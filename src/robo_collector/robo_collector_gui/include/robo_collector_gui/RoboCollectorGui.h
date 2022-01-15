@@ -5,12 +5,14 @@
 
 //C++ system headers
 #include <cstdint>
+#include <array>
 
 //Other libraries headers
 #include "game_engine/Game.h"
 
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
+#include "robo_collector_gui/entities/Robot.h"
 
 //Forward declarations
 class InputEvent;
@@ -24,6 +26,12 @@ public:
   void handleEvent(const InputEvent &e) override;
 
 private:
+  enum InternalDefines {
+    ENEMIES_CTN = 3
+  };
+
+  Robot _blinky;
+  std::array<Robot, ENEMIES_CTN> _enemies;
   Field _field;
 };
 

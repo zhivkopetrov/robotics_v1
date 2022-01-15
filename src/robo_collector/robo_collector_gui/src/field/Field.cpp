@@ -19,6 +19,8 @@ int32_t Field::init(const FieldConfig &cfg) {
     return FAILURE;
   }
 
+  _map.create(cfg.mapRsrcId);
+
   TileConfig tileCfg;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
 
@@ -59,11 +61,14 @@ void Field::draw() const {
 void Field::updateFieldSpriteBuffer() {
   _fieldSB.unlock();
   _fieldSB.reset();
+
+  _fieldSB.addWidget(_map);
   for (const auto & row : _tiles) {
     for (const auto &tile : row) {
       tile.drawOnSpriteBuffer(_fieldSB);
     }
   }
+
   _fieldSB.update();
   _fieldSB.lock();
 }

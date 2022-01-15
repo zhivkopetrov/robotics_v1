@@ -14,7 +14,7 @@
 #include "robo_collector_gui/field/config/TileConfig.h"
 
 namespace {
-constexpr auto DEBUG_TEXT_OFFSET_X = 5;
+constexpr auto DEBUG_TEXT_OFFSET_X = 10;
 constexpr auto DEBUG_TEXT_OFFSET_Y = 10;
 }
 

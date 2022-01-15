@@ -28,7 +28,7 @@ public:
   void updateFieldSpriteBuffer();
 
   std::vector<std::vector<Tile>> _tiles;
-  Image _tileTargetImg;
+  Image _map;
 
   SpriteBuffer _fieldSB;
 };

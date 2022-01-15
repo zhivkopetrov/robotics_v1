@@ -55,6 +55,9 @@ static RoboCollectorGuiConfig populateGuiConfig() {
   RoboCollectorGuiConfig cfg;
 
   cfg.gameMode = GAME_MODE;
+  cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
+  cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
+
   cfg.fieldCfg.rows = GAME_FIELD_ROWS;
   cfg.fieldCfg.cols = GAME_FIELD_COLS;
   cfg.fieldCfg.fieldDimensions = { GAME_FIELD_START_X,
@@ -62,6 +65,7 @@ static RoboCollectorGuiConfig populateGuiConfig() {
   cfg.fieldCfg.tileWidth = TILE_WIDTH;
   cfg.fieldCfg.tileHeight = TILE_HEIGHT;
   cfg.fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
+  cfg.fieldCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG;
 
   return cfg;

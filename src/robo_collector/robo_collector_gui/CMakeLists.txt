@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+# Author Zhivko Petrov
+
+cmake_minimum_required(VERSION 3.10)
+
 project(
     robo_collector_gui
     LANGUAGES CXX
@@ -28,12 +31,14 @@ add_executable(
         ${_INC_DIR}/field/Tile.h
         ${_INC_DIR}/field/config/FieldConfig.h
         ${_INC_DIR}/field/config/TileConfig.h
+        ${_INC_DIR}/entities/Robot.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
         ${_SRC_DIR}/defines/RoboCollectorGuiDefines.cpp
         ${_SRC_DIR}/field/Field.cpp
         ${_SRC_DIR}/field/Tile.cpp
+        ${_SRC_DIR}/entities/Robot.cpp
 )
 
 target_include_directories(
@@ -50,7 +55,7 @@ target_include_directories(
 )
 
 target_link_libraries(
-    ${PROJECT_NAME} 
+    ${PROJECT_NAME}
         game_engine::game_engine
 )
 
