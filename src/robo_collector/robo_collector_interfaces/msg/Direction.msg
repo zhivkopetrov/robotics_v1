@@ -1,0 +1,6 @@
+int8 DIRECTION_UP = 0
+int8 DIRECTION_RIGHT = 1
+int8 DIRECTION_DOWN = 2
+int8 DIRECTION_LEFT = 3
+
+int8 direction
