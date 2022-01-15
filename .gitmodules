@@ -1,0 +1,18 @@
+[submodule "src/lib/utils"]
+	path = src/lib/utils
+	url = https://github.com/zhivkopetrov/utils.git
+[submodule "src/lib/sdl_utils"]
+	path = src/lib/sdl_utils
+	url = https://github.com/zhivkopetrov/sdl_utils.git
+[submodule "src/lib/resource_utils"]
+	path = src/lib/resource_utils
+	url = https://github.com/zhivkopetrov/resource_utils.git
+[submodule "src/lib/manager_utils"]
+	path = src/lib/manager_utils
+	url = https://github.com/zhivkopetrov/manager_utils.git
+[submodule "src/lib/game_engine"]
+	path = src/lib/game_engine
+	url = https://github.com/zhivkopetrov/game_engine.git
+[submodule "src/tools"]
+	path = src/tools
+	url = https://github.com/zhivkopetrov/tools.git
