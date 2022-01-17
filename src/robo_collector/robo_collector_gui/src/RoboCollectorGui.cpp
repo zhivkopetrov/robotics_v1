@@ -20,11 +20,14 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       LOGERR("Error in _field.init()");
       return FAILURE;
     }
+    constexpr auto tileSize = 160;
+    constexpr auto startX = 47;
+    constexpr auto startY = 47;
 
     RobotCfg robotCfg;
     robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
-    robotCfg.startPos.x = 47;
-    robotCfg.startPos.y = 47;
+    robotCfg.startPos.x = startX;
+    robotCfg.startPos.y = startY;
     robotCfg.frameId = 0;
     for (auto &enemy : _enemies) {
       robotCfg.startPos.x += 160;
@@ -36,8 +39,8 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     }
 
     robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
-    robotCfg.startPos.x = 207;
-    robotCfg.startPos.y = 207;
+    robotCfg.startPos.x = startX + tileSize;
+    robotCfg.startPos.y = startY + tileSize;
     robotCfg.frameId = 0;
     if (SUCCESS != _blinky.init(robotCfg)) {
       LOGERR("Error in _field.init()");
@@ -49,10 +52,23 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       return FAILURE;
     }
 
+    CoinConfig coinCfg;
+    constexpr auto coinOffsetFromTile = 30;
+    coinCfg.pos.x = startX + tileSize + coinOffsetFromTile;
+    coinCfg.pos.y = startX + coinOffsetFromTile + (3 * tileSize);
+    coinCfg.rsrcId = gameCfg.coinAnimRsrcId;
+    coinCfg.timerId = gameCfg.cointAnimTimerId;
+    if (SUCCESS != _coin.init(coinCfg)) {
+      LOGERR("Error in _coin.init()");
+      return FAILURE;
+    }
+
   } catch (const std::bad_any_cast &e) {
     LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
     return FAILURE;
   }
+
+
 
   return SUCCESS;
 }
@@ -64,6 +80,7 @@ void RoboCollectorGui::deinit() {
 void RoboCollectorGui::draw() const {
   _field.draw();
   _panel.draw();
+  _coin.draw();
 
   _blinky.draw();
   for (const auto &enemy : _enemies) {
@@ -75,7 +92,6 @@ void RoboCollectorGui::handleEvent(const InputEvent &e) {
   _field.handleEvent(e);
 
   _blinky.handleEvent(e);
-
 
   //TODO remove snipper below. used only for test
   if (TouchEvent::KEYBOARD_RELEASE != e.type) {

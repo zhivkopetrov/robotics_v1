@@ -70,6 +70,15 @@ description=empty
 position=0,0
 load=on_init
 
+##### ANIMATIONS
+
+tag=[COIN_ANIM_GOLD]
+type=sprite
+path=p/coin_animations/gold/coin_anim_gold.png
+description=100,100,10,0
+position=0,0
+load=on_init
+
 ##### FONTS
 tag=[VINQUE_RG]
 type=font

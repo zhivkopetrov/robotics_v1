@@ -13,6 +13,7 @@
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
 #include "robo_collector_gui/entities/Robot.h"
+#include "robo_collector_gui/entities/coin/Coin.h"
 #include "robo_collector_gui/panels/Panel.h"
 
 //Forward declarations
@@ -34,6 +35,7 @@ private:
   Robot _blinky;
   std::array<Robot, ENEMIES_CTN> _enemies;
   Panel _panel;
+  Coin _coin;
   Field _field;
 };
 

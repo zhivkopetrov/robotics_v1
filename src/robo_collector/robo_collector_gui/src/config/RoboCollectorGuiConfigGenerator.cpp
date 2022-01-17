@@ -34,6 +34,10 @@ constexpr auto GAME_FIELD_START_X = 47;
 constexpr auto GAME_FIELD_START_Y = 47;
 constexpr auto GAME_FIELD_WIDTH = GAME_FIELD_COLS * TILE_WIDTH;
 constexpr auto GAME_FIELD_HEIGHT = GAME_FIELD_ROWS * TILE_HEIGHT;
+
+enum TimerId {
+  COIN_ANIM_TIMER_ID
+};
 }
 
 EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
@@ -61,6 +65,9 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.gameMode = GAME_MODE;
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
   cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
+
+  cfg.coinAnimRsrcId = RoboCollectorGuiResources::COIN_ANIM_GOLD;
+  cfg.cointAnimTimerId = COIN_ANIM_TIMER_ID;
 
   auto& fieldCfg = cfg.fieldCfg;
   fieldCfg.rows = GAME_FIELD_ROWS;

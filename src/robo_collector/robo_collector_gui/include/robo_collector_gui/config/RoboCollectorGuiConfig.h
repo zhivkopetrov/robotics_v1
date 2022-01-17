@@ -21,6 +21,9 @@ struct RoboCollectorGuiConfig {
   PanelConfig panelConfig;
   uint64_t robotBlinkyRsrcId = 0;
   uint64_t robotEnemiesRsrcId = 0;
+
+  uint64_t coinAnimRsrcId = 0;
+  int32_t cointAnimTimerId = 0;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUICONFIG_H_ */
