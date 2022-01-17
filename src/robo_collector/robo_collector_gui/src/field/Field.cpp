@@ -45,6 +45,8 @@ int32_t Field::init(const FieldConfig &cfg) {
   }
 
   _fieldSB.create(cfg.fieldDimensions);
+  _fieldSB.activateAlphaModulation();
+  _fieldSB.setResetColor(Colors::FULL_TRANSPARENT);
   updateFieldSpriteBuffer();
 
   return SUCCESS;
@@ -55,6 +57,7 @@ void Field::handleEvent([[maybe_unused]]const InputEvent &e) {
 }
 
 void Field::draw() const {
+  _map.draw();
   _fieldSB.draw();
 }
 
@@ -62,7 +65,7 @@ void Field::updateFieldSpriteBuffer() {
   _fieldSB.unlock();
   _fieldSB.reset();
 
-  _fieldSB.addWidget(_map);
+//  _fieldSB.addWidget(_map);
   for (const auto & row : _tiles) {
     for (const auto &tile : row) {
       tile.drawOnSpriteBuffer(_fieldSB);

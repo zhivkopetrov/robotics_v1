@@ -8,6 +8,7 @@
 //Other libraries headers
 #include "sdl_utils/input/InputEvent.h"
 #include "utils/ErrorCode.h"
+#include "utils/Log.h"
 
 //Own components headers
 
@@ -23,7 +24,7 @@ void Robot::draw() const {
 }
 
 void Robot::handleEvent(const InputEvent& e) {
-  if (TouchEvent::KEYBOARD_PRESS != e.type) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
     return;
   }
 

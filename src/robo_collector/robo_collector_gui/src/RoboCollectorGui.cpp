@@ -22,8 +22,8 @@ int32_t RoboCollectorGui::init(const std::any& cfg) {
 
       RobotCfg robotCfg;
       robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
-      robotCfg.startPos.x = 150;
-      robotCfg.startPos.y = 150;
+      robotCfg.startPos.x = 50;
+      robotCfg.startPos.y = 200;
       robotCfg.frameId = 0;
       for (auto& enemy : _enemies) {
         robotCfg.startPos.x += 160;
@@ -35,8 +35,8 @@ int32_t RoboCollectorGui::init(const std::any& cfg) {
       }
 
       robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
-      robotCfg.startPos.x = 310;
-      robotCfg.startPos.y = 310;
+      robotCfg.startPos.x = 210;
+      robotCfg.startPos.y = 360;
       robotCfg.frameId = 0;
       if (SUCCESS != _blinky.init(robotCfg)) {
         LOGERR("Error in _field.init()");

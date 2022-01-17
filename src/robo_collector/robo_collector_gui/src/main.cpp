@@ -31,13 +31,10 @@ constexpr auto TILE_HEIGHT = 160;
 constexpr auto GAME_MODE = GameMode::NORMAL;
 constexpr auto GAME_FIELD_ROWS = 5;
 constexpr auto GAME_FIELD_COLS = 7;
-constexpr auto GAME_FIELD_START_X = 150;
-constexpr auto GAME_FIELD_START_Y = 150;
-//NOTE: (TILE_WIDTH / 2) and (TILE_HEIGHT / 2) guarantee the tile offset
-constexpr auto GAME_FIELD_WIDTH =
-    (GAME_FIELD_COLS * TILE_WIDTH) + (TILE_WIDTH / 2);
-constexpr auto GAME_FIELD_HEIGHT =
-    (GAME_FIELD_ROWS * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+constexpr auto GAME_FIELD_START_X = 50;
+constexpr auto GAME_FIELD_START_Y = 200;
+constexpr auto GAME_FIELD_WIDTH = GAME_FIELD_COLS * TILE_WIDTH;
+constexpr auto GAME_FIELD_HEIGHT = GAME_FIELD_ROWS * TILE_HEIGHT;
 }
 
 static EngineConfig populateEngineConfig() {
