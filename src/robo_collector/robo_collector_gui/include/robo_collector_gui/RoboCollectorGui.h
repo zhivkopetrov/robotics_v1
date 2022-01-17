@@ -13,6 +13,7 @@
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
 #include "robo_collector_gui/entities/Robot.h"
+#include "robo_collector_gui/panels/Panel.h"
 
 //Forward declarations
 class InputEvent;
@@ -32,6 +33,7 @@ private:
 
   Robot _blinky;
   std::array<Robot, ENEMIES_CTN> _enemies;
+  Panel _panel;
   Field _field;
 };
 

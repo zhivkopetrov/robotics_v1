@@ -10,7 +10,7 @@
 0                   
 
 # Size of all files in kBytes:
-491                 
+447                 
 
 0x50F97991CE94C9BC
 p/background/map.png
@@ -66,33 +66,33 @@ p/stars/stars.png
 
 0x8DF7ACDAA833451F
 p/panels/health_panel.png
-27
+13
 0
-0 0 983 147
+0 0 500 75
 1
-0 0 983 147
+0 0 500 75
 
 0x47A8FA33A2F9F010
 p/panels/health_indicator.png
-21
+6
 0
-0 0 958 99
+0 0 404 48
 1
-0 0 958 99
+0 0 404 48
 
 0xA3C786C1A68E56AA
 p/panels/coin_panel.png
-25
+15
 0
-0 0 631 187
+0 0 500 150
 1
-0 0 631 187
+0 0 500 150
 
 0x6C8D337F6DA83B2F
 p/panels/time_panel.png
-20
+15
 0
-0 0 631 187
+0 0 500 150
 1
-0 0 631 187
+0 0 500 150
 

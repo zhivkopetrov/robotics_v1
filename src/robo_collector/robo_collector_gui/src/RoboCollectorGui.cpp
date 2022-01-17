@@ -6,6 +6,7 @@
 //C++ system headers
 
 //Other libraries headers
+#include "sdl_utils/input/InputEvent.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -42,6 +43,12 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       LOGERR("Error in _field.init()");
       return FAILURE;
     }
+
+    if (SUCCESS != _panel.init(gameCfg.panelConfig)) {
+      LOGERR("Error in _field.init()");
+      return FAILURE;
+    }
+
   } catch (const std::bad_any_cast &e) {
     LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
     return FAILURE;
@@ -56,6 +63,7 @@ void RoboCollectorGui::deinit() {
 
 void RoboCollectorGui::draw() const {
   _field.draw();
+  _panel.draw();
 
   _blinky.draw();
   for (const auto &enemy : _enemies) {
@@ -67,5 +75,24 @@ void RoboCollectorGui::handleEvent(const InputEvent &e) {
   _field.handleEvent(e);
 
   _blinky.handleEvent(e);
+
+
+  //TODO remove snipper below. used only for test
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return;
+  }
+
+  switch (e.key) {
+  case Keyboard::KEY_O:
+    _panel.shrinkHealthIndicator(5);
+    break;
+
+  case Keyboard::KEY_P:
+    _panel.shrinkHealthIndicator(-5);
+    break;
+
+  default:
+    break;
+  }
 }
 

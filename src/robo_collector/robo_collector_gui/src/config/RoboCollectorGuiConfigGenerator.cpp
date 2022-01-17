@@ -62,15 +62,22 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
   cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
 
-  cfg.fieldCfg.rows = GAME_FIELD_ROWS;
-  cfg.fieldCfg.cols = GAME_FIELD_COLS;
-  cfg.fieldCfg.fieldDimensions = { GAME_FIELD_START_X,
+  auto& fieldCfg = cfg.fieldCfg;
+  fieldCfg.rows = GAME_FIELD_ROWS;
+  fieldCfg.cols = GAME_FIELD_COLS;
+  fieldCfg.fieldDimensions = { GAME_FIELD_START_X,
       GAME_FIELD_START_Y, GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT };
-  cfg.fieldCfg.tileWidth = TILE_WIDTH;
-  cfg.fieldCfg.tileHeight = TILE_HEIGHT;
-  cfg.fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
-  cfg.fieldCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  cfg.fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG;
+  fieldCfg.tileWidth = TILE_WIDTH;
+  fieldCfg.tileHeight = TILE_HEIGHT;
+  fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
+  fieldCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
+  fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG;
+
+  auto& panelCfg = cfg.panelConfig;
+  panelCfg.timePanelRsrcId = RoboCollectorGuiResources::TIME_PANEL;
+  panelCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
+  panelCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
+  panelCfg.healthIndicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
 
   return cfg;
 }
