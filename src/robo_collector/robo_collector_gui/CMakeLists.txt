@@ -26,6 +26,7 @@ add_executable(
     ${PROJECT_NAME} 
         ${_INC_DIR}/RoboCollectorGui.h
         ${_INC_DIR}/config/RoboCollectorGuiConfig.h
+        ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/field/Field.h
         ${_INC_DIR}/field/Tile.h
@@ -36,6 +37,7 @@ add_executable(
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
         ${_SRC_DIR}/defines/RoboCollectorGuiDefines.cpp
+        ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
         ${_SRC_DIR}/field/Field.cpp
         ${_SRC_DIR}/field/Tile.cpp
         ${_SRC_DIR}/entities/Robot.cpp

@@ -12,40 +12,39 @@
 //Own components headers
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
 
-int32_t RoboCollectorGui::init(const std::any& cfg) {
+int32_t RoboCollectorGui::init(const std::any &cfg) {
   try {
-      const auto& gameCfg = std::any_cast<const RoboCollectorGuiConfig&>(cfg);
-      if (SUCCESS != _field.init(gameCfg.fieldCfg)) {
-        LOGERR("Error in _field.init()");
-        return FAILURE;
-      }
-
-      RobotCfg robotCfg;
-      robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
-      robotCfg.startPos.x = 47;
-      robotCfg.startPos.y = 47;
-      robotCfg.frameId = 0;
-      for (auto& enemy : _enemies) {
-        robotCfg.startPos.x += 160;
-        if (SUCCESS != enemy.init(robotCfg)) {
-          LOGERR("Error in _field.init()");
-          return FAILURE;
-        }
-        ++robotCfg.frameId;
-      }
-
-      robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
-      robotCfg.startPos.x = 207;
-      robotCfg.startPos.y = 207;
-      robotCfg.frameId = 0;
-      if (SUCCESS != _blinky.init(robotCfg)) {
-        LOGERR("Error in _field.init()");
-        return FAILURE;
-      }
-  }
-  catch(const std::bad_any_cast& e) {
-      LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
+    const auto &gameCfg = std::any_cast<const RoboCollectorGuiConfig&>(cfg);
+    if (SUCCESS != _field.init(gameCfg.fieldCfg)) {
+      LOGERR("Error in _field.init()");
       return FAILURE;
+    }
+
+    RobotCfg robotCfg;
+    robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
+    robotCfg.startPos.x = 47;
+    robotCfg.startPos.y = 47;
+    robotCfg.frameId = 0;
+    for (auto &enemy : _enemies) {
+      robotCfg.startPos.x += 160;
+      if (SUCCESS != enemy.init(robotCfg)) {
+        LOGERR("Error in _field.init()");
+        return FAILURE;
+      }
+      ++robotCfg.frameId;
+    }
+
+    robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
+    robotCfg.startPos.x = 207;
+    robotCfg.startPos.y = 207;
+    robotCfg.frameId = 0;
+    if (SUCCESS != _blinky.init(robotCfg)) {
+      LOGERR("Error in _field.init()");
+      return FAILURE;
+    }
+  } catch (const std::bad_any_cast &e) {
+    LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
+    return FAILURE;
   }
 
   return SUCCESS;
@@ -59,7 +58,7 @@ void RoboCollectorGui::draw() const {
   _field.draw();
 
   _blinky.draw();
-  for (const auto& enemy : _enemies) {
+  for (const auto &enemy : _enemies) {
     enemy.draw();
   }
 }
