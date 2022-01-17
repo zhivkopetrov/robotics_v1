@@ -23,16 +23,22 @@ namespace {
 constexpr auto PROJECT_FOLDER_NAME = "robo_collector_gui";
 constexpr auto LOADING_SCREEN_RESOURCES_PATH = "p/loading_screen/";
 
+//screen
+constexpr auto WINDOW_X = 72;
+constexpr auto WINDOW_Y = 27;
+constexpr auto WINDOW_WIDTH = 1848;
+constexpr auto WINDOW_HEIGHT = 1053;
+
 //game field tiles
 constexpr auto TILE_WIDTH = 160;
 constexpr auto TILE_HEIGHT = 160;
 
 //game field
 constexpr auto GAME_MODE = GameMode::NORMAL;
-constexpr auto GAME_FIELD_ROWS = 5;
+constexpr auto GAME_FIELD_ROWS = 6;
 constexpr auto GAME_FIELD_COLS = 7;
-constexpr auto GAME_FIELD_START_X = 50;
-constexpr auto GAME_FIELD_START_Y = 200;
+constexpr auto GAME_FIELD_START_X = 47;
+constexpr auto GAME_FIELD_START_Y = 47;
 constexpr auto GAME_FIELD_WIDTH = GAME_FIELD_COLS * TILE_WIDTH;
 constexpr auto GAME_FIELD_HEIGHT = GAME_FIELD_ROWS * TILE_HEIGHT;
 }
@@ -42,6 +48,14 @@ static EngineConfig populateEngineConfig() {
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   auto cfg = getDefaultEngineConfig(
       projectInstallPrefix, LOADING_SCREEN_RESOURCES_PATH);
+
+  auto& windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
+  windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
+  windowCfg.width = WINDOW_WIDTH;
+  windowCfg.height = WINDOW_HEIGHT;
+  windowCfg.displayMode = WindowDisplayMode::WINDOWED;
+  windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
   cfg.debugConsoleRsrcId = RoboCollectorGuiResources::VINQUE_RG;
 
@@ -83,8 +97,6 @@ int32_t main(int32_t argc, char *args[]) {
 
   return app.run();
 }
-
-
 
 //#include <chrono>
 //
