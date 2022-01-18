@@ -12,11 +12,14 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/field/FieldUtils.h"
 
 int32_t Robot::init(const RobotCfg& cfg) {
   _img.create(cfg.rsrcId);
-  _img.setPosition(cfg.startPos);
+  _img.setPosition(FieldUtils::getAbsPos(cfg.fieldPos));
   _img.setFrame(cfg.frameId);
+  _fieldPos = cfg.fieldPos;
+
   return SUCCESS;
 }
 
@@ -29,6 +32,7 @@ void Robot::handleEvent(const InputEvent& e) {
     return;
   }
 
+  //TODO remove me
   switch (e.key) {
   case Keyboard::KEY_RIGHT:
     _img.moveRight(_img.getFrameHeight());
@@ -51,8 +55,11 @@ void Robot::handleEvent(const InputEvent& e) {
 void Robot::move(MoveType moveType) {
   switch (moveType) {
   case MoveType::FORWARD:
-    _img.moveUp(_img.getFrameHeight());
+    _fieldPos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
+    _img.setPosition(FieldUtils::getAbsPos(_fieldPos));
     break;
+
+    //TODO rotate and not move
   case MoveType::ROTATE_LEFT:
     _img.moveLeft(_img.getFrameWidth());
     break;
@@ -64,6 +71,10 @@ void Robot::move(MoveType moveType) {
     LOGERR("Error, received unsupported moveType: %d", getEnumValue(moveType));
     break;
   }
+}
+
+FieldPos Robot::getFieldPos() const {
+  return _fieldPos;
 }
 
 

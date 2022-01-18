@@ -10,13 +10,15 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/field/FieldUtils.h"
 
 int32_t Coin::init(const CoinConfig& cfg) {
   AnimBaseConfig animCfg;
   animCfg.rsrcId = cfg.rsrcId;
   animCfg.timerId = cfg.timerId;
   animCfg.timerInterval = 75;
-  animCfg.startPos = cfg.pos;
+  animCfg.startPos = FieldUtils::getAbsPos(cfg.fieldPos);
+  animCfg.startPos += cfg.tileOffset;
   animCfg.animDirection = AnimDir::FORWARD;
 
   if (SUCCESS != _anim.configure(animCfg)) {

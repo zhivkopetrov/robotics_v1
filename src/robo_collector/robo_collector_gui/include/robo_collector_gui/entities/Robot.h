@@ -11,12 +11,13 @@
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
+#include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
 class InputEvent;
 
 struct RobotCfg {
-  Point startPos;
+  FieldPos fieldPos;
   uint64_t rsrcId = 0;
   int32_t frameId = 0;
 };
@@ -31,8 +32,11 @@ public:
 
   void move(MoveType moveType);
 
+  FieldPos getFieldPos() const;
+
 private:
   Image _img;
+  FieldPos _fieldPos;
   Direction _dir = Direction::UP;
 };
 

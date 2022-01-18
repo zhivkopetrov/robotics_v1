@@ -20,17 +20,14 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       LOGERR("Error in _field.init()");
       return FAILURE;
     }
-    constexpr auto tileSize = 160;
-    constexpr auto startX = 47;
-    constexpr auto startY = 47;
 
     RobotCfg robotCfg;
     robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
-    robotCfg.startPos.x = startX;
-    robotCfg.startPos.y = startY;
+    robotCfg.fieldPos.row = 0;
+    robotCfg.fieldPos.col = 0;
     robotCfg.frameId = 0;
     for (auto &enemy : _enemies) {
-      robotCfg.startPos.x += 160;
+      ++(robotCfg.fieldPos.col);
       if (SUCCESS != enemy.init(robotCfg)) {
         LOGERR("Error in _field.init()");
         return FAILURE;
@@ -39,8 +36,8 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     }
 
     robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
-    robotCfg.startPos.x = startX + tileSize;
-    robotCfg.startPos.y = startY + tileSize;
+    robotCfg.fieldPos.row = 1;
+    robotCfg.fieldPos.col = 1;
     robotCfg.frameId = 0;
     if (SUCCESS != _blinky.init(robotCfg)) {
       LOGERR("Error in _field.init()");
@@ -52,10 +49,11 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       return FAILURE;
     }
 
-    CoinConfig coinCfg;
     constexpr auto coinOffsetFromTile = 30;
-    coinCfg.pos.x = startX + tileSize + coinOffsetFromTile;
-    coinCfg.pos.y = startX + coinOffsetFromTile + (3 * tileSize);
+    CoinConfig coinCfg;
+    coinCfg.fieldPos.row = 4;
+    coinCfg.fieldPos.col = 2;
+    coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
     coinCfg.rsrcId = gameCfg.coinAnimRsrcId;
     coinCfg.timerId = gameCfg.cointAnimTimerId;
     if (SUCCESS != _coin.init(coinCfg)) {

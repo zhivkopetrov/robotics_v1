@@ -10,12 +10,15 @@
 #include "manager_utils/drawing/animation/FrameAnimation.h"
 
 //Own components headers
+#include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
 
 struct CoinConfig {
+  FieldPos fieldPos;
+  Point tileOffset;
   uint64_t rsrcId = 0;
-  Point pos;
+  //x and y offset from the top-left part of a tile
   int32_t timerId = 0;
 };
 

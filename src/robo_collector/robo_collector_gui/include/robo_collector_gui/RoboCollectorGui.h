@@ -30,12 +30,11 @@ public:
 
 private:
   enum InternalDefines {
-    ENEMIES_CTN = 3,
     MOVE_BUTTONS_CTN = 3
   };
 
   Robot _blinky;
-  std::array<Robot, ENEMIES_CTN> _enemies;
+  std::array<Robot, Defines::ENEMIES_CTN> _enemies;
   std::array<MoveButton, MOVE_BUTTONS_CTN> _moveButtons;
   Panel _panel;
   Coin _coin;

@@ -29,6 +29,8 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/field/Field.h
+        ${_INC_DIR}/field/FieldPos.h
+        ${_INC_DIR}/field/FieldUtils.h
         ${_INC_DIR}/field/Tile.h
         ${_INC_DIR}/field/config/FieldConfig.h
         ${_INC_DIR}/field/config/TileConfig.h
@@ -43,6 +45,8 @@ add_executable(
         ${_SRC_DIR}/defines/RoboCollectorGuiDefines.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
         ${_SRC_DIR}/field/Field.cpp
+        ${_SRC_DIR}/field/FieldPos.cpp
+        ${_SRC_DIR}/field/FieldUtils.cpp
         ${_SRC_DIR}/field/Tile.cpp
         ${_SRC_DIR}/entities/Robot.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
