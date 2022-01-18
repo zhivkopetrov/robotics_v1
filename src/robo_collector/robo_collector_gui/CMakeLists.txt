@@ -36,6 +36,7 @@ add_executable(
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/panels/Panel.h
         ${_INC_DIR}/panels/config/PanelConfig.h
+        ${_INC_DIR}/buttons/MoveButton.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -46,6 +47,7 @@ add_executable(
         ${_SRC_DIR}/entities/Robot.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
         ${_SRC_DIR}/panels/Panel.cpp
+        ${_SRC_DIR}/buttons/MoveButton.cpp
 )
 
 target_include_directories(

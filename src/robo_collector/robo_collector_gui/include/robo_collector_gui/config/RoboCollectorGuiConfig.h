@@ -22,6 +22,10 @@ struct RoboCollectorGuiConfig {
   uint64_t robotBlinkyRsrcId = 0;
   uint64_t robotEnemiesRsrcId = 0;
 
+  uint64_t upMoveButtonRsrcId = 0;
+  uint64_t leftMoveButtonRsrcId = 0;
+  uint64_t rightMoveButtonRsrcId = 0;
+
   uint64_t coinAnimRsrcId = 0;
   int32_t cointAnimTimerId = 0;
 };

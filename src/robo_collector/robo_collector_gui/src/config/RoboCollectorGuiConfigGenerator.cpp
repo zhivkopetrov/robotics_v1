@@ -69,6 +69,10 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.coinAnimRsrcId = RoboCollectorGuiResources::COIN_ANIM_GOLD;
   cfg.cointAnimTimerId = COIN_ANIM_TIMER_ID;
 
+  cfg.upMoveButtonRsrcId = RoboCollectorGuiResources::UP_BUTTON;
+  cfg.leftMoveButtonRsrcId = RoboCollectorGuiResources::LEFT_BUTTON;
+  cfg.rightMoveButtonRsrcId = RoboCollectorGuiResources::RIGHT_BUTTON;
+
   auto& fieldCfg = cfg.fieldCfg;
   fieldCfg.rows = GAME_FIELD_ROWS;
   fieldCfg.cols = GAME_FIELD_COLS;

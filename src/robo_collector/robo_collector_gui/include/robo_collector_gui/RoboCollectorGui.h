@@ -15,6 +15,7 @@
 #include "robo_collector_gui/entities/Robot.h"
 #include "robo_collector_gui/entities/coin/Coin.h"
 #include "robo_collector_gui/panels/Panel.h"
+#include "robo_collector_gui/buttons/MoveButton.h"
 
 //Forward declarations
 class InputEvent;
@@ -29,11 +30,13 @@ public:
 
 private:
   enum InternalDefines {
-    ENEMIES_CTN = 3
+    ENEMIES_CTN = 3,
+    MOVE_BUTTONS_CTN = 3
   };
 
   Robot _blinky;
   std::array<Robot, ENEMIES_CTN> _enemies;
+  std::array<MoveButton, MOVE_BUTTONS_CTN> _moveButtons;
   Panel _panel;
   Coin _coin;
   Field _field;

@@ -10,6 +10,7 @@
 #include "manager_utils/drawing/Image.h"
 
 //Own components headers
+#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 
 //Forward declarations
 class InputEvent;
@@ -27,6 +28,8 @@ public:
   void draw() const;
 
   void handleEvent(const InputEvent& e);
+
+  void move(MoveType moveType);
 
 private:
   Image _img;

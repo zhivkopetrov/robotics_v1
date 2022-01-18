@@ -79,6 +79,29 @@ description=100,100,10,0
 position=0,0
 load=on_init
 
+##### BUTTONS
+
+tag=[UP_BUTTON]
+type=sprite
+path=p/buttons/up_button.png
+description=140,140,3,0
+position=0,0
+load=on_init
+
+tag=[LEFT_BUTTON]
+type=sprite
+path=p/buttons/left_button.png
+description=140,140,3,0
+position=0,0
+load=on_init
+
+tag=[RIGHT_BUTTON]
+type=sprite
+path=p/buttons/right_button.png
+description=140,140,3,0
+position=0,0
+load=on_init
+
 ##### FONTS
 tag=[VINQUE_RG]
 type=font

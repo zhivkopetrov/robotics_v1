@@ -7,6 +7,7 @@
 
 //Other libraries headers
 #include "sdl_utils/input/InputEvent.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -30,7 +31,7 @@ void Robot::handleEvent(const InputEvent& e) {
 
   switch (e.key) {
   case Keyboard::KEY_RIGHT:
-    _img.moveRight(_img.getFrameWidth());
+    _img.moveRight(_img.getFrameHeight());
     break;
   case Keyboard::KEY_DOWN:
     _img.moveDown(_img.getFrameHeight());
@@ -46,3 +47,23 @@ void Robot::handleEvent(const InputEvent& e) {
     break;
   }
 }
+
+void Robot::move(MoveType moveType) {
+  switch (moveType) {
+  case MoveType::FORWARD:
+    _img.moveUp(_img.getFrameHeight());
+    break;
+  case MoveType::ROTATE_LEFT:
+    _img.moveLeft(_img.getFrameWidth());
+    break;
+  case MoveType::ROTATE_RIGHT:
+    _img.moveRight(_img.getFrameWidth());
+    break;
+
+  default:
+    LOGERR("Error, received unsupported moveType: %d", getEnumValue(moveType));
+    break;
+  }
+}
+
+

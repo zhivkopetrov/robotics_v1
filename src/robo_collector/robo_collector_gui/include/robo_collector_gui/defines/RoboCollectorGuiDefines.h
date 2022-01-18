@@ -19,6 +19,13 @@ enum class GameMode {
   SUPER_EXTENDED
 };
 
+enum class MoveType {
+  UNKNOWN,
+  FORWARD,
+  ROTATE_LEFT,
+  ROTATE_RIGHT
+};
+
 GameMode toGameMode(const int32_t mode);
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIDEFINES_H_ */
