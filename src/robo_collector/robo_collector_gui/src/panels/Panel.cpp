@@ -26,6 +26,12 @@ int32_t Panel::init(const PanelConfig &cfg) {
   _healthIndicator.setPosition(panelX + 79, 423);
   _healthIndicator.setCropRect(_healthIndicator.getCropRect());
 
+  _horDelimiter.create(cfg.horDelimiterRsrcId);
+  _horDelimiter.setPosition(1245, 500);
+
+  _vertDelimiter.create(cfg.vertDelimiterRsrcId);
+  _vertDelimiter.setPosition(1200, 550);
+
   return SUCCESS;
 }
 
@@ -35,6 +41,8 @@ void Panel::draw() const {
   }
 
   _healthIndicator.draw();
+  _horDelimiter.draw();
+  _vertDelimiter.draw();
 }
 
 void Panel::shrinkHealthIndicator(int32_t deltaPx) {

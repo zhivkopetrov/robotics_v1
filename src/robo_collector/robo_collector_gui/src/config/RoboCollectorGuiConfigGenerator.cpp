@@ -7,6 +7,7 @@
 
 //Other libraries headers
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include "resource_utils/common/ResourceFileHeader.h"
 
 //Own components headers
 #include "generated/RoboCollectorGuiResources.h"
@@ -48,6 +49,9 @@ EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
 
   auto& windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
   windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.iconPath.append(projectInstallPrefix).append("/").
+      append(ResourceFileHeader::getResourcesFolderName()).
+      append("/p/entities/blinky.png");
   windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
   windowCfg.width = WINDOW_WIDTH;
   windowCfg.height = WINDOW_HEIGHT;
@@ -89,6 +93,8 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   panelCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
   panelCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
   panelCfg.healthIndicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
+  panelCfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
+  panelCfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
 
   return cfg;
 }

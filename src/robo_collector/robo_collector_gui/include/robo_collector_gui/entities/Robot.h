@@ -33,6 +33,7 @@ public:
 
 private:
   Image _img;
+  Direction _dir = Direction::UP;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOT_H_ */

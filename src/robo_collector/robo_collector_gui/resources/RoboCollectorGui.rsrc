@@ -70,6 +70,20 @@ description=empty
 position=0,0
 load=on_init
 
+tag=[HOR_DELIMITER]
+type=sprite
+path=p/panels/hor_delimiter.png
+description=404,48,2,0
+position=0,0
+load=on_init
+
+tag=[VERT_DELIMITER]
+type=sprite
+path=p/panels/vert_delimiter.png
+description=48,404,2,0
+position=0,0
+load=on_init
+
 ##### ANIMATIONS
 
 tag=[COIN_ANIM_GOLD]

@@ -65,7 +65,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
 
     MoveButtonCfg moveButtonCfg;
     const std::array<Point, MOVE_BUTTONS_CTN> buttonsPos {
-      Point(1450, 650), Point(1300, 800), Point(1600, 800)
+      Point(1435, 695), Point(1285, 860), Point(1585, 860)
     };
     const std::array<MoveType, MOVE_BUTTONS_CTN> buttonsMoveType {
       MoveType::FORWARD, MoveType::ROTATE_LEFT, MoveType::ROTATE_RIGHT

@@ -26,6 +26,13 @@ enum class MoveType {
   ROTATE_RIGHT
 };
 
+enum class Direction {
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT
+};
+
 GameMode toGameMode(const int32_t mode);
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIDEFINES_H_ */

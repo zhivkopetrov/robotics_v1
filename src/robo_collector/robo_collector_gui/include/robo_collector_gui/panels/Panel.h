@@ -33,6 +33,8 @@ private:
   std::array<Image, PANELS_CTN> _panels;
 
   Image _healthIndicator;
+  Image _horDelimiter;
+  Image _vertDelimiter;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANEL_H_ */
