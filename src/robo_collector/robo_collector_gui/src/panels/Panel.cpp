@@ -20,10 +20,10 @@ int32_t Panel::init(const PanelConfig &cfg) {
   _panels[COIN_PANEL].setPosition(panelX, 215);
 
   _panels[HEALTH_PANEL].create(cfg.healthPanelRsrcId);
-  _panels[HEALTH_PANEL].setPosition(panelX, 410);
+  _panels[HEALTH_PANEL].setPosition(panelX, 390);
 
   _healthIndicator.create(cfg.healthIndicatorRsrcId);
-  _healthIndicator.setPosition(panelX + 79, 423);
+  _healthIndicator.setPosition(panelX + 79, 403);
   _healthIndicator.setCropRect(_healthIndicator.getCropRect());
 
   _horDelimiter.create(cfg.horDelimiterRsrcId);
@@ -45,8 +45,8 @@ void Panel::draw() const {
   _vertDelimiter.draw();
 }
 
-void Panel::shrinkHealthIndicator(int32_t deltaPx) {
+void Panel::decreaseHealthIndicator(int32_t damage) {
   auto cropRectangle = _healthIndicator.getCropRect();
-  cropRectangle.w -= deltaPx;
+  cropRectangle.w -= damage;
   _healthIndicator.setCropRect(cropRectangle);
 }

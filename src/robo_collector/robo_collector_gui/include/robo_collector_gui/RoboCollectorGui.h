@@ -12,7 +12,7 @@
 
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
-#include "robo_collector_gui/entities/Robot.h"
+#include "robo_collector_gui/entities/robot/Robot.h"
 #include "robo_collector_gui/entities/coin/Coin.h"
 #include "robo_collector_gui/panels/Panel.h"
 #include "robo_collector_gui/buttons/MoveButton.h"

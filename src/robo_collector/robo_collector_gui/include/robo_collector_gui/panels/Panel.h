@@ -19,7 +19,8 @@ public:
   int32_t init(const PanelConfig& cfg);
   void draw() const;
 
-  void shrinkHealthIndicator(int32_t deltaPx);
+  /* 1 damage == 1px */
+  void decreaseHealthIndicator(int32_t damage);
 
 private:
   enum InternalDefines {

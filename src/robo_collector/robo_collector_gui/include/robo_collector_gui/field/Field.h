@@ -14,14 +14,11 @@
 #include "robo_collector_gui/field/Tile.h"
 
 //Forward declarations
-class InputEvent;
 struct FieldConfig;
 
 class Field {
 public:
   int32_t init(const FieldConfig &cfg);
-
-  void handleEvent(const InputEvent &e);
 
   void draw() const;
 

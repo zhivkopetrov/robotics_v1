@@ -11,7 +11,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/entities/Robot.h"
+#include "robo_collector_gui/entities/robot/Robot.h"
 
 FieldPos FieldUtils::getFieldPos(const Point &absPos) {
   return FieldPos(

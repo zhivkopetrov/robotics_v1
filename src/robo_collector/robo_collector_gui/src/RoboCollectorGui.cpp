@@ -14,6 +14,8 @@
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
 
 int32_t RoboCollectorGui::init(const std::any &cfg) {
+  using namespace std::placeholders;
+
   try {
     const auto &gameCfg = std::any_cast<const RoboCollectorGuiConfig&>(cfg);
     if (SUCCESS != _field.init(gameCfg.fieldCfg)) {
@@ -22,6 +24,8 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     }
 
     RobotCfg robotCfg;
+    robotCfg._collisionCb =
+        std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
     robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
     robotCfg.fieldPos.row = 0;
     robotCfg.fieldPos.col = 0;
@@ -72,8 +76,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       gameCfg.upMoveButtonRsrcId, gameCfg.leftMoveButtonRsrcId,
       gameCfg.rightMoveButtonRsrcId
     };
-    moveButtonCfg.moveCb =
-        std::bind(&Robot::move, &_blinky, std::placeholders::_1);
+    moveButtonCfg.moveCb = std::bind(&Robot::act, &_blinky, _1);
 
     for (auto i = 0; i < MOVE_BUTTONS_CTN; ++i) {
       moveButtonCfg.startPos = buttonsPos[i];
@@ -101,8 +104,8 @@ void RoboCollectorGui::draw() const {
   _field.draw();
   _panel.draw();
   _coin.draw();
-
   _blinky.draw();
+
   for (const auto &enemy : _enemies) {
     enemy.draw();
   }
@@ -112,33 +115,11 @@ void RoboCollectorGui::draw() const {
 }
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
-  _field.handleEvent(e);
-
-  _blinky.handleEvent(e);
-
   for (auto& button : _moveButtons) {
     if(button.isInputUnlocked() && button.containsEvent(e)) {
       button.handleEvent(e);
       break;
     }
-  }
-
-  //TODO remove snippet below. used only for test
-  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
-    return;
-  }
-
-  switch (e.key) {
-  case Keyboard::KEY_O:
-    _panel.shrinkHealthIndicator(5);
-    break;
-
-  case Keyboard::KEY_P:
-    _panel.shrinkHealthIndicator(-5);
-    break;
-
-  default:
-    break;
   }
 }
 

@@ -52,10 +52,6 @@ int32_t Field::init(const FieldConfig &cfg) {
   return SUCCESS;
 }
 
-void Field::handleEvent([[maybe_unused]]const InputEvent &e) {
-
-}
-
 void Field::draw() const {
   _map.draw();
   _fieldSB.draw();
