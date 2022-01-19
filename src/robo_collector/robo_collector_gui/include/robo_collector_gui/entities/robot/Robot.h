@@ -9,6 +9,8 @@
 
 //Other libraries headers
 #include "manager_utils/drawing/Image.h"
+#include "manager_utils/drawing/animation/PositionAnimation.h"
+#include "manager_utils/drawing/animation/RotationAnimation.h"
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
@@ -20,6 +22,7 @@ struct RobotCfg {
   FieldPos fieldPos;
   uint64_t rsrcId = 0;
   int32_t frameId = 0;
+  int32_t animTimerId = 0;
   std::function<void(int32_t)> _collisionCb;
 };
 
@@ -35,12 +38,19 @@ public:
 
 private:
   void move();
-  void rotate(bool isLeftRotation);
 
-  Image _img;
+  void startPosAnim(FieldPos futurePos);
+  void startRotAnim(bool isLeftRotation);
+  AnimBaseConfig generateAnimBaseConfig();
+
+  Image _robotImg;
   FieldPos _fieldPos;
   Direction _dir = Direction::UP;
   std::function<void(int32_t)> _collisionCb;
+  int32_t _animTimerId;
+
+  PositionAnimation _posAnim;
+  RotationAnimation _rotAnim;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOT_H_ */

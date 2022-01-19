@@ -26,26 +26,27 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     RobotCfg robotCfg;
     robotCfg._collisionCb =
         std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
+    robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
+    robotCfg.fieldPos.row = 1;
+    robotCfg.fieldPos.col = 4;
+    robotCfg.frameId = 0;
+    robotCfg.animTimerId = gameCfg.robotsAnimStartTimerId;
+    if (SUCCESS != _blinky.init(robotCfg)) {
+      LOGERR("Error in _field.init()");
+      return FAILURE;
+    }
+
     robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
     robotCfg.fieldPos.row = 0;
-    robotCfg.fieldPos.col = 0;
     robotCfg.frameId = 0;
-    for (auto &enemy : _enemies) {
-      ++(robotCfg.fieldPos.col);
-      if (SUCCESS != enemy.init(robotCfg)) {
+    for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
+      robotCfg.fieldPos.col = i;
+      robotCfg.animTimerId = gameCfg.robotsAnimStartTimerId + 1;
+      if (SUCCESS != _enemies[i].init(robotCfg)) {
         LOGERR("Error in _field.init()");
         return FAILURE;
       }
       ++robotCfg.frameId;
-    }
-
-    robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
-    robotCfg.fieldPos.row = 1;
-    robotCfg.fieldPos.col = 1;
-    robotCfg.frameId = 0;
-    if (SUCCESS != _blinky.init(robotCfg)) {
-      LOGERR("Error in _field.init()");
-      return FAILURE;
     }
 
     if (SUCCESS != _panel.init(gameCfg.panelConfig)) {

@@ -28,6 +28,10 @@ constexpr auto WINDOW_HEIGHT = 1053;
 constexpr auto GAME_MODE = GameMode::NORMAL;
 
 enum TimerId {
+  ROBOTS_ANIM_TIMER_ID_START,
+  //reserved
+  ROBOTS_ANIM_TIMER_ID_END = ROBOTS_ANIM_TIMER_ID_START + Defines::ENEMIES_CTN,
+
   COIN_ANIM_TIMER_ID
 };
 }
@@ -60,6 +64,7 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.gameMode = GAME_MODE;
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
   cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
+  cfg.robotsAnimStartTimerId = TimerId::ROBOTS_ANIM_TIMER_ID_START;
 
   cfg.coinAnimRsrcId = RoboCollectorGuiResources::COIN_ANIM_GOLD;
   cfg.cointAnimTimerId = COIN_ANIM_TIMER_ID;
