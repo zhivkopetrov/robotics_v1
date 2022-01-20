@@ -15,6 +15,8 @@
 #include "robo_collector_gui/entities/robot/RobotUtils.h"
 
 int32_t Robot::init(const RobotCfg &cfg) {
+  using namespace std::placeholders;
+
   if (nullptr == cfg._collisionCb) {
     LOGERR("Error, nullptr provided for RobotCfg collisionCb");
     return FAILURE;
@@ -27,6 +29,12 @@ int32_t Robot::init(const RobotCfg &cfg) {
   _robotImg.setFrame(cfg.frameId);
 
   _fieldPos = cfg.fieldPos;
+
+  if (SUCCESS != _animEndCb.init(
+          std::bind(&Robot::setMoveData, this, _1, _2))) {
+    LOGERR("Error, _animEndCb.init() failed");
+    return FAILURE;
+  }
 
   return SUCCESS;
 }
@@ -42,15 +50,9 @@ void Robot::act(MoveType moveType) {
     break;
 
   case MoveType::ROTATE_LEFT:
-    //TODO move in animEndCb
-//    _dir = RobotUtils::getDirAfterRotation(_dir, true /*isLeftRotation*/);
-
     startRotAnim(true /*isLeftRotation*/);
     break;
   case MoveType::ROTATE_RIGHT:
-    //TODO move in animEndCb
-//    _dir = RobotUtils::getDirAfterRotation(_dir, false /*isLeftRotation*/);
-
     startRotAnim(false /*isLeftRotation*/);
     break;
 
@@ -64,31 +66,29 @@ FieldPos Robot::getFieldPos() const {
   return _fieldPos;
 }
 
+void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
+  _dir = futureDir;
+  _fieldPos = futurePos;
+}
+
 void Robot::move() {
   const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
   if (FieldUtils::isInsideField(futurePos)) {
     startPosAnim(futurePos);
-    //TODO move in animEndCb
-//    _fieldPos = futurePos;
   } else {
     constexpr auto damage = 10;
     _collisionCb(damage);
   }
-
-//  _robotImg.setPosition(FieldUtils::getAbsPos(_fieldPos));
 }
 
 void Robot::startPosAnim(FieldPos futurePos) {
   const auto cfg = generateAnimBaseConfig();
-
   constexpr auto numberOfSteps = 40;
   const auto futureAbsPos = FieldUtils::getAbsPos(futurePos);
+  _animEndCb.setAnimEndData(_dir, futurePos);
 
-  //TODO populate me
-  AnimationEndCb *endCb = nullptr;
-
-  if (SUCCESS != _posAnim.configure(cfg, futureAbsPos, numberOfSteps, endCb,
-          PosAnimType::ONE_DIRECTIONAL)) {
+  if (SUCCESS != _posAnim.configure(cfg, futureAbsPos, numberOfSteps,
+          &_animEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error in posAnim.configure() for rsrcId: %#16lX", cfg.rsrcId);
     return;
   }
@@ -103,11 +103,10 @@ void Robot::startRotAnim(bool isLeftRotation) {
   const auto totalRotAngle = 90.0 * angleSign;
   const auto rotCenter = _robotImg.getPredefinedRotationCenter(
       RotationCenterType::ORIG_CENTER);
+  const auto futureDir = RobotUtils::getDirAfterRotation(_dir, isLeftRotation);
+  _animEndCb.setAnimEndData(futureDir, _fieldPos);
 
-  //TODO populate me
-  AnimationEndCb *endCb = nullptr;
-
-  if (SUCCESS != _rotAnim.configure(cfg, rotAngleStep, endCb, rotCenter,
+  if (SUCCESS != _rotAnim.configure(cfg, rotAngleStep, &_animEndCb, rotCenter,
           PosAnimType::ONE_DIRECTIONAL, AnimType::FINITE, totalRotAngle)) {
     LOGERR("Error in rotAnim.configure() for rsrcId: %#16lX", cfg.rsrcId);
     return;

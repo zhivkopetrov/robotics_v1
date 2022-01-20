@@ -13,6 +13,7 @@
 #include "manager_utils/drawing/animation/RotationAnimation.h"
 
 //Own components headers
+#include "robo_collector_gui/entities/robot/RobotAnimEndCb.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "robo_collector_gui/field/FieldPos.h"
 
@@ -36,6 +37,9 @@ public:
 
   FieldPos getFieldPos() const;
 
+  // called from the animEndCb
+  void setMoveData(Direction futureDir, const FieldPos& futurePos);
+
 private:
   void move();
 
@@ -51,6 +55,7 @@ private:
 
   PositionAnimation _posAnim;
   RotationAnimation _rotAnim;
+  RobotAnimEndCb _animEndCb;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOT_H_ */

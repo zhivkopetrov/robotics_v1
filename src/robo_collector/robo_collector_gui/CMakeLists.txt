@@ -36,6 +36,7 @@ add_executable(
         ${_INC_DIR}/field/config/TileConfig.h
         ${_INC_DIR}/entities/robot/Robot.h
         ${_INC_DIR}/entities/robot/RobotUtils.h
+        ${_INC_DIR}/entities/robot/RobotAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/panels/Panel.h
         ${_INC_DIR}/panels/config/PanelConfig.h
@@ -51,6 +52,7 @@ add_executable(
         ${_SRC_DIR}/field/Tile.cpp
         ${_SRC_DIR}/entities/robot/Robot.cpp
         ${_SRC_DIR}/entities/robot/RobotUtils.cpp
+        ${_SRC_DIR}/entities/robot/RobotAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
         ${_SRC_DIR}/panels/Panel.cpp
         ${_SRC_DIR}/buttons/MoveButton.cpp
