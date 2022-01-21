@@ -32,6 +32,8 @@ enum TimerId {
   //reserved
   ROBOTS_ANIM_TIMER_ID_END = ROBOTS_ANIM_TIMER_ID_START + Defines::ENEMIES_CTN,
 
+  COIN_PANEL_INCR_TIMER_ID,
+  COIN_PANEL_DECR_TIMER_ID,
   COIN_ANIM_TIMER_ID
 };
 }
@@ -53,7 +55,7 @@ EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
-  cfg.debugConsoleRsrcId = RoboCollectorGuiResources::VINQUE_RG;
+  cfg.debugConsoleRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   return cfg;
 }
@@ -68,7 +70,7 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.robotsAnimStartTimerId = TimerId::ROBOTS_ANIM_TIMER_ID_START;
 
   cfg.coinAnimRsrcId = RoboCollectorGuiResources::COIN_ANIM_GOLD;
-  cfg.cointAnimTimerId = COIN_ANIM_TIMER_ID;
+  cfg.coinAnimTimerId = COIN_ANIM_TIMER_ID;
 
   cfg.upMoveButtonRsrcId = RoboCollectorGuiResources::UP_BUTTON;
   cfg.leftMoveButtonRsrcId = RoboCollectorGuiResources::LEFT_BUTTON;
@@ -85,15 +87,19 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   fieldCfg.tileWidth = Defines::TILE_WIDTH;
   fieldCfg.tileHeight = Defines::TILE_HEIGHT;
   fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
-  fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG;
+  fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   auto& panelCfg = cfg.panelConfig;
   panelCfg.timePanelRsrcId = RoboCollectorGuiResources::TIME_PANEL;
-  panelCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
   panelCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
   panelCfg.healthIndicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
   panelCfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
   panelCfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
+
+  panelCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
+  panelCfg.coinPanelFontId = RoboCollectorGuiResources::VINQUE_RG_75;
+  panelCfg.coinPanelIncrTimerId = COIN_PANEL_INCR_TIMER_ID;
+  panelCfg.coinPanelDecrTimerId = COIN_PANEL_DECR_TIMER_ID;
 
   return cfg;
 }

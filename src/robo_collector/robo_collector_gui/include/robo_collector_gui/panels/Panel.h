@@ -4,10 +4,10 @@
 //C system headers
 
 //C++ system headers
-#include <array>
 
 //Other libraries headers
 #include "manager_utils/drawing/Image.h"
+#include "manager_utils/drawing/NumberCounter.h"
 
 //Own components headers
 #include "robo_collector_gui/panels/config/PanelConfig.h"
@@ -23,19 +23,13 @@ public:
   void decreaseHealthIndicator(int32_t damage);
 
 private:
-  enum InternalDefines {
-    TIME_PANEL,
-    COIN_PANEL,
-    HEALTH_PANEL,
-
-    PANELS_CTN
-  };
-
-  std::array<Image, PANELS_CTN> _panels;
-
+  Image _timePanel;
+  Image _healthPanel;
   Image _healthIndicator;
   Image _horDelimiter;
   Image _vertDelimiter;
+
+  NumberCounter _coinPanel;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANEL_H_ */

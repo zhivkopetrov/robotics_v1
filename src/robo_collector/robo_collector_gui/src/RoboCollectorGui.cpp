@@ -62,7 +62,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     coinCfg.fieldPos.col = 2;
     coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
     coinCfg.rsrcId = gameCfg.coinAnimRsrcId;
-    coinCfg.timerId = gameCfg.cointAnimTimerId;
+    coinCfg.timerId = gameCfg.coinAnimTimerId;
     if (SUCCESS != _coin.init(coinCfg)) {
       LOGERR("Error in _coin.init()");
       return FAILURE;

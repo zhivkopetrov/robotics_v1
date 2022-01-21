@@ -13,14 +13,11 @@
 
 int32_t Panel::init(const PanelConfig &cfg) {
   constexpr auto panelX = 1250;
-  _panels[TIME_PANEL].create(cfg.timePanelRsrcId);
-  _panels[TIME_PANEL].setPosition(panelX, 50);
+  _timePanel.create(cfg.timePanelRsrcId);
+  _timePanel.setPosition(panelX, 50);
 
-  _panels[COIN_PANEL].create(cfg.coinPanelRsrcId);
-  _panels[COIN_PANEL].setPosition(panelX, 215);
-
-  _panels[HEALTH_PANEL].create(cfg.healthPanelRsrcId);
-  _panels[HEALTH_PANEL].setPosition(panelX, 390);
+  _healthPanel.create(cfg.healthPanelRsrcId);
+  _healthPanel.setPosition(panelX, 390);
 
   _healthIndicator.create(cfg.healthIndicatorRsrcId);
   _healthIndicator.setPosition(panelX + 79, 403);
@@ -32,15 +29,29 @@ int32_t Panel::init(const PanelConfig &cfg) {
   _vertDelimiter.create(cfg.vertDelimiterRsrcId);
   _vertDelimiter.setPosition(1200, 550);
 
+  NumberCounterConfig coinCounterCfg;
+  coinCounterCfg.backgroundRsrcId = cfg.coinPanelRsrcId;
+  coinCounterCfg.backgroundRsrcPos = Point(panelX, 215);
+  coinCounterCfg.fontId = cfg.coinPanelFontId;
+  coinCounterCfg.fontColor = Color(0x1FA4DFFF); //light blue
+  coinCounterCfg.incrTimerId = cfg.coinPanelIncrTimerId;
+  coinCounterCfg.decrTimerId = cfg.coinPanelDecrTimerId;
+  coinCounterCfg.startValue = 0;
+  coinCounterCfg.boundaryRect = Rectangle(1365, 230, 346, 120);
+
+  if (SUCCESS != _coinPanel.init(coinCounterCfg)) {
+    LOGERR("Error, _coinPanel.init() failed");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
 void Panel::draw() const {
-  for (const auto& panel : _panels) {
-    panel.draw();
-  }
-
+  _timePanel.draw();
+  _healthPanel.draw();
   _healthIndicator.draw();
+  _coinPanel.draw();
   _horDelimiter.draw();
   _vertDelimiter.draw();
 }
@@ -50,3 +61,5 @@ void Panel::decreaseHealthIndicator(int32_t damage) {
   cropRectangle.w -= damage;
   _healthIndicator.setCropRect(cropRectangle);
 }
+
+

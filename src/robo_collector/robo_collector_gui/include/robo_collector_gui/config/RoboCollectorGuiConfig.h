@@ -29,7 +29,7 @@ struct RoboCollectorGuiConfig {
   uint64_t rightMoveButtonRsrcId = 0;
 
   uint64_t coinAnimRsrcId = 0;
-  int32_t cointAnimTimerId = 0;
+  int32_t coinAnimTimerId = 0;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUICONFIG_H_ */
