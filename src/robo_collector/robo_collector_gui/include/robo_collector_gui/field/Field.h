@@ -25,7 +25,6 @@ public:
   void updateFieldFbo();
 
   std::vector<std::vector<Tile>> _tiles;
-  Image _map;
 
   Fbo _fieldFbo;
 };

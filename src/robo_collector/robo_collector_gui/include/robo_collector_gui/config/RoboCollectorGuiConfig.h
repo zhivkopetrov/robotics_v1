@@ -19,6 +19,7 @@ struct RoboCollectorGuiConfig {
   GameMode gameMode = GameMode::UNKNOWN;
   FieldConfig fieldCfg;
   PanelConfig panelConfig;
+  uint64_t mapRsrcId = 0;
   uint64_t robotBlinkyRsrcId = 0;
   uint64_t robotEnemiesRsrcId = 0;
   uint64_t robotsAnimStartTimerId = 0;

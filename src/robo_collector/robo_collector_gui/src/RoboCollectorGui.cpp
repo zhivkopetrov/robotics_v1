@@ -23,6 +23,8 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       return FAILURE;
     }
 
+    _map.create(gameCfg.mapRsrcId);
+
     RobotCfg robotCfg;
     robotCfg._collisionCb =
         std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
@@ -102,6 +104,7 @@ void RoboCollectorGui::deinit() {
 }
 
 void RoboCollectorGui::draw() const {
+  _map.draw();
   _field.draw();
   _panel.draw();
   _coin.draw();

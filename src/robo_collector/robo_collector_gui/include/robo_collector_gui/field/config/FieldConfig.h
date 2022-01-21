@@ -17,7 +17,6 @@
 struct FieldConfig {
   Rectangle fieldDimensions;
   uint64_t tileRsrcId = 0;
-  uint64_t mapRsrcId = 0;
   uint64_t debugFontRsrcId = 0;
   int32_t tileWidth = 0;
   int32_t tileHeight = 0;

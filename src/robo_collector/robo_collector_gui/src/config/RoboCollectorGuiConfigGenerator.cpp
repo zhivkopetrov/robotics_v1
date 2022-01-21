@@ -62,6 +62,7 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   RoboCollectorGuiConfig cfg;
 
   cfg.gameMode = GAME_MODE;
+  cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
   cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
   cfg.robotsAnimStartTimerId = TimerId::ROBOTS_ANIM_TIMER_ID_START;
@@ -84,7 +85,6 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   fieldCfg.tileWidth = Defines::TILE_WIDTH;
   fieldCfg.tileHeight = Defines::TILE_HEIGHT;
   fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
-  fieldCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG;
 
   auto& panelCfg = cfg.panelConfig;

@@ -33,6 +33,7 @@ private:
     MOVE_BUTTONS_CTN = 3
   };
 
+  Image _map;
   Robot _blinky;
   std::array<Robot, Defines::ENEMIES_CTN> _enemies;
   std::array<MoveButton, MOVE_BUTTONS_CTN> _moveButtons;
