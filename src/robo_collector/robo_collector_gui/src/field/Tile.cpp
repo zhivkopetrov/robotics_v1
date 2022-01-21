@@ -7,7 +7,7 @@
 #include <string>
 
 //Other libraries headers
-#include "manager_utils/drawing/SpriteBuffer.h"
+#include "manager_utils/drawing/Fbo.h"
 #include "utils/ErrorCode.h"
 
 //Own components headers
@@ -38,8 +38,8 @@ void Tile::draw() const {
   _debugText.draw();
 }
 
-void Tile::drawOnSpriteBuffer(SpriteBuffer &spriteBuffer) const {
-  spriteBuffer.addWidget(_tileImg);
-  spriteBuffer.addWidget(_debugText);
+void Tile::drawOnFbo(Fbo &fbo) const {
+  fbo.addWidget(_tileImg);
+  fbo.addWidget(_debugText);
 }
 

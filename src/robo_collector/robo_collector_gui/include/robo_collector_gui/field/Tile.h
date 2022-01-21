@@ -13,7 +13,7 @@
 //Own components headers
 
 //Forward declarations
-class SpriteBuffer;
+class Fbo;
 struct TileConfig;
 struct TileDebugConfig;
 
@@ -23,7 +23,7 @@ public:
 
   void draw() const;
 
-  void drawOnSpriteBuffer(SpriteBuffer &spriteBuffer) const;
+  void drawOnFbo(Fbo &fbo) const;
 
 private:
   Image _tileImg;

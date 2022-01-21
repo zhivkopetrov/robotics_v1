@@ -44,31 +44,31 @@ int32_t Field::init(const FieldConfig &cfg) {
     }
   }
 
-  _fieldSB.create(cfg.fieldDimensions);
-  _fieldSB.activateAlphaModulation();
-  _fieldSB.setResetColor(Colors::FULL_TRANSPARENT);
-  updateFieldSpriteBuffer();
+  _fieldFbo.create(cfg.fieldDimensions);
+  _fieldFbo.activateAlphaModulation();
+  _fieldFbo.setResetColor(Colors::FULL_TRANSPARENT);
+  updateFieldFbo();
 
   return SUCCESS;
 }
 
 void Field::draw() const {
   _map.draw();
-  _fieldSB.draw();
+  _fieldFbo.draw();
 }
 
-void Field::updateFieldSpriteBuffer() {
-  _fieldSB.unlock();
-  _fieldSB.reset();
+void Field::updateFieldFbo() {
+  _fieldFbo.unlock();
+  _fieldFbo.reset();
 
-//  _fieldSB.addWidget(_map);
+//  _fieldFbo.addWidget(_map);
   for (const auto & row : _tiles) {
     for (const auto &tile : row) {
-      tile.drawOnSpriteBuffer(_fieldSB);
+      tile.drawOnFbo(_fieldFbo);
     }
   }
 
-  _fieldSB.update();
-  _fieldSB.lock();
+  _fieldFbo.update();
+  _fieldFbo.lock();
 }
 

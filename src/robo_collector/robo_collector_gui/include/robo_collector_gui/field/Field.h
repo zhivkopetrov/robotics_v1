@@ -8,7 +8,7 @@
 #include <vector>
 
 //Other libraries headers
-#include "manager_utils/drawing/SpriteBuffer.h"
+#include "manager_utils/drawing/Fbo.h"
 
 //Own components headers
 #include "robo_collector_gui/field/Tile.h"
@@ -22,12 +22,12 @@ public:
 
   void draw() const;
 
-  void updateFieldSpriteBuffer();
+  void updateFieldFbo();
 
   std::vector<std::vector<Tile>> _tiles;
   Image _map;
 
-  SpriteBuffer _fieldSB;
+  Fbo _fieldFbo;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_FIELD_H_ */
