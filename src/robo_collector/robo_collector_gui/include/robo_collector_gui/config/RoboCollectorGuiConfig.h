@@ -29,7 +29,8 @@ struct RoboCollectorGuiConfig {
 
   std::vector<uint64_t> coinAnimRsrcIds;
   int32_t maxCoins = 0;
-  int32_t coinAnimFirstTimerId = 0;
+  int32_t coinRotateAnimFirstTimerId = 0;
+  int32_t coinCollectAnimFirstTimerId = 0;
 
   char blinkyFieldMarker = 'B';
   char enemyFieldMarker = 'E';

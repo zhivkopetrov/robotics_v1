@@ -30,6 +30,7 @@ private:
   Image _vertDelimiter;
 
   NumberCounter _coinPanel;
+  Text _totalCoinsText;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANEL_H_ */

@@ -29,20 +29,24 @@ int32_t Panel::init(const PanelConfig &cfg) {
   _vertDelimiter.create(cfg.vertDelimiterRsrcId);
   _vertDelimiter.setPosition(1200, 550);
 
+  const auto lightGoldColor = Color(0xD4AF37FF);
   NumberCounterConfig coinCounterCfg;
   coinCounterCfg.backgroundRsrcId = cfg.coinPanelRsrcId;
   coinCounterCfg.backgroundRsrcPos = Point(panelX, 215);
   coinCounterCfg.fontId = cfg.coinPanelFontId;
-  coinCounterCfg.fontColor = Color(0x1FA4DFFF); //light blue
+  coinCounterCfg.fontColor = lightGoldColor;
   coinCounterCfg.incrTimerId = cfg.coinPanelIncrTimerId;
   coinCounterCfg.decrTimerId = cfg.coinPanelDecrTimerId;
   coinCounterCfg.startValue = 0;
-  coinCounterCfg.boundaryRect = Rectangle(1365, 230, 346, 120);
+  coinCounterCfg.boundaryRect = Rectangle(1300, 230, 346, 120);
 
   if (SUCCESS != _coinPanel.init(coinCounterCfg)) {
     LOGERR("Error, _coinPanel.init() failed");
     return FAILURE;
   }
+
+  _totalCoinsText.create(cfg.coinPanelFontId, "/ 30", lightGoldColor,
+      Point(1540, 245));
 
   return SUCCESS;
 }
@@ -52,6 +56,7 @@ void Panel::draw() const {
   _healthPanel.draw();
   _healthIndicator.draw();
   _coinPanel.draw();
+  _totalCoinsText.draw();
   _horDelimiter.draw();
   _vertDelimiter.draw();
 }
@@ -61,5 +66,4 @@ void Panel::decreaseHealthIndicator(int32_t damage) {
   cropRectangle.w -= damage;
   _healthIndicator.setCropRect(cropRectangle);
 }
-
 

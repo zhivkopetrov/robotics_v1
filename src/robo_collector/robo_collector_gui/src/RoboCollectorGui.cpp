@@ -74,7 +74,9 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     CoinHandlerConfig coinHandlerCfg;
     coinHandlerCfg.animRsrcIds = gameCfg.coinAnimRsrcIds;
     coinHandlerCfg.maxCoins = gameCfg.maxCoins;
-    coinHandlerCfg.animFirstTimerId = gameCfg.coinAnimFirstTimerId;
+    coinHandlerCfg.rotateAnimFirstTimerId = gameCfg.coinRotateAnimFirstTimerId;
+    coinHandlerCfg.collectAnimFirstTimerId =
+        gameCfg.coinCollectAnimFirstTimerId;
     coinHandlerCfg.setFieldDataMarkerCb = setFieldDataMarkerCb;
     coinHandlerCfg.resetFieldDataMarkerCb = resetFieldDataMarkerCb;
     coinHandlerCfg.getFieldDataCb = getFieldDataCb;
@@ -140,5 +142,7 @@ void RoboCollectorGui::handleEvent(const InputEvent &e) {
       break;
     }
   }
+
+  _coinHandler.handleEvent(e);
 }
 
