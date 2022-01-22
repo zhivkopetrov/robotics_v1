@@ -4,6 +4,7 @@
 //C system headers
 
 //C++ system headers
+#include <sstream>
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -19,11 +20,15 @@ int32_t Field::init(const FieldConfig &cfg) {
     return FAILURE;
   }
 
+  _emptyDataMarker = cfg.emptyTileMarker;
+
   TileConfig tileCfg;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
 
+  _fieldData.resize(cfg.rows);
   _tiles.resize(cfg.rows);
   for (int32_t row = 0; row < cfg.rows; ++row) {
+    _fieldData[row].resize(cfg.cols, cfg.emptyTileMarker);
     _tiles[row].resize(cfg.cols);
     tileCfg.row = row;
     for (int32_t col = 0; col < cfg.cols; ++col) {
@@ -66,5 +71,31 @@ void Field::updateFieldFbo() {
 
   _fieldFbo.update();
   _fieldFbo.lock();
+}
+
+void Field::setFieldDataMarker(const FieldPos &fieldPos, char fieldMarker) {
+  _fieldData[fieldPos.row][fieldPos.col] = fieldMarker;
+  printFieldData();
+}
+
+void Field::resetFieldDataMarker(const FieldPos &fieldPos) {
+  LOGC("Resetting FieldData for row, col [%d,%d]", fieldPos.row, fieldPos.col);
+  setFieldDataMarker(fieldPos, _emptyDataMarker);
+}
+
+const std::vector<std::vector<char>>& Field::getFieldData() const {
+  return _fieldData;
+}
+
+void Field::printFieldData() const {
+  std::ostringstream ostr;
+  for (const auto& row : _fieldData) {
+    for (const auto field : row) {
+      ostr << field;
+    }
+    ostr << '\n';
+  }
+  ostr << '\n';
+  LOGC("Printing FieldData:\n%s", ostr.str().c_str());
 }
 

@@ -17,6 +17,13 @@ enum RobotDefines {
   ENEMIES_CTN = 3,
 };
 
+enum CoinDefines {
+  GOLD_COIN,
+  SILVER_COIN,
+  BRONZE_COIN,
+  COINS_CTN
+};
+
 enum FieldDefines {
   FIELD_ROWS = 6,
   FIELD_COLS = 7,
@@ -26,13 +33,6 @@ enum FieldDefines {
   TILE_HEIGHT = 160
 };
 } //namespace Defines
-
-enum class GameMode {
-  UNKNOWN,
-  NORMAL,
-  EXTENDED,
-  SUPER_EXTENDED
-};
 
 enum class MoveType {
   UNKNOWN,
@@ -47,8 +47,6 @@ enum class Direction {
   DOWN,
   LEFT
 };
-
-GameMode toGameMode(const int32_t mode);
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIDEFINES_H_ */
 

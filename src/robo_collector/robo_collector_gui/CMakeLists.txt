@@ -28,6 +28,7 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorGuiConfig.h
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
+        ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
         ${_INC_DIR}/field/Field.h
         ${_INC_DIR}/field/FieldPos.h
         ${_INC_DIR}/field/FieldUtils.h
@@ -38,13 +39,13 @@ add_executable(
         ${_INC_DIR}/entities/robot/RobotUtils.h
         ${_INC_DIR}/entities/robot/RobotAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
+        ${_INC_DIR}/entities/coin/CoinHandler.h
         ${_INC_DIR}/panels/Panel.h
         ${_INC_DIR}/panels/config/PanelConfig.h
         ${_INC_DIR}/buttons/MoveButton.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
-        ${_SRC_DIR}/defines/RoboCollectorGuiDefines.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
         ${_SRC_DIR}/field/Field.cpp
         ${_SRC_DIR}/field/FieldPos.cpp
@@ -54,6 +55,7 @@ add_executable(
         ${_SRC_DIR}/entities/robot/RobotUtils.cpp
         ${_SRC_DIR}/entities/robot/RobotAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
+        ${_SRC_DIR}/entities/coin/CoinHandler.cpp
         ${_SRC_DIR}/panels/Panel.cpp
         ${_SRC_DIR}/buttons/MoveButton.cpp
 )

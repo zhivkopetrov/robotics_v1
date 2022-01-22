@@ -17,18 +17,39 @@
 int32_t Robot::init(const RobotCfg &cfg) {
   using namespace std::placeholders;
 
-  if (nullptr == cfg._collisionCb) {
+  if (nullptr == cfg.collisionCb) {
     LOGERR("Error, nullptr provided for RobotCfg collisionCb");
     return FAILURE;
   }
-  _collisionCb = cfg._collisionCb;
-  _animTimerId = cfg.animTimerId;
+  _collisionCb = cfg.collisionCb;
 
+  if (nullptr == cfg.setFieldDataMarkerCb) {
+    LOGERR("Error, nullptr provided for RobotCfg setFieldDataMarkerCb");
+    return FAILURE;
+  }
+  _setFieldDataMarkerCb = cfg.setFieldDataMarkerCb;
+
+  if (nullptr == cfg.resetFieldDataMarkerCb) {
+    LOGERR("Error, nullptr provided for RobotCfg resetFieldDataMarkerCb");
+    return FAILURE;
+  }
+  _resetFieldDataMarkerCb = cfg.resetFieldDataMarkerCb;
+
+  if (nullptr == cfg.getFieldDataCb) {
+    LOGERR("Error, nullptr provided for RobotCfg getFieldDataCb");
+    return FAILURE;
+  }
+  _getFieldDataCb = cfg.getFieldDataCb;
+
+  _animTimerId = cfg.animTimerId;
   _robotImg.create(cfg.rsrcId);
   _robotImg.setPosition(FieldUtils::getAbsPos(cfg.fieldPos));
   _robotImg.setFrame(cfg.frameId);
 
   _fieldPos = cfg.fieldPos;
+
+  _selfFieldMarker = cfg.fieldMarker;
+  _enemyFieldMarker = cfg.enemyFieldMarker;
 
   if (SUCCESS != _animEndCb.init(
           std::bind(&Robot::setMoveData, this, _1, _2))) {
@@ -67,8 +88,10 @@ FieldPos Robot::getFieldPos() const {
 }
 
 void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
+  _resetFieldDataMarkerCb(_fieldPos);
   _dir = futureDir;
   _fieldPos = futurePos;
+  _setFieldDataMarkerCb(futurePos, _selfFieldMarker);
 }
 
 void Robot::move() {

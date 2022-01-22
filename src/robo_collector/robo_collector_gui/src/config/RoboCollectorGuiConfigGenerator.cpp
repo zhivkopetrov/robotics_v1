@@ -24,9 +24,6 @@ constexpr auto WINDOW_Y = 27;
 constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
-//game field
-constexpr auto GAME_MODE = GameMode::NORMAL;
-
 enum TimerId {
   ROBOTS_ANIM_TIMER_ID_START,
   //reserved
@@ -63,14 +60,18 @@ EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
 RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   RoboCollectorGuiConfig cfg;
 
-  cfg.gameMode = GAME_MODE;
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
   cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
   cfg.robotsAnimStartTimerId = TimerId::ROBOTS_ANIM_TIMER_ID_START;
 
-  cfg.coinAnimRsrcId = RoboCollectorGuiResources::COIN_ANIM_GOLD;
-  cfg.coinAnimTimerId = COIN_ANIM_TIMER_ID;
+  cfg.coinAnimRsrcIds = {
+      RoboCollectorGuiResources::COIN_ANIM_GOLD,
+      RoboCollectorGuiResources::COIN_ANIM_SILVER,
+      RoboCollectorGuiResources::COIN_ANIM_BRONZE
+  };
+  cfg.maxCoins = Defines::COINS_CTN;
+  cfg.coinAnimFirstTimerId = COIN_ANIM_TIMER_ID;
 
   cfg.upMoveButtonRsrcId = RoboCollectorGuiResources::UP_BUTTON;
   cfg.leftMoveButtonRsrcId = RoboCollectorGuiResources::LEFT_BUTTON;

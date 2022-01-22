@@ -5,18 +5,17 @@
 
 //C++ system headers
 #include <cstdint>
+#include <vector>
 
 //Other libraries headers
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "robo_collector_gui/field/config/FieldConfig.h"
 #include "robo_collector_gui/panels/config/PanelConfig.h"
 
 //Forward declarations
 
 struct RoboCollectorGuiConfig {
-  GameMode gameMode = GameMode::UNKNOWN;
   FieldConfig fieldCfg;
   PanelConfig panelConfig;
   uint64_t mapRsrcId = 0;
@@ -28,8 +27,12 @@ struct RoboCollectorGuiConfig {
   uint64_t leftMoveButtonRsrcId = 0;
   uint64_t rightMoveButtonRsrcId = 0;
 
-  uint64_t coinAnimRsrcId = 0;
-  int32_t coinAnimTimerId = 0;
+  std::vector<uint64_t> coinAnimRsrcIds;
+  int32_t maxCoins = 0;
+  int32_t coinAnimFirstTimerId = 0;
+
+  char blinkyFieldMarker = 'B';
+  char enemyFieldMarker = 'E';
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUICONFIG_H_ */

@@ -93,6 +93,20 @@ description=100,100,10,0
 position=0,0
 load=on_init
 
+tag=[COIN_ANIM_SILVER]
+type=sprite
+path=p/coin_animations/silver/coin_anim_silver.png
+description=100,100,10,0
+position=0,0
+load=on_init
+
+tag=[COIN_ANIM_BRONZE]
+type=sprite
+path=p/coin_animations/bronze/coin_anim_bronze.png
+description=100,100,10,0
+position=0,0
+load=on_init
+
 ##### BUTTONS
 
 tag=[UP_BUTTON]

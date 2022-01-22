@@ -22,6 +22,7 @@ struct FieldConfig {
   int32_t tileHeight = 0;
   int32_t rows = 0;
   int32_t cols = 0;
+  char emptyTileMarker = '.';
 };
 
 #endif /* ROBO_COLLECTOR_GUI_FIELDCONFIG_H_ */

@@ -24,15 +24,27 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     }
 
     _map.create(gameCfg.mapRsrcId);
+    const auto setFieldDataMarkerCb =
+        std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
+    const auto resetFieldDataMarkerCb =
+        std::bind(&Field::resetFieldDataMarker, &_field, _1);
+    const auto getFieldDataCb = std::bind(&Field::getFieldData, &_field);
 
     RobotCfg robotCfg;
-    robotCfg._collisionCb =
+    robotCfg.collisionCb =
         std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
     robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
     robotCfg.fieldPos.row = 1;
     robotCfg.fieldPos.col = 4;
     robotCfg.frameId = 0;
     robotCfg.animTimerId = gameCfg.robotsAnimStartTimerId;
+    robotCfg.setFieldDataMarkerCb = setFieldDataMarkerCb;
+    robotCfg.resetFieldDataMarkerCb = resetFieldDataMarkerCb;
+
+    robotCfg.getFieldDataCb = getFieldDataCb;
+
+    robotCfg.fieldMarker = gameCfg.blinkyFieldMarker;
+    robotCfg.enemyFieldMarker = gameCfg.enemyFieldMarker;
     if (SUCCESS != _blinky.init(robotCfg)) {
       LOGERR("Error in _field.init()");
       return FAILURE;
@@ -41,6 +53,9 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
     robotCfg.fieldPos.row = 0;
     robotCfg.frameId = 0;
+    //reversed for the enemies
+    robotCfg.fieldMarker = gameCfg.enemyFieldMarker;
+    robotCfg.enemyFieldMarker = gameCfg.blinkyFieldMarker;
     for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
       robotCfg.fieldPos.col = i;
       robotCfg.animTimerId = gameCfg.robotsAnimStartTimerId + 1;
@@ -56,15 +71,15 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
       return FAILURE;
     }
 
-    constexpr auto coinOffsetFromTile = 30;
-    CoinConfig coinCfg;
-    coinCfg.fieldPos.row = 4;
-    coinCfg.fieldPos.col = 2;
-    coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
-    coinCfg.rsrcId = gameCfg.coinAnimRsrcId;
-    coinCfg.timerId = gameCfg.coinAnimTimerId;
-    if (SUCCESS != _coin.init(coinCfg)) {
-      LOGERR("Error in _coin.init()");
+    CoinHandlerConfig coinHandlerCfg;
+    coinHandlerCfg.animRsrcIds = gameCfg.coinAnimRsrcIds;
+    coinHandlerCfg.maxCoins = gameCfg.maxCoins;
+    coinHandlerCfg.animFirstTimerId = gameCfg.coinAnimFirstTimerId;
+    coinHandlerCfg.setFieldDataMarkerCb = setFieldDataMarkerCb;
+    coinHandlerCfg.resetFieldDataMarkerCb = resetFieldDataMarkerCb;
+    coinHandlerCfg.getFieldDataCb = getFieldDataCb;
+    if (SUCCESS != _coinHandler.init(coinHandlerCfg)) {
+      LOGERR("Error in _coinHandler.init()");
       return FAILURE;
     }
 
@@ -107,7 +122,7 @@ void RoboCollectorGui::draw() const {
   _map.draw();
   _field.draw();
   _panel.draw();
-  _coin.draw();
+  _coinHandler.draw();
   _blinky.draw();
 
   for (const auto &enemy : _enemies) {
