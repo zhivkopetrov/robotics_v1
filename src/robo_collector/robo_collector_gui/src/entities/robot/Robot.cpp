@@ -11,6 +11,7 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/helpers/CollisionWatcher.h"
 #include "robo_collector_gui/field/FieldUtils.h"
 #include "robo_collector_gui/entities/robot/RobotUtils.h"
 
@@ -60,7 +61,20 @@ int32_t Robot::init(const RobotCfg &cfg) {
     return FAILURE;
   }
 
+  if (nullptr == cfg.collisionWatcher) {
+    LOGERR("Error, nullptr provided for collisionWatcher");
+    return FAILURE;
+  }
+  _collisionWatcher = cfg.collisionWatcher;
+  _collisionObjHandle = cfg.collisionWatcher->registerObject(this);
+
   return SUCCESS;
+}
+
+void Robot::deinit() {
+  if (_collisionWatcher) {
+    _collisionWatcher->unregisterObject(_collisionObjHandle);
+  }
 }
 
 void Robot::draw() const {
@@ -95,9 +109,22 @@ void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
   _dir = futureDir;
   _fieldPos = futurePos;
   _setFieldDataMarkerCb(futurePos, _selfFieldMarker);
+
+  _collisionWatcher->toggleWatchStatus(
+      _collisionObjHandle, CollisionWatchStatus::OFF);
+}
+
+void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect) {
+
+}
+
+Rectangle Robot::getBoundary() const {
+  return _robotImg.getImageRect();
 }
 
 void Robot::move() {
+  _collisionWatcher->toggleWatchStatus(
+      _collisionObjHandle, CollisionWatchStatus::ON);
   const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
   if (FieldUtils::isInsideField(futurePos)) {
     startPosAnim(futurePos);

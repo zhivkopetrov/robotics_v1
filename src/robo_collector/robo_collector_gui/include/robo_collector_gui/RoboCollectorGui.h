@@ -15,6 +15,7 @@
 #include "robo_collector_gui/entities/robot/Robot.h"
 #include "robo_collector_gui/panels/Panel.h"
 #include "robo_collector_gui/entities/coin/CoinHandler.h"
+#include "robo_collector_gui/helpers/CollisionWatcher.h"
 #include "robo_collector_gui/controller/RoboCollectorController.h"
 
 //Forward declarations
@@ -29,6 +30,8 @@ public:
   void draw() const override;
   void handleEvent(const InputEvent &e) override;
 
+  void process() override;
+
 private:
   int32_t initRobots(const RoboCollectorGuiConfig& cfg);
   int32_t initCoinHandler(const RoboCollectorGuiConfig& cfg);
@@ -39,6 +42,7 @@ private:
   Field _field;
   CoinHandler _coinHandler;
   RoboCollectorController _controller;
+  CollisionWatcher _collisionWatcher;
   std::array<Robot, Defines::ROBOTS_CTN> _robots;
 };
 

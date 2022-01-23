@@ -43,6 +43,7 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg) {
 
   constexpr auto coinOffsetFromTile = 30;
   CoinConfig coinCfg;
+  coinCfg.collisionWatcher = cfg.collisionWatcher;
   coinCfg.fieldPos.row = 4;
   coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
 
@@ -58,6 +59,12 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg) {
   }
 
   return SUCCESS;
+}
+
+void CoinHandler::deinit() {
+  for (auto &coin : _coins) {
+    coin.deinit();
+  }
 }
 
 void CoinHandler::draw() const {

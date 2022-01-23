@@ -63,7 +63,11 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
 }
 
 void RoboCollectorGui::deinit() {
+  for (auto &robot : _robots) {
+    robot.deinit();
+  }
 
+  _coinHandler.deinit();
 }
 
 void RoboCollectorGui::draw() const {
@@ -82,8 +86,13 @@ void RoboCollectorGui::handleEvent(const InputEvent &e) {
   _coinHandler.handleEvent(e);
 }
 
+void RoboCollectorGui::process() {
+  _collisionWatcher.process();
+}
+
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   RobotCfg robotCfg;
+  robotCfg.collisionWatcher = &_collisionWatcher;
   robotCfg.collisionCb =
       std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
   robotCfg.setFieldDataMarkerCb =
@@ -130,6 +139,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
 
 int32_t RoboCollectorGui::initCoinHandler(const RoboCollectorGuiConfig &cfg) {
   CoinHandlerConfig coinHandlerCfg;
+  coinHandlerCfg.collisionWatcher = &_collisionWatcher;
   coinHandlerCfg.animRsrcIds = cfg.coinAnimRsrcIds;
   coinHandlerCfg.maxCoins = cfg.maxCoins;
   coinHandlerCfg.rotateAnimFirstTimerId = cfg.coinRotateAnimFirstTimerId;

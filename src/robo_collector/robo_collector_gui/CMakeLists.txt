@@ -44,6 +44,8 @@ add_executable(
         ${_INC_DIR}/panels/config/PanelConfig.h
         ${_INC_DIR}/controller/MoveButton.h
         ${_INC_DIR}/controller/RoboCollectorController.h
+        ${_INC_DIR}/helpers/CollisionObject.h
+        ${_INC_DIR}/helpers/CollisionWatcher.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -60,6 +62,7 @@ add_executable(
         ${_SRC_DIR}/panels/Panel.cpp
         ${_SRC_DIR}/controller/MoveButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
+        ${_SRC_DIR}/helpers/CollisionWatcher.cpp
 )
 
 target_include_directories(

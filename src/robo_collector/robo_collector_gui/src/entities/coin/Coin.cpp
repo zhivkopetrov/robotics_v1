@@ -10,6 +10,7 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/helpers/CollisionWatcher.h"
 #include "robo_collector_gui/field/FieldUtils.h"
 
 namespace {
@@ -18,7 +19,14 @@ constexpr auto TARGET_COLLECT_ANIM_Y = 243;
 }
 
 int32_t Coin::init(const CoinConfig &cfg) {
-  collectAnimTimerId = cfg.collectAnimTimerId;
+  if (nullptr == cfg.collisionWatcher) {
+    LOGERR("Error, nullptr provided for collisionWatcher");
+    return FAILURE;
+  }
+  _collisionWatcher = cfg.collisionWatcher;
+  _collisionObjHandle = cfg.collisionWatcher->registerObject(this);
+
+  _collectAnimTimerId = cfg.collectAnimTimerId;
   _coinImg.create(cfg.rsrcId);
 
   AnimBaseConfig animCfg;
@@ -40,13 +48,19 @@ int32_t Coin::init(const CoinConfig &cfg) {
   return SUCCESS;
 }
 
+void Coin::deinit() {
+  if (_collisionWatcher) {
+    _collisionWatcher->unregisterObject(_collisionObjHandle);
+  }
+}
+
 void Coin::draw() const {
   _coinImg.draw();
 }
 
 void Coin::startCollectAnim() {
   AnimBaseConfig cfg;
-  cfg.timerId = collectAnimTimerId;
+  cfg.timerId = _collectAnimTimerId;
   cfg.timerInterval = 20;
   cfg.startPos = _coinImg.getPosition();
   cfg.animDirection = AnimDir::FORWARD;
@@ -61,5 +75,13 @@ void Coin::startCollectAnim() {
     LOGERR("Error, _posAnim.configure() failed for rsrcId: %#16lX");
   }
   _posAnim.start();
+}
+
+void Coin::registerCollision([[maybe_unused]]const Rectangle& intersectRect) {
+
+}
+
+Rectangle Coin::getBoundary() const {
+  return _coinImg.getImageRect();
 }
 

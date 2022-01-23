@@ -25,11 +25,14 @@ struct CoinHandlerConfig {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
+
+  CollisionWatcher* collisionWatcher = nullptr;
 };
 
 class CoinHandler {
 public:
   int32_t init(const CoinHandlerConfig& cfg);
+  void deinit();
   void draw() const;
 
   void handleEvent(const InputEvent& e);

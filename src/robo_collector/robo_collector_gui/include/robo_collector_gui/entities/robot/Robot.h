@@ -12,12 +12,14 @@
 #include "manager_utils/drawing/animation/RotationAnimation.h"
 
 //Own components headers
+#include "robo_collector_gui/helpers/CollisionObject.h"
 #include "robo_collector_gui/entities/robot/RobotAnimEndCb.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
+class CollisionWatcher;
 
 struct RobotCfg {
   FieldPos fieldPos;
@@ -32,11 +34,15 @@ struct RobotCfg {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
+
+  CollisionWatcher* collisionWatcher = nullptr;
 };
 
-class Robot {
+class Robot : public CollisionObject {
 public:
   int32_t init(const RobotCfg &cfg);
+
+  void deinit();
 
   void draw() const;
 
@@ -48,6 +54,9 @@ public:
   void setMoveData(Direction futureDir, const FieldPos &futurePos);
 
 private:
+  void registerCollision(const Rectangle& intersectRect) override;
+  Rectangle getBoundary() const override;
+
   void move();
 
   void startPosAnim(FieldPos futurePos);
@@ -69,6 +78,8 @@ private:
   PositionAnimation _posAnim;
   RotationAnimation _rotAnim;
   RobotAnimEndCb _animEndCb;
+
+  CollisionWatcher* _collisionWatcher = nullptr;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOT_H_ */
