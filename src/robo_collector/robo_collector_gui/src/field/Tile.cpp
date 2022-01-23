@@ -26,7 +26,7 @@ int32_t Tile::init(const TileConfig &cfg) {
   debugText.reserve(8); //max debug string size
   debugText.append("[").append(std::to_string(cfg.row)).append(",").append(
       std::to_string(cfg.col)).append("]");
-  _debugText.create(cfg.debugFontRsrcId, debugText.c_str(), Colors::RED,
+  _debugText.create(cfg.debugFontRsrcId, debugText.c_str(), Colors::WHITE,
       Point(cfg.screenCoordinates.x + DEBUG_TEXT_OFFSET_X,
             cfg.screenCoordinates.y + DEBUG_TEXT_OFFSET_Y));
 

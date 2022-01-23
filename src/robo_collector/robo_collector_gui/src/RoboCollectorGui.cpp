@@ -150,6 +150,7 @@ int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
       std::bind(&Robot::act, &_robots[Defines::BLINKY_IDX], _1);
   collectorCfg.moveButtonsRsrcIds = cfg.moveButtonsRsrcIds;
   collectorCfg.maxMoveButtons = cfg.maxMoveButtons;
+  collectorCfg.moveButtonInfoTextFontId = cfg.moveButtonsInfoTextFontId;
 
   if (SUCCESS != _controller.init(collectorCfg)) {
     LOGERR("Error in _controller.init()");

@@ -23,6 +23,7 @@ struct RoboCollectorGuiConfig {
   uint64_t robotEnemiesRsrcId = 0;
   uint64_t robotsAnimStartTimerId = 0;
 
+  uint64_t moveButtonsInfoTextFontId = 0;
   std::vector<uint64_t> moveButtonsRsrcIds;
   int32_t maxMoveButtons = 0;
 

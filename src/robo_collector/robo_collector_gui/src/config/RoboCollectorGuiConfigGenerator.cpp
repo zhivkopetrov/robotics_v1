@@ -89,6 +89,7 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
       RoboCollectorGuiResources::RIGHT_BUTTON
   };
   cfg.maxMoveButtons = Defines::MOVE_BUTTONS_CTN;
+  cfg.moveButtonsInfoTextFontId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   constexpr auto GAME_FIELD_WIDTH = Defines::FIELD_COLS * Defines::TILE_WIDTH;
   constexpr auto GAME_FIELD_HEIGHT = Defines::FIELD_ROWS * Defines::TILE_HEIGHT;

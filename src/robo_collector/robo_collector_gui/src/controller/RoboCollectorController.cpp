@@ -25,17 +25,26 @@ int32_t RoboCollectorController::init(
 
   MoveButtonCfg moveButtonCfg;
   moveButtonCfg.robotActCb = cfg.robotActCb;
+  moveButtonCfg.infoTextFontId = cfg.moveButtonInfoTextFontId;
   const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsPos {
-    Point(1435, 695), Point(1285, 860), Point(1585, 860)
+    Point(1435, 695), Point(1285, 830), Point(1585, 830)
+  };
+  const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsInfoTextPos {
+    Point(1470, 835), Point(1280, 965), Point(1580, 965)
+  };
+  const std::array<std::string, Defines::MOVE_BUTTONS_CTN> buttonsInfoTextContent {
+    "Move", "Rotate Left", "Rotate Right"
   };
   const std::array<MoveType, Defines::MOVE_BUTTONS_CTN> buttonsMoveType {
     MoveType::FORWARD, MoveType::ROTATE_LEFT, MoveType::ROTATE_RIGHT
   };
 
   for (auto i = 0; i < Defines::MOVE_BUTTONS_CTN; ++i) {
+    moveButtonCfg.rsrcId = cfg.moveButtonsRsrcIds[i];
     moveButtonCfg.startPos = buttonsPos[i];
     moveButtonCfg.moveType = buttonsMoveType[i];
-    moveButtonCfg.rsrcId = cfg.moveButtonsRsrcIds[i];
+    moveButtonCfg.infoTextContent = buttonsInfoTextContent[i];
+    moveButtonCfg.infoTextPos = buttonsInfoTextPos[i];
     if (SUCCESS != _moveButtons[i].init(moveButtonCfg)) {
       LOGERR("Error in _moveButtons[%d].init()", i);
       return FAILURE;

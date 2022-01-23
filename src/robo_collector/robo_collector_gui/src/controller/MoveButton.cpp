@@ -12,9 +12,10 @@
 
 //Own components headers
 
-int32_t MoveButton::init(const MoveButtonCfg& cfg) {
+int32_t MoveButton::init(const MoveButtonCfg &cfg) {
   if (nullptr == cfg.robotActCb) {
-    LOGERR("Error, null _robotActCb detected for MoveButton with rsrcId: %#16lX",
+    LOGERR(
+        "Error, null _robotActCb detected for MoveButton with rsrcId: %#16lX",
         cfg.rsrcId);
     return FAILURE;
   }
@@ -29,10 +30,15 @@ int32_t MoveButton::init(const MoveButtonCfg& cfg) {
 
   create(cfg.rsrcId);
   setPosition(cfg.startPos);
+
+  const auto lightBlue = Color(0x29B6F6FF);
+  _infoText.create(cfg.infoTextFontId, cfg.infoTextContent.c_str(),
+      lightBlue, cfg.infoTextPos);
+
   return SUCCESS;
 }
 
-void MoveButton::handleEvent(const InputEvent& e) {
+void MoveButton::handleEvent(const InputEvent &e) {
   if (TouchEvent::TOUCH_PRESS == e.type) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
@@ -41,4 +47,8 @@ void MoveButton::handleEvent(const InputEvent& e) {
   }
 }
 
+void MoveButton::draw() const {
+  ButtonBase::draw();
+  _infoText.draw();
+}
 
