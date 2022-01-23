@@ -24,6 +24,7 @@ struct RobotCfg {
   uint64_t rsrcId = 0;
   int32_t frameId = 0;
   int32_t animTimerId = 0;
+  Direction initialDir = Direction::UP;
   char fieldMarker = '!';
   char enemyFieldMarker = '?';
 

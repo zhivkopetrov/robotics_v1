@@ -41,12 +41,15 @@ int32_t Robot::init(const RobotCfg &cfg) {
   }
   _getFieldDataCb = cfg.getFieldDataCb;
 
+  _fieldPos = cfg.fieldPos;
+  _dir = cfg.initialDir;
+
   _animTimerId = cfg.animTimerId;
   _robotImg.create(cfg.rsrcId);
   _robotImg.setPosition(FieldUtils::getAbsPos(cfg.fieldPos));
   _robotImg.setFrame(cfg.frameId);
-
-  _fieldPos = cfg.fieldPos;
+  _robotImg.setPredefinedRotationCenter(RotationCenterType::ORIG_CENTER);
+  _robotImg.setRotation(RobotUtils::getRotationDegFromDir(cfg.initialDir));
 
   _selfFieldMarker = cfg.fieldMarker;
   _enemyFieldMarker = cfg.enemyFieldMarker;

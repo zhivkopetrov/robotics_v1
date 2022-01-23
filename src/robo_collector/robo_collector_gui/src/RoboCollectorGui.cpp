@@ -92,9 +92,16 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
   robotCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
 
-  //TODO populate via Rng
-  const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos { FieldPos(2,
-      4), FieldPos(0, 1), FieldPos(0, 2), FieldPos(0, 3) };
+  const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos {
+    FieldPos(cfg.fieldCfg.rows - 1, cfg.fieldCfg.cols - 1),
+    FieldPos(cfg.fieldCfg.rows - 1, 0),
+    FieldPos(0, 0),
+    FieldPos(0, cfg.fieldCfg.cols - 1)
+  };
+
+  const std::array<Direction, Defines::ROBOTS_CTN> robotsInitialDirs {
+    Direction::UP, Direction::UP, Direction::DOWN, Direction::DOWN
+  };
 
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     if (Defines::BLINKY_IDX == i) {
@@ -109,6 +116,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
       robotCfg.enemyFieldMarker = cfg.blinkyFieldMarker;
     }
     robotCfg.fieldPos = robotsFieldPos[i];
+    robotCfg.initialDir = robotsInitialDirs[i];
     robotCfg.animTimerId = cfg.robotsAnimStartTimerId;
 
     if (SUCCESS != _robots[i].init(robotCfg)) {
