@@ -83,7 +83,6 @@ void RoboCollectorGui::draw() const {
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
   _controller.handleEvent(e);
-  _coinHandler.handleEvent(e);
 }
 
 void RoboCollectorGui::process() {
@@ -149,6 +148,8 @@ int32_t RoboCollectorGui::initCoinHandler(const RoboCollectorGuiConfig &cfg) {
   coinHandlerCfg.resetFieldDataMarkerCb =
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
   coinHandlerCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  coinHandlerCfg.incrCollectedCoinsCb =
+      std::bind(&Panel::increaseCollectedCoins, &_panel, _1);
 
   if (SUCCESS != _coinHandler.init(coinHandlerCfg)) {
     LOGERR("Error in _coinHandler.init()");

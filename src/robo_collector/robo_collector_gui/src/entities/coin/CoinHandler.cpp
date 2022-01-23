@@ -6,7 +6,6 @@
 //C++ system headers
 
 //Other libraries headers
-#include "sdl_utils/input/InputEvent.h"
 #include "utils/rng/Rng.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -41,17 +40,20 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg) {
   }
   _coins.resize(cfg.maxCoins);
 
+  constexpr auto goldCoinScore = 3;
   constexpr auto coinOffsetFromTile = 30;
   CoinConfig coinCfg;
   coinCfg.collisionWatcher = cfg.collisionWatcher;
+  coinCfg.incrCollectedCoinsCb = cfg.incrCollectedCoinsCb;
   coinCfg.fieldPos.row = 4;
   coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
 
   for (int32_t i = 0; i < cfg.maxCoins; ++i) {
+    coinCfg.coinScore = goldCoinScore - i;
     coinCfg.rsrcId = cfg.animRsrcIds[i];
     coinCfg.rotateAnimTimerId = cfg.rotateAnimFirstTimerId + i;
     coinCfg.collectAnimTimerId = cfg.collectAnimFirstTimerId + i;
-    coinCfg.fieldPos.col = i;
+    coinCfg.fieldPos.col = i * 3;
     if (SUCCESS != _coins[i].init(coinCfg)) {
       LOGERR("Error in _coins[%d].init()", i);
       return FAILURE;
@@ -70,20 +72,6 @@ void CoinHandler::deinit() {
 void CoinHandler::draw() const {
   for (const auto &coin : _coins) {
     coin.draw();
-  }
-}
-
-void CoinHandler::handleEvent(const InputEvent& e) {
-  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
-    return;
-  }
-
-  if (Keyboard::KEY_UP == e.key) {
-    _coins[0].startCollectAnim();
-  } else if (Keyboard::KEY_RIGHT == e.key) {
-    _coins[1].startCollectAnim();
-  } else if (Keyboard::KEY_LEFT == e.key) {
-    _coins[2].startCollectAnim();
   }
 }
 

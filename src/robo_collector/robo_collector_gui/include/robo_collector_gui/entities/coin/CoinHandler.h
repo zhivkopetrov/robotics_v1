@@ -14,7 +14,6 @@
 #include "robo_collector_gui/entities/coin/Coin.h"
 
 //Forward declarations
-class InputEvent;
 
 struct CoinHandlerConfig {
   std::vector<uint64_t> animRsrcIds;
@@ -25,6 +24,7 @@ struct CoinHandlerConfig {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
+  IncrCollectedCoinsCb incrCollectedCoinsCb;
 
   CollisionWatcher* collisionWatcher = nullptr;
 };
@@ -34,8 +34,6 @@ public:
   int32_t init(const CoinHandlerConfig& cfg);
   void deinit();
   void draw() const;
-
-  void handleEvent(const InputEvent& e);
 
 private:
   std::vector<Coin> _coins;

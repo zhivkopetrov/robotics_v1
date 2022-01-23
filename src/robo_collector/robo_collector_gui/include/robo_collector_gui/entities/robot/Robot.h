@@ -14,7 +14,6 @@
 //Own components headers
 #include "robo_collector_gui/helpers/CollisionObject.h"
 #include "robo_collector_gui/entities/robot/RobotAnimEndCb.h"
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/field/FieldPos.h"
 

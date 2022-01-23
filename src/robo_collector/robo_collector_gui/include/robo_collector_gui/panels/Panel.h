@@ -22,6 +22,8 @@ public:
   /* 1 damage == 1px */
   void decreaseHealthIndicator(int32_t damage);
 
+  void increaseCollectedCoins(int32_t coins);
+
 private:
   Image _timePanel;
   Image _healthPanel;

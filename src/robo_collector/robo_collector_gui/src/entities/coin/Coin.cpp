@@ -4,6 +4,7 @@
 //C system headers
 
 //C++ system headers
+#include <cmath>
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -26,7 +27,20 @@ int32_t Coin::init(const CoinConfig &cfg) {
   _collisionWatcher = cfg.collisionWatcher;
   _collisionObjHandle = cfg.collisionWatcher->registerObject(this);
 
+  if (nullptr == cfg.incrCollectedCoinsCb) {
+    LOGERR("Error, nullptr provided for CoinCfg incrCollectedCoinsCb");
+    return FAILURE;
+  }
+  _incrCollectedCoinsCb = cfg.incrCollectedCoinsCb;
+
+  if (SUCCESS !=
+      _coinAnimEndCb.init(std::bind(&Coin::onCollectAnimEnd, this))) {
+    LOGERR("Error, coinAnimEndCb.init() failed");
+    return FAILURE;
+  }
+
   _collectAnimTimerId = cfg.collectAnimTimerId;
+  _coinScore = cfg.coinScore;
   _coinImg.create(cfg.rsrcId);
 
   AnimBaseConfig animCfg;
@@ -58,6 +72,10 @@ void Coin::draw() const {
   _coinImg.draw();
 }
 
+void Coin::onCollectAnimEnd() {
+  _incrCollectedCoinsCb(_coinScore);
+}
+
 void Coin::startCollectAnim() {
   AnimBaseConfig cfg;
   cfg.timerId = _collectAnimTimerId;
@@ -67,18 +85,22 @@ void Coin::startCollectAnim() {
   cfg.animImageType = AnimImageType::EXTERNAL;
   cfg.externalImage = &_coinImg;
   const Point endPos = Point(TARGET_COLLECT_ANIM_X, TARGET_COLLECT_ANIM_Y);
-  const auto numberOfSteps = 50;
-  AnimationEndCb *animEndCb = nullptr;
 
-  if (SUCCESS != _posAnim.configure(cfg, endPos, numberOfSteps, animEndCb,
+  const auto deltaX = endPos.x - cfg.startPos.x;
+  const auto deltaY = endPos.y - cfg.startPos.y;
+  const auto distance =
+      static_cast<int32_t>(sqrt((deltaX * deltaX) + (deltaY * deltaY)));
+  const auto numberOfSteps = distance / 20;
+
+  if (SUCCESS != _posAnim.configure(cfg, endPos, numberOfSteps, &_coinAnimEndCb,
           PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error, _posAnim.configure() failed for rsrcId: %#16lX");
   }
   _posAnim.start();
 }
 
-void Coin::registerCollision([[maybe_unused]]const Rectangle& intersectRect) {
-
+void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect) {
+  startCollectAnim();
 }
 
 Rectangle Coin::getBoundary() const {

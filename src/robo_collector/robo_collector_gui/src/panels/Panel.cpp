@@ -57,13 +57,17 @@ void Panel::draw() const {
   _healthIndicator.draw();
   _coinPanel.draw();
   _totalCoinsText.draw();
-  _horDelimiter.draw();
-  _vertDelimiter.draw();
+//  _horDelimiter.draw();
+//  _vertDelimiter.draw();
 }
 
 void Panel::decreaseHealthIndicator(int32_t damage) {
   auto cropRectangle = _healthIndicator.getCropRect();
   cropRectangle.w -= damage;
   _healthIndicator.setCropRect(cropRectangle);
+}
+
+void Panel::increaseCollectedCoins(int32_t coins) {
+  _coinPanel.increaseWith(coins);
 }
 

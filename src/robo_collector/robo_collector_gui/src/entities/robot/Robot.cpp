@@ -16,8 +16,6 @@
 #include "robo_collector_gui/entities/robot/RobotUtils.h"
 
 int32_t Robot::init(const RobotCfg &cfg) {
-  using namespace std::placeholders;
-
   if (nullptr == cfg.collisionCb) {
     LOGERR("Error, nullptr provided for RobotCfg collisionCb");
     return FAILURE;
@@ -55,8 +53,8 @@ int32_t Robot::init(const RobotCfg &cfg) {
   _selfFieldMarker = cfg.fieldMarker;
   _enemyFieldMarker = cfg.enemyFieldMarker;
 
-  if (SUCCESS != _animEndCb.init(
-          std::bind(&Robot::setMoveData, this, _1, _2))) {
+  if (SUCCESS != _animEndCb.init(std::bind(&Robot::setMoveData, this,
+      std::placeholders::_1, std::placeholders::_2))) {
     LOGERR("Error, _animEndCb.init() failed");
     return FAILURE;
   }
