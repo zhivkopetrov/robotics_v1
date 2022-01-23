@@ -13,12 +13,13 @@
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
 #include "robo_collector_gui/entities/robot/Robot.h"
-#include "robo_collector_gui/entities/coin/CoinHandler.h"
 #include "robo_collector_gui/panels/Panel.h"
-#include "robo_collector_gui/buttons/MoveButton.h"
+#include "robo_collector_gui/entities/coin/CoinHandler.h"
+#include "robo_collector_gui/controller/RoboCollectorController.h"
 
 //Forward declarations
 class InputEvent;
+struct RoboCollectorGuiConfig;
 
 class RoboCollectorGui final : public Game {
 public:
@@ -29,17 +30,16 @@ public:
   void handleEvent(const InputEvent &e) override;
 
 private:
-  enum InternalDefines {
-    MOVE_BUTTONS_CTN = 3
-  };
+  int32_t initRobots(const RoboCollectorGuiConfig& cfg);
+  int32_t initCoinHandler(const RoboCollectorGuiConfig& cfg);
+  int32_t initController(const RoboCollectorGuiConfig& cfg);
 
   Image _map;
-  Robot _blinky;
-  std::array<Robot, Defines::ENEMIES_CTN> _enemies;
-  std::array<MoveButton, MOVE_BUTTONS_CTN> _moveButtons;
-  CoinHandler _coinHandler;
   Panel _panel;
   Field _field;
+  CoinHandler _coinHandler;
+  RoboCollectorController _controller;
+  std::array<Robot, Defines::ROBOTS_CTN> _robots;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUI_H_ */

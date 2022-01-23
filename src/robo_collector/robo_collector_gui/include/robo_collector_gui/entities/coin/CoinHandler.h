@@ -10,7 +10,6 @@
 //Other libraries headers
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/entities/coin/Coin.h"
 

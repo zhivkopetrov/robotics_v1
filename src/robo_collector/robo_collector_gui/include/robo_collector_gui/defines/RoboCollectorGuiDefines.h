@@ -14,7 +14,16 @@
 
 namespace Defines {
 enum RobotDefines {
+  BLINKY_IDX = 0,
   ENEMIES_CTN = 3,
+  ROBOTS_CTN = 4
+};
+
+enum MoveButtonDefines {
+  BUTTON_FORWARD,
+  BUTTON_ROTATE_LEFT,
+  BUTTON_ROTATE_RIGHT,
+  MOVE_BUTTONS_CTN
 };
 
 enum CoinDefines {

@@ -12,12 +12,13 @@
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
+#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 
 //Forward declarations
 class InputEvent;
 
 struct MoveButtonCfg {
-  std::function<void(MoveType)> moveCb;
+  RobotActCb robotActCb;
   Point startPos;
   uint64_t rsrcId = 0;
   MoveType moveType = MoveType::UNKNOWN;
@@ -29,7 +30,7 @@ public:
   void handleEvent(const InputEvent& e) override;
 
 private:
-  std::function<void(MoveType)> _moveCb;
+  RobotActCb _robotActCb;
   MoveType _moveType = MoveType::UNKNOWN;
 };
 

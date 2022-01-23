@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/buttons/MoveButton.h"
+#include "robo_collector_gui/controller/MoveButton.h"
 
 //C system headers
 
@@ -13,12 +13,12 @@
 //Own components headers
 
 int32_t MoveButton::init(const MoveButtonCfg& cfg) {
-  if (nullptr == cfg.moveCb) {
-    LOGERR("Error, null moveCb detected for MoveButton with rsrcId: %#16lX",
+  if (nullptr == cfg.robotActCb) {
+    LOGERR("Error, null _robotActCb detected for MoveButton with rsrcId: %#16lX",
         cfg.rsrcId);
     return FAILURE;
   }
-  _moveCb = cfg.moveCb;
+  _robotActCb = cfg.robotActCb;
 
   if (MoveType::UNKNOWN == cfg.moveType) {
     LOGERR("MoveType::UNKNOWN detected for MoveButton with rsrcId: %#16lX",
@@ -37,7 +37,7 @@ void MoveButton::handleEvent(const InputEvent& e) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
     setFrame(UNCLICKED);
-    _moveCb(_moveType);
+    _robotActCb(_moveType);
   }
 }
 

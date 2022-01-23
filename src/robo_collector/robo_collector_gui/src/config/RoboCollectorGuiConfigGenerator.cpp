@@ -83,9 +83,12 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.coinRotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
   cfg.coinCollectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
 
-  cfg.upMoveButtonRsrcId = RoboCollectorGuiResources::UP_BUTTON;
-  cfg.leftMoveButtonRsrcId = RoboCollectorGuiResources::LEFT_BUTTON;
-  cfg.rightMoveButtonRsrcId = RoboCollectorGuiResources::RIGHT_BUTTON;
+  cfg.moveButtonsRsrcIds = {
+      RoboCollectorGuiResources::UP_BUTTON,
+      RoboCollectorGuiResources::LEFT_BUTTON,
+      RoboCollectorGuiResources::RIGHT_BUTTON
+  };
+  cfg.maxMoveButtons = Defines::MOVE_BUTTONS_CTN;
 
   constexpr auto GAME_FIELD_WIDTH = Defines::FIELD_COLS * Defines::TILE_WIDTH;
   constexpr auto GAME_FIELD_HEIGHT = Defines::FIELD_ROWS * Defines::TILE_HEIGHT;

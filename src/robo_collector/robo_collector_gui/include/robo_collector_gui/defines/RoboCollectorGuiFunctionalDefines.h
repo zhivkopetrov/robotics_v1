@@ -10,9 +10,10 @@
 //Other libraries headers
 
 //Own components headers
+#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
+#include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
-#include "robo_collector_gui/field/FieldPos.h"
 
 using FieldData = std::vector<std::vector<char>>;
 
@@ -20,5 +21,6 @@ using CollisionCb = std::function<void(int32_t)>;
 using SetFieldDataMarkerCb = std::function<void(const FieldPos&, char)>;
 using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;
 using GetFieldDataCb = std::function<const FieldData&()>;
+using RobotActCb = std::function<void(MoveType)>;
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIFUNCTIONALDEFINES_H_ */

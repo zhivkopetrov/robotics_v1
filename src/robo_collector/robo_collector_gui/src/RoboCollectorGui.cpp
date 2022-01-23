@@ -13,103 +13,49 @@
 //Own components headers
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
 
+using namespace std::placeholders;
+
 int32_t RoboCollectorGui::init(const std::any &cfg) {
-  using namespace std::placeholders;
-
-  try {
-    const auto &gameCfg = std::any_cast<const RoboCollectorGuiConfig&>(cfg);
-    if (SUCCESS != _field.init(gameCfg.fieldCfg)) {
-      LOGERR("Error in _field.init()");
-      return FAILURE;
+  int32_t err = SUCCESS;
+  const auto parsedCfg = [&cfg, &err]() {
+    RoboCollectorGuiConfig localCfg;
+    try {
+      localCfg = std::any_cast<const RoboCollectorGuiConfig&>(cfg);
+    } catch (const std::bad_any_cast &e) {
+      LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
+      err = FAILURE;
     }
+    return localCfg;
+  }();
+  if (SUCCESS != err) {
+    LOGERR("Error, parsing config failed");
+    return FAILURE;
+  }
 
-    _map.create(gameCfg.mapRsrcId);
-    const auto setFieldDataMarkerCb =
-        std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
-    const auto resetFieldDataMarkerCb =
-        std::bind(&Field::resetFieldDataMarker, &_field, _1);
-    const auto getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  _map.create(parsedCfg.mapRsrcId);
 
-    RobotCfg robotCfg;
-    robotCfg.collisionCb =
-        std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
-    robotCfg.rsrcId = gameCfg.robotBlinkyRsrcId;
-    robotCfg.fieldPos.row = 1;
-    robotCfg.fieldPos.col = 4;
-    robotCfg.frameId = 0;
-    robotCfg.animTimerId = gameCfg.robotsAnimStartTimerId;
-    robotCfg.setFieldDataMarkerCb = setFieldDataMarkerCb;
-    robotCfg.resetFieldDataMarkerCb = resetFieldDataMarkerCb;
+  if (SUCCESS != _field.init(parsedCfg.fieldCfg)) {
+    LOGERR("Error in _field.init()");
+    return FAILURE;
+  }
 
-    robotCfg.getFieldDataCb = getFieldDataCb;
+  if (SUCCESS != _panel.init(parsedCfg.panelConfig)) {
+    LOGERR("Error in _panel.init()");
+    return FAILURE;
+  }
 
-    robotCfg.fieldMarker = gameCfg.blinkyFieldMarker;
-    robotCfg.enemyFieldMarker = gameCfg.enemyFieldMarker;
-    if (SUCCESS != _blinky.init(robotCfg)) {
-      LOGERR("Error in _field.init()");
-      return FAILURE;
-    }
+  if (SUCCESS != initRobots(parsedCfg)) {
+    LOGERR("initRobots() failed");
+    return FAILURE;
+  }
 
-    robotCfg.rsrcId = gameCfg.robotEnemiesRsrcId;
-    robotCfg.fieldPos.row = 0;
-    robotCfg.frameId = 0;
-    //reversed for the enemies
-    robotCfg.fieldMarker = gameCfg.enemyFieldMarker;
-    robotCfg.enemyFieldMarker = gameCfg.blinkyFieldMarker;
-    for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
-      robotCfg.fieldPos.col = i;
-      robotCfg.animTimerId = gameCfg.robotsAnimStartTimerId + 1;
-      if (SUCCESS != _enemies[i].init(robotCfg)) {
-        LOGERR("Error in _field.init()");
-        return FAILURE;
-      }
-      ++robotCfg.frameId;
-    }
+  if (SUCCESS != initCoinHandler(parsedCfg)) {
+    LOGERR("initCoinHandler() failed");
+    return FAILURE;
+  }
 
-    if (SUCCESS != _panel.init(gameCfg.panelConfig)) {
-      LOGERR("Error in _field.init()");
-      return FAILURE;
-    }
-
-    CoinHandlerConfig coinHandlerCfg;
-    coinHandlerCfg.animRsrcIds = gameCfg.coinAnimRsrcIds;
-    coinHandlerCfg.maxCoins = gameCfg.maxCoins;
-    coinHandlerCfg.rotateAnimFirstTimerId = gameCfg.coinRotateAnimFirstTimerId;
-    coinHandlerCfg.collectAnimFirstTimerId =
-        gameCfg.coinCollectAnimFirstTimerId;
-    coinHandlerCfg.setFieldDataMarkerCb = setFieldDataMarkerCb;
-    coinHandlerCfg.resetFieldDataMarkerCb = resetFieldDataMarkerCb;
-    coinHandlerCfg.getFieldDataCb = getFieldDataCb;
-    if (SUCCESS != _coinHandler.init(coinHandlerCfg)) {
-      LOGERR("Error in _coinHandler.init()");
-      return FAILURE;
-    }
-
-    MoveButtonCfg moveButtonCfg;
-    const std::array<Point, MOVE_BUTTONS_CTN> buttonsPos {
-      Point(1435, 695), Point(1285, 860), Point(1585, 860)
-    };
-    const std::array<MoveType, MOVE_BUTTONS_CTN> buttonsMoveType {
-      MoveType::FORWARD, MoveType::ROTATE_LEFT, MoveType::ROTATE_RIGHT
-    };
-    const std::array<uint64_t, MOVE_BUTTONS_CTN> buttonsRsrcIds {
-      gameCfg.upMoveButtonRsrcId, gameCfg.leftMoveButtonRsrcId,
-      gameCfg.rightMoveButtonRsrcId
-    };
-    moveButtonCfg.moveCb = std::bind(&Robot::act, &_blinky, _1);
-
-    for (auto i = 0; i < MOVE_BUTTONS_CTN; ++i) {
-      moveButtonCfg.startPos = buttonsPos[i];
-      moveButtonCfg.moveType = buttonsMoveType[i];
-      moveButtonCfg.rsrcId = buttonsRsrcIds[i];
-      if (SUCCESS != _moveButtons[i].init(moveButtonCfg)) {
-        LOGERR("Error in _moveButtons[%d].init()", i);
-        return FAILURE;
-      }
-    }
-
-  } catch (const std::bad_any_cast &e) {
-    LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
+  if (SUCCESS != initController(parsedCfg)) {
+    LOGERR("initController() failed");
     return FAILURE;
   }
 
@@ -125,24 +71,91 @@ void RoboCollectorGui::draw() const {
   _field.draw();
   _panel.draw();
   _coinHandler.draw();
-  _blinky.draw();
-
-  for (const auto &enemy : _enemies) {
-    enemy.draw();
-  }
-  for (const auto &button : _moveButtons) {
-    button.draw();
+  _controller.draw();
+  for (const auto &robot : _robots) {
+    robot.draw();
   }
 }
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
-  for (auto& button : _moveButtons) {
-    if(button.isInputUnlocked() && button.containsEvent(e)) {
-      button.handleEvent(e);
-      break;
+  _controller.handleEvent(e);
+  _coinHandler.handleEvent(e);
+}
+
+int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
+  RobotCfg robotCfg;
+  robotCfg.collisionCb =
+      std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
+  robotCfg.setFieldDataMarkerCb =
+      std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
+  robotCfg.resetFieldDataMarkerCb =
+      std::bind(&Field::resetFieldDataMarker, &_field, _1);
+  robotCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+
+  //TODO populate via Rng
+  const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos { FieldPos(2,
+      4), FieldPos(0, 1), FieldPos(0, 2), FieldPos(0, 3) };
+
+  for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
+    if (Defines::BLINKY_IDX == i) {
+      robotCfg.rsrcId = cfg.robotBlinkyRsrcId;
+      robotCfg.frameId = 0;
+      robotCfg.fieldMarker = cfg.blinkyFieldMarker;
+      robotCfg.enemyFieldMarker = cfg.enemyFieldMarker;
+    } else {
+      robotCfg.rsrcId = cfg.robotEnemiesRsrcId;
+      robotCfg.frameId = i - 1;
+      robotCfg.fieldMarker = cfg.enemyFieldMarker;
+      robotCfg.enemyFieldMarker = cfg.blinkyFieldMarker;
+    }
+    robotCfg.fieldPos = robotsFieldPos[i];
+    robotCfg.animTimerId = cfg.robotsAnimStartTimerId;
+
+    if (SUCCESS != _robots[i].init(robotCfg)) {
+      LOGERR("Error in _robots[%d].init()", i);
+      return FAILURE;
     }
   }
 
-  _coinHandler.handleEvent(e);
+  return SUCCESS;
+}
+
+int32_t RoboCollectorGui::initCoinHandler(const RoboCollectorGuiConfig &cfg) {
+  CoinHandlerConfig coinHandlerCfg;
+  coinHandlerCfg.animRsrcIds = cfg.coinAnimRsrcIds;
+  coinHandlerCfg.maxCoins = cfg.maxCoins;
+  coinHandlerCfg.rotateAnimFirstTimerId = cfg.coinRotateAnimFirstTimerId;
+  coinHandlerCfg.collectAnimFirstTimerId = cfg.coinCollectAnimFirstTimerId;
+  coinHandlerCfg.setFieldDataMarkerCb =
+      std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
+  coinHandlerCfg.resetFieldDataMarkerCb =
+      std::bind(&Field::resetFieldDataMarker, &_field, _1);
+  coinHandlerCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+
+  if (SUCCESS != _coinHandler.init(coinHandlerCfg)) {
+    LOGERR("Error in _coinHandler.init()");
+    return FAILURE;
+  }
+
+  return SUCCESS;
+}
+
+int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
+  RoboCollectorControllerConfig collectorCfg;
+  if (_robots.empty()) {
+    LOGERR("Error, robots array is empty!");
+    return FAILURE;
+  }
+  collectorCfg.robotActCb =
+      std::bind(&Robot::act, &_robots[Defines::BLINKY_IDX], _1);
+  collectorCfg.moveButtonsRsrcIds = cfg.moveButtonsRsrcIds;
+  collectorCfg.maxMoveButtons = cfg.maxMoveButtons;
+
+  if (SUCCESS != _controller.init(collectorCfg)) {
+    LOGERR("Error in _controller.init()");
+    return FAILURE;
+  }
+
+  return SUCCESS;
 }
 

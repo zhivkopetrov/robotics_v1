@@ -36,7 +36,7 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg) {
   if (cfg.maxCoins != rsrcIdsSize) {
     LOGERR(
         "Error, coinAnimRsrcIds.size() is: %d, while it should be exactly: %d",
-        rsrcIdsSize, rsrcIdsSize);
+        rsrcIdsSize, cfg.maxCoins);
     return FAILURE;
   }
   _coins.resize(cfg.maxCoins);
