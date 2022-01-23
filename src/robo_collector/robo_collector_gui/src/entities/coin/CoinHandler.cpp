@@ -6,7 +6,6 @@
 //C++ system headers
 
 //Other libraries headers
-#include "utils/rng/Rng.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -39,7 +38,7 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg) {
   coinCfg.setFieldDataMarkerCb = cfg.setFieldDataMarkerCb;
   coinCfg.resetFieldDataMarkerCb = cfg.resetFieldDataMarkerCb;
   coinCfg.getFieldDataCb = cfg.getFieldDataCb;
-  coinCfg.fieldPos.row = 4;
+  coinCfg.fieldEmptyDataMarker = cfg.fieldEmptyDataMarker;
   coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
 
   for (int32_t i = 0; i < cfg.maxCoins; ++i) {
@@ -49,7 +48,6 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg) {
     coinCfg.rotateAnimTimerId = cfg.rotateAnimFirstTimerId + i;
     coinCfg.collectAnimTimerId = cfg.collectAnimFirstTimerId + i;
     coinCfg.respawnAnimTimerId = cfg.respawnAnimFirstTimerId + i;
-    coinCfg.fieldPos.col = i * 3;
     if (SUCCESS != _coins[i].init(coinCfg)) {
       LOGERR("Error in _coins[%d].init()", i);
       return FAILURE;

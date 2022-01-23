@@ -7,6 +7,7 @@
 #include <cmath>
 
 //Other libraries headers
+#include "utils/rng/Rng.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -26,7 +27,8 @@ int32_t Coin::init(const CoinConfig &cfg) {
     return FAILURE;
   }
   _collisionWatcher = cfg.collisionWatcher;
-  _collisionObjHandle = cfg.collisionWatcher->registerObject(this);
+  _collisionObjHandle =
+      cfg.collisionWatcher->registerObject(this, CollisionDamageImpact::NO);
 
   if (nullptr == cfg.incrCollectedCoinsCb) {
     LOGERR("Error, nullptr provided for CoinCfg incrCollectedCoinsCb");
@@ -68,22 +70,25 @@ int32_t Coin::init(const CoinConfig &cfg) {
     return FAILURE;
   }
 
-  tileOffset = cfg.tileOffset;
+  _tileOffset = cfg.tileOffset;
   _collectAnimTimerId = cfg.collectAnimTimerId;
   _coinScore = cfg.coinScore;
   _fieldDataMarker = cfg.fieldDataMarker;
+  _fieldEmptyDataMarker = cfg.fieldEmptyDataMarker;
   _coinImg.create(cfg.rsrcId);
+
+  const auto fieldPos = choseRespawnLocation();
 
   AnimBaseConfig animCfg;
   animCfg.timerId = cfg.rotateAnimTimerId;
   animCfg.timerInterval = 75;
-  animCfg.startPos = FieldUtils::getAbsPos(cfg.fieldPos);
+  animCfg.startPos = FieldUtils::getAbsPos(fieldPos);
   animCfg.startPos += cfg.tileOffset;
   animCfg.animDirection = AnimDir::FORWARD;
   animCfg.animImageType = AnimImageType::EXTERNAL;
   animCfg.externalImage = &_coinImg;
 
-  _setFieldDataMarkerCb(cfg.fieldPos, _fieldDataMarker);
+  _setFieldDataMarkerCb(fieldPos, _fieldDataMarker);
 
   if (SUCCESS != _rotateAnim.configure(animCfg)) {
     LOGERR("Coin _rotateAnim configure failed for rsrcId: %#16lX", cfg.rsrcId);
@@ -109,6 +114,8 @@ void Coin::onAnimEnd(CoinAnimType coinAnimType) {
   if (CoinAnimType::COLLECT == coinAnimType) {
     _incrCollectedCoinsCb(_coinScore);
     _resetFieldDataMarkerCb(FieldUtils::getFieldPos(_coinImg.getPosition()));
+    const auto fieldPos = choseRespawnLocation();
+    startRespawnAnim(fieldPos);
   } else if(CoinAnimType::RESPAWN == coinAnimType) {
     _setFieldDataMarkerCb(
         FieldUtils::getFieldPos(_coinImg.getPosition()), _fieldDataMarker);
@@ -142,7 +149,8 @@ void Coin::startCollectAnim() {
   _posAnim.start();
 }
 
-void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect) {
+void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
+                             [[maybe_unused]]CollisionDamageImpact impact) {
   startCollectAnim();
 }
 
@@ -150,4 +158,29 @@ Rectangle Coin::getBoundary() const {
   return _coinImg.getImageRect();
 }
 
+FieldPos Coin::choseRespawnLocation() {
+  const auto& fieldData = _getFieldDataCb();
+  const auto cols = fieldData.size();
+  const auto rows = fieldData[0].size();
+  auto& rng = Rng::getInstance();
+  FieldPos chosenPos;
+
+  while (true) {
+    chosenPos.row = rng.getRandomNumber(0, rows - 1);
+    chosenPos.col = rng.getRandomNumber(0, cols - 1);
+    const auto chosenTile = fieldData[chosenPos.row][chosenPos.col];
+    if (_fieldEmptyDataMarker == chosenTile) {
+      break;
+    }
+  }
+
+  return chosenPos;
+}
+
+void Coin::startRespawnAnim(const FieldPos& fieldPos) {
+  Point absPos = FieldUtils::getAbsPos(fieldPos);
+  absPos += _tileOffset;
+  _coinImg.setPosition(absPos);
+  _respawnAnim.start();
+}
 

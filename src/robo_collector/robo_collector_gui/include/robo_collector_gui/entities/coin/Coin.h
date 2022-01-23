@@ -21,7 +21,6 @@
 class CollisionWatcher;
 
 struct CoinConfig {
-  FieldPos fieldPos;
   //x and y offset from the top-left part of a tile
   Point tileOffset;
   uint64_t rsrcId = 0;
@@ -30,10 +29,12 @@ struct CoinConfig {
   int32_t respawnAnimTimerId = 0;
   int32_t coinScore = 0;
   char fieldDataMarker = '!';
+  char fieldEmptyDataMarker = '?';
   IncrCollectedCoinsCb incrCollectedCoinsCb;
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
+  GetFieldEmptyDataMarkerCb _getFieldEmptyDataMarkerCb;
   CollisionWatcher* collisionWatcher = nullptr;
 };
 
@@ -46,8 +47,12 @@ public:
 
 private:
   void startCollectAnim();
-  void registerCollision(const Rectangle& intersectRect) override;
+  void registerCollision(const Rectangle& intersectRect,
+                         CollisionDamageImpact impact) override;
   Rectangle getBoundary() const override;
+
+  FieldPos choseRespawnLocation();
+  void startRespawnAnim(const FieldPos& fieldPos);
 
   Image _coinImg;
   FrameAnimation _rotateAnim;
@@ -56,15 +61,17 @@ private:
 
   CoinCollectAnimEndCb _coinCollectAnimEndCb;
 
-  Point tileOffset;
+  Point _tileOffset;
   int32_t _collectAnimTimerId = 0;
   int32_t _coinScore = 0;
   char _fieldDataMarker = '!';
+  char _fieldEmptyDataMarker = '?';
 
   IncrCollectedCoinsCb _incrCollectedCoinsCb;
   SetFieldDataMarkerCb _setFieldDataMarkerCb;
   ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
   GetFieldDataCb _getFieldDataCb;
+  GetFieldEmptyDataMarkerCb _getFieldEmptyDataMarkerCb;
 
   CollisionWatcher* _collisionWatcher = nullptr;
 };

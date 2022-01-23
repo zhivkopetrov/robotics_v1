@@ -53,7 +53,8 @@ public:
   void setMoveData(Direction futureDir, const FieldPos &futurePos);
 
 private:
-  void registerCollision(const Rectangle& intersectRect) override;
+  void registerCollision(const Rectangle& intersectRect,
+                         CollisionDamageImpact impact) override;
   Rectangle getBoundary() const override;
 
   void move();

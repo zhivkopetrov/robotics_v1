@@ -26,7 +26,7 @@ class CoinRespawnAnim : public TimerClient {
 public:
   int32_t init(const CoinRespawnAnimConfig& cfg);
 
-  void start(const Point& absPos);
+  void start();
 
 private:
   void onTimeout(const int32_t timerId) override;

@@ -15,7 +15,8 @@
 
 class CollisionWatcher {
 public:
-  CollisionObjHandle registerObject(CollisionObject* object);
+  CollisionObjHandle registerObject(CollisionObject *object,
+                                    CollisionDamageImpact impact);
   void unregisterObject(CollisionObjHandle handle);
 
   void toggleWatchStatus(CollisionObjHandle handle,
@@ -25,8 +26,15 @@ public:
   void process();
 
 private:
-  std::vector<CollisionObject*> _objects;
+  struct CollisionData {
+    CollisionData(CollisionObject *inputObject,
+                  CollisionDamageImpact inputImpact)
+        : object(inputObject), impact(inputImpact) { }
+    CollisionObject *object;
+    CollisionDamageImpact impact;
+  };
 
+  std::vector<CollisionData> _objects;
   std::vector<CollisionObjHandle> _activeWatchedHandles;
 };
 

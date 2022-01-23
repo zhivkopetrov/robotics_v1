@@ -13,7 +13,7 @@
 #include "robo_collector_gui/field/FieldPos.h"
 
 namespace {
-constexpr auto ANIM_STEPS = 7;
+constexpr auto ANIM_STEPS = 6;
 }
 
 int32_t CoinRespawnAnim::init(const CoinRespawnAnimConfig& cfg) {
@@ -34,10 +34,8 @@ int32_t CoinRespawnAnim::init(const CoinRespawnAnimConfig& cfg) {
   return SUCCESS;
 }
 
-void CoinRespawnAnim::start(const Point& absPos) {
-  _coinImg->setPosition(absPos);
-
-  constexpr auto timerInterval = 500;
+void CoinRespawnAnim::start() {
+  constexpr auto timerInterval = 250;
   startTimer(timerInterval, _timerId, TimerType::PULSE);
 }
 

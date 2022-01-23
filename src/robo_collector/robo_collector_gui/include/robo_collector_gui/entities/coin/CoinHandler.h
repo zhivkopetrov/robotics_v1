@@ -22,6 +22,7 @@ struct CoinHandlerConfig {
   int32_t rotateAnimFirstTimerId = 0;
   int32_t collectAnimFirstTimerId = 0;
   int32_t respawnAnimFirstTimerId = 0;
+  char fieldEmptyDataMarker = '!';
 
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;

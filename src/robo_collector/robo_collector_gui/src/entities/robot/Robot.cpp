@@ -64,7 +64,8 @@ int32_t Robot::init(const RobotCfg &cfg) {
     return FAILURE;
   }
   _collisionWatcher = cfg.collisionWatcher;
-  _collisionObjHandle = cfg.collisionWatcher->registerObject(this);
+  _collisionObjHandle =
+      cfg.collisionWatcher->registerObject(this, CollisionDamageImpact::YES);
 
   _setFieldDataMarkerCb(_fieldPos, _selfFieldMarker);
 
@@ -114,7 +115,12 @@ void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
       _collisionObjHandle, CollisionWatchStatus::OFF);
 }
 
-void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect) {
+void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
+                              CollisionDamageImpact impact) {
+  if (CollisionDamageImpact::NO == impact) {
+    return; //nothing to do
+  }
+
 
 }
 

@@ -12,19 +12,21 @@
 
 //Own components headers
 
-CollisionObjHandle CollisionWatcher::registerObject(CollisionObject *object) {
+CollisionObjHandle CollisionWatcher::registerObject(
+    CollisionObject *object, CollisionDamageImpact impact) {
   CollisionObjHandle handleIdx = 0;
-  for (auto &obj : _objects) {
+  for (auto &data : _objects) {
     // free index found, occupy it
-    if (nullptr == obj) {
-      obj = object;
+    if (nullptr == data.object) {
+      data.object = object;
+      data.impact = impact;
       return handleIdx;
     }
 
     ++handleIdx;
   }
 
-  _objects.push_back(object);
+  _objects.emplace_back(object, impact);
   return handleIdx;
 }
 
@@ -34,7 +36,7 @@ void CollisionWatcher::unregisterObject(CollisionObjHandle handle) {
     return;
   }
 
-  _objects[handle] = nullptr;
+  _objects[handle].object = nullptr;
 }
 
 void CollisionWatcher::toggleWatchStatus(CollisionObjHandle handle,
@@ -67,18 +69,21 @@ void CollisionWatcher::process() {
   const auto objSize = _objects.size();
   Rectangle intersectRect;
   for (const auto activeHandle : _activeWatchedHandles) {
+    const auto& activeData = _objects[activeHandle];
+
     for (CollisionObjHandle handle = 0; handle < objSize; ++handle) {
       if (handle == activeHandle) {
         continue; //skip self-collision
       }
+      const auto& checkedData = _objects[handle];
 
       const bool found = GeometryUtils::findRectIntersection(
-          _objects[activeHandle]->getBoundary(),
-          _objects[handle]->getBoundary(),
+          activeData.object->getBoundary(),
+          checkedData.object->getBoundary(),
           intersectRect);
-      if (found)  {
-        _objects[activeHandle]->registerCollision(intersectRect);
-        _objects[handle]->registerCollision(intersectRect);
+      if (found) {
+        activeData.object->registerCollision(intersectRect, activeData.impact);
+        checkedData.object->registerCollision(intersectRect, checkedData.impact);
       }
     }
   }
