@@ -40,7 +40,12 @@ enum TimerId {
   COIN_COLLECT_ANIM_TIMER_ID_START,
   //reserved
   COIN_COLLECT_ANIM_TIMER_ID_END =
-      COIN_COLLECT_ANIM_TIMER_ID_START + Defines::COINS_CTN
+      COIN_COLLECT_ANIM_TIMER_ID_START + Defines::COINS_CTN,
+
+  COIN_RESPAWN_ANIM_TIMER_ID_START,
+  //reserved
+  COIN_RESPAWN_ANIM_TIMER_ID_END =
+      COIN_RESPAWN_ANIM_TIMER_ID_START + Defines::COINS_CTN
 };
 }
 
@@ -79,9 +84,13 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
       RoboCollectorGuiResources::COIN_ANIM_SILVER,
       RoboCollectorGuiResources::COIN_ANIM_BRONZE
   };
+  cfg.coinFieldDataMarkers = {
+      'g', 's', 'b' //gold, silver, bronze
+  };
   cfg.maxCoins = Defines::COINS_CTN;
   cfg.coinRotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
   cfg.coinCollectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
+  cfg.coinRespawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
 
   cfg.moveButtonsRsrcIds = {
       RoboCollectorGuiResources::UP_BUTTON,

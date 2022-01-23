@@ -40,7 +40,8 @@ add_executable(
         ${_INC_DIR}/entities/robot/RobotAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/entities/coin/CoinHandler.h
-        ${_INC_DIR}/entities/coin/CoinAnimEndCb.h
+        ${_INC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.h
+        ${_INC_DIR}/entities/coin/animation/CoinRespawnAnim.h
         ${_INC_DIR}/panels/Panel.h
         ${_INC_DIR}/panels/config/PanelConfig.h
         ${_INC_DIR}/controller/MoveButton.h
@@ -60,7 +61,8 @@ add_executable(
         ${_SRC_DIR}/entities/robot/RobotAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
         ${_SRC_DIR}/entities/coin/CoinHandler.cpp
-        ${_SRC_DIR}/entities/coin/CoinAnimEndCb.cpp
+        ${_SRC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.cpp
+        ${_SRC_DIR}/entities/coin/animation/CoinRespawnAnim.cpp
         ${_SRC_DIR}/panels/Panel.cpp
         ${_SRC_DIR}/controller/MoveButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp

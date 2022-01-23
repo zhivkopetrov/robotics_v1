@@ -50,6 +50,12 @@ enum class MoveType {
   ROTATE_RIGHT
 };
 
+enum class CoinAnimType {
+  ROTATE,
+  COLLECT,
+  RESPAWN
+};
+
 enum class Direction {
   UP,
   RIGHT,

@@ -55,7 +55,7 @@ void CollisionWatcher::toggleWatchStatus(CollisionObjHandle handle,
     _activeWatchedHandles.push_back(handle);
   } else { // CollisionWatchStatus::OFF == status
     if (it == _activeWatchedHandles.end()) {
-      LOGERR("CollisionObjHandle: %d has is not active to be disabled", handle);
+      LOGERR("CollisionObjHandle: %d is not active to be disabled", handle);
       return;
     }
 

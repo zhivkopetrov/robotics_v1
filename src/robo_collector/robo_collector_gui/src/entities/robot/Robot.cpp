@@ -66,6 +66,8 @@ int32_t Robot::init(const RobotCfg &cfg) {
   _collisionWatcher = cfg.collisionWatcher;
   _collisionObjHandle = cfg.collisionWatcher->registerObject(this);
 
+  _setFieldDataMarkerCb(_fieldPos, _selfFieldMarker);
+
   return SUCCESS;
 }
 
@@ -127,7 +129,7 @@ void Robot::move() {
   if (FieldUtils::isInsideField(futurePos)) {
     startPosAnim(futurePos);
   } else {
-    constexpr auto damage = 10;
+    constexpr auto damage = 20;
     _collisionCb(damage);
   }
 }

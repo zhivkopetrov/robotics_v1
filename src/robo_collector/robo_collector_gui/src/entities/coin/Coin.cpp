@@ -7,6 +7,7 @@
 #include <cmath>
 
 //Other libraries headers
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -33,14 +34,44 @@ int32_t Coin::init(const CoinConfig &cfg) {
   }
   _incrCollectedCoinsCb = cfg.incrCollectedCoinsCb;
 
-  if (SUCCESS !=
-      _coinAnimEndCb.init(std::bind(&Coin::onCollectAnimEnd, this))) {
+  if (nullptr == cfg.setFieldDataMarkerCb) {
+    LOGERR("Error, nullptr provided for CoinConfig setFieldDataMarkerCb");
+    return FAILURE;
+  }
+  _setFieldDataMarkerCb = cfg.setFieldDataMarkerCb;
+
+  if (nullptr == cfg.resetFieldDataMarkerCb) {
+    LOGERR("Error, nullptr provided for CoinConfig resetFieldDataMarkerCb");
+    return FAILURE;
+  }
+  _resetFieldDataMarkerCb = cfg.resetFieldDataMarkerCb;
+
+  if (nullptr == cfg.getFieldDataCb) {
+    LOGERR("Error, nullptr provided for CoinConfig getFieldDataCb");
+    return FAILURE;
+  }
+  _getFieldDataCb = cfg.getFieldDataCb;
+
+  const auto animEndCb =
+      std::bind(&Coin::onAnimEnd, this, std::placeholders::_1);
+  if (SUCCESS != _coinCollectAnimEndCb.init(animEndCb)) {
     LOGERR("Error, coinAnimEndCb.init() failed");
     return FAILURE;
   }
 
+  CoinRespawnAnimConfig coinRespawnAnimCfg;
+  coinRespawnAnimCfg.coinImg = &_coinImg;
+  coinRespawnAnimCfg.timerId = cfg.respawnAnimTimerId;
+  coinRespawnAnimCfg.animEndCb = animEndCb;
+  if (SUCCESS != _respawnAnim.init(coinRespawnAnimCfg)) {
+    LOGERR("Error, _respawnAnim.init() failed");
+    return FAILURE;
+  }
+
+  tileOffset = cfg.tileOffset;
   _collectAnimTimerId = cfg.collectAnimTimerId;
   _coinScore = cfg.coinScore;
+  _fieldDataMarker = cfg.fieldDataMarker;
   _coinImg.create(cfg.rsrcId);
 
   AnimBaseConfig animCfg;
@@ -51,6 +82,8 @@ int32_t Coin::init(const CoinConfig &cfg) {
   animCfg.animDirection = AnimDir::FORWARD;
   animCfg.animImageType = AnimImageType::EXTERNAL;
   animCfg.externalImage = &_coinImg;
+
+  _setFieldDataMarkerCb(cfg.fieldPos, _fieldDataMarker);
 
   if (SUCCESS != _rotateAnim.configure(animCfg)) {
     LOGERR("Coin _rotateAnim configure failed for rsrcId: %#16lX", cfg.rsrcId);
@@ -72,8 +105,17 @@ void Coin::draw() const {
   _coinImg.draw();
 }
 
-void Coin::onCollectAnimEnd() {
-  _incrCollectedCoinsCb(_coinScore);
+void Coin::onAnimEnd(CoinAnimType coinAnimType) {
+  if (CoinAnimType::COLLECT == coinAnimType) {
+    _incrCollectedCoinsCb(_coinScore);
+    _resetFieldDataMarkerCb(FieldUtils::getFieldPos(_coinImg.getPosition()));
+  } else if(CoinAnimType::RESPAWN == coinAnimType) {
+    _setFieldDataMarkerCb(
+        FieldUtils::getFieldPos(_coinImg.getPosition()), _fieldDataMarker);
+  } else {
+    LOGERR("Logical error, received wrong anim type: %d",
+        getEnumValue(coinAnimType));
+  }
 }
 
 void Coin::startCollectAnim() {
@@ -88,12 +130,13 @@ void Coin::startCollectAnim() {
 
   const auto deltaX = endPos.x - cfg.startPos.x;
   const auto deltaY = endPos.y - cfg.startPos.y;
-  const auto distance =
+  const auto pixelDistance =
       static_cast<int32_t>(sqrt((deltaX * deltaX) + (deltaY * deltaY)));
-  const auto numberOfSteps = distance / 20;
+  constexpr auto pixelsPerStep = 20;
+  const auto numberOfSteps = pixelDistance / pixelsPerStep;
 
-  if (SUCCESS != _posAnim.configure(cfg, endPos, numberOfSteps, &_coinAnimEndCb,
-          PosAnimType::ONE_DIRECTIONAL)) {
+  if (SUCCESS != _posAnim.configure(cfg, endPos, numberOfSteps,
+          &_coinCollectAnimEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error, _posAnim.configure() failed for rsrcId: %#16lX");
   }
   _posAnim.start();
@@ -106,4 +149,5 @@ void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect) {
 Rectangle Coin::getBoundary() const {
   return _coinImg.getImageRect();
 }
+
 

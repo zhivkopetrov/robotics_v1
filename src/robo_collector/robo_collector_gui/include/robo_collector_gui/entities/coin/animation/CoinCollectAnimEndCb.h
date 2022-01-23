@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_COINANIMENDCB_H_
-#define ROBO_COLLECTOR_GUI_COINANIMENDCB_H_
+#ifndef ROBO_COLLECTOR_GUI_COINCOLLECTANIMENDCB_H_
+#define ROBO_COLLECTOR_GUI_COINCOLLECTANIMENDCB_H_
 
 //C system headers
 
@@ -16,14 +16,14 @@
 
 //Forward declarations
 
-class CoinAnimEndCb final : public AnimationEndCb {
+class CoinCollectAnimEndCb final : public AnimationEndCb {
 public:
-  int32_t init(const std::function<void()>& notifyCoinOnAnimEndCb);
+  int32_t init(const std::function<void(CoinAnimType)>& coinOnAnimEndCb);
 
   int32_t onAnimationEnd() override;
 
 private:
-  std::function<void()> _notifyCoinOnAnimEndCb;
+  std::function<void(CoinAnimType)> _coinOnAnimEndCb;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_COINANIMENDCB_H_ */
+#endif /* ROBO_COLLECTOR_GUI_COINCOLLECTANIMENDCB_H_ */

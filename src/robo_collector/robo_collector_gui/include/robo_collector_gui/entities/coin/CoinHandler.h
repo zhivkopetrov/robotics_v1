@@ -17,9 +17,11 @@
 
 struct CoinHandlerConfig {
   std::vector<uint64_t> animRsrcIds;
+  std::vector<char> fieldDataMarkers;
   int32_t maxCoins = 0;
   int32_t rotateAnimFirstTimerId = 0;
   int32_t collectAnimFirstTimerId = 0;
+  int32_t respawnAnimFirstTimerId = 0;
 
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
@@ -37,10 +39,6 @@ public:
 
 private:
   std::vector<Coin> _coins;
-
-  SetFieldDataMarkerCb _setFieldDataMarkerCb;
-  ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
-  GetFieldDataCb _getFieldDataCb;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_COIN_COINHANDLER_H_ */

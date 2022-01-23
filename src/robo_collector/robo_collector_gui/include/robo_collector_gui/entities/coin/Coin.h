@@ -14,7 +14,8 @@
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/helpers/CollisionObject.h"
 #include "robo_collector_gui/field/FieldPos.h"
-#include "robo_collector_gui/entities/coin/CoinAnimEndCb.h"
+#include "robo_collector_gui/entities/coin/animation/CoinRespawnAnim.h"
+#include "robo_collector_gui/entities/coin/animation/CoinCollectAnimEndCb.h"
 
 //Forward declarations
 class CollisionWatcher;
@@ -26,8 +27,13 @@ struct CoinConfig {
   uint64_t rsrcId = 0;
   int32_t rotateAnimTimerId = 0;
   int32_t collectAnimTimerId = 0;
+  int32_t respawnAnimTimerId = 0;
   int32_t coinScore = 0;
+  char fieldDataMarker = '!';
   IncrCollectedCoinsCb incrCollectedCoinsCb;
+  SetFieldDataMarkerCb setFieldDataMarkerCb;
+  ResetFieldDataMarkerCb resetFieldDataMarkerCb;
+  GetFieldDataCb getFieldDataCb;
   CollisionWatcher* collisionWatcher = nullptr;
 };
 
@@ -36,7 +42,7 @@ public:
   int32_t init(const CoinConfig& cfg);
   void deinit();
   void draw() const;
-  void onCollectAnimEnd();
+  void onAnimEnd(CoinAnimType coinAnimType);
 
 private:
   void startCollectAnim();
@@ -46,13 +52,19 @@ private:
   Image _coinImg;
   FrameAnimation _rotateAnim;
   PositionAnimation _posAnim;
+  CoinRespawnAnim _respawnAnim;
 
-  CoinAnimEndCb _coinAnimEndCb;
+  CoinCollectAnimEndCb _coinCollectAnimEndCb;
 
+  Point tileOffset;
   int32_t _collectAnimTimerId = 0;
   int32_t _coinScore = 0;
+  char _fieldDataMarker = '!';
 
   IncrCollectedCoinsCb _incrCollectedCoinsCb;
+  SetFieldDataMarkerCb _setFieldDataMarkerCb;
+  ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
+  GetFieldDataCb _getFieldDataCb;
 
   CollisionWatcher* _collisionWatcher = nullptr;
 };
