@@ -140,7 +140,6 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
   if (CollisionDamageImpact::NO == impact) {
     return; //nothing more to do
   }
-
 }
 
 Rectangle Robot::getBoundary() const {
@@ -157,6 +156,7 @@ void Robot::move() {
   } else {
     constexpr auto damage = 20;
     _collisionCb(damage);
+    _finishRobotActCb();
   }
 }
 
