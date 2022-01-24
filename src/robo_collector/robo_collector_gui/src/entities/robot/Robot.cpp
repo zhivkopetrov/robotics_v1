@@ -34,11 +34,17 @@ int32_t Robot::init(const RobotCfg &cfg) {
   }
   _resetFieldDataMarkerCb = cfg.resetFieldDataMarkerCb;
 
-  if (nullptr == cfg.getFieldDataCb) {
-    LOGERR("Error, nullptr provided for RobotCfg getFieldDataCb");
+  if (nullptr == cfg.finishRobotActCb) {
+    LOGERR("Error, nullptr provided for RobotCfg finishRobotActCb");
     return FAILURE;
   }
-  _getFieldDataCb = cfg.getFieldDataCb;
+  _finishRobotActCb = cfg.finishRobotActCb;
+
+  if (nullptr == cfg.getFieldDataCb) {
+      LOGERR("Error, nullptr provided for RobotCfg getFieldDataCb");
+      return FAILURE;
+    }
+    _getFieldDataCb = cfg.getFieldDataCb;
 
   _fieldPos = cfg.fieldPos;
   _dir = cfg.initialDir;
@@ -53,7 +59,7 @@ int32_t Robot::init(const RobotCfg &cfg) {
   _selfFieldMarker = cfg.fieldMarker;
   _enemyFieldMarker = cfg.enemyFieldMarker;
 
-  if (SUCCESS != _animEndCb.init(std::bind(&Robot::setMoveData, this,
+  if (SUCCESS != _animEndCb.init(std::bind(&Robot::onMoveAnimEnd, this,
       std::placeholders::_1, std::placeholders::_2))) {
     LOGERR("Error, _animEndCb.init() failed");
     return FAILURE;
@@ -105,7 +111,7 @@ FieldPos Robot::getFieldPos() const {
   return _fieldPos;
 }
 
-void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
+void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
   _resetFieldDataMarkerCb(_fieldPos);
   _dir = futureDir;
   _fieldPos = futurePos;
@@ -116,6 +122,8 @@ void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
     _collisionWatcher->toggleWatchStatus(
           _collisionObjHandle, _currCollisionWatchStatus);
   }
+
+  _finishRobotActCb();
 }
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
@@ -145,26 +153,26 @@ void Robot::move() {
       _collisionObjHandle, _currCollisionWatchStatus);
   const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
   if (FieldUtils::isInsideField(futurePos)) {
-    startPosAnim(futurePos);
+    startMoveAnim(futurePos);
   } else {
     constexpr auto damage = 20;
     _collisionCb(damage);
   }
 }
 
-void Robot::startPosAnim(FieldPos futurePos) {
+void Robot::startMoveAnim(FieldPos futurePos) {
   const auto cfg = generateAnimBaseConfig();
   constexpr auto numberOfSteps = 40;
   const auto futureAbsPos = FieldUtils::getAbsPos(futurePos);
   _animEndCb.setAnimEndData(_dir, futurePos);
 
-  if (SUCCESS != _posAnim.configure(cfg, futureAbsPos, numberOfSteps,
+  if (SUCCESS != _moveAnim.configure(cfg, futureAbsPos, numberOfSteps,
           &_animEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error in posAnim.configure() for rsrcId: %#16lX", cfg.rsrcId);
     return;
   }
 
-  _posAnim.start();
+  _moveAnim.start();
 }
 
 void Robot::startRotAnim(bool isLeftRotation) {

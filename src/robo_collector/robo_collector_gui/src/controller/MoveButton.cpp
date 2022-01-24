@@ -13,13 +13,12 @@
 //Own components headers
 
 int32_t MoveButton::init(const MoveButtonCfg &cfg) {
-  if (nullptr == cfg.robotActCb) {
-    LOGERR(
-        "Error, null _robotActCb detected for MoveButton with rsrcId: %#16lX",
-        cfg.rsrcId);
+  if (nullptr == cfg.clickCb) {
+    LOGERR("Error, nullptr provided for clickCb for MoveButton with rsrcId: "
+        "%#16lX", cfg.rsrcId);
     return FAILURE;
   }
-  _robotActCb = cfg.robotActCb;
+  _clickCb = cfg.clickCb;
 
   if (MoveType::UNKNOWN == cfg.moveType) {
     LOGERR("MoveType::UNKNOWN detected for MoveButton with rsrcId: %#16lX",
@@ -43,7 +42,7 @@ void MoveButton::handleEvent(const InputEvent &e) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
     setFrame(UNCLICKED);
-    _robotActCb(_moveType);
+    _clickCb(_moveType);
   }
 }
 

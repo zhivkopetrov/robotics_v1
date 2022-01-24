@@ -33,6 +33,7 @@ struct RobotCfg {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
+  FinishRobotActCb finishRobotActCb;
 
   CollisionWatcher* collisionWatcher = nullptr;
 };
@@ -49,8 +50,7 @@ public:
 
   FieldPos getFieldPos() const;
 
-  // called from the animEndCb
-  void setMoveData(Direction futureDir, const FieldPos &futurePos);
+  void onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos);
 
 private:
   void registerCollision(const Rectangle& intersectRect,
@@ -59,7 +59,7 @@ private:
 
   void move();
 
-  void startPosAnim(FieldPos futurePos);
+  void startMoveAnim(FieldPos futurePos);
   void startRotAnim(bool isLeftRotation);
   AnimBaseConfig generateAnimBaseConfig();
 
@@ -74,8 +74,9 @@ private:
   SetFieldDataMarkerCb _setFieldDataMarkerCb;
   ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
   GetFieldDataCb _getFieldDataCb;
+  FinishRobotActCb _finishRobotActCb;
 
-  PositionAnimation _posAnim;
+  PositionAnimation _moveAnim;
   RotationAnimation _rotAnim;
   RobotAnimEndCb _animEndCb;
 

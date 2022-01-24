@@ -14,6 +14,13 @@
 
 int32_t RoboCollectorController::init(
     const RoboCollectorControllerConfig &cfg) {
+  if (nullptr == cfg.robotActCb) {
+    LOGERR("Error, nullptr provided for robotActCb in "
+        "RoboCollectorControllerConfig");
+    return FAILURE;
+  }
+  _robotActCb = cfg.robotActCb;
+
   const int32_t rsrcIdsSize =
       static_cast<int32_t>(cfg.moveButtonsRsrcIds.size());
   if (cfg.maxMoveButtons != rsrcIdsSize) {
@@ -24,7 +31,8 @@ int32_t RoboCollectorController::init(
   }
 
   MoveButtonCfg moveButtonCfg;
-  moveButtonCfg.robotActCb = cfg.robotActCb;
+  moveButtonCfg.clickCb = std::bind(
+    &RoboCollectorController::onMoveButtonClicked, this, std::placeholders::_1);
   moveButtonCfg.infoTextFontId = cfg.moveButtonInfoTextFontId;
   const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsPos {
     Point(1435, 695), Point(1285, 830), Point(1585, 830)
@@ -68,3 +76,18 @@ void RoboCollectorController::handleEvent(const InputEvent &e) {
     }
   }
 }
+
+void RoboCollectorController::onMoveButtonClicked(MoveType moveType) {
+  for (auto& button : _moveButtons) {
+    button.lockInput();
+  }
+  _robotActCb(moveType);
+}
+
+void RoboCollectorController::unlockInput() {
+  for (auto& button : _moveButtons) {
+      button.unlockInput();
+    }
+}
+
+

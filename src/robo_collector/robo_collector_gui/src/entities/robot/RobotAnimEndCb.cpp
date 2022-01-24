@@ -13,18 +13,18 @@
 //Own components headers
 
 int32_t RobotAnimEndCb::init(
-    const std::function<void(Direction, const FieldPos&)> &robotSetDataCb) {
-  if (nullptr == robotSetDataCb) {
-    LOGERR("Error, nullptr provided for robotSetDataCb");
+    const std::function<void(Direction, const FieldPos&)> &onRobotsAnimEndCb) {
+  if (nullptr == onRobotsAnimEndCb) {
+    LOGERR("Error, nullptr provided for onRobotsAnimEndCb");
     return FAILURE;
   }
-  _robotSetDataCb = robotSetDataCb;
+  _onRobotsAnimEndCb = onRobotsAnimEndCb;
 
   return SUCCESS;
 }
 
 int32_t RobotAnimEndCb::onAnimationEnd() {
-  _robotSetDataCb(_futureDir, _futurePos);
+  _onRobotsAnimEndCb(_futureDir, _futurePos);
   return SUCCESS;
 }
 

@@ -99,6 +99,8 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   robotCfg.resetFieldDataMarkerCb =
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
   robotCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  robotCfg.finishRobotActCb =
+      std::bind(&RoboCollectorController::unlockInput, &_controller);
 
   const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos {
     FieldPos(cfg.fieldCfg.rows - 1, cfg.fieldCfg.cols - 1),

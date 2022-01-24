@@ -23,6 +23,8 @@ using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;
 using GetFieldDataCb = std::function<const FieldData&()>;
 using GetFieldEmptyDataMarkerCb = std::function<char()>;
 using RobotActCb = std::function<void(MoveType)>;
+using FinishRobotActCb = std::function<void()>;
+using MoveButtonClickCb = std::function<void(MoveType)>;
 using IncrCollectedCoinsCb = std::function<void(int32_t)>;
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIFUNCTIONALDEFINES_H_ */

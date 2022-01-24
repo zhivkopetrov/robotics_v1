@@ -28,8 +28,11 @@ public:
   int32_t init(const RoboCollectorControllerConfig& cfg);
   void draw() const;
   void handleEvent(const InputEvent& e);
+  void onMoveButtonClicked(MoveType moveType);
+  void unlockInput();
 private:
   std::array<MoveButton, Defines::MOVE_BUTTONS_CTN> _moveButtons;
+  RobotActCb _robotActCb;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORCONTROLLER_H_ */

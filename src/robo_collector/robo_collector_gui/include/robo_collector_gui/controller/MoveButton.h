@@ -20,7 +20,7 @@
 class InputEvent;
 
 struct MoveButtonCfg {
-  RobotActCb robotActCb;
+  MoveButtonClickCb clickCb;
   Point startPos;
   uint64_t rsrcId = 0;
   MoveType moveType = MoveType::UNKNOWN;
@@ -36,7 +36,7 @@ public:
   void draw() const;
 
 private:
-  RobotActCb _robotActCb;
+  MoveButtonClickCb _clickCb;
   MoveType _moveType = MoveType::UNKNOWN;
   Text _infoText;
 };
