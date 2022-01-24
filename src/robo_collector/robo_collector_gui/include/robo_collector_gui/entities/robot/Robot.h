@@ -48,8 +48,6 @@ public:
 
   void act(MoveType moveType);
 
-  FieldPos getFieldPos() const;
-
   void onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos);
 
 private:

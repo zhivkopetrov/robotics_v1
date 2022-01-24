@@ -30,11 +30,6 @@ public:
   static bool isInsideField(const Point &absPos);
 
   static FieldPos getAdjacentPos(Direction dir, const FieldPos &fieldPos);
-
-  static bool doCollideWithEnemy(
-      const FieldPos &selectedPos,
-      const std::array<Robot, Defines::ENEMIES_CTN> &enemies,
-      int32_t *outCollisionRelativeId = nullptr);
 };
 
 #endif /* ROBO_COLLECTOR_GUI_FIELDUTILS_H_ */

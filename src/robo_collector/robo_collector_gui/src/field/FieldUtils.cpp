@@ -11,7 +11,6 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/entities/robot/Robot.h"
 
 FieldPos FieldUtils::getFieldPos(const Point &absPos) {
   return FieldPos(
@@ -71,23 +70,5 @@ FieldPos FieldUtils::getAdjacentPos(Direction dir, const FieldPos &fieldPos) {
   }
 
   return futurePos;
-}
-
-bool FieldUtils::doCollideWithEnemy(
-    const FieldPos &selectedPos,
-    const std::array<Robot, Defines::ENEMIES_CTN> &enemies,
-    int32_t *outCollisionRelativeId) {
-  int32_t pieceRelativeId = 0;
-  for (const auto &enemy : enemies) {
-    if (selectedPos == enemy.getFieldPos()) {
-      if (outCollisionRelativeId) {
-        *outCollisionRelativeId = pieceRelativeId;
-      }
-      return true;
-    }
-    ++pieceRelativeId;
-  }
-
-  return false;
 }
 

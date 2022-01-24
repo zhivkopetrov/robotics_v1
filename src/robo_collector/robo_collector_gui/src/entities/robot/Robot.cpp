@@ -107,10 +107,6 @@ void Robot::act(MoveType moveType) {
   }
 }
 
-FieldPos Robot::getFieldPos() const {
-  return _fieldPos;
-}
-
 void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
   _resetFieldDataMarkerCb(_fieldPos);
   _dir = futureDir;
