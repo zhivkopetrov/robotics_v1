@@ -82,8 +82,8 @@ void CollisionWatcher::process() {
           checkedData.object->getBoundary(),
           intersectRect);
       if (found) {
-        activeData.object->registerCollision(intersectRect, activeData.impact);
-        checkedData.object->registerCollision(intersectRect, checkedData.impact);
+        activeData.object->registerCollision(intersectRect, checkedData.impact);
+        checkedData.object->registerCollision(intersectRect, activeData.impact);
       }
     }
   }
