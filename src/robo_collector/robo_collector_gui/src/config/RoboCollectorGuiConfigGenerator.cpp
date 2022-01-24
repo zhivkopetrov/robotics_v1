@@ -24,6 +24,9 @@ constexpr auto WINDOW_Y = 27;
 constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
+//misc
+constexpr auto totalGameSeconds = 180;
+
 enum TimerId {
   ROBOTS_ANIM_TIMER_ID_START,
   //reserved
@@ -45,7 +48,10 @@ enum TimerId {
   COIN_RESPAWN_ANIM_TIMER_ID_START,
   //reserved
   COIN_RESPAWN_ANIM_TIMER_ID_END =
-      COIN_RESPAWN_ANIM_TIMER_ID_START + Defines::COINS_CTN
+      COIN_RESPAWN_ANIM_TIMER_ID_START + Defines::COINS_CTN,
+
+  TIME_PANEL_CLOCK_TIMER_ID,
+  TIME_PANEL_BLINK_TIMER_ID
 };
 }
 
@@ -114,7 +120,6 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   auto& panelHandlerCfg = cfg.panelHandlerConfig;
-  panelHandlerCfg.timePanelRsrcId = RoboCollectorGuiResources::TIME_PANEL;
   panelHandlerCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
   panelHandlerCfg.healthIndicatorRsrcId =
       RoboCollectorGuiResources::HEALTH_INDICATOR;
@@ -126,6 +131,13 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   panelHandlerCfg.coinPanelFontId = RoboCollectorGuiResources::VINQUE_RG_75;
   panelHandlerCfg.coinPanelIncrTimerId = COIN_PANEL_INCR_TIMER_ID;
   panelHandlerCfg.coinPanelDecrTimerId = COIN_PANEL_DECR_TIMER_ID;
+
+  auto& timePanelCfg = panelHandlerCfg.timePanelCfg;
+  timePanelCfg.rsrcId = RoboCollectorGuiResources::TIME_PANEL;
+  timePanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
+  timePanelCfg.clockTimerId = TIME_PANEL_CLOCK_TIMER_ID;
+  timePanelCfg.blinkTimerId = TIME_PANEL_BLINK_TIMER_ID;
+  timePanelCfg.totalSeconds = totalGameSeconds;
 
   return cfg;
 }

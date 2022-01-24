@@ -13,9 +13,6 @@
 
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg) {
   constexpr auto panelX = 1250;
-  _timePanel.create(cfg.timePanelRsrcId);
-  _timePanel.setPosition(panelX, 50);
-
   _healthPanel.create(cfg.healthPanelRsrcId);
   _healthPanel.setPosition(panelX, 390);
 
@@ -28,6 +25,11 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg) {
 
   _vertDelimiter.create(cfg.vertDelimiterRsrcId);
   _vertDelimiter.setPosition(1200, 550);
+
+  if (SUCCESS != _timePanel.init(cfg.timePanelCfg)) {
+    LOGERR("Error, _timePanel.init() failed");
+    return FAILURE;
+  }
 
   const auto lightGoldColor = Color(0xD4AF37FF);
   NumberCounterConfig coinCounterCfg;

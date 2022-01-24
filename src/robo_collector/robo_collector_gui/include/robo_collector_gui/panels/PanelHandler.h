@@ -11,6 +11,7 @@
 
 //Own components headers
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
+#include "robo_collector_gui/panels/TimePanel.h"
 
 //Forward declarations
 
@@ -25,14 +26,15 @@ public:
   void increaseCollectedCoins(int32_t coins);
 
 private:
-  Image _timePanel;
+  TimePanel _timePanel;
+
+  NumberCounter _coinPanel;
+  Text _totalCoinsText;
+
   Image _healthPanel;
   Image _healthIndicator;
   Image _horDelimiter;
   Image _vertDelimiter;
-
-  NumberCounter _coinPanel;
-  Text _totalCoinsText;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_ */

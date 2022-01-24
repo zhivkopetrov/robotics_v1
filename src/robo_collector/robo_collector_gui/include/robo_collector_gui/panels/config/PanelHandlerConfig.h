@@ -9,9 +9,11 @@
 //Other libraries headers
 
 //Own components headers
+#include "robo_collector_gui/panels/config/TimePanelConfig.h"
 
 struct PanelHandlerConfig {
-  uint64_t timePanelRsrcId = 0;
+  TimePanelConfig timePanelCfg;
+
   uint64_t healthPanelRsrcId = 0;
   uint64_t healthIndicatorRsrcId = 0;
   uint64_t horDelimiterRsrcId = 0;
