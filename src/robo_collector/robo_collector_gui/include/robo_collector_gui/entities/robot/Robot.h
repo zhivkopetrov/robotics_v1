@@ -13,7 +13,7 @@
 
 //Own components headers
 #include "robo_collector_gui/helpers/CollisionObject.h"
-#include "robo_collector_gui/entities/robot/RobotAnimEndCb.h"
+#include "robo_collector_gui/entities/robot/animation/RobotAnimEndCb.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/field/FieldPos.h"
 
@@ -23,6 +23,7 @@ class CollisionWatcher;
 struct RobotCfg {
   FieldPos fieldPos;
   uint64_t rsrcId = 0;
+  int32_t robotId = 0;
   int32_t frameId = 0;
   int32_t animTimerId = 0;
   Direction initialDir = Direction::UP;
@@ -64,6 +65,7 @@ private:
   Image _robotImg;
   FieldPos _fieldPos;
   Direction _dir = Direction::UP;
+  int32_t _robotId = 0;
   int32_t _animTimerId;
   char _selfFieldMarker = '!';
   char _enemyFieldMarker = '?';

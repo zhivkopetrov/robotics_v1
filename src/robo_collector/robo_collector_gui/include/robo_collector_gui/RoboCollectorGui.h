@@ -16,6 +16,7 @@
 #include "robo_collector_gui/panels/Panel.h"
 #include "robo_collector_gui/entities/coin/CoinHandler.h"
 #include "robo_collector_gui/helpers/CollisionWatcher.h"
+#include "robo_collector_gui/helpers/TurnHelper.h"
 #include "robo_collector_gui/controller/RoboCollectorController.h"
 
 //Forward declarations
@@ -36,12 +37,14 @@ private:
   int32_t initRobots(const RoboCollectorGuiConfig& cfg);
   int32_t initCoinHandler(const RoboCollectorGuiConfig& cfg);
   int32_t initController(const RoboCollectorGuiConfig& cfg);
+  int32_t initTurnHelper();
 
   Image _map;
   Panel _panel;
   Field _field;
   CoinHandler _coinHandler;
   RoboCollectorController _controller;
+  TurnHelper _turnHelper;
   CollisionWatcher _collisionWatcher;
   std::array<Robot, Defines::ROBOTS_CTN> _robots;
 };

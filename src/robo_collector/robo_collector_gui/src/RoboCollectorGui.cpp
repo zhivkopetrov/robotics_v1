@@ -59,6 +59,11 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
+  if (SUCCESS != initTurnHelper()) {
+    LOGERR("initTurnHelper() failed");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
@@ -100,7 +105,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
   robotCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
   robotCfg.finishRobotActCb =
-      std::bind(&RoboCollectorController::unlockInput, &_controller);
+      std::bind(&TurnHelper::onRobotFinishAct, &_turnHelper, _1);
 
   const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos {
     FieldPos(cfg.fieldCfg.rows - 1, cfg.fieldCfg.cols - 1),
@@ -125,6 +130,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
       robotCfg.fieldMarker = cfg.enemyFieldMarker;
       robotCfg.enemyFieldMarker = cfg.blinkyFieldMarker;
     }
+    robotCfg.robotId = i;
     robotCfg.fieldPos = robotsFieldPos[i];
     robotCfg.initialDir = robotsInitialDirs[i];
     robotCfg.animTimerId = cfg.robotsAnimStartTimerId;
@@ -178,6 +184,19 @@ int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
 
   if (SUCCESS != _controller.init(collectorCfg)) {
     LOGERR("Error in _controller.init()");
+    return FAILURE;
+  }
+
+  return SUCCESS;
+}
+
+int32_t RoboCollectorGui::initTurnHelper() {
+  TurnHelperConfig turnHelperCfg;
+  turnHelperCfg.finishPlayerActCb =
+      std::bind(&RoboCollectorController::unlockInput, &_controller);
+
+  if (SUCCESS != _turnHelper.init(turnHelperCfg)) {
+    LOGERR("Error in _turnHelper.init()");
     return FAILURE;
   }
 

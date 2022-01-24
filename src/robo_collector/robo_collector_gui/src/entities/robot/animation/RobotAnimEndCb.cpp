@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/entities/robot/RobotAnimEndCb.h"
+#include "robo_collector_gui/entities/robot/animation/RobotAnimEndCb.h"
 
 //C system headers
 

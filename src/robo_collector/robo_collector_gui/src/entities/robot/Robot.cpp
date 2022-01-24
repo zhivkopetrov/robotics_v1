@@ -41,13 +41,14 @@ int32_t Robot::init(const RobotCfg &cfg) {
   _finishRobotActCb = cfg.finishRobotActCb;
 
   if (nullptr == cfg.getFieldDataCb) {
-      LOGERR("Error, nullptr provided for RobotCfg getFieldDataCb");
-      return FAILURE;
-    }
-    _getFieldDataCb = cfg.getFieldDataCb;
+    LOGERR("Error, nullptr provided for RobotCfg getFieldDataCb");
+    return FAILURE;
+  }
+  _getFieldDataCb = cfg.getFieldDataCb;
 
   _fieldPos = cfg.fieldPos;
   _dir = cfg.initialDir;
+  _robotId = cfg.robotId;
 
   _animTimerId = cfg.animTimerId;
   _robotImg.create(cfg.rsrcId);
@@ -119,7 +120,7 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
           _collisionObjHandle, _currCollisionWatchStatus);
   }
 
-  _finishRobotActCb();
+  _finishRobotActCb(_robotId);
 }
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
@@ -150,9 +151,11 @@ void Robot::move() {
   if (FieldUtils::isInsideField(futurePos)) {
     startMoveAnim(futurePos);
   } else {
-    constexpr auto damage = 20;
-    _collisionCb(damage);
-    _finishRobotActCb();
+    if (_collisionCb) {
+      constexpr auto damage = 20;
+      _collisionCb(damage);
+    }
+    _finishRobotActCb(_robotId);
   }
 }
 

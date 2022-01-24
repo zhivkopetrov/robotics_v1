@@ -37,7 +37,7 @@ add_executable(
         ${_INC_DIR}/field/config/TileConfig.h
         ${_INC_DIR}/entities/robot/Robot.h
         ${_INC_DIR}/entities/robot/RobotUtils.h
-        ${_INC_DIR}/entities/robot/RobotAnimEndCb.h
+        ${_INC_DIR}/entities/robot/animation/RobotAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/entities/coin/CoinHandler.h
         ${_INC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.h
@@ -48,6 +48,7 @@ add_executable(
         ${_INC_DIR}/controller/RoboCollectorController.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
+        ${_INC_DIR}/helpers/TurnHelper.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -58,7 +59,7 @@ add_executable(
         ${_SRC_DIR}/field/Tile.cpp
         ${_SRC_DIR}/entities/robot/Robot.cpp
         ${_SRC_DIR}/entities/robot/RobotUtils.cpp
-        ${_SRC_DIR}/entities/robot/RobotAnimEndCb.cpp
+        ${_SRC_DIR}/entities/robot/animation/RobotAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
         ${_SRC_DIR}/entities/coin/CoinHandler.cpp
         ${_SRC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.cpp
@@ -67,6 +68,7 @@ add_executable(
         ${_SRC_DIR}/controller/MoveButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
+        ${_SRC_DIR}/helpers/TurnHelper.cpp
 )
 
 target_include_directories(
