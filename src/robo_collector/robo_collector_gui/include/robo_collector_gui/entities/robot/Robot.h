@@ -80,6 +80,7 @@ private:
   RobotAnimEndCb _animEndCb;
 
   CollisionWatcher* _collisionWatcher = nullptr;
+  CollisionWatchStatus _currCollisionWatchStatus = CollisionWatchStatus::OFF;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOT_H_ */

@@ -111,16 +111,27 @@ void Robot::setMoveData(Direction futureDir, const FieldPos &futurePos) {
   _fieldPos = futurePos;
   _setFieldDataMarkerCb(futurePos, _selfFieldMarker);
 
-  _collisionWatcher->toggleWatchStatus(
-      _collisionObjHandle, CollisionWatchStatus::OFF);
+  if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
+    _currCollisionWatchStatus = CollisionWatchStatus::OFF;
+    _collisionWatcher->toggleWatchStatus(
+          _collisionObjHandle, _currCollisionWatchStatus);
+  }
 }
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
                               CollisionDamageImpact impact) {
-  if (CollisionDamageImpact::NO == impact) {
-    return; //nothing to do
+  //if collision watch status was started -> disable it
+  //collision watch status will not be started in the case where
+  //another object collides into this one
+  if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
+    _currCollisionWatchStatus = CollisionWatchStatus::OFF;
+    _collisionWatcher->toggleWatchStatus(
+          _collisionObjHandle, _currCollisionWatchStatus);
   }
 
+  if (CollisionDamageImpact::NO == impact) {
+    return; //nothing more to do
+  }
 
 }
 
@@ -129,8 +140,9 @@ Rectangle Robot::getBoundary() const {
 }
 
 void Robot::move() {
+  _currCollisionWatchStatus = CollisionWatchStatus::ON;
   _collisionWatcher->toggleWatchStatus(
-      _collisionObjHandle, CollisionWatchStatus::ON);
+      _collisionObjHandle, _currCollisionWatchStatus);
   const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
   if (FieldUtils::isInsideField(futurePos)) {
     startPosAnim(futurePos);

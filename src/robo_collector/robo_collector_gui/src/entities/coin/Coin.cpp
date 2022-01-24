@@ -142,11 +142,11 @@ void Coin::startCollectAnim() {
   constexpr auto pixelsPerStep = 20;
   const auto numberOfSteps = pixelDistance / pixelsPerStep;
 
-  if (SUCCESS != _posAnim.configure(cfg, endPos, numberOfSteps,
+  if (SUCCESS != _colllectAnim.configure(cfg, endPos, numberOfSteps,
           &_coinCollectAnimEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error, _posAnim.configure() failed for rsrcId: %#16lX");
   }
-  _posAnim.start();
+  _colllectAnim.start();
 }
 
 void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect,

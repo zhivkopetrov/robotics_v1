@@ -56,7 +56,7 @@ private:
 
   Image _coinImg;
   FrameAnimation _rotateAnim;
-  PositionAnimation _posAnim;
+  PositionAnimation _colllectAnim;
   CoinRespawnAnim _respawnAnim;
 
   CoinCollectAnimEndCb _coinCollectAnimEndCb;
