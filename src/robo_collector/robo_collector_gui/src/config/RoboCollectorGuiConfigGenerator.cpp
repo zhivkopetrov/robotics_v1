@@ -113,17 +113,19 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
-  auto& panelCfg = cfg.panelConfig;
-  panelCfg.timePanelRsrcId = RoboCollectorGuiResources::TIME_PANEL;
-  panelCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
-  panelCfg.healthIndicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
-  panelCfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
-  panelCfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
+  auto& panelHandlerCfg = cfg.panelHandlerConfig;
+  panelHandlerCfg.timePanelRsrcId = RoboCollectorGuiResources::TIME_PANEL;
+  panelHandlerCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
+  panelHandlerCfg.healthIndicatorRsrcId =
+      RoboCollectorGuiResources::HEALTH_INDICATOR;
+  panelHandlerCfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
+  panelHandlerCfg.vertDelimiterRsrcId =
+      RoboCollectorGuiResources::VERT_DELIMITER;
 
-  panelCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
-  panelCfg.coinPanelFontId = RoboCollectorGuiResources::VINQUE_RG_75;
-  panelCfg.coinPanelIncrTimerId = COIN_PANEL_INCR_TIMER_ID;
-  panelCfg.coinPanelDecrTimerId = COIN_PANEL_DECR_TIMER_ID;
+  panelHandlerCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
+  panelHandlerCfg.coinPanelFontId = RoboCollectorGuiResources::VINQUE_RG_75;
+  panelHandlerCfg.coinPanelIncrTimerId = COIN_PANEL_INCR_TIMER_ID;
+  panelHandlerCfg.coinPanelDecrTimerId = COIN_PANEL_DECR_TIMER_ID;
 
   return cfg;
 }

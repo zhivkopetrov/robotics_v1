@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_PANELS_PANELCONFIG_H_
-#define ROBO_COLLECTOR_GUI_PANELS_PANELCONFIG_H_
+#ifndef ROBO_COLLECTOR_GUI_PANELS_PANELHANDLERCONFIG_H_
+#define ROBO_COLLECTOR_GUI_PANELS_PANELHANDLERCONFIG_H_
 
 //C system headers
 
@@ -10,7 +10,7 @@
 
 //Own components headers
 
-struct PanelConfig {
+struct PanelHandlerConfig {
   uint64_t timePanelRsrcId = 0;
   uint64_t healthPanelRsrcId = 0;
   uint64_t healthIndicatorRsrcId = 0;
@@ -23,4 +23,4 @@ struct PanelConfig {
   int32_t coinPanelDecrTimerId = 0;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_PANELS_PANELCONFIG_H_ */
+#endif /* ROBO_COLLECTOR_GUI_PANELS_PANELHANDLERCONFIG_H_ */

@@ -42,8 +42,8 @@ add_executable(
         ${_INC_DIR}/entities/coin/CoinHandler.h
         ${_INC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.h
         ${_INC_DIR}/entities/coin/animation/CoinRespawnAnim.h
-        ${_INC_DIR}/panels/Panel.h
-        ${_INC_DIR}/panels/config/PanelConfig.h
+        ${_INC_DIR}/panels/PanelHandler.h
+        ${_INC_DIR}/panels/config/PanelHandlerConfig.h
         ${_INC_DIR}/controller/MoveButton.h
         ${_INC_DIR}/controller/RoboCollectorController.h
         ${_INC_DIR}/helpers/CollisionObject.h
@@ -64,7 +64,7 @@ add_executable(
         ${_SRC_DIR}/entities/coin/CoinHandler.cpp
         ${_SRC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/animation/CoinRespawnAnim.cpp
-        ${_SRC_DIR}/panels/Panel.cpp
+        ${_SRC_DIR}/panels/PanelHandler.cpp
         ${_SRC_DIR}/controller/MoveButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp

@@ -39,7 +39,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  if (SUCCESS != _panel.init(parsedCfg.panelConfig)) {
+  if (SUCCESS != _panelHandler.init(parsedCfg.panelHandlerConfig)) {
     LOGERR("Error in _panel.init()");
     return FAILURE;
   }
@@ -78,7 +78,7 @@ void RoboCollectorGui::deinit() {
 void RoboCollectorGui::draw() const {
   _map.draw();
   _field.draw();
-  _panel.draw();
+  _panelHandler.draw();
   _coinHandler.draw();
   _controller.draw();
   for (const auto &robot : _robots) {
@@ -98,7 +98,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   RobotCfg robotCfg;
   robotCfg.collisionWatcher = &_collisionWatcher;
   robotCfg.collisionCb =
-      std::bind(&Panel::decreaseHealthIndicator, &_panel, _1);
+      std::bind(&PanelHandler::decreaseHealthIndicator, &_panelHandler, _1);
   robotCfg.setFieldDataMarkerCb =
       std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
   robotCfg.resetFieldDataMarkerCb =
@@ -160,7 +160,7 @@ int32_t RoboCollectorGui::initCoinHandler(const RoboCollectorGuiConfig &cfg) {
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
   coinHandlerCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
   coinHandlerCfg.incrCollectedCoinsCb =
-      std::bind(&Panel::increaseCollectedCoins, &_panel, _1);
+      std::bind(&PanelHandler::increaseCollectedCoins, &_panelHandler, _1);
 
   if (SUCCESS != _coinHandler.init(coinHandlerCfg)) {
     LOGERR("Error in _coinHandler.init()");

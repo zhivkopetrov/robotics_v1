@@ -11,13 +11,13 @@
 
 //Own components headers
 #include "robo_collector_gui/field/config/FieldConfig.h"
-#include "robo_collector_gui/panels/config/PanelConfig.h"
+#include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
 
 //Forward declarations
 
 struct RoboCollectorGuiConfig {
   FieldConfig fieldCfg;
-  PanelConfig panelConfig;
+  PanelHandlerConfig panelHandlerConfig;
   uint64_t mapRsrcId = 0;
   uint64_t robotBlinkyRsrcId = 0;
   uint64_t robotEnemiesRsrcId = 0;

@@ -13,7 +13,7 @@
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
 #include "robo_collector_gui/entities/robot/Robot.h"
-#include "robo_collector_gui/panels/Panel.h"
+#include "robo_collector_gui/panels/PanelHandler.h"
 #include "robo_collector_gui/entities/coin/CoinHandler.h"
 #include "robo_collector_gui/helpers/CollisionWatcher.h"
 #include "robo_collector_gui/helpers/TurnHelper.h"
@@ -40,7 +40,7 @@ private:
   int32_t initTurnHelper();
 
   Image _map;
-  Panel _panel;
+  PanelHandler _panelHandler;
   Field _field;
   CoinHandler _coinHandler;
   RoboCollectorController _controller;

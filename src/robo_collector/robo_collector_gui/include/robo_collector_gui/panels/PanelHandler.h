@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_PANELS_PANEL_H_
-#define ROBO_COLLECTOR_GUI_PANELS_PANEL_H_
+#ifndef ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_
+#define ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_
 
 //C system headers
 
@@ -10,13 +10,13 @@
 #include "manager_utils/drawing/NumberCounter.h"
 
 //Own components headers
-#include "robo_collector_gui/panels/config/PanelConfig.h"
+#include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
 
 //Forward declarations
 
-class Panel {
+class PanelHandler {
 public:
-  int32_t init(const PanelConfig& cfg);
+  int32_t init(const PanelHandlerConfig& cfg);
   void draw() const;
 
   /* 1 damage == 1px */
@@ -35,4 +35,4 @@ private:
   Text _totalCoinsText;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_PANELS_PANEL_H_ */
+#endif /* ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_ */

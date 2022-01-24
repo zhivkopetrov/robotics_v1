@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/panels/Panel.h"
+#include "robo_collector_gui/panels/PanelHandler.h"
 
 //C system headers
 
@@ -11,7 +11,7 @@
 
 //Own components headers
 
-int32_t Panel::init(const PanelConfig &cfg) {
+int32_t PanelHandler::init(const PanelHandlerConfig &cfg) {
   constexpr auto panelX = 1250;
   _timePanel.create(cfg.timePanelRsrcId);
   _timePanel.setPosition(panelX, 50);
@@ -51,7 +51,7 @@ int32_t Panel::init(const PanelConfig &cfg) {
   return SUCCESS;
 }
 
-void Panel::draw() const {
+void PanelHandler::draw() const {
   _timePanel.draw();
   _healthPanel.draw();
   _healthIndicator.draw();
@@ -61,13 +61,13 @@ void Panel::draw() const {
 //  _vertDelimiter.draw();
 }
 
-void Panel::decreaseHealthIndicator(int32_t damage) {
+void PanelHandler::decreaseHealthIndicator(int32_t damage) {
   auto cropRectangle = _healthIndicator.getCropRect();
   cropRectangle.w -= damage;
   _healthIndicator.setCropRect(cropRectangle);
 }
 
-void Panel::increaseCollectedCoins(int32_t coins) {
+void PanelHandler::increaseCollectedCoins(int32_t coins) {
   _coinPanel.increaseWith(coins);
 }
 
