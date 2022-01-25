@@ -28,9 +28,15 @@ constexpr auto WINDOW_HEIGHT = 1053;
 constexpr auto totalGameSeconds = 180;
 
 enum TimerId {
-  ROBOTS_ANIM_TIMER_ID_START,
+  ROBOTS_MOVE_ANIM_TIMER_ID_START,
   //reserved
-  ROBOTS_ANIM_TIMER_ID_END = ROBOTS_ANIM_TIMER_ID_START + Defines::ENEMIES_CTN,
+  ROBOTS_MOVE_ANIM_TIMER_ID_END =
+      ROBOTS_MOVE_ANIM_TIMER_ID_START + Defines::ENEMIES_CTN,
+
+  ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START,
+  //reserved
+  ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_END =
+      ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START + Defines::ENEMIES_CTN,
 
   COIN_PANEL_INCR_TIMER_ID,
   COIN_PANEL_DECR_TIMER_ID,
@@ -83,7 +89,9 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
   cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
-  cfg.robotsAnimStartTimerId = TimerId::ROBOTS_ANIM_TIMER_ID_START;
+  cfg.robotsMoveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
+  cfg.robotsWallCollisionAnimStartTimerId =
+      ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START;
 
   cfg.coinAnimRsrcIds = {
       RoboCollectorGuiResources::COIN_ANIM_GOLD,

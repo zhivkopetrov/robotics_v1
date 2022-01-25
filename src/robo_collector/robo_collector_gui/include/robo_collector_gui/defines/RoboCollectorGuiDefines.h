@@ -14,7 +14,7 @@
 
 namespace Defines {
 enum RobotDefines {
-  BLINKY_IDX = 0,
+  PLAYER_ROBOT_IDX = 0,
   ENEMIES_CTN = 3,
   ROBOTS_CTN = 4
 };

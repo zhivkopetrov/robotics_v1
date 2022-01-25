@@ -37,7 +37,7 @@ private:
   int32_t initRobots(const RoboCollectorGuiConfig& cfg);
   int32_t initCoinHandler(const RoboCollectorGuiConfig& cfg);
   int32_t initController(const RoboCollectorGuiConfig& cfg);
-  int32_t initTurnHelper();
+  int32_t initTurnHelper(const RoboCollectorGuiConfig& cfg);
 
   Image _map;
   PanelHandler _panelHandler;

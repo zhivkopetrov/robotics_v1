@@ -17,14 +17,15 @@
 
 using FieldData = std::vector<std::vector<char>>;
 
-using CollisionCb = std::function<void(int32_t)>;
+using PlayerDamageCb = std::function<void(int32_t)>;
 using SetFieldDataMarkerCb = std::function<void(const FieldPos&, char)>;
 using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;
 using GetFieldDataCb = std::function<const FieldData&()>;
-using GetFieldEmptyDataMarkerCb = std::function<char()>;
 using RobotActCb = std::function<void(MoveType)>;
+using GetRobotFieldPosCb = std::function<FieldPos()>;
+using GetRobotDirCb = std::function<Direction()>;
 using FinishRobotActCb = std::function<void(int32_t)>;
-using FinishPlayerActCb = std::function<void()>;
+using EnablePlayerInputCb = std::function<void()>;
 using MoveButtonClickCb = std::function<void(MoveType)>;
 using IncrCollectedCoinsCb = std::function<void(int32_t)>;
 

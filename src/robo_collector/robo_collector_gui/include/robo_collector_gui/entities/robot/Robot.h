@@ -10,6 +10,7 @@
 #include "manager_utils/drawing/Image.h"
 #include "manager_utils/drawing/animation/PositionAnimation.h"
 #include "manager_utils/drawing/animation/RotationAnimation.h"
+#include "manager_utils/time/TimerClient.h"
 
 //Own components headers
 #include "robo_collector_gui/helpers/CollisionObject.h"
@@ -25,12 +26,13 @@ struct RobotCfg {
   uint64_t rsrcId = 0;
   int32_t robotId = 0;
   int32_t frameId = 0;
-  int32_t animTimerId = 0;
+  int32_t moveAnimTimerId = 0;
+  int32_t wallCollisionAnimTimerId = 0;
   Direction initialDir = Direction::UP;
   char fieldMarker = '!';
   char enemyFieldMarker = '?';
 
-  CollisionCb collisionCb;
+  PlayerDamageCb playerDamageCb;
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
@@ -39,7 +41,7 @@ struct RobotCfg {
   CollisionWatcher* collisionWatcher = nullptr;
 };
 
-class Robot : public CollisionObject {
+class Robot final : public CollisionObject, public TimerClient {
 public:
   int32_t init(const RobotCfg &cfg);
 
@@ -47,6 +49,8 @@ public:
 
   void draw() const;
 
+  FieldPos getFieldPos() const;
+  Direction getDirection() const;
   void act(MoveType moveType);
 
   void onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos);
@@ -55,8 +59,11 @@ private:
   void registerCollision(const Rectangle& intersectRect,
                          CollisionDamageImpact impact) override;
   Rectangle getBoundary() const override;
+  void onTimeout(const int32_t timerId) override;
 
   void move();
+
+  void handleCollision();
 
   void startMoveAnim(FieldPos futurePos);
   void startRotAnim(bool isLeftRotation);
@@ -66,11 +73,12 @@ private:
   FieldPos _fieldPos;
   Direction _dir = Direction::UP;
   int32_t _robotId = 0;
-  int32_t _animTimerId;
+  int32_t _moveAnimTimerId = 0;
+  int32_t _wallCollisionAnimTimerId = 0;
   char _selfFieldMarker = '!';
   char _enemyFieldMarker = '?';
 
-  CollisionCb _collisionCb;
+  PlayerDamageCb _playerDamageCb;
   SetFieldDataMarkerCb _setFieldDataMarkerCb;
   ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
   GetFieldDataCb _getFieldDataCb;

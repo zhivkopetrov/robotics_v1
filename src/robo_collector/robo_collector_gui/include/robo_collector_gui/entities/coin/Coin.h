@@ -34,7 +34,6 @@ struct CoinConfig {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
-  GetFieldEmptyDataMarkerCb _getFieldEmptyDataMarkerCb;
   CollisionWatcher* collisionWatcher = nullptr;
 };
 
@@ -71,7 +70,6 @@ private:
   SetFieldDataMarkerCb _setFieldDataMarkerCb;
   ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
   GetFieldDataCb _getFieldDataCb;
-  GetFieldEmptyDataMarkerCb _getFieldEmptyDataMarkerCb;
 
   CollisionWatcher* _collisionWatcher = nullptr;
 };

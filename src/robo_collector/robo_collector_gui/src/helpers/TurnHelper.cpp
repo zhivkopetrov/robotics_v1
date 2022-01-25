@@ -12,17 +12,35 @@
 //Own components headers
 
 int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
-  if (nullptr == cfg.finishPlayerActCb) {
-    LOGERR("Error, nullptr provided for finishPlayerActCb");
+  RobotAIConfig robotAiCfg;
+  robotAiCfg.getFieldDataCb = cfg.getFieldDataCb;
+  robotAiCfg.fieldEmptyDataMarker = cfg.fieldEmptyDataMarker;
+  robotAiCfg.playerDataMarker = cfg.playerDataMarker;
+  if (SUCCESS != _robotAI.init(robotAiCfg)) {
+    LOGERR("Error, robotAI.init() failed");
     return FAILURE;
   }
-  _finishPlayerActCb = cfg.finishPlayerActCb;
+
+  if (nullptr == cfg.enablePlayerInputCb) {
+    LOGERR("Error, nullptr provided for enablePlayerInputCb");
+    return FAILURE;
+  }
+  _enablePlayerInputCb = cfg.enablePlayerInputCb;
+
+  _maxRobots = cfg.maxRobots;
+  _robotActInterfaces = cfg.robotActInterfaces;
 
   return SUCCESS;
 }
 
 void TurnHelper::onRobotFinishAct(int32_t robotId) {
-  if (Defines::BLINKY_IDX == robotId) {
-    _finishPlayerActCb();
+  const auto lastRobotIdx = _maxRobots - 1;
+  if (lastRobotIdx == robotId) {
+    _activeRobotId = Defines::PLAYER_ROBOT_IDX;
+    _enablePlayerInputCb();
+  } else {
+    _activeRobotId = robotId + 1;
+    _robotAI.makeMove(_robotActInterfaces[_activeRobotId]);
   }
 }
+

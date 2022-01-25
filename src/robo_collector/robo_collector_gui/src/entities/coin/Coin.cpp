@@ -160,14 +160,14 @@ Rectangle Coin::getBoundary() const {
 
 FieldPos Coin::choseRespawnLocation() {
   const auto& fieldData = _getFieldDataCb();
-  const auto cols = fieldData.size();
-  const auto rows = fieldData[0].size();
+  const auto lastColIdx = fieldData.size() - 1;
+  const auto lastRowIdx = fieldData[0].size() - 1;
   auto& rng = Rng::getInstance();
   FieldPos chosenPos;
 
   while (true) {
-    chosenPos.row = rng.getRandomNumber(0, rows - 1);
-    chosenPos.col = rng.getRandomNumber(0, cols - 1);
+    chosenPos.row = rng.getRandomNumber(0, lastRowIdx);
+    chosenPos.col = rng.getRandomNumber(0, lastColIdx);
     const auto chosenTile = fieldData[chosenPos.row][chosenPos.col];
     if (_fieldEmptyDataMarker == chosenTile) {
       break;

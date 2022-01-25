@@ -59,7 +59,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  if (SUCCESS != initTurnHelper()) {
+  if (SUCCESS != initTurnHelper(parsedCfg)) {
     LOGERR("initTurnHelper() failed");
     return FAILURE;
   }
@@ -97,7 +97,7 @@ void RoboCollectorGui::process() {
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   RobotCfg robotCfg;
   robotCfg.collisionWatcher = &_collisionWatcher;
-  robotCfg.collisionCb =
+  robotCfg.playerDamageCb =
       std::bind(&PanelHandler::decreaseHealthIndicator, &_panelHandler, _1);
   robotCfg.setFieldDataMarkerCb =
       std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
@@ -119,21 +119,23 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   };
 
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
-    if (Defines::BLINKY_IDX == i) {
+    if (Defines::PLAYER_ROBOT_IDX == i) {
       robotCfg.rsrcId = cfg.robotBlinkyRsrcId;
       robotCfg.frameId = 0;
-      robotCfg.fieldMarker = cfg.blinkyFieldMarker;
+      robotCfg.fieldMarker = cfg.playerFieldMarker;
       robotCfg.enemyFieldMarker = cfg.enemyFieldMarker;
     } else {
       robotCfg.rsrcId = cfg.robotEnemiesRsrcId;
       robotCfg.frameId = i - 1;
       robotCfg.fieldMarker = cfg.enemyFieldMarker;
-      robotCfg.enemyFieldMarker = cfg.blinkyFieldMarker;
+      robotCfg.enemyFieldMarker = cfg.playerFieldMarker;
     }
     robotCfg.robotId = i;
     robotCfg.fieldPos = robotsFieldPos[i];
     robotCfg.initialDir = robotsInitialDirs[i];
-    robotCfg.animTimerId = cfg.robotsAnimStartTimerId;
+    robotCfg.moveAnimTimerId = cfg.robotsMoveAnimStartTimerId + i;
+    robotCfg.wallCollisionAnimTimerId =
+        cfg.robotsWallCollisionAnimStartTimerId + i;
 
     if (SUCCESS != _robots[i].init(robotCfg)) {
       LOGERR("Error in _robots[%d].init()", i);
@@ -177,7 +179,7 @@ int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
     return FAILURE;
   }
   collectorCfg.robotActCb =
-      std::bind(&Robot::act, &_robots[Defines::BLINKY_IDX], _1);
+      std::bind(&Robot::act, &_robots[Defines::PLAYER_ROBOT_IDX], _1);
   collectorCfg.moveButtonsRsrcIds = cfg.moveButtonsRsrcIds;
   collectorCfg.maxMoveButtons = cfg.maxMoveButtons;
   collectorCfg.moveButtonInfoTextFontId = cfg.moveButtonsInfoTextFontId;
@@ -190,10 +192,20 @@ int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
   return SUCCESS;
 }
 
-int32_t RoboCollectorGui::initTurnHelper() {
+int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig& cfg) {
   TurnHelperConfig turnHelperCfg;
-  turnHelperCfg.finishPlayerActCb =
+  turnHelperCfg.enablePlayerInputCb =
       std::bind(&RoboCollectorController::unlockInput, &_controller);
+  turnHelperCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  turnHelperCfg.fieldEmptyDataMarker = cfg.fieldCfg.emptyTileMarker;
+  turnHelperCfg.playerDataMarker = cfg.playerFieldMarker;
+  turnHelperCfg.maxRobots = Defines::ROBOTS_CTN;
+  for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
+    turnHelperCfg.robotActInterfaces.emplace_back(
+        std::bind(&Robot::act, &_robots[i], _1),
+        std::bind(&Robot::getFieldPos, &_robots[i]),
+        std::bind(&Robot::getDirection, &_robots[i]));
+  }
 
   if (SUCCESS != _turnHelper.init(turnHelperCfg)) {
     LOGERR("Error in _turnHelper.init()");

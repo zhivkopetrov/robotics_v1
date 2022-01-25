@@ -16,6 +16,10 @@
 
 //Forward declarations
 
+enum class RobotAnimEndCbReport {
+  ENABLE, DISABLE
+};
+
 class RobotAnimEndCb final : public AnimationEndCb {
 public:
   int32_t init(
@@ -25,10 +29,13 @@ public:
 
   int32_t onAnimationEnd() override;
 
+  void setCbStatus(RobotAnimEndCbReport status);
+
 private:
   std::function<void(Direction, const FieldPos&)> _onRobotsAnimEndCb;
   Direction _futureDir = Direction::UP;
   FieldPos _futurePos;
+  RobotAnimEndCbReport _status = RobotAnimEndCbReport::ENABLE;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOTANIMENDCB_H_ */

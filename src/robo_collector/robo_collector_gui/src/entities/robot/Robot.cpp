@@ -16,11 +16,14 @@
 #include "robo_collector_gui/entities/robot/RobotUtils.h"
 
 int32_t Robot::init(const RobotCfg &cfg) {
-  if (nullptr == cfg.collisionCb) {
+  if (nullptr == cfg.playerDamageCb) {
     LOGERR("Error, nullptr provided for RobotCfg collisionCb");
     return FAILURE;
   }
-  _collisionCb = cfg.collisionCb;
+
+  // only player robot should report damage callback
+  _playerDamageCb =
+      (Defines::PLAYER_ROBOT_IDX == cfg.robotId) ? cfg.playerDamageCb : nullptr;
 
   if (nullptr == cfg.setFieldDataMarkerCb) {
     LOGERR("Error, nullptr provided for RobotCfg setFieldDataMarkerCb");
@@ -50,7 +53,8 @@ int32_t Robot::init(const RobotCfg &cfg) {
   _dir = cfg.initialDir;
   _robotId = cfg.robotId;
 
-  _animTimerId = cfg.animTimerId;
+  _moveAnimTimerId = cfg.moveAnimTimerId;
+  _wallCollisionAnimTimerId = cfg.wallCollisionAnimTimerId;
   _robotImg.create(cfg.rsrcId);
   _robotImg.setPosition(FieldUtils::getAbsPos(cfg.fieldPos));
   _robotImg.setFrame(cfg.frameId);
@@ -87,6 +91,14 @@ void Robot::deinit() {
 
 void Robot::draw() const {
   _robotImg.draw();
+}
+
+FieldPos Robot::getFieldPos() const {
+  return _fieldPos;
+}
+
+Direction Robot::getDirection() const {
+  return _dir;
 }
 
 void Robot::act(MoveType moveType) {
@@ -137,26 +149,53 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
   if (CollisionDamageImpact::NO == impact) {
     return; //nothing more to do
   }
+
+  //TODO invoke on collisionAnimEnd
+  handleCollision();
 }
 
 Rectangle Robot::getBoundary() const {
   return _robotImg.getImageRect();
 }
 
-void Robot::move() {
-  _currCollisionWatchStatus = CollisionWatchStatus::ON;
-  _collisionWatcher->toggleWatchStatus(
-      _collisionObjHandle, _currCollisionWatchStatus);
-  const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
-  if (FieldUtils::isInsideField(futurePos)) {
-    startMoveAnim(futurePos);
+void Robot::onTimeout(const int32_t timerId) {
+  if (timerId == _wallCollisionAnimTimerId) {
+    //TODO invoke on collisionAnimEnd
+    handleCollision();
   } else {
-    if (_collisionCb) {
-      constexpr auto damage = 20;
-      _collisionCb(damage);
-    }
-    _finishRobotActCb(_robotId);
+    LOGERR("Error, receive unsupported timerId: %d", timerId);
   }
+}
+
+void Robot::move() {
+  const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
+  startMoveAnim(futurePos);
+
+  if (FieldUtils::isInsideField(futurePos)) {
+    _currCollisionWatchStatus = CollisionWatchStatus::ON;
+    _collisionWatcher->toggleWatchStatus(
+        _collisionObjHandle, _currCollisionWatchStatus);
+  } else {
+    constexpr auto timerInterval = 200;
+    startTimer(timerInterval, _wallCollisionAnimTimerId, TimerType::ONESHOT);
+  }
+}
+
+void Robot::handleCollision() {
+  LOGY("handling collision for robotId: %d", _robotId);
+
+  _animEndCb.setCbStatus(RobotAnimEndCbReport::DISABLE);
+  _moveAnim.stop();
+
+  _robotImg.setPosition(FieldUtils::getAbsPos(_fieldPos));
+
+  if (_playerDamageCb) {
+    LOGY("dealing damage for robotId: %d", _robotId);
+    constexpr auto damage = 20;
+    _playerDamageCb(damage);
+  }
+
+  _finishRobotActCb(_robotId);
 }
 
 void Robot::startMoveAnim(FieldPos futurePos) {
@@ -164,6 +203,7 @@ void Robot::startMoveAnim(FieldPos futurePos) {
   constexpr auto numberOfSteps = 40;
   const auto futureAbsPos = FieldUtils::getAbsPos(futurePos);
   _animEndCb.setAnimEndData(_dir, futurePos);
+  _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
   if (SUCCESS != _moveAnim.configure(cfg, futureAbsPos, numberOfSteps,
           &_animEndCb, PosAnimType::ONE_DIRECTIONAL)) {
@@ -183,6 +223,7 @@ void Robot::startRotAnim(bool isLeftRotation) {
       RotationCenterType::ORIG_CENTER);
   const auto futureDir = RobotUtils::getDirAfterRotation(_dir, isLeftRotation);
   _animEndCb.setAnimEndData(futureDir, _fieldPos);
+  _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
   if (SUCCESS != _rotAnim.configure(cfg, rotAngleStep, &_animEndCb, rotCenter,
           PosAnimType::ONE_DIRECTIONAL, AnimType::FINITE, totalRotAngle)) {
@@ -198,7 +239,7 @@ AnimBaseConfig Robot::generateAnimBaseConfig() {
   cfg.rsrcId = _robotImg.getRsrcId();
   cfg.startPos = FieldUtils::getAbsPos(_fieldPos);
   cfg.animDirection = AnimDir::FORWARD;
-  cfg.timerId = _animTimerId;
+  cfg.timerId = _moveAnimTimerId;
   cfg.timerInterval = 20;
   cfg.isTimerPauseble = true;
   cfg.animImageType = AnimImageType::EXTERNAL;

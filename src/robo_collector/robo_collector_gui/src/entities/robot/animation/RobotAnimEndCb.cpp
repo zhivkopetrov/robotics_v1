@@ -24,7 +24,10 @@ int32_t RobotAnimEndCb::init(
 }
 
 int32_t RobotAnimEndCb::onAnimationEnd() {
-  _onRobotsAnimEndCb(_futureDir, _futurePos);
+  if (RobotAnimEndCbReport::ENABLE ==_status) {
+    _onRobotsAnimEndCb(_futureDir, _futurePos);
+  }
+
   return SUCCESS;
 }
 
@@ -32,4 +35,8 @@ void RobotAnimEndCb::setAnimEndData(Direction futureDir,
                                     const FieldPos &futurePos) {
   _futureDir = futureDir;
   _futurePos = futurePos;
+}
+
+void RobotAnimEndCb::setCbStatus(RobotAnimEndCbReport status) {
+  _status = status;
 }

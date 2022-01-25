@@ -21,7 +21,8 @@ struct RoboCollectorGuiConfig {
   uint64_t mapRsrcId = 0;
   uint64_t robotBlinkyRsrcId = 0;
   uint64_t robotEnemiesRsrcId = 0;
-  uint64_t robotsAnimStartTimerId = 0;
+  int32_t robotsMoveAnimStartTimerId = 0;
+  int32_t robotsWallCollisionAnimStartTimerId = 0;
 
   uint64_t moveButtonsInfoTextFontId = 0;
   std::vector<uint64_t> moveButtonsRsrcIds;
@@ -34,7 +35,7 @@ struct RoboCollectorGuiConfig {
   int32_t coinCollectAnimFirstTimerId = 0;
   int32_t coinRespawnAnimFirstTimerId = 0;
 
-  char blinkyFieldMarker = 'B';
+  char playerFieldMarker = 'B';
   char enemyFieldMarker = 'E';
 };
 
