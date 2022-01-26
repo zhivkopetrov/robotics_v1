@@ -214,7 +214,7 @@ void Robot::handleDamageImpactCollision() {
 
 void Robot::startMoveAnim(FieldPos futurePos) {
   const auto cfg = generateAnimBaseConfig();
-  constexpr auto numberOfSteps = 40;
+  constexpr auto numberOfSteps = 20;
   const auto futureAbsPos = FieldUtils::getAbsPos(futurePos);
   _animEndCb.setAnimEndData(_dir, futurePos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
@@ -231,7 +231,7 @@ void Robot::startMoveAnim(FieldPos futurePos) {
 void Robot::startRotAnim(bool isLeftRotation) {
   const auto cfg = generateAnimBaseConfig();
   const auto angleSign = isLeftRotation ? -1.0 : 1.0;
-  const auto rotAngleStep = 2.5 * angleSign;
+  const auto rotAngleStep = 4.5 * angleSign;
   const auto totalRotAngle = 90.0 * angleSign;
   const auto rotCenter = _robotImg.getPredefinedRotationCenter(
       RotationCenterType::ORIG_CENTER);
