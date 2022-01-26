@@ -127,6 +127,7 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
   _setFieldDataMarkerCb(futurePos, _selfFieldMarker);
 
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
+    LOGB("Switching CollisionWatchStatus::OFF for robotId: %d", _robotId);
     _currCollisionWatchStatus = CollisionWatchStatus::OFF;
     _collisionWatcher->toggleWatchStatus(
           _collisionObjHandle, _currCollisionWatchStatus);
@@ -137,21 +138,33 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
                               CollisionDamageImpact impact) {
-  //if collision watch status was started -> disable it
+  LOGC("Received registerCollision for robotId: %d", _robotId);
   //collision watch status will not be started in the case where
-  //another object collides into this one
+  //this is the currently moving object
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
+    LOGB("Switching CollisionWatchStatus::OFF for robotId: %d", _robotId);
     _currCollisionWatchStatus = CollisionWatchStatus::OFF;
     _collisionWatcher->toggleWatchStatus(
           _collisionObjHandle, _currCollisionWatchStatus);
+
+    //this is a soft object (such as coin). Don't stop the movement
+    if (CollisionDamageImpact::NO == impact) {
+      return; //nothing more to do
+    }
+
+    LOGM("Handle collision from registerCollision CollisionWatchStatus::ON "
+        "for robotId: %d", _robotId);
+    handleDamageImpactCollision();
+    _finishRobotActCb(_robotId);
+    return;
   }
 
-  if (CollisionDamageImpact::NO == impact) {
-    return; //nothing more to do
-  }
-
+  //collision watch status will not be started in the case where
+  //another moving object collides into this one, which is not moving
   //TODO invoke on collisionAnimEnd
-  handleCollision();
+  LOGM("Handle collision from registerCollision CollisionWatchStatus::OFF "
+      "for robotId: %d", _robotId);
+  handleDamageImpactCollision();
 }
 
 Rectangle Robot::getBoundary() const {
@@ -160,8 +173,10 @@ Rectangle Robot::getBoundary() const {
 
 void Robot::onTimeout(const int32_t timerId) {
   if (timerId == _wallCollisionAnimTimerId) {
+    LOGM("Handle collision from onTimeout wall timer");
     //TODO invoke on collisionAnimEnd
-    handleCollision();
+    handleDamageImpactCollision();
+    _finishRobotActCb(_robotId);
   } else {
     LOGERR("Error, receive unsupported timerId: %d", timerId);
   }
@@ -169,9 +184,8 @@ void Robot::onTimeout(const int32_t timerId) {
 
 void Robot::move() {
   const auto futurePos = FieldUtils::getAdjacentPos(_dir, _fieldPos);
-  startMoveAnim(futurePos);
-
   if (FieldUtils::isInsideField(futurePos)) {
+    LOGB("Switching CollisionWatchStatus::ON for robotId: %d", _robotId);
     _currCollisionWatchStatus = CollisionWatchStatus::ON;
     _collisionWatcher->toggleWatchStatus(
         _collisionObjHandle, _currCollisionWatchStatus);
@@ -179,9 +193,11 @@ void Robot::move() {
     constexpr auto timerInterval = 200;
     startTimer(timerInterval, _wallCollisionAnimTimerId, TimerType::ONESHOT);
   }
+
+  startMoveAnim(futurePos);
 }
 
-void Robot::handleCollision() {
+void Robot::handleDamageImpactCollision() {
   LOGY("handling collision for robotId: %d", _robotId);
 
   _animEndCb.setCbStatus(RobotAnimEndCbReport::DISABLE);
@@ -194,8 +210,6 @@ void Robot::handleCollision() {
     constexpr auto damage = 20;
     _playerDamageCb(damage);
   }
-
-  _finishRobotActCb(_robotId);
 }
 
 void Robot::startMoveAnim(FieldPos futurePos) {

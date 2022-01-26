@@ -36,6 +36,7 @@ private:
   EnablePlayerInputCb _enablePlayerInputCb;
   int32_t _activeRobotId = Defines::PLAYER_ROBOT_IDX;
   int32_t _maxRobots;
+  int32_t _currTurn = 0;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_TURNHELPER_H_ */

@@ -63,7 +63,7 @@ private:
 
   void move();
 
-  void handleCollision();
+  void handleDamageImpactCollision();
 
   void startMoveAnim(FieldPos futurePos);
   void startRotAnim(bool isLeftRotation);

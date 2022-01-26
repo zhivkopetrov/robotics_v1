@@ -82,8 +82,11 @@ void CollisionWatcher::process() {
           checkedData.object->getBoundary(),
           intersectRect);
       if (found) {
-        activeData.object->registerCollision(intersectRect, checkedData.impact);
         checkedData.object->registerCollision(intersectRect, activeData.impact);
+
+        //process the active data last, because
+        //it might end the turn immediately
+        activeData.object->registerCollision(intersectRect, checkedData.impact);
       }
     }
   }

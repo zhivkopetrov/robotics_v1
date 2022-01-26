@@ -75,11 +75,11 @@ void Field::updateFieldFbo() {
 
 void Field::setFieldDataMarker(const FieldPos &fieldPos, char fieldMarker) {
   _fieldData[fieldPos.row][fieldPos.col] = fieldMarker;
-  printFieldData();
+//  printFieldData();
 }
 
 void Field::resetFieldDataMarker(const FieldPos &fieldPos) {
-  LOGC("Resetting FieldData for row, col [%d,%d]", fieldPos.row, fieldPos.col);
+//  LOGC("Resetting FieldData for row, col [%d,%d]", fieldPos.row, fieldPos.col);
   setFieldDataMarker(fieldPos, _emptyDataMarker);
 }
 

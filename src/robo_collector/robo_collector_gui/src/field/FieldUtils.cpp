@@ -14,8 +14,8 @@
 
 FieldPos FieldUtils::getFieldPos(const Point &absPos) {
   return FieldPos(
-      (absPos.y - Defines::FIRST_TILE_X_POS) / Defines::TILE_HEIGHT,
-      (absPos.x - Defines::FIRST_TILE_Y_POS) / Defines::TILE_WIDTH);
+      (absPos.y - Defines::FIRST_TILE_Y_POS) / Defines::TILE_HEIGHT,
+      (absPos.x - Defines::FIRST_TILE_X_POS) / Defines::TILE_WIDTH);
 }
 
 Point FieldUtils::getAbsPos(const FieldPos &boardPos) {

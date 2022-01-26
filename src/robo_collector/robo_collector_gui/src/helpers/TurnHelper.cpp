@@ -34,12 +34,17 @@ int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
 }
 
 void TurnHelper::onRobotFinishAct(int32_t robotId) {
+  LOGC("======= FINISH TURN: %d for robotId: %d", _currTurn, robotId);
+  ++_currTurn;
+
   const auto lastRobotIdx = _maxRobots - 1;
   if (lastRobotIdx == robotId) {
     _activeRobotId = Defines::PLAYER_ROBOT_IDX;
+    LOGY("======= START TURN: %d for robotId: %d", _currTurn, _activeRobotId);
     _enablePlayerInputCb();
   } else {
     _activeRobotId = robotId + 1;
+    LOGY("======= START TURN: %d for robotId: %d", _currTurn, _activeRobotId);
     _robotAI.makeMove(_robotActInterfaces[_activeRobotId]);
   }
 }
