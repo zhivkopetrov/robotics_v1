@@ -21,29 +21,30 @@
 //Forward declarations
 class CollisionWatcher;
 
-struct RobotCfg {
+struct RobotOutInterface {
+  PlayerDamageCb playerDamageCb;
+  SetFieldDataMarkerCb setFieldDataMarkerCb;
+  ResetFieldDataMarkerCb resetFieldDataMarkerCb;
+  GetFieldDataCb getFieldDataCb;
+  FinishRobotActCb finishRobotActCb;
+  CollisionWatcher* collisionWatcher = nullptr;
+};
+
+struct RobotConfig {
   FieldPos fieldPos;
   uint64_t rsrcId = 0;
   int32_t robotId = 0;
   int32_t frameId = 0;
   int32_t moveAnimTimerId = 0;
   int32_t wallCollisionAnimTimerId = 0;
-  Direction initialDir = Direction::UP;
+  Direction dir = Direction::UP;
   char fieldMarker = '!';
   char enemyFieldMarker = '?';
-
-  PlayerDamageCb playerDamageCb;
-  SetFieldDataMarkerCb setFieldDataMarkerCb;
-  ResetFieldDataMarkerCb resetFieldDataMarkerCb;
-  GetFieldDataCb getFieldDataCb;
-  FinishRobotActCb finishRobotActCb;
-
-  CollisionWatcher* collisionWatcher = nullptr;
 };
 
 class Robot final : public CollisionObject, public TimerClient {
 public:
-  int32_t init(const RobotCfg &cfg);
+  int32_t init(const RobotConfig &cfg, const RobotOutInterface &interface);
 
   void deinit();
 
@@ -56,6 +57,9 @@ public:
   void onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos);
 
 private:
+  int32_t initConfig(const RobotConfig &cfg);
+  int32_t initOutInterface(const RobotOutInterface &interface);
+
   void registerCollision(const Rectangle& intersectRect,
                          CollisionDamageImpact impact) override;
   Rectangle getBoundary() const override;
@@ -69,26 +73,14 @@ private:
   void startRotAnim(bool isLeftRotation);
   AnimBaseConfig generateAnimBaseConfig();
 
+  RobotConfig _cfg;
+  RobotOutInterface _outInterface;
   Image _robotImg;
-  FieldPos _fieldPos;
-  Direction _dir = Direction::UP;
-  int32_t _robotId = 0;
-  int32_t _moveAnimTimerId = 0;
-  int32_t _wallCollisionAnimTimerId = 0;
-  char _selfFieldMarker = '!';
-  char _enemyFieldMarker = '?';
-
-  PlayerDamageCb _playerDamageCb;
-  SetFieldDataMarkerCb _setFieldDataMarkerCb;
-  ResetFieldDataMarkerCb _resetFieldDataMarkerCb;
-  GetFieldDataCb _getFieldDataCb;
-  FinishRobotActCb _finishRobotActCb;
 
   PositionAnimation _moveAnim;
   RotationAnimation _rotAnim;
   RobotAnimEndCb _animEndCb;
 
-  CollisionWatcher* _collisionWatcher = nullptr;
   CollisionWatchStatus _currCollisionWatchStatus = CollisionWatchStatus::OFF;
 };
 

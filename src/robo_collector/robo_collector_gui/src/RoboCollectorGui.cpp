@@ -95,16 +95,17 @@ void RoboCollectorGui::process() {
 }
 
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
-  RobotCfg robotCfg;
-  robotCfg.collisionWatcher = &_collisionWatcher;
-  robotCfg.playerDamageCb =
+  RobotOutInterface robotOutInterface;
+
+  robotOutInterface.collisionWatcher = &_collisionWatcher;
+  robotOutInterface.playerDamageCb =
       std::bind(&PanelHandler::decreaseHealthIndicator, &_panelHandler, _1);
-  robotCfg.setFieldDataMarkerCb =
+  robotOutInterface.setFieldDataMarkerCb =
       std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
-  robotCfg.resetFieldDataMarkerCb =
+  robotOutInterface.resetFieldDataMarkerCb =
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
-  robotCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  robotCfg.finishRobotActCb =
+  robotOutInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  robotOutInterface.finishRobotActCb =
       std::bind(&TurnHelper::onRobotFinishAct, &_turnHelper, _1);
 
   const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos {
@@ -118,6 +119,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
     Direction::UP, Direction::UP, Direction::DOWN, Direction::DOWN
   };
 
+  RobotConfig robotCfg;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     if (Defines::PLAYER_ROBOT_IDX == i) {
       robotCfg.rsrcId = cfg.robotBlinkyRsrcId;
@@ -132,12 +134,12 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
     }
     robotCfg.robotId = i;
     robotCfg.fieldPos = robotsFieldPos[i];
-    robotCfg.initialDir = robotsInitialDirs[i];
+    robotCfg.dir = robotsInitialDirs[i];
     robotCfg.moveAnimTimerId = cfg.robotsMoveAnimStartTimerId + i;
     robotCfg.wallCollisionAnimTimerId =
         cfg.robotsWallCollisionAnimStartTimerId + i;
 
-    if (SUCCESS != _robots[i].init(robotCfg)) {
+    if (SUCCESS != _robots[i].init(robotCfg, robotOutInterface)) {
       LOGERR("Error in _robots[%d].init()", i);
       return FAILURE;
     }
