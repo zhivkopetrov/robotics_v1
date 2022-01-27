@@ -60,6 +60,17 @@ enum TimerId {
   HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID
 };
 
+RobotBaseConfig generateRobotBaseConfig() {
+  RobotBaseConfig cfg;
+
+  cfg.playerRsrcId = RoboCollectorGuiResources::PLAYER_ROBOT;
+  cfg.enemiesRsrcId = RoboCollectorGuiResources::ENEMY_ROBOTS;
+  cfg.moveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
+  cfg.wallCollisionAnimStartTimerId = ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START;
+
+  return cfg;
+}
+
 PanelHandlerConfig generatePanelHandlerConfig() {
   PanelHandlerConfig cfg;
 
@@ -113,7 +124,7 @@ EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
   windowCfg.name = PROJECT_FOLDER_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").
       append(ResourceFileHeader::getResourcesFolderName()).
-      append("/p/entities/blinky.png");
+      append("/p/entities/player_robot.png");
   windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
   windowCfg.width = WINDOW_WIDTH;
   windowCfg.height = WINDOW_HEIGHT;
@@ -128,14 +139,10 @@ EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
 RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   RoboCollectorGuiConfig cfg;
   cfg.fieldCfg = generateFieldConfig();
-  cfg.panelHandlerConfig = generatePanelHandlerConfig();
+  cfg.panelHandlerCfg = generatePanelHandlerConfig();
+  cfg.robotBaseCfg = generateRobotBaseConfig();
 
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  cfg.playerRobotRsrcId = RoboCollectorGuiResources::PLAYER_ROBOT;
-  cfg.enemyRobotsRsrcId = RoboCollectorGuiResources::ENEMY_ROBOTS;
-  cfg.robotsMoveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
-  cfg.robotsWallCollisionAnimStartTimerId =
-      ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START;
 
   cfg.coinAnimRsrcIds = {
       RoboCollectorGuiResources::COIN_ANIM_GOLD,

@@ -39,7 +39,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  if (SUCCESS != _panelHandler.init(parsedCfg.panelHandlerConfig)) {
+  if (SUCCESS != _panelHandler.init(parsedCfg.panelHandlerCfg)) {
     LOGERR("Error in _panel.init()");
     return FAILURE;
   }
@@ -95,6 +95,7 @@ void RoboCollectorGui::process() {
 }
 
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
+  const auto robotBaseCfg = cfg.robotBaseCfg;
   RobotOutInterface robotOutInterface;
 
   robotOutInterface.collisionWatcher = &_collisionWatcher;
@@ -122,12 +123,12 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   RobotConfig robotCfg;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     if (Defines::PLAYER_ROBOT_IDX == i) {
-      robotCfg.rsrcId = cfg.playerRobotRsrcId;
+      robotCfg.rsrcId = robotBaseCfg.playerRsrcId;
       robotCfg.frameId = 0;
       robotCfg.fieldMarker = cfg.playerFieldMarker;
       robotCfg.enemyFieldMarker = cfg.enemyFieldMarker;
     } else {
-      robotCfg.rsrcId = cfg.enemyRobotsRsrcId;
+      robotCfg.rsrcId = robotBaseCfg.enemiesRsrcId;
       robotCfg.frameId = i - 1;
       robotCfg.fieldMarker = cfg.enemyFieldMarker;
       robotCfg.enemyFieldMarker = cfg.playerFieldMarker;
@@ -135,9 +136,9 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
     robotCfg.robotId = i;
     robotCfg.fieldPos = robotsFieldPos[i];
     robotCfg.dir = robotsInitialDirs[i];
-    robotCfg.moveAnimTimerId = cfg.robotsMoveAnimStartTimerId + i;
+    robotCfg.moveAnimTimerId = robotBaseCfg.moveAnimStartTimerId + i;
     robotCfg.wallCollisionAnimTimerId =
-        cfg.robotsWallCollisionAnimStartTimerId + i;
+        robotBaseCfg.wallCollisionAnimStartTimerId + i;
 
     if (SUCCESS != _robots[i].init(robotCfg, robotOutInterface)) {
       LOGERR("Error in _robots[%d].init()", i);
