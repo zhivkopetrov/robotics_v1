@@ -131,8 +131,8 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.panelHandlerConfig = generatePanelHandlerConfig();
 
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
-  cfg.robotEnemiesRsrcId = RoboCollectorGuiResources::ROBO_ENEMIES;
+  cfg.playerRobotRsrcId = RoboCollectorGuiResources::PLAYER_ROBOT;
+  cfg.enemyRobotsRsrcId = RoboCollectorGuiResources::ENEMY_ROBOTS;
   cfg.robotsMoveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
   cfg.robotsWallCollisionAnimStartTimerId =
       ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START;

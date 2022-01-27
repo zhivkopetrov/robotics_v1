@@ -19,8 +19,8 @@ struct RoboCollectorGuiConfig {
   FieldConfig fieldCfg;
   PanelHandlerConfig panelHandlerConfig;
   uint64_t mapRsrcId = 0;
-  uint64_t robotBlinkyRsrcId = 0;
-  uint64_t robotEnemiesRsrcId = 0;
+  uint64_t playerRobotRsrcId = 0;
+  uint64_t enemyRobotsRsrcId = 0;
   int32_t robotsMoveAnimStartTimerId = 0;
   int32_t robotsWallCollisionAnimStartTimerId = 0;
 

@@ -14,16 +14,16 @@ description=empty
 position=100,100
 load=on_init
 
-tag=[ROBO_BLINKY]
+tag=[PLAYER_ROBOT]
 type=image
-path=p/entities/blinky.png
+path=p/entities/player_robot.png
 description=empty
 position=0,0
 load=on_init
 
-tag=[ROBO_ENEMIES]
+tag=[ENEMY_ROBOTS]
 type=sprite
-path=p/entities/enemies.png
+path=p/entities/enemy_robots.png
 description=160,160,3,0
 position=0,0
 load=on_init

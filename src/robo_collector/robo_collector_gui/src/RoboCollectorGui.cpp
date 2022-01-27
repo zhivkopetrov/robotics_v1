@@ -122,12 +122,12 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   RobotConfig robotCfg;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     if (Defines::PLAYER_ROBOT_IDX == i) {
-      robotCfg.rsrcId = cfg.robotBlinkyRsrcId;
+      robotCfg.rsrcId = cfg.playerRobotRsrcId;
       robotCfg.frameId = 0;
       robotCfg.fieldMarker = cfg.playerFieldMarker;
       robotCfg.enemyFieldMarker = cfg.enemyFieldMarker;
     } else {
-      robotCfg.rsrcId = cfg.robotEnemiesRsrcId;
+      robotCfg.rsrcId = cfg.enemyRobotsRsrcId;
       robotCfg.frameId = i - 1;
       robotCfg.fieldMarker = cfg.enemyFieldMarker;
       robotCfg.enemyFieldMarker = cfg.playerFieldMarker;
