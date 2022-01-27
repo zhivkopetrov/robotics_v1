@@ -38,9 +38,6 @@ enum TimerId {
   ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_END =
       ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START + Defines::ENEMIES_CTN,
 
-  COIN_PANEL_INCR_TIMER_ID,
-  COIN_PANEL_DECR_TIMER_ID,
-
   COIN_ROTATE_ANIM_TIMER_ID_START,
   //reserved
   COIN_ROTATE_ANIM_TIMER_ID_END =
@@ -56,9 +53,54 @@ enum TimerId {
   COIN_RESPAWN_ANIM_TIMER_ID_END =
       COIN_RESPAWN_ANIM_TIMER_ID_START + Defines::COINS_CTN,
 
+  COIN_PANEL_INCR_TIMER_ID,
+  COIN_PANEL_DECR_TIMER_ID,
   TIME_PANEL_CLOCK_TIMER_ID,
-  TIME_PANEL_BLINK_TIMER_ID
+  TIME_PANEL_BLINK_TIMER_ID,
+  HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID
 };
+
+PanelHandlerConfig generatePanelHandlerConfig() {
+  PanelHandlerConfig cfg;
+
+  auto& healthPanelCfg = cfg.healthPanelCfg;
+  healthPanelCfg.rsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
+  healthPanelCfg.indicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
+  healthPanelCfg.indicatorReduceTimerId =
+      HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
+
+  auto& coinPanelCfg = cfg.coinPanelCfg;
+  coinPanelCfg.rsrcId = RoboCollectorGuiResources::COIN_PANEL;
+  coinPanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
+  coinPanelCfg.incrTimerId = COIN_PANEL_INCR_TIMER_ID;
+  coinPanelCfg.decrTimerId = COIN_PANEL_DECR_TIMER_ID;
+
+  auto& timePanelCfg = cfg.timePanelCfg;
+  timePanelCfg.rsrcId = RoboCollectorGuiResources::TIME_PANEL;
+  timePanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
+  timePanelCfg.clockTimerId = TIME_PANEL_CLOCK_TIMER_ID;
+  timePanelCfg.blinkTimerId = TIME_PANEL_BLINK_TIMER_ID;
+  timePanelCfg.totalSeconds = totalGameSeconds;
+
+  return cfg;
+}
+} //end anonymous namespace
+
+FieldConfig generateFieldConfig() {
+  FieldConfig cfg;
+  constexpr auto GAME_FIELD_WIDTH = Defines::FIELD_COLS * Defines::TILE_WIDTH;
+  constexpr auto GAME_FIELD_HEIGHT = Defines::FIELD_ROWS * Defines::TILE_HEIGHT;
+
+  cfg.rows = Defines::FIELD_ROWS;
+  cfg.cols = Defines::FIELD_COLS;
+  cfg.fieldDimensions = { Defines::FIRST_TILE_X_POS,
+      Defines::FIRST_TILE_Y_POS, GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT };
+  cfg.tileWidth = Defines::TILE_WIDTH;
+  cfg.tileHeight = Defines::TILE_HEIGHT;
+  cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
+  cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+
+  return cfg;
 }
 
 EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
@@ -85,6 +127,8 @@ EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
 
 RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   RoboCollectorGuiConfig cfg;
+  cfg.fieldCfg = generateFieldConfig();
+  cfg.panelHandlerConfig = generatePanelHandlerConfig();
 
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.robotBlinkyRsrcId = RoboCollectorGuiResources::ROBO_BLINKY;
@@ -113,39 +157,8 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   };
   cfg.maxMoveButtons = Defines::MOVE_BUTTONS_CTN;
   cfg.moveButtonsInfoTextFontId = RoboCollectorGuiResources::VINQUE_RG_30;
-
-  constexpr auto GAME_FIELD_WIDTH = Defines::FIELD_COLS * Defines::TILE_WIDTH;
-  constexpr auto GAME_FIELD_HEIGHT = Defines::FIELD_ROWS * Defines::TILE_HEIGHT;
-
-  auto& fieldCfg = cfg.fieldCfg;
-  fieldCfg.rows = Defines::FIELD_ROWS;
-  fieldCfg.cols = Defines::FIELD_COLS;
-  fieldCfg.fieldDimensions = { Defines::FIRST_TILE_X_POS,
-      Defines::FIRST_TILE_Y_POS, GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT };
-  fieldCfg.tileWidth = Defines::TILE_WIDTH;
-  fieldCfg.tileHeight = Defines::TILE_HEIGHT;
-  fieldCfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
-  fieldCfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
-
-  auto& panelHandlerCfg = cfg.panelHandlerConfig;
-  panelHandlerCfg.healthPanelRsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
-  panelHandlerCfg.healthIndicatorRsrcId =
-      RoboCollectorGuiResources::HEALTH_INDICATOR;
-  panelHandlerCfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
-  panelHandlerCfg.vertDelimiterRsrcId =
-      RoboCollectorGuiResources::VERT_DELIMITER;
-
-  panelHandlerCfg.coinPanelRsrcId = RoboCollectorGuiResources::COIN_PANEL;
-  panelHandlerCfg.coinPanelFontId = RoboCollectorGuiResources::VINQUE_RG_75;
-  panelHandlerCfg.coinPanelIncrTimerId = COIN_PANEL_INCR_TIMER_ID;
-  panelHandlerCfg.coinPanelDecrTimerId = COIN_PANEL_DECR_TIMER_ID;
-
-  auto& timePanelCfg = panelHandlerCfg.timePanelCfg;
-  timePanelCfg.rsrcId = RoboCollectorGuiResources::TIME_PANEL;
-  timePanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
-  timePanelCfg.clockTimerId = TIME_PANEL_CLOCK_TIMER_ID;
-  timePanelCfg.blinkTimerId = TIME_PANEL_BLINK_TIMER_ID;
-  timePanelCfg.totalSeconds = totalGameSeconds;
+  cfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
+  cfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
 
   return cfg;
 }

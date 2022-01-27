@@ -45,6 +45,10 @@ add_executable(
         ${_INC_DIR}/entities/coin/animation/CoinRespawnAnim.h
         ${_INC_DIR}/panels/PanelHandler.h
         ${_INC_DIR}/panels/TimePanel.h
+        ${_INC_DIR}/panels/CoinPanel.h
+        ${_INC_DIR}/panels/HealthPanel.h
+        ${_INC_DIR}/panels/config/HealthPanelConfig.h
+        ${_INC_DIR}/panels/config/CoinPanelConfig.h
         ${_INC_DIR}/panels/config/TimePanelConfig.h
         ${_INC_DIR}/panels/config/PanelHandlerConfig.h
         ${_INC_DIR}/controller/MoveButton.h
@@ -70,6 +74,8 @@ add_executable(
         ${_SRC_DIR}/entities/coin/animation/CoinRespawnAnim.cpp
         ${_SRC_DIR}/panels/PanelHandler.cpp
         ${_SRC_DIR}/panels/TimePanel.cpp
+        ${_SRC_DIR}/panels/CoinPanel.cpp
+        ${_SRC_DIR}/panels/HealthPanel.cpp
         ${_SRC_DIR}/controller/MoveButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp

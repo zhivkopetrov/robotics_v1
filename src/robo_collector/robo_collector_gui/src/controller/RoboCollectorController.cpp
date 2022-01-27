@@ -59,6 +59,12 @@ int32_t RoboCollectorController::init(
     }
   }
 
+  _horDelimiter.create(cfg.horDelimiterRsrcId);
+  _horDelimiter.setPosition(1245, 500);
+
+  _vertDelimiter.create(cfg.vertDelimiterRsrcId);
+  _vertDelimiter.setPosition(1200, 550);
+
   return SUCCESS;
 }
 
@@ -66,6 +72,10 @@ void RoboCollectorController::draw() const {
   for (const auto &button : _moveButtons) {
     button.draw();
   }
+
+  //TODO enable once animated
+//  _horDelimiter.draw();
+//  _vertDelimiter.draw();
 }
 
 void RoboCollectorController::handleEvent(const InputEvent &e) {

@@ -28,6 +28,9 @@ struct RoboCollectorGuiConfig {
   std::vector<uint64_t> moveButtonsRsrcIds;
   int32_t maxMoveButtons = 0;
 
+  uint64_t horDelimiterRsrcId = 0;
+  uint64_t vertDelimiterRsrcId = 0;
+
   std::vector<uint64_t> coinAnimRsrcIds;
   std::vector<char> coinFieldDataMarkers;
   int32_t maxCoins = 0;

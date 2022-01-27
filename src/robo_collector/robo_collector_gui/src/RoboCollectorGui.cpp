@@ -183,6 +183,8 @@ int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
   collectorCfg.moveButtonsRsrcIds = cfg.moveButtonsRsrcIds;
   collectorCfg.maxMoveButtons = cfg.maxMoveButtons;
   collectorCfg.moveButtonInfoTextFontId = cfg.moveButtonsInfoTextFontId;
+  collectorCfg.horDelimiterRsrcId = cfg.horDelimiterRsrcId;
+  collectorCfg.vertDelimiterRsrcId = cfg.vertDelimiterRsrcId;
 
   if (SUCCESS != _controller.init(collectorCfg)) {
     LOGERR("Error in _controller.init()");

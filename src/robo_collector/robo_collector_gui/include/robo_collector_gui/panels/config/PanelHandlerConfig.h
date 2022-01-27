@@ -10,19 +10,13 @@
 
 //Own components headers
 #include "robo_collector_gui/panels/config/TimePanelConfig.h"
+#include "robo_collector_gui/panels/config/CoinPanelConfig.h"
+#include "robo_collector_gui/panels/config/HealthPanelConfig.h"
 
 struct PanelHandlerConfig {
   TimePanelConfig timePanelCfg;
-
-  uint64_t healthPanelRsrcId = 0;
-  uint64_t healthIndicatorRsrcId = 0;
-  uint64_t horDelimiterRsrcId = 0;
-  uint64_t vertDelimiterRsrcId = 0;
-
-  uint64_t coinPanelRsrcId = 0;
-  uint64_t coinPanelFontId = 0;
-  int32_t coinPanelIncrTimerId = 0;
-  int32_t coinPanelDecrTimerId = 0;
+  HealthPanelConfig healthPanelCfg;
+  CoinPanelConfig coinPanelCfg;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANELHANDLERCONFIG_H_ */
