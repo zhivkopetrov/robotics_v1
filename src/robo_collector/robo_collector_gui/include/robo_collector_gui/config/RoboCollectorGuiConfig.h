@@ -13,6 +13,7 @@
 #include "robo_collector_gui/field/config/FieldConfig.h"
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
 #include "robo_collector_gui/entities/robot/config/RobotBaseConfig.h"
+#include "robo_collector_gui/entities/coin/config/CoinHandlerConfig.h"
 
 //Forward declarations
 
@@ -20,6 +21,7 @@ struct RoboCollectorGuiConfig {
   FieldConfig fieldCfg;
   PanelHandlerConfig panelHandlerCfg;
   RobotBaseConfig robotBaseCfg;
+  CoinHandlerConfig coinHandlerCfg;
 
   uint64_t mapRsrcId = 0;
 
@@ -29,13 +31,6 @@ struct RoboCollectorGuiConfig {
 
   uint64_t horDelimiterRsrcId = 0;
   uint64_t vertDelimiterRsrcId = 0;
-
-  std::vector<uint64_t> coinAnimRsrcIds;
-  std::vector<char> coinFieldDataMarkers;
-  int32_t maxCoins = 0;
-  int32_t coinRotateAnimFirstTimerId = 0;
-  int32_t coinCollectAnimFirstTimerId = 0;
-  int32_t coinRespawnAnimFirstTimerId = 0;
 
   char playerFieldMarker = 'B';
   char enemyFieldMarker = 'E';

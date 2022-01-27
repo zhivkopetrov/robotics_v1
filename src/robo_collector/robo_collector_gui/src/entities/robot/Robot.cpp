@@ -27,11 +27,7 @@ int32_t Robot::init(const RobotConfig &cfg,
     return FAILURE;
   }
 
-  _collisionObjHandle =_outInterface.collisionWatcher->registerObject(
-      this, CollisionDamageImpact::YES);
-
-  _outInterface.setFieldDataMarkerCb(_cfg.fieldPos, _cfg.fieldMarker);
-
+  onInitEnd();
   return SUCCESS;
 }
 
@@ -145,6 +141,13 @@ int32_t Robot::initOutInterface(const RobotOutInterface &interface) {
   }
 
   return SUCCESS;
+}
+
+void Robot::onInitEnd() {
+  _collisionObjHandle =_outInterface.collisionWatcher->registerObject(
+      this, CollisionDamageImpact::YES);
+
+  _outInterface.setFieldDataMarkerCb(_cfg.fieldPos, _cfg.fieldMarker);
 }
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,

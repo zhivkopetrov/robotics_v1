@@ -49,7 +49,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  if (SUCCESS != initCoinHandler(parsedCfg)) {
+  if (SUCCESS != initCoinHandler(parsedCfg.coinHandlerCfg)) {
     LOGERR("initCoinHandler() failed");
     return FAILURE;
   }
@@ -149,25 +149,18 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   return SUCCESS;
 }
 
-int32_t RoboCollectorGui::initCoinHandler(const RoboCollectorGuiConfig &cfg) {
-  CoinHandlerConfig coinHandlerCfg;
-  coinHandlerCfg.collisionWatcher = &_collisionWatcher;
-  coinHandlerCfg.animRsrcIds = cfg.coinAnimRsrcIds;
-  coinHandlerCfg.fieldDataMarkers = cfg.coinFieldDataMarkers;
-  coinHandlerCfg.fieldEmptyDataMarker = cfg.fieldCfg.emptyTileMarker;
-  coinHandlerCfg.maxCoins = cfg.maxCoins;
-  coinHandlerCfg.rotateAnimFirstTimerId = cfg.coinRotateAnimFirstTimerId;
-  coinHandlerCfg.collectAnimFirstTimerId = cfg.coinCollectAnimFirstTimerId;
-  coinHandlerCfg.respawnAnimFirstTimerId = cfg.coinRespawnAnimFirstTimerId;
-  coinHandlerCfg.setFieldDataMarkerCb =
+int32_t RoboCollectorGui::initCoinHandler(const CoinHandlerConfig &cfg) {
+  CoinOutInterface coinOutInterface;
+  coinOutInterface.collisionWatcher = &_collisionWatcher;
+  coinOutInterface.setFieldDataMarkerCb =
       std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
-  coinHandlerCfg.resetFieldDataMarkerCb =
+  coinOutInterface.resetFieldDataMarkerCb =
       std::bind(&Field::resetFieldDataMarker, &_field, _1);
-  coinHandlerCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  coinHandlerCfg.incrCollectedCoinsCb =
+  coinOutInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  coinOutInterface.incrCollectedCoinsCb =
       std::bind(&PanelHandler::increaseCollectedCoins, &_panelHandler, _1);
 
-  if (SUCCESS != _coinHandler.init(coinHandlerCfg)) {
+  if (SUCCESS != _coinHandler.init(cfg, coinOutInterface)) {
     LOGERR("Error in _coinHandler.init()");
     return FAILURE;
   }

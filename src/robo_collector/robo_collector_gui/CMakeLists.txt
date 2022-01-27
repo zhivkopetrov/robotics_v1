@@ -42,6 +42,7 @@ add_executable(
         ${_INC_DIR}/entities/robot/animation/RobotAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/entities/coin/CoinHandler.h
+        ${_INC_DIR}/entities/coin/config/CoinHandlerConfig.h
         ${_INC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.h
         ${_INC_DIR}/entities/coin/animation/CoinRespawnAnim.h
         ${_INC_DIR}/panels/PanelHandler.h

@@ -59,6 +59,7 @@ public:
 private:
   int32_t initConfig(const RobotConfig &cfg);
   int32_t initOutInterface(const RobotOutInterface &interface);
+  void onInitEnd();
 
   void registerCollision(const Rectangle& intersectRect,
                          CollisionDamageImpact impact) override;

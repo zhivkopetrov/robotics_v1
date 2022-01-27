@@ -25,6 +25,9 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
+constexpr auto playerFieldMarker = 'B'; //B for Blinky
+constexpr auto enemyFieldMarker = 'E'; //E for Enemy
+constexpr auto emptyFieldMarker = '.';
 constexpr auto totalGameSeconds = 180;
 
 enum TimerId {
@@ -67,6 +70,26 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.enemiesRsrcId = RoboCollectorGuiResources::ENEMY_ROBOTS;
   cfg.moveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
   cfg.wallCollisionAnimStartTimerId = ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START;
+
+  return cfg;
+}
+
+CoinHandlerConfig generateCoinHandlerConfig() {
+  CoinHandlerConfig cfg;
+
+  cfg.animRsrcIds = {
+      RoboCollectorGuiResources::COIN_ANIM_GOLD,
+      RoboCollectorGuiResources::COIN_ANIM_SILVER,
+      RoboCollectorGuiResources::COIN_ANIM_BRONZE
+  };
+  cfg.fieldMarkers = {
+      'g', 's', 'b' //gold, silver, bronze
+  };
+  cfg.maxCoins = Defines::COINS_CTN;
+  cfg.rotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
+  cfg.collectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
+  cfg.respawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
+  cfg.fieldEmptyMarker = emptyFieldMarker;
 
   return cfg;
 }
@@ -141,21 +164,11 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.fieldCfg = generateFieldConfig();
   cfg.panelHandlerCfg = generatePanelHandlerConfig();
   cfg.robotBaseCfg = generateRobotBaseConfig();
+  cfg.coinHandlerCfg = generateCoinHandlerConfig();
 
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-
-  cfg.coinAnimRsrcIds = {
-      RoboCollectorGuiResources::COIN_ANIM_GOLD,
-      RoboCollectorGuiResources::COIN_ANIM_SILVER,
-      RoboCollectorGuiResources::COIN_ANIM_BRONZE
-  };
-  cfg.coinFieldDataMarkers = {
-      'g', 's', 'b' //gold, silver, bronze
-  };
-  cfg.maxCoins = Defines::COINS_CTN;
-  cfg.coinRotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
-  cfg.coinCollectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
-  cfg.coinRespawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
+  cfg.playerFieldMarker = playerFieldMarker;
+  cfg.enemyFieldMarker = enemyFieldMarker;
 
   cfg.moveButtonsRsrcIds = {
       RoboCollectorGuiResources::UP_BUTTON,
