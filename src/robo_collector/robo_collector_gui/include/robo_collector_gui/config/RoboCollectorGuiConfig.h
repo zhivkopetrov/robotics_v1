@@ -14,6 +14,7 @@
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
 #include "robo_collector_gui/entities/robot/config/RobotBaseConfig.h"
 #include "robo_collector_gui/entities/coin/config/CoinHandlerConfig.h"
+#include "robo_collector_gui/controller/config/RoboCollectorControllerConfig.h"
 
 //Forward declarations
 
@@ -22,15 +23,9 @@ struct RoboCollectorGuiConfig {
   PanelHandlerConfig panelHandlerCfg;
   RobotBaseConfig robotBaseCfg;
   CoinHandlerConfig coinHandlerCfg;
+  RoboCollectorControllerConfig controllerCfg;
 
   uint64_t mapRsrcId = 0;
-
-  uint64_t moveButtonsInfoTextFontId = 0;
-  std::vector<uint64_t> moveButtonsRsrcIds;
-  int32_t maxMoveButtons = 0;
-
-  uint64_t horDelimiterRsrcId = 0;
-  uint64_t vertDelimiterRsrcId = 0;
 
   char playerFieldMarker = 'B';
   char enemyFieldMarker = 'E';

@@ -54,7 +54,7 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  if (SUCCESS != initController(parsedCfg)) {
+  if (SUCCESS != initController(parsedCfg.controllerCfg)) {
     LOGERR("initController() failed");
     return FAILURE;
   }
@@ -168,21 +168,18 @@ int32_t RoboCollectorGui::initCoinHandler(const CoinHandlerConfig &cfg) {
   return SUCCESS;
 }
 
-int32_t RoboCollectorGui::initController(const RoboCollectorGuiConfig& cfg) {
-  RoboCollectorControllerConfig collectorCfg;
+int32_t RoboCollectorGui::initController(
+    const RoboCollectorControllerConfig& cfg) {
+  RoboCollectorControllerOutInterface outInterface;
+
   if (_robots.empty()) {
     LOGERR("Error, robots array is empty!");
     return FAILURE;
   }
-  collectorCfg.robotActCb =
+  outInterface.robotActCb =
       std::bind(&Robot::act, &_robots[Defines::PLAYER_ROBOT_IDX], _1);
-  collectorCfg.moveButtonsRsrcIds = cfg.moveButtonsRsrcIds;
-  collectorCfg.maxMoveButtons = cfg.maxMoveButtons;
-  collectorCfg.moveButtonInfoTextFontId = cfg.moveButtonsInfoTextFontId;
-  collectorCfg.horDelimiterRsrcId = cfg.horDelimiterRsrcId;
-  collectorCfg.vertDelimiterRsrcId = cfg.vertDelimiterRsrcId;
 
-  if (SUCCESS != _controller.init(collectorCfg)) {
+  if (SUCCESS != _controller.init(cfg, outInterface)) {
     LOGERR("Error in _controller.init()");
     return FAILURE;
   }

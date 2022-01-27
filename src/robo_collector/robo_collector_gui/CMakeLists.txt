@@ -55,6 +55,7 @@ add_executable(
         ${_INC_DIR}/panels/config/PanelHandlerConfig.h
         ${_INC_DIR}/controller/MoveButton.h
         ${_INC_DIR}/controller/RoboCollectorController.h
+        ${_INC_DIR}/controller/config/RoboCollectorControllerConfig.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
         ${_INC_DIR}/helpers/TurnHelper.h

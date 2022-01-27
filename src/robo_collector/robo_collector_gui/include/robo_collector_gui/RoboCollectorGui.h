@@ -23,6 +23,7 @@
 class InputEvent;
 struct RoboCollectorGuiConfig;
 struct CoinHandlerConfig;
+struct RoboCollectorControllerConfig;
 
 class RoboCollectorGui final : public Game {
 public:
@@ -37,7 +38,7 @@ public:
 private:
   int32_t initRobots(const RoboCollectorGuiConfig& cfg);
   int32_t initCoinHandler(const CoinHandlerConfig& cfg);
-  int32_t initController(const RoboCollectorGuiConfig& cfg);
+  int32_t initController(const RoboCollectorControllerConfig& cfg);
   int32_t initTurnHelper(const RoboCollectorGuiConfig& cfg);
 
   Image _map;

@@ -12,30 +12,26 @@
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "robo_collector_gui/controller/MoveButton.h"
+#include "robo_collector_gui/controller/config/RoboCollectorControllerConfig.h"
 
 //Forward declarations
 class InputEvent;
 
-struct RoboCollectorControllerConfig {
+struct RoboCollectorControllerOutInterface {
   RobotActCb robotActCb;
-  std::vector<uint64_t> moveButtonsRsrcIds;
-  uint64_t moveButtonInfoTextFontId = 0;
-  int32_t maxMoveButtons = 0;
-
-  uint64_t horDelimiterRsrcId = 0;
-  uint64_t vertDelimiterRsrcId = 0;
 };
 
 class RoboCollectorController {
 public:
-  int32_t init(const RoboCollectorControllerConfig& cfg);
+  int32_t init(const RoboCollectorControllerConfig& cfg,
+               const RoboCollectorControllerOutInterface& interface);
   void draw() const;
   void handleEvent(const InputEvent& e);
   void onMoveButtonClicked(MoveType moveType);
   void unlockInput();
 private:
+  RoboCollectorControllerOutInterface _outInterface;
   std::array<MoveButton, Defines::MOVE_BUTTONS_CTN> _moveButtons;
-  RobotActCb _robotActCb;
 
   //TODO animate them
   Image _horDelimiter;

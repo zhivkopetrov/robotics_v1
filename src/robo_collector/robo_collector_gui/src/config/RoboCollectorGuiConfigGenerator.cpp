@@ -74,6 +74,22 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
+RoboCollectorControllerConfig generateRoboCollectorControllerConfig() {
+  RoboCollectorControllerConfig cfg;
+
+  cfg.moveButtonsRsrcIds = {
+      RoboCollectorGuiResources::UP_BUTTON,
+      RoboCollectorGuiResources::LEFT_BUTTON,
+      RoboCollectorGuiResources::RIGHT_BUTTON
+  };
+  cfg.maxMoveButtons = Defines::MOVE_BUTTONS_CTN;
+  cfg.moveButtonInfoTextFontId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
+  cfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
+
+  return cfg;
+}
+
 CoinHandlerConfig generateCoinHandlerConfig() {
   CoinHandlerConfig cfg;
 
@@ -165,20 +181,11 @@ RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
   cfg.panelHandlerCfg = generatePanelHandlerConfig();
   cfg.robotBaseCfg = generateRobotBaseConfig();
   cfg.coinHandlerCfg = generateCoinHandlerConfig();
+  cfg.controllerCfg = generateRoboCollectorControllerConfig();
 
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.playerFieldMarker = playerFieldMarker;
   cfg.enemyFieldMarker = enemyFieldMarker;
-
-  cfg.moveButtonsRsrcIds = {
-      RoboCollectorGuiResources::UP_BUTTON,
-      RoboCollectorGuiResources::LEFT_BUTTON,
-      RoboCollectorGuiResources::RIGHT_BUTTON
-  };
-  cfg.maxMoveButtons = Defines::MOVE_BUTTONS_CTN;
-  cfg.moveButtonsInfoTextFontId = RoboCollectorGuiResources::VINQUE_RG_30;
-  cfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
-  cfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
 
   return cfg;
 }

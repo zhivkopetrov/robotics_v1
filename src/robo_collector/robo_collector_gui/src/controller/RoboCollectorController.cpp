@@ -13,13 +13,13 @@
 //Own components headers
 
 int32_t RoboCollectorController::init(
-    const RoboCollectorControllerConfig &cfg) {
-  if (nullptr == cfg.robotActCb) {
-    LOGERR("Error, nullptr provided for robotActCb in "
-        "RoboCollectorControllerConfig");
+    const RoboCollectorControllerConfig& cfg,
+    const RoboCollectorControllerOutInterface& interface) {
+  _outInterface = interface;
+  if (nullptr == _outInterface.robotActCb) {
+    LOGERR("Error, nullptr provided for robotActCb");
     return FAILURE;
   }
-  _robotActCb = cfg.robotActCb;
 
   const int32_t rsrcIdsSize =
       static_cast<int32_t>(cfg.moveButtonsRsrcIds.size());
@@ -91,7 +91,7 @@ void RoboCollectorController::onMoveButtonClicked(MoveType moveType) {
   for (auto& button : _moveButtons) {
     button.lockInput();
   }
-  _robotActCb(moveType);
+  _outInterface.robotActCb(moveType);
 }
 
 void RoboCollectorController::unlockInput() {
