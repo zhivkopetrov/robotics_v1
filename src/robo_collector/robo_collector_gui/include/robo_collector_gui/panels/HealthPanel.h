@@ -8,6 +8,7 @@
 
 //Other libraries headers
 #include "manager_utils/drawing/Image.h"
+#include "manager_utils/drawing/Text.h"
 #include "manager_utils/time/TimerClient.h"
 
 //Own components headers
@@ -27,9 +28,11 @@ public:
 private:
   void onTimeout(const int32_t timerId) final;
   void processIndicatorReduceAnim();
+  void setAndCenterIndicatorText();
 
   Image _panel;
   Image _indicator;
+  Text _indicatorText;
 
   int32_t _indicatorReduceTimerId = 0;
   int32_t _damageTicksLeft = 0;

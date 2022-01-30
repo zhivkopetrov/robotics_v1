@@ -6,6 +6,7 @@
 //C++ system headers
 
 //Other libraries headers
+#include "utils/drawing/WidgetAligner.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -13,6 +14,8 @@
 
 int32_t HealthPanel::init(const HealthPanelConfig &cfg,
                           const GameLostCb &gameLostCb) {
+  _indicatorReduceTimerId = cfg.indicatorReduceTimerId;
+
   if (nullptr == gameLostCb) {
     LOGERR("Error, nullptr provided for GameLostCb");
     return FAILURE;
@@ -27,7 +30,8 @@ int32_t HealthPanel::init(const HealthPanelConfig &cfg,
   _indicator.setPosition(panelX + 79, 403);
   _indicator.setCropRect(_indicator.getImageRect());
 
-  _indicatorReduceTimerId = cfg.indicatorReduceTimerId;
+  _indicatorText.create(cfg.indicatorFontId, "100%", Colors::RED);
+  setAndCenterIndicatorText();
 
   return SUCCESS;
 }
@@ -35,6 +39,7 @@ int32_t HealthPanel::init(const HealthPanelConfig &cfg,
 void HealthPanel::draw() const {
   _panel.draw();
   _indicator.draw();
+  _indicatorText.draw();
 }
 
 void HealthPanel::decreaseHealthIndicator(int32_t damage) {
@@ -55,7 +60,7 @@ void HealthPanel::onTimeout(const int32_t timerId) {
 
 void HealthPanel::processIndicatorReduceAnim() {
   auto cropRectangle = _indicator.getCropRect();
-  auto& remainingHealth = cropRectangle.w;
+  auto &remainingHealth = cropRectangle.w;
   if (0 == remainingHealth) {
     stopTimer(_indicatorReduceTimerId);
     _gameLostCb();
@@ -70,4 +75,28 @@ void HealthPanel::processIndicatorReduceAnim() {
 
   --remainingHealth;
   _indicator.setCropRect(cropRectangle);
+  setAndCenterIndicatorText();
+}
+
+void HealthPanel::setAndCenterIndicatorText() {
+  const auto totalHealth = _indicator.getImageWidth();
+  const auto indicatorCropRect = _indicator.getCropRect();
+  const auto remainingHealth = indicatorCropRect.w;
+  const auto remainingHealthPecent = (remainingHealth * 100) / totalHealth;
+  const auto healthContent = std::to_string(remainingHealthPecent) + "%";
+
+  _indicatorText.setText(healthContent.c_str());
+
+  auto widgetAlignArea = indicatorCropRect;
+  if (remainingHealthPecent < 50) {
+    widgetAlignArea.x += widgetAlignArea.w;
+    widgetAlignArea.w = totalHealth - remainingHealth;
+    _indicatorText.setColor(Colors::GREEN);
+  }
+
+  const auto indicatorTextWidth = _indicatorText.getImageWidth();
+  const auto textPos = WidgetAligner::getPosition(
+      indicatorTextWidth, _indicatorText.getImageHeight(),
+      widgetAlignArea, WidgetAlignment::CENTER_CENTER);
+  _indicatorText.setPosition(textPos);
 }

@@ -13,6 +13,7 @@
 struct HealthPanelConfig {
   uint64_t rsrcId = 0;
   uint64_t indicatorRsrcId = 0;
+  uint64_t indicatorFontId = 0;
   int32_t indicatorReduceTimerId = 0;
 };
 

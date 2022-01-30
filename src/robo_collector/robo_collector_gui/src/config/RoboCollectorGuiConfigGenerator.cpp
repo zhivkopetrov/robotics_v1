@@ -116,6 +116,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   auto& healthPanelCfg = cfg.healthPanelCfg;
   healthPanelCfg.rsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
   healthPanelCfg.indicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
+  healthPanelCfg.indicatorFontId = RoboCollectorGuiResources::VINQUE_RG_30;
   healthPanelCfg.indicatorReduceTimerId =
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
 
