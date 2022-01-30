@@ -88,7 +88,9 @@ void HealthPanel::setAndCenterIndicatorText() {
   _indicatorText.setText(healthContent.c_str());
 
   auto widgetAlignArea = indicatorCropRect;
-  if (remainingHealthPecent < 50) {
+  if (0 == remainingHealthPecent) {
+    widgetAlignArea = _indicator.getImageRect();
+  } else if (remainingHealthPecent < 50) {
     widgetAlignArea.x += widgetAlignArea.w;
     widgetAlignArea.w = totalHealth - remainingHealth;
     _indicatorText.setColor(Colors::GREEN);
