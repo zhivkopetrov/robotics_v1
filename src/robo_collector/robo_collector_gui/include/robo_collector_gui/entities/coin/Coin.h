@@ -69,7 +69,7 @@ private:
   CoinCollectAnimEndCb _coinCollectAnimEndCb;
 
   FieldPos _fieldPos;
-  CoinConfig _cfg;
+  CoinConfig _state;
   CoinOutInterface _outInterface;
 };
 

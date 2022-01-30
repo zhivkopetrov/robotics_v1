@@ -22,13 +22,13 @@ constexpr auto TARGET_COLLECT_ANIM_Y = 243;
 }
 
 int32_t Coin::init(const CoinConfig &cfg, const CoinOutInterface& interface) {
-  _cfg = cfg;
+  _state = cfg;
 
   if (SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
     return FAILURE;
   }
-  _coinImg.create(_cfg.rsrcId);
+  _coinImg.create(_state.rsrcId);
   _fieldPos = choseRespawnLocation();
 
   if (SUCCESS != initRotateAnim(_fieldPos)) {
@@ -57,14 +57,14 @@ void Coin::draw() const {
 
 void Coin::onAnimEnd(CoinAnimType coinAnimType) {
   if (CoinAnimType::COLLECT == coinAnimType) {
-    _outInterface.incrCollectedCoinsCb(_cfg.coinScore);
+    _outInterface.incrCollectedCoinsCb(_state.coinScore);
     _outInterface.resetFieldDataMarkerCb(
         FieldUtils::getFieldPos(_coinImg.getPosition()));
     const auto fieldPos = choseRespawnLocation();
     startRespawnAnim(fieldPos);
   } else if(CoinAnimType::RESPAWN == coinAnimType) {
     _outInterface.setFieldDataMarkerCb(
-        FieldUtils::getFieldPos(_coinImg.getPosition()), _cfg.fieldMarker);
+        FieldUtils::getFieldPos(_coinImg.getPosition()), _state.fieldMarker);
   } else {
     LOGERR("Logical error, received wrong anim type: %d",
         getEnumValue(coinAnimType));
@@ -81,7 +81,7 @@ int32_t Coin::initRespawnAnim() {
 
   CoinRespawnAnimConfig coinRespawnAnimCfg;
   coinRespawnAnimCfg.coinImg = &_coinImg;
-  coinRespawnAnimCfg.timerId = _cfg.respawnAnimTimerId;
+  coinRespawnAnimCfg.timerId = _state.respawnAnimTimerId;
   coinRespawnAnimCfg.animEndCb = animEndCb;
   if (SUCCESS != _respawnAnim.init(coinRespawnAnimCfg)) {
     LOGERR("Error, _respawnAnim.init() failed");
@@ -93,10 +93,10 @@ int32_t Coin::initRespawnAnim() {
 
 int32_t Coin::initRotateAnim(const FieldPos &fieldPos) {
   AnimBaseConfig animCfg;
-  animCfg.timerId = _cfg.rotateAnimTimerId;
+  animCfg.timerId = _state.rotateAnimTimerId;
   animCfg.timerInterval = 75;
   animCfg.startPos = FieldUtils::getAbsPos(fieldPos);
-  animCfg.startPos += _cfg.tileOffset;
+  animCfg.startPos += _state.tileOffset;
   animCfg.animDirection = AnimDir::FORWARD;
   animCfg.animImageType = AnimImageType::EXTERNAL;
   animCfg.externalImage = &_coinImg;
@@ -110,7 +110,7 @@ int32_t Coin::initRotateAnim(const FieldPos &fieldPos) {
 }
 
 void Coin::onInitEnd() {
-  _outInterface.setFieldDataMarkerCb(_fieldPos, _cfg.fieldMarker);
+  _outInterface.setFieldDataMarkerCb(_fieldPos, _state.fieldMarker);
 
   _collisionObjHandle = _outInterface.collisionWatcher->registerObject(
       this, CollisionDamageImpact::NO);
@@ -151,7 +151,7 @@ int32_t Coin::initOutInterface(const CoinOutInterface &interface) {
 
 void Coin::startCollectAnim() {
   AnimBaseConfig cfg;
-  cfg.timerId = _cfg.collectAnimTimerId;
+  cfg.timerId = _state.collectAnimTimerId;
   cfg.timerInterval = 20;
   cfg.startPos = _coinImg.getPosition();
   cfg.animDirection = AnimDir::FORWARD;
@@ -193,7 +193,7 @@ FieldPos Coin::choseRespawnLocation() {
     chosenPos.row = rng.getRandomNumber(0, lastRowIdx);
     chosenPos.col = rng.getRandomNumber(0, lastColIdx);
     const auto chosenTile = fieldData[chosenPos.row][chosenPos.col];
-    if (_cfg.fieldEmptyMarker == chosenTile) {
+    if (_state.fieldEmptyMarker == chosenTile) {
       break;
     }
   }
@@ -203,7 +203,7 @@ FieldPos Coin::choseRespawnLocation() {
 
 void Coin::startRespawnAnim(const FieldPos& fieldPos) {
   Point absPos = FieldUtils::getAbsPos(fieldPos);
-  absPos += _cfg.tileOffset;
+  absPos += _state.tileOffset;
   _coinImg.setPosition(absPos);
   _respawnAnim.start();
 }

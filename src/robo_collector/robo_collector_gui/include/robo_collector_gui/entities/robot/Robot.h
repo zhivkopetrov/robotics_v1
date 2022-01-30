@@ -74,7 +74,7 @@ private:
   void startRotAnim(bool isLeftRotation);
   AnimBaseConfig generateAnimBaseConfig();
 
-  RobotConfig _cfg;
+  RobotConfig _state;
   RobotOutInterface _outInterface;
   Image _robotImg;
 

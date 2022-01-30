@@ -42,11 +42,11 @@ void Robot::draw() const {
 }
 
 FieldPos Robot::getFieldPos() const {
-  return _cfg.fieldPos;
+  return _state.fieldPos;
 }
 
 Direction Robot::getDirection() const {
-  return _cfg.dir;
+  return _state.dir;
 }
 
 void Robot::act(MoveType moveType) {
@@ -69,29 +69,29 @@ void Robot::act(MoveType moveType) {
 }
 
 void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
-  _outInterface.resetFieldDataMarkerCb(_cfg.fieldPos);
-  _cfg.dir = futureDir;
-  _cfg.fieldPos = futurePos;
-  _outInterface.setFieldDataMarkerCb(futurePos, _cfg.fieldMarker);
+  _outInterface.resetFieldDataMarkerCb(_state.fieldPos);
+  _state.dir = futureDir;
+  _state.fieldPos = futurePos;
+  _outInterface.setFieldDataMarkerCb(futurePos, _state.fieldMarker);
 
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
-    LOGB("Switching CollisionWatchStatus::OFF for robotId: %d", _cfg.robotId);
+    LOGB("Switching CollisionWatchStatus::OFF for robotId: %d", _state.robotId);
     _currCollisionWatchStatus = CollisionWatchStatus::OFF;
     _outInterface.collisionWatcher->toggleWatchStatus(
           _collisionObjHandle, _currCollisionWatchStatus);
   }
 
-  _outInterface.finishRobotActCb(_cfg.robotId);
+  _outInterface.finishRobotActCb(_state.robotId);
 }
 
 int32_t Robot::initConfig(const RobotConfig &cfg) {
-  _cfg = cfg;
+  _state = cfg;
 
-  _robotImg.create(_cfg.rsrcId);
-  _robotImg.setPosition(FieldUtils::getAbsPos(_cfg.fieldPos));
-  _robotImg.setFrame(_cfg.frameId);
+  _robotImg.create(_state.rsrcId);
+  _robotImg.setPosition(FieldUtils::getAbsPos(_state.fieldPos));
+  _robotImg.setFrame(_state.frameId);
   _robotImg.setPredefinedRotationCenter(RotationCenterType::ORIG_CENTER);
-  _robotImg.setRotation(RobotUtils::getRotationDegFromDir(_cfg.dir));
+  _robotImg.setRotation(RobotUtils::getRotationDegFromDir(_state.dir));
 
   if (SUCCESS != _animEndCb.init(std::bind(&Robot::onMoveAnimEnd, this,
       std::placeholders::_1, std::placeholders::_2))) {
@@ -111,7 +111,7 @@ int32_t Robot::initOutInterface(const RobotOutInterface &interface) {
   }
 
   // only player robot should report damage callback
-  if (Defines::PLAYER_ROBOT_IDX != _cfg.robotId) {
+  if (Defines::PLAYER_ROBOT_IDX != _state.robotId) {
     _outInterface.playerDamageCb = nullptr;
   }
 
@@ -147,16 +147,16 @@ void Robot::onInitEnd() {
   _collisionObjHandle =_outInterface.collisionWatcher->registerObject(
       this, CollisionDamageImpact::YES);
 
-  _outInterface.setFieldDataMarkerCb(_cfg.fieldPos, _cfg.fieldMarker);
+  _outInterface.setFieldDataMarkerCb(_state.fieldPos, _state.fieldMarker);
 }
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
                               CollisionDamageImpact impact) {
-  LOGC("Received registerCollision for robotId: %d", _cfg.robotId);
+  LOGC("Received registerCollision for robotId: %d", _state.robotId);
   //collision watch status will not be started in the case where
   //this is the currently moving object
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
-    LOGB("Switching CollisionWatchStatus::OFF for robotId: %d", _cfg.robotId);
+    LOGB("Switching CollisionWatchStatus::OFF for robotId: %d", _state.robotId);
     _currCollisionWatchStatus = CollisionWatchStatus::OFF;
     _outInterface.collisionWatcher->toggleWatchStatus(
           _collisionObjHandle, _currCollisionWatchStatus);
@@ -167,9 +167,9 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
     }
 
     LOGM("Handle collision from registerCollision CollisionWatchStatus::ON "
-        "for robotId: %d", _cfg.robotId);
+        "for robotId: %d", _state.robotId);
     handleDamageImpactCollision();
-    _outInterface.finishRobotActCb(_cfg.robotId);
+    _outInterface.finishRobotActCb(_state.robotId);
     return;
   }
 
@@ -177,7 +177,7 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle& intersectRect,
   //another moving object collides into this one, which is not moving
   //TODO invoke on collisionAnimEnd
   LOGM("Handle collision from registerCollision CollisionWatchStatus::OFF "
-      "for robotId: %d", _cfg.robotId);
+      "for robotId: %d", _state.robotId);
   handleDamageImpactCollision();
 }
 
@@ -186,42 +186,43 @@ Rectangle Robot::getBoundary() const {
 }
 
 void Robot::onTimeout(const int32_t timerId) {
-  if (timerId == _cfg.wallCollisionAnimTimerId) {
+  if (timerId == _state.wallCollisionAnimTimerId) {
     LOGM("Handle collision from onTimeout wall timer");
     //TODO invoke on collisionAnimEnd
     handleDamageImpactCollision();
-    _outInterface.finishRobotActCb(_cfg.robotId);
+    _outInterface.finishRobotActCb(_state.robotId);
   } else {
     LOGERR("Error, receive unsupported timerId: %d", timerId);
   }
 }
 
 void Robot::move() {
-  const auto futurePos = FieldUtils::getAdjacentPos(_cfg.dir, _cfg.fieldPos);
+  const auto futurePos =
+      FieldUtils::getAdjacentPos(_state.dir, _state.fieldPos);
   if (FieldUtils::isInsideField(futurePos)) {
-    LOGB("Switching CollisionWatchStatus::ON for robotId: %d", _cfg.robotId);
+    LOGB("Switching CollisionWatchStatus::ON for robotId: %d", _state.robotId);
     _currCollisionWatchStatus = CollisionWatchStatus::ON;
     _outInterface.collisionWatcher->toggleWatchStatus(
         _collisionObjHandle, _currCollisionWatchStatus);
   } else {
     constexpr auto timerInterval = 200;
     startTimer(
-        timerInterval, _cfg.wallCollisionAnimTimerId, TimerType::ONESHOT);
+        timerInterval, _state.wallCollisionAnimTimerId, TimerType::ONESHOT);
   }
 
   startMoveAnim(futurePos);
 }
 
 void Robot::handleDamageImpactCollision() {
-  LOGY("handling collision for robotId: %d", _cfg.robotId);
+  LOGY("handling collision for robotId: %d", _state.robotId);
 
   _animEndCb.setCbStatus(RobotAnimEndCbReport::DISABLE);
   _moveAnim.stop();
 
-  _robotImg.setPosition(FieldUtils::getAbsPos(_cfg.fieldPos));
+  _robotImg.setPosition(FieldUtils::getAbsPos(_state.fieldPos));
 
   if (_outInterface.playerDamageCb) {
-    LOGY("dealing damage for robotId: %d", _cfg.robotId);
+    LOGY("dealing damage for robotId: %d", _state.robotId);
     constexpr auto damage = 45;
     _outInterface.playerDamageCb(damage);
   }
@@ -231,7 +232,7 @@ void Robot::startMoveAnim(FieldPos futurePos) {
   const auto cfg = generateAnimBaseConfig();
   constexpr auto numberOfSteps = 20;
   const auto futureAbsPos = FieldUtils::getAbsPos(futurePos);
-  _animEndCb.setAnimEndData(_cfg.dir, futurePos);
+  _animEndCb.setAnimEndData(_state.dir, futurePos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
   if (SUCCESS != _moveAnim.configure(cfg, futureAbsPos, numberOfSteps,
@@ -251,8 +252,8 @@ void Robot::startRotAnim(bool isLeftRotation) {
   const auto rotCenter = _robotImg.getPredefinedRotationCenter(
       RotationCenterType::ORIG_CENTER);
   const auto futureDir =
-      RobotUtils::getDirAfterRotation(_cfg.dir, isLeftRotation);
-  _animEndCb.setAnimEndData(futureDir, _cfg.fieldPos);
+      RobotUtils::getDirAfterRotation(_state.dir, isLeftRotation);
+  _animEndCb.setAnimEndData(futureDir, _state.fieldPos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
   if (SUCCESS != _rotAnim.configure(cfg, rotAngleStep, &_animEndCb, rotCenter,
@@ -267,9 +268,9 @@ void Robot::startRotAnim(bool isLeftRotation) {
 AnimBaseConfig Robot::generateAnimBaseConfig() {
   AnimBaseConfig cfg;
   cfg.rsrcId = _robotImg.getRsrcId();
-  cfg.startPos = FieldUtils::getAbsPos(_cfg.fieldPos);
+  cfg.startPos = FieldUtils::getAbsPos(_state.fieldPos);
   cfg.animDirection = AnimDir::FORWARD;
-  cfg.timerId = _cfg.moveAnimTimerId;
+  cfg.timerId = _state.moveAnimTimerId;
   cfg.timerInterval = 20;
   cfg.isTimerPauseble = true;
   cfg.animImageType = AnimImageType::EXTERNAL;
