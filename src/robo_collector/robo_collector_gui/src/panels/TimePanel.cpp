@@ -13,7 +13,14 @@
 
 //Own components headers
 
-int32_t TimePanel::init(const TimePanelConfig &cfg) {
+int32_t TimePanel::init(const TimePanelConfig &cfg,
+                        const GameLostCb& gameLostCb) {
+  if (nullptr == gameLostCb) {
+    LOGERR("Error, nullptr provided for GameLostCb");
+    return FAILURE;
+  }
+  _gameLostCb = gameLostCb;
+
   constexpr auto panelX = 1250;
   constexpr auto panelY = 50;
   _clockTimerId = cfg.clockTimerId;
@@ -62,8 +69,7 @@ void TimePanel::processClockTick() {
   if (0 == _remainingSeconds) {
     stopTimer(_clockTimerId);
     stopTimer(_blinkTimerId);
-    //TODO attach callback
-    LOGR("YOU LOSE");
+    _gameLostCb();
     return;
   }
 

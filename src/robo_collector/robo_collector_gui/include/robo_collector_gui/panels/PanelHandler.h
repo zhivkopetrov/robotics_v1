@@ -15,9 +15,15 @@
 
 //Forward declarations
 
+struct PanelHandlerOutInterface {
+  GameLostCb gameLostCb;
+  GameWonCb gameWonCb;
+};
+
 class PanelHandler {
 public:
-  int32_t init(const PanelHandlerConfig& cfg);
+  int32_t init(const PanelHandlerConfig &cfg,
+               const PanelHandlerOutInterface &interface);
   void draw() const;
   void decreaseHealthIndicator(int32_t damage);
   void increaseCollectedCoins(int32_t coins);

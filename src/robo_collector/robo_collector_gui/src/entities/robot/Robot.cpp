@@ -222,7 +222,7 @@ void Robot::handleDamageImpactCollision() {
 
   if (_outInterface.playerDamageCb) {
     LOGY("dealing damage for robotId: %d", _cfg.robotId);
-    constexpr auto damage = 20;
+    constexpr auto damage = 40;
     _outInterface.playerDamageCb(damage);
   }
 }

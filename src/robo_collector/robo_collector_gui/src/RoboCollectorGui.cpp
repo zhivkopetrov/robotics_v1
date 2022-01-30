@@ -39,8 +39,8 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  if (SUCCESS != _panelHandler.init(parsedCfg.panelHandlerCfg)) {
-    LOGERR("Error in _panel.init()");
+  if (SUCCESS != initPanelHandler(parsedCfg.panelHandlerCfg)) {
+    LOGERR("initPanelHandler() failed");
     return FAILURE;
   }
 
@@ -64,6 +64,11 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
+  if (SUCCESS != _gameEndHelper.init()) {
+    LOGERR("_gameEndHelper.init() failed");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
@@ -84,6 +89,8 @@ void RoboCollectorGui::draw() const {
   for (const auto &robot : _robots) {
     robot.draw();
   }
+
+  _gameEndHelper.draw();
 }
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
@@ -149,6 +156,20 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   return SUCCESS;
 }
 
+int32_t RoboCollectorGui::initPanelHandler(const PanelHandlerConfig& cfg) {
+  PanelHandlerOutInterface outInterface;
+  outInterface.gameWonCb = std::bind(&GameEndHelper::gameWon, &_gameEndHelper);
+  outInterface.gameLostCb =
+      std::bind(&GameEndHelper::gameLost, &_gameEndHelper);
+
+  if (SUCCESS != _panelHandler.init(cfg, outInterface)) {
+    LOGERR("Error in _panel.init()");
+    return FAILURE;
+  }
+
+  return SUCCESS;
+}
+
 int32_t RoboCollectorGui::initCoinHandler(const CoinHandlerConfig &cfg) {
   CoinOutInterface coinOutInterface;
   coinOutInterface.collisionWatcher = &_collisionWatcher;
@@ -209,4 +230,5 @@ int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig& cfg) {
 
   return SUCCESS;
 }
+
 

@@ -11,18 +11,19 @@
 
 //Own components headers
 
-int32_t PanelHandler::init(const PanelHandlerConfig &cfg) {
-  if (SUCCESS != _healthPanel.init(cfg.healthPanelCfg)) {
+int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
+                           const PanelHandlerOutInterface &interface) {
+  if (SUCCESS != _healthPanel.init(cfg.healthPanelCfg, interface.gameLostCb)) {
     LOGERR("Error, _healthPanel.init() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != _timePanel.init(cfg.timePanelCfg)) {
+  if (SUCCESS != _timePanel.init(cfg.timePanelCfg, interface.gameLostCb)) {
     LOGERR("Error, _timePanel.init() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != _coinPanel.init(cfg.coinPanelCfg)) {
+  if (SUCCESS != _coinPanel.init(cfg.coinPanelCfg, interface.gameWonCb)) {
     LOGERR("Error, _coinPanel.init() failed");
     return FAILURE;
   }

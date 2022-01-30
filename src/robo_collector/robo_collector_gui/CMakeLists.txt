@@ -59,6 +59,7 @@ add_executable(
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
         ${_INC_DIR}/helpers/TurnHelper.h
+        ${_INC_DIR}/helpers/GameEndHelper.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -83,6 +84,7 @@ add_executable(
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
+        ${_SRC_DIR}/helpers/GameEndHelper.cpp
 )
 
 target_include_directories(

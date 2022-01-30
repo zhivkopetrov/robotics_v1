@@ -12,13 +12,14 @@
 #include "manager_utils/time/TimerClient.h"
 
 //Own components headers
+#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/panels/config/TimePanelConfig.h"
 
 //Forward declarations
 
 class TimePanel : public TimerClient {
 public:
-  int32_t init(const TimePanelConfig& cfg);
+  int32_t init(const TimePanelConfig& cfg, const GameLostCb& gameLostCb);
   void draw() const;
 
 private:
@@ -37,6 +38,8 @@ private:
   int32_t _clockTimerId = 0;
   int32_t _blinkTimerId = 0;
   int32_t _remainingSeconds = 0;
+
+  GameLostCb _gameLostCb;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_TIMEPANEL_H_ */

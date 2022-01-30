@@ -11,7 +11,14 @@
 
 //Own components headers
 
-int32_t CoinPanel::init(const CoinPanelConfig& cfg) {
+int32_t CoinPanel::init(const CoinPanelConfig& cfg,
+                        const GameWonCb &gameWonCb) {
+  if (nullptr == gameWonCb) {
+    LOGERR("Error, nullptr provided for GameWonCb");
+    return FAILURE;
+  }
+  _gameWonCb = gameWonCb;
+
   constexpr auto panelX = 1250;
   constexpr auto panelY = 215;
   const auto lightGoldColor = Color(0xD4AF37FF);
@@ -43,5 +50,7 @@ void CoinPanel::draw() const {
 
 void CoinPanel::increaseCollectedCoins(int32_t coins) {
   _numberPanel.increaseWith(coins);
+
+  //TODO invoke win CB
 }
 
