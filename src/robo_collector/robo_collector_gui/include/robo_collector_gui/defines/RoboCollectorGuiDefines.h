@@ -63,5 +63,9 @@ enum class Direction {
   LEFT
 };
 
+enum class RotationDir {
+  LEFT, RIGHT
+};
+
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIDEFINES_H_ */
 

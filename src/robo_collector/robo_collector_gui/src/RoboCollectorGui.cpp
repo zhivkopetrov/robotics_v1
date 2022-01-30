@@ -101,53 +101,53 @@ void RoboCollectorGui::process() {
   _collisionWatcher.process();
 }
 
-int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
-  const auto robotBaseCfg = cfg.robotBaseCfg;
-  RobotOutInterface robotOutInterface;
+int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
+  const auto& baseCfg = guiCfg.robotBaseCfg;
+  RobotOutInterface outInterface;
 
-  robotOutInterface.collisionWatcher = &_collisionWatcher;
-  robotOutInterface.playerDamageCb =
-      std::bind(&PanelHandler::decreaseHealthIndicator, &_panelHandler, _1);
-  robotOutInterface.setFieldDataMarkerCb =
-      std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
-  robotOutInterface.resetFieldDataMarkerCb =
-      std::bind(&Field::resetFieldDataMarker, &_field, _1);
-  robotOutInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  robotOutInterface.finishRobotActCb =
-      std::bind(&TurnHelper::onRobotFinishAct, &_turnHelper, _1);
+  outInterface.collisionWatcher = &_collisionWatcher;
+  outInterface.playerDamageCb = std::bind(
+      &PanelHandler::decreaseHealthIndicator, &_panelHandler, _1);
+  outInterface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
+      &_field, _1, _2);
+  outInterface.resetFieldDataMarkerCb = std::bind(&Field::resetFieldDataMarker,
+      &_field, _1);
+  outInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  outInterface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
+      &_turnHelper, _1);
 
-  const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos {
-    FieldPos(cfg.fieldCfg.rows - 1, cfg.fieldCfg.cols - 1),
-    FieldPos(cfg.fieldCfg.rows - 1, 0),
-    FieldPos(0, 0),
-    FieldPos(0, cfg.fieldCfg.cols - 1)
-  };
+  const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos { FieldPos(
+      guiCfg.fieldCfg.rows - 1, guiCfg.fieldCfg.cols - 1), FieldPos(
+      guiCfg.fieldCfg.rows - 1, 0), FieldPos(0, 0), FieldPos(0,
+      guiCfg.fieldCfg.cols - 1) };
 
   const std::array<Direction, Defines::ROBOTS_CTN> robotsInitialDirs {
-    Direction::UP, Direction::UP, Direction::DOWN, Direction::DOWN
-  };
+      Direction::UP, Direction::UP, Direction::DOWN, Direction::DOWN };
 
-  RobotConfig robotCfg;
+  RobotConfig cfg;
+  RobotAnimatorConfigBase animatorCfgBase;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     if (Defines::PLAYER_ROBOT_IDX == i) {
-      robotCfg.rsrcId = robotBaseCfg.playerRsrcId;
-      robotCfg.frameId = 0;
-      robotCfg.fieldMarker = cfg.playerFieldMarker;
-      robotCfg.enemyFieldMarker = cfg.enemyFieldMarker;
+      animatorCfgBase.rsrcId = baseCfg.playerRsrcId;
+      animatorCfgBase.frameId = 0;
+      cfg.fieldMarker = guiCfg.playerFieldMarker;
+      cfg.enemyFieldMarker = guiCfg.enemyFieldMarker;
     } else {
-      robotCfg.rsrcId = robotBaseCfg.enemiesRsrcId;
-      robotCfg.frameId = i - 1;
-      robotCfg.fieldMarker = cfg.enemyFieldMarker;
-      robotCfg.enemyFieldMarker = cfg.playerFieldMarker;
+      animatorCfgBase.rsrcId = baseCfg.enemiesRsrcId;
+      animatorCfgBase.frameId = i - 1;
+      cfg.fieldMarker = guiCfg.enemyFieldMarker;
+      cfg.enemyFieldMarker = guiCfg.playerFieldMarker;
     }
-    robotCfg.robotId = i;
-    robotCfg.fieldPos = robotsFieldPos[i];
-    robotCfg.dir = robotsInitialDirs[i];
-    robotCfg.moveAnimTimerId = robotBaseCfg.moveAnimStartTimerId + i;
-    robotCfg.wallCollisionAnimTimerId =
-        robotBaseCfg.wallCollisionAnimStartTimerId + i;
+    cfg.robotId = i;
+    cfg.fieldPos = robotsFieldPos[i];
+    cfg.dir = robotsInitialDirs[i];
+    animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId + i;
+    animatorCfgBase.wallCollisionAnimTimerId =
+        baseCfg.wallCollisionAnimStartTimerId + i;
+    animatorCfgBase.robotCollisionAnimTimerId =
+        baseCfg.robotCollisionAnimStartTimerId + i;
 
-    if (SUCCESS != _robots[i].init(robotCfg, robotOutInterface)) {
+    if (SUCCESS != _robots[i].init(cfg, animatorCfgBase, outInterface)) {
       LOGERR("Error in _robots[%d].init()", i);
       return FAILURE;
     }
@@ -156,11 +156,11 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &cfg) {
   return SUCCESS;
 }
 
-int32_t RoboCollectorGui::initPanelHandler(const PanelHandlerConfig& cfg) {
+int32_t RoboCollectorGui::initPanelHandler(const PanelHandlerConfig &cfg) {
   PanelHandlerOutInterface outInterface;
   outInterface.gameWonCb = std::bind(&GameEndHelper::gameWon, &_gameEndHelper);
-  outInterface.gameLostCb =
-      std::bind(&GameEndHelper::gameLost, &_gameEndHelper);
+  outInterface.gameLostCb = std::bind(&GameEndHelper::gameLost,
+      &_gameEndHelper);
 
   if (SUCCESS != _panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");
@@ -171,17 +171,17 @@ int32_t RoboCollectorGui::initPanelHandler(const PanelHandlerConfig& cfg) {
 }
 
 int32_t RoboCollectorGui::initCoinHandler(const CoinHandlerConfig &cfg) {
-  CoinOutInterface coinOutInterface;
-  coinOutInterface.collisionWatcher = &_collisionWatcher;
-  coinOutInterface.setFieldDataMarkerCb =
-      std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
-  coinOutInterface.resetFieldDataMarkerCb =
-      std::bind(&Field::resetFieldDataMarker, &_field, _1);
-  coinOutInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  coinOutInterface.incrCollectedCoinsCb =
-      std::bind(&PanelHandler::increaseCollectedCoins, &_panelHandler, _1);
+  CoinOutInterface outInterface;
+  outInterface.collisionWatcher = &_collisionWatcher;
+  outInterface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
+      &_field, _1, _2);
+  outInterface.resetFieldDataMarkerCb = std::bind(&Field::resetFieldDataMarker,
+      &_field, _1);
+  outInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  outInterface.incrCollectedCoinsCb = std::bind(
+      &PanelHandler::increaseCollectedCoins, &_panelHandler, _1);
 
-  if (SUCCESS != _coinHandler.init(cfg, coinOutInterface)) {
+  if (SUCCESS != _coinHandler.init(cfg, outInterface)) {
     LOGERR("Error in _coinHandler.init()");
     return FAILURE;
   }
@@ -190,15 +190,15 @@ int32_t RoboCollectorGui::initCoinHandler(const CoinHandlerConfig &cfg) {
 }
 
 int32_t RoboCollectorGui::initController(
-    const RoboCollectorControllerConfig& cfg) {
+    const RoboCollectorControllerConfig &cfg) {
   RoboCollectorControllerOutInterface outInterface;
 
   if (_robots.empty()) {
     LOGERR("Error, robots array is empty!");
     return FAILURE;
   }
-  outInterface.robotActCb =
-      std::bind(&Robot::act, &_robots[Defines::PLAYER_ROBOT_IDX], _1);
+  outInterface.robotActCb = std::bind(&Robot::act,
+      &_robots[Defines::PLAYER_ROBOT_IDX], _1);
 
   if (SUCCESS != _controller.init(cfg, outInterface)) {
     LOGERR("Error in _controller.init()");
@@ -208,27 +208,25 @@ int32_t RoboCollectorGui::initController(
   return SUCCESS;
 }
 
-int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig& cfg) {
-  TurnHelperConfig turnHelperCfg;
-  turnHelperCfg.enablePlayerInputCb =
-      std::bind(&RoboCollectorController::unlockInput, &_controller);
-  turnHelperCfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  turnHelperCfg.fieldEmptyDataMarker = cfg.fieldCfg.emptyTileMarker;
-  turnHelperCfg.playerDataMarker = cfg.playerFieldMarker;
-  turnHelperCfg.maxRobots = Defines::ROBOTS_CTN;
+int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig &guiCfg) {
+  TurnHelperConfig cfg;
+  cfg.enablePlayerInputCb = std::bind(&RoboCollectorController::unlockInput,
+      &_controller);
+  cfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  cfg.fieldEmptyDataMarker = guiCfg.fieldCfg.emptyTileMarker;
+  cfg.playerDataMarker = guiCfg.playerFieldMarker;
+  cfg.maxRobots = Defines::ROBOTS_CTN;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
-    turnHelperCfg.robotActInterfaces.emplace_back(
-        std::bind(&Robot::act, &_robots[i], _1),
+    cfg.robotActInterfaces.emplace_back(std::bind(&Robot::act, &_robots[i], _1),
         std::bind(&Robot::getFieldPos, &_robots[i]),
         std::bind(&Robot::getDirection, &_robots[i]));
   }
 
-  if (SUCCESS != _turnHelper.init(turnHelperCfg)) {
+  if (SUCCESS != _turnHelper.init(cfg)) {
     LOGERR("Error in _turnHelper.init()");
     return FAILURE;
   }
 
   return SUCCESS;
 }
-
 

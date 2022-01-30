@@ -7,16 +7,11 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "manager_utils/drawing/Image.h"
-#include "manager_utils/drawing/animation/PositionAnimation.h"
-#include "manager_utils/drawing/animation/RotationAnimation.h"
-#include "manager_utils/time/TimerClient.h"
 
 //Own components headers
 #include "robo_collector_gui/helpers/CollisionObject.h"
-#include "robo_collector_gui/entities/robot/animation/RobotAnimEndCb.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/field/FieldPos.h"
+#include "robo_collector_gui/entities/robot/animation/RobotAnimator.h"
 
 //Forward declarations
 class CollisionWatcher;
@@ -27,24 +22,22 @@ struct RobotOutInterface {
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
   FinishRobotActCb finishRobotActCb;
-  CollisionWatcher* collisionWatcher = nullptr;
+  CollisionWatcher *collisionWatcher = nullptr;
 };
 
 struct RobotConfig {
   FieldPos fieldPos;
-  uint64_t rsrcId = 0;
   int32_t robotId = 0;
-  int32_t frameId = 0;
-  int32_t moveAnimTimerId = 0;
-  int32_t wallCollisionAnimTimerId = 0;
   Direction dir = Direction::UP;
   char fieldMarker = '!';
   char enemyFieldMarker = '?';
 };
 
-class Robot final : public CollisionObject, public TimerClient {
+class Robot final : public CollisionObject {
 public:
-  int32_t init(const RobotConfig &cfg, const RobotOutInterface &interface);
+  int32_t init(const RobotConfig &cfg,
+               const RobotAnimatorConfigBase &robotAnimCfgBase,
+               const RobotOutInterface &interface);
 
   void deinit();
 
@@ -55,33 +48,23 @@ public:
   void act(MoveType moveType);
 
   void onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos);
+  void onCollisionImpactAnimEnd(RobotEndTurn status);
+  void onCollisionImpact();
 
 private:
-  int32_t initConfig(const RobotConfig &cfg);
   int32_t initOutInterface(const RobotOutInterface &interface);
+  int32_t initRobotAnimator(const RobotAnimatorConfigBase &robotAnimCfgBase);
   void onInitEnd();
 
-  void registerCollision(const Rectangle& intersectRect,
+  void registerCollision(const Rectangle &intersectRect,
                          CollisionDamageImpact impact) override;
   Rectangle getBoundary() const override;
-  void onTimeout(const int32_t timerId) override;
 
   void move();
 
-  void handleDamageImpactCollision();
-
-  void startMoveAnim(FieldPos futurePos);
-  void startRotAnim(bool isLeftRotation);
-  AnimBaseConfig generateAnimBaseConfig();
-
   RobotConfig _state;
   RobotOutInterface _outInterface;
-  Image _robotImg;
-
-  PositionAnimation _moveAnim;
-  RotationAnimation _rotAnim;
-  RobotAnimEndCb _animEndCb;
-
+  RobotAnimator _animator;
   CollisionWatchStatus _currCollisionWatchStatus = CollisionWatchStatus::OFF;
 };
 

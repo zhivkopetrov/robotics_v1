@@ -37,11 +37,11 @@ public:
   void process() override;
 
 private:
-  int32_t initRobots(const RoboCollectorGuiConfig& cfg);
+  int32_t initRobots(const RoboCollectorGuiConfig& guiCfg);
   int32_t initPanelHandler(const PanelHandlerConfig& cfg);
   int32_t initCoinHandler(const CoinHandlerConfig& cfg);
-  int32_t initController(const RoboCollectorControllerConfig& cfg);
-  int32_t initTurnHelper(const RoboCollectorGuiConfig& cfg);
+  int32_t initController(const RoboCollectorControllerConfig& guiCfg);
+  int32_t initTurnHelper(const RoboCollectorGuiConfig& guiCfg);
 
   Image _map;
   PanelHandler _panelHandler;

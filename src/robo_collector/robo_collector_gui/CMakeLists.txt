@@ -39,6 +39,7 @@ add_executable(
         ${_INC_DIR}/entities/robot/RobotAI.h
         ${_INC_DIR}/entities/robot/RobotUtils.h
         ${_INC_DIR}/entities/robot/config/RobotBaseConfig.h
+        ${_INC_DIR}/entities/robot/animation/RobotAnimator.h
         ${_INC_DIR}/entities/robot/animation/RobotAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/entities/coin/CoinHandler.h
@@ -71,6 +72,7 @@ add_executable(
         ${_SRC_DIR}/entities/robot/Robot.cpp
         ${_SRC_DIR}/entities/robot/RobotAI.cpp
         ${_SRC_DIR}/entities/robot/RobotUtils.cpp
+        ${_SRC_DIR}/entities/robot/animation/RobotAnimator.cpp
         ${_SRC_DIR}/entities/robot/animation/RobotAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
         ${_SRC_DIR}/entities/coin/CoinHandler.cpp

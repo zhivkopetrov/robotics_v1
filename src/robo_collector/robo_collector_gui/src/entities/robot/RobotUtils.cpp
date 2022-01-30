@@ -12,16 +12,16 @@
 //Own components headers
 
 Direction RobotUtils::getDirAfterRotation(Direction currDir,
-                                          bool isLeftRotation) {
+                                          RotationDir rotDir) {
   switch (currDir) {
   case Direction::UP:
-    return isLeftRotation ? Direction::LEFT : Direction::RIGHT;
+    return (RotationDir::LEFT == rotDir) ? Direction::LEFT : Direction::RIGHT;
   case Direction::RIGHT:
-    return isLeftRotation ? Direction::UP : Direction::DOWN;
+    return (RotationDir::LEFT == rotDir) ? Direction::UP : Direction::DOWN;
   case Direction::DOWN:
-    return isLeftRotation ? Direction::RIGHT : Direction::LEFT;
+    return (RotationDir::LEFT == rotDir) ? Direction::RIGHT : Direction::LEFT;
   case Direction::LEFT:
-    return isLeftRotation ? Direction::DOWN : Direction::UP;
+    return (RotationDir::LEFT == rotDir) ? Direction::DOWN : Direction::UP;
 
   default:
     LOGERR("Received unsupported dir: %d", getEnumValue(currDir));

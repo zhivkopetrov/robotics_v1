@@ -17,7 +17,7 @@ class RobotUtils {
 public:
   RobotUtils() = delete;
 
-  static Direction getDirAfterRotation(Direction currDir, bool isLeftRotation);
+  static Direction getDirAfterRotation(Direction currDir, RotationDir rotDir);
 
   static double getRotationDegFromDir(Direction dir);
 };
