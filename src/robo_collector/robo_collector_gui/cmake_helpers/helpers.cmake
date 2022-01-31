@@ -114,14 +114,18 @@ function(enable_target_sanitizer target sanitizer)
     
     target_link_libraries(
         ${target}
-            PRIVATE
                 -fsanitize=${sanitizer}
+                -fsanitize-recover=all
+    )
+    
+    target_compile_options(
+        ${target}
+                -fsanitize-recover=all
     )
     
     if(${sanitizer} STREQUAL "address")
         target_link_libraries(
             ${target}
-                PRIVATE
                     -fno-omit-frame-pointer
         )
     endif()
@@ -130,13 +134,11 @@ function(enable_target_sanitizer target sanitizer)
         if (${sanitizer} STREQUAL "undefined")
             target_link_libraries(
                 ${target}
-                    PRIVATE
                         -lubsan
             )
         elseif (${sanitizer} STREQUAL "thread")
             target_link_libraries(
                 ${target}
-                    PRIVATE
                         -ltsan
             )
         endif()

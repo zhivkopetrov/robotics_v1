@@ -116,7 +116,7 @@ ament_target_dependencies(
 
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
-#set_target_visibility(${PROJECT_NAME})
+# enable_target_sanitizer(${PROJECT_NAME} "memory")
 
 if(NOT DISABLE_ROS_TOOLING)
     enable_ros_tooling_for_target(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)

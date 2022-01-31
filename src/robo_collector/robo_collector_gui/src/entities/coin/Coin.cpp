@@ -168,7 +168,7 @@ void Coin::startCollectAnim() {
 
   if (SUCCESS != _colllectAnim.configure(cfg, endPos, numberOfSteps,
           &_coinCollectAnimEndCb, PosAnimType::ONE_DIRECTIONAL)) {
-    LOGERR("Error, _posAnim.configure() failed for rsrcId: %#16lX");
+    LOGERR("Error, _posAnim.configure() failed");
   }
   _colllectAnim.start();
 }
@@ -184,8 +184,8 @@ Rectangle Coin::getBoundary() const {
 
 FieldPos Coin::choseRespawnLocation() {
   const auto& fieldData = _outInterface.getFieldDataCb();
-  const auto lastColIdx = fieldData.size() - 1;
-  const auto lastRowIdx = fieldData[0].size() - 1;
+  const auto lastRowIdx = fieldData.size() - 1;
+  const auto lastColIdx = fieldData[0].size() - 1;
   auto& rng = Rng::getInstance();
   FieldPos chosenPos;
 

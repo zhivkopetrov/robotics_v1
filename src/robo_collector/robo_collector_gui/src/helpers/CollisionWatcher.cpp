@@ -32,7 +32,7 @@ CollisionObjHandle CollisionWatcher::registerObject(
 
 void CollisionWatcher::unregisterObject(CollisionObjHandle handle) {
   if (handle >= _objects.size()) {
-    LOGERR("CollisionObjHandle: %d not found", handle);
+    LOGERR("CollisionObjHandle: %zu not found", handle);
     return;
   }
 
@@ -42,7 +42,7 @@ void CollisionWatcher::unregisterObject(CollisionObjHandle handle) {
 void CollisionWatcher::toggleWatchStatus(CollisionObjHandle handle,
                                          CollisionWatchStatus status) {
   if (handle >= _objects.size()) {
-    LOGERR("CollisionObjHandle: %d not found", handle);
+    LOGERR("CollisionObjHandle: %zu not found", handle);
     return;
   }
 
@@ -50,14 +50,14 @@ void CollisionWatcher::toggleWatchStatus(CollisionObjHandle handle,
       _activeWatchedHandles.end(), handle);
   if (CollisionWatchStatus::ON == status) {
     if (it != _activeWatchedHandles.end()) {
-      LOGERR("CollisionObjHandle: %d has already an active status", handle);
+      LOGERR("CollisionObjHandle: %zu has already an active status", handle);
       return;
     }
 
     _activeWatchedHandles.push_back(handle);
   } else { // CollisionWatchStatus::OFF == status
     if (it == _activeWatchedHandles.end()) {
-      LOGERR("CollisionObjHandle: %d is not active to be disabled", handle);
+      LOGERR("CollisionObjHandle: %zu is not active to be disabled", handle);
       return;
     }
 
