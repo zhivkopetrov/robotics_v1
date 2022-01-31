@@ -204,6 +204,7 @@ void Robot::onCollisionImpactAnimEnd(RobotEndTurn status) {
 }
 
 void Robot::onCollisionImpact() {
+  // only player robot should report damage callback
   if (_outInterface.playerDamageCb) {
     constexpr auto damage = 45;
     _outInterface.playerDamageCb(damage);

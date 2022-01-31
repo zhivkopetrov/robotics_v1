@@ -126,19 +126,21 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
 
   RobotConfig cfg;
   RobotAnimatorConfigBase animatorCfgBase;
+  animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     if (Defines::PLAYER_ROBOT_IDX == i) {
-      animatorCfgBase.rsrcId = baseCfg.playerRsrcId;
+      animatorCfgBase.robotRsrcId = baseCfg.playerRsrcId;
       animatorCfgBase.frameId = 0;
       cfg.fieldMarker = guiCfg.playerFieldMarker;
       cfg.enemyFieldMarker = guiCfg.enemyFieldMarker;
     } else {
-      animatorCfgBase.rsrcId = baseCfg.enemiesRsrcId;
+      animatorCfgBase.robotRsrcId = baseCfg.enemiesRsrcId;
       animatorCfgBase.frameId = i - 1;
       cfg.fieldMarker = guiCfg.enemyFieldMarker;
       cfg.enemyFieldMarker = guiCfg.playerFieldMarker;
     }
     cfg.robotId = i;
+    animatorCfgBase.robotId = i;
     cfg.fieldPos = robotsFieldPos[i];
     cfg.dir = robotsInitialDirs[i];
     animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId + i;
@@ -146,6 +148,8 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
         baseCfg.wallCollisionAnimStartTimerId + i;
     animatorCfgBase.robotCollisionAnimTimerId =
         baseCfg.robotCollisionAnimStartTimerId + i;
+    animatorCfgBase.robotDamageAnimTimerId =
+        baseCfg.robotDamageAnimStartTimerId + i;
 
     if (SUCCESS != _robots[i].init(cfg, animatorCfgBase, outInterface)) {
       LOGERR("Error in _robots[%d].init()", i);

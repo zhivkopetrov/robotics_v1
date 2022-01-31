@@ -56,6 +56,13 @@ description=empty
 position=0,0
 load=on_init
 
+tag=[DAMAGE_MARKER]
+type=image
+path=p/entities/damage_marker.png
+description=empty
+position=0,0
+load=on_init
+
 tag=[COIN_PANEL]
 type=image
 path=p/panels/coin_panel.png

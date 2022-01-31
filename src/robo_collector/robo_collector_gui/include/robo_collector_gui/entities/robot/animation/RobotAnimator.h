@@ -17,6 +17,7 @@
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/field/FieldPos.h"
 #include "robo_collector_gui/entities/robot/animation/RobotAnimEndCb.h"
+#include "robo_collector_gui/entities/robot/animation/PlayerDamageAnimEndCb.h"
 
 //Forward declarations
 
@@ -24,12 +25,19 @@ enum class RobotEndTurn {
   YES, NO
 };
 
+enum class StartPlayerDamageAnim {
+  YES, NO
+};
+
 struct RobotAnimatorConfigBase {
-  uint64_t rsrcId = 0;
+  uint64_t robotRsrcId = 0;
+  uint64_t damageMarkerRsrcId = 0;
   int32_t frameId = 0;
+  int32_t robotId = 0;
   int32_t moveAnimTimerId = 0;
   int32_t wallCollisionAnimTimerId = 0;
   int32_t robotCollisionAnimTimerId = 0;
+  int32_t robotDamageAnimTimerId = 0;
 };
 
 struct RobotAnimatorConfig {
@@ -60,7 +68,13 @@ public:
   Rectangle getBoundary() const;
 
 private:
+  int32_t initOutInterface(const RobotAnimatorConfig &cfg);
+
   void onTimeout(const int32_t timerId) override;
+
+  void configurePlayerDamageAnim();
+  void onPlayerDamageAnimEnd();
+
   AnimBaseConfig generateAnimBaseConfig(const FieldPos &currPos);
   void processCollisionAnim();
 
@@ -73,9 +87,15 @@ private:
   RotationAnimation _rotAnim;
   RobotAnimEndCb _animEndCb;
 
+  PositionAnimation _playerDamageAnim;
+  PlayerDamageAnimEndCb _playerDamageAnimEndCb;
+  uint64_t _damageMarkerRsrcId = 0;
+
+  int32_t _robotId = 0;
   int32_t _moveAnimTimerId = 0;
   int32_t _wallCollisionAnimTimerId = 0;
   int32_t _robotCollisionAnimTimerId = 0;
+  int32_t _robotDamageAnimTimerId = 0;
 
   RobotEndTurn _collisionAnimOutcome = RobotEndTurn::YES;
   int32_t _collisionAnimStep = 0;
