@@ -14,8 +14,7 @@
 int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
   RobotAIConfig robotAiCfg;
   robotAiCfg.getFieldDataCb = cfg.getFieldDataCb;
-  robotAiCfg.fieldEmptyDataMarker = cfg.fieldEmptyDataMarker;
-  robotAiCfg.playerDataMarker = cfg.playerDataMarker;
+  robotAiCfg.fieldEnemyMarker = cfg.fieldEnemyMarker;
   if (SUCCESS != _robotAI.init(robotAiCfg)) {
     LOGERR("Error, robotAI.init() failed");
     return FAILURE;
@@ -34,7 +33,6 @@ int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
 }
 
 void TurnHelper::onRobotFinishAct(int32_t robotId) {
-  ++_currTurn;
   const auto lastRobotIdx = _maxRobots - 1;
   if (lastRobotIdx == robotId) {
     _activeRobotId = Defines::PLAYER_ROBOT_IDX;
@@ -43,5 +41,9 @@ void TurnHelper::onRobotFinishAct(int32_t robotId) {
     _activeRobotId = robotId + 1;
     _robotAI.makeMove(_robotActInterfaces[_activeRobotId]);
   }
+}
+
+bool TurnHelper::isPlayerTurnActive() const {
+  return Defines::PLAYER_ROBOT_IDX == _activeRobotId;
 }
 

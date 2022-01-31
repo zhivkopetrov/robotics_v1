@@ -58,10 +58,7 @@ void Coin::draw() const {
 void Coin::onAnimEnd(CoinAnimType coinAnimType) {
   if (CoinAnimType::COLLECT == coinAnimType) {
     _outInterface.incrCollectedCoinsCb(_state.coinScore);
-    _outInterface.resetFieldDataMarkerCb(
-        FieldUtils::getFieldPos(_coinImg.getPosition()));
-    const auto fieldPos = choseRespawnLocation();
-    startRespawnAnim(fieldPos);
+    startRespawnAnim();
   } else if(CoinAnimType::RESPAWN == coinAnimType) {
     _outInterface.setFieldDataMarkerCb(
         FieldUtils::getFieldPos(_coinImg.getPosition()), _state.fieldMarker);
@@ -146,6 +143,11 @@ int32_t Coin::initOutInterface(const CoinOutInterface &interface) {
     return FAILURE;
   }
 
+  if (nullptr == _outInterface.isPlayerTurnActiveCb) {
+    LOGERR("Error, nullptr provided for IsPlayerTurnActiveCb");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
@@ -175,7 +177,12 @@ void Coin::startCollectAnim() {
 
 void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
                              [[maybe_unused]]CollisionDamageImpact impact) {
-  startCollectAnim();
+  const bool isCollisionFromPlayer = _outInterface.isPlayerTurnActiveCb();
+  if (isCollisionFromPlayer) {
+    startCollectAnim();
+  } else {
+    startRespawnAnim();
+  }
 }
 
 Rectangle Coin::getBoundary() const {
@@ -201,7 +208,11 @@ FieldPos Coin::choseRespawnLocation() {
   return chosenPos;
 }
 
-void Coin::startRespawnAnim(const FieldPos& fieldPos) {
+void Coin::startRespawnAnim() {
+  _outInterface.resetFieldDataMarkerCb(
+      FieldUtils::getFieldPos(_coinImg.getPosition()));
+  const auto fieldPos = choseRespawnLocation();
+
   Point absPos = FieldUtils::getAbsPos(fieldPos);
   absPos += _state.tileOffset;
   _coinImg.setPosition(absPos);

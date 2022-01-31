@@ -28,8 +28,7 @@ struct RobotActInterface {
 
 struct RobotAIConfig {
   GetFieldDataCb getFieldDataCb;
-  char fieldEmptyDataMarker = '!';
-  char playerDataMarker = '?';
+  char fieldEnemyMarker = '!';
 };
 
 class RobotAI {
@@ -42,8 +41,7 @@ private:
   bool isForwardDirValid(const FieldPos &currFieldPos, Direction currDir) const;
 
   GetFieldDataCb _getFieldDataCb;
-  char _fieldEmptyDataMarker = '!';
-  char _playerDataMarker = '?';
+  char _fieldEnemyMarker = '!';
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOTAI_H_ */

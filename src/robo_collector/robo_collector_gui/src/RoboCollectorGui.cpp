@@ -102,7 +102,7 @@ void RoboCollectorGui::process() {
 }
 
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
-  const auto& baseCfg = guiCfg.robotBaseCfg;
+  const auto &baseCfg = guiCfg.robotBaseCfg;
   RobotOutInterface outInterface;
 
   outInterface.collisionWatcher = &_collisionWatcher;
@@ -148,8 +148,8 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
         baseCfg.wallCollisionAnimStartTimerId + i;
     animatorCfgBase.robotCollisionAnimTimerId =
         baseCfg.robotCollisionAnimStartTimerId + i;
-    animatorCfgBase.robotDamageAnimTimerId =
-        baseCfg.robotDamageAnimStartTimerId + i;
+    animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId
+        + i;
 
     if (SUCCESS != _robots[i].init(cfg, animatorCfgBase, outInterface)) {
       LOGERR("Error in _robots[%d].init()", i);
@@ -184,6 +184,8 @@ int32_t RoboCollectorGui::initCoinHandler(const CoinHandlerConfig &cfg) {
   outInterface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
   outInterface.incrCollectedCoinsCb = std::bind(
       &PanelHandler::increaseCollectedCoins, &_panelHandler, _1);
+  outInterface.isPlayerTurnActiveCb = std::bind(&TurnHelper::isPlayerTurnActive,
+      &_turnHelper);
 
   if (SUCCESS != _coinHandler.init(cfg, outInterface)) {
     LOGERR("Error in _coinHandler.init()");
@@ -217,8 +219,7 @@ int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig &guiCfg) {
   cfg.enablePlayerInputCb = std::bind(&RoboCollectorController::unlockInput,
       &_controller);
   cfg.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  cfg.fieldEmptyDataMarker = guiCfg.fieldCfg.emptyTileMarker;
-  cfg.playerDataMarker = guiCfg.playerFieldMarker;
+  cfg.fieldEnemyMarker = guiCfg.enemyFieldMarker;
   cfg.maxRobots = Defines::ROBOTS_CTN;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
     cfg.robotActInterfaces.emplace_back(std::bind(&Robot::act, &_robots[i], _1),

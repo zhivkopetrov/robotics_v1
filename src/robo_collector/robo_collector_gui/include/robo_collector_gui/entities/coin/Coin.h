@@ -25,6 +25,7 @@ struct CoinOutInterface {
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
   IncrCollectedCoinsCb incrCollectedCoinsCb;
+  IsPlayerTurnActiveCb isPlayerTurnActiveCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
@@ -59,7 +60,7 @@ private:
   Rectangle getBoundary() const override;
 
   FieldPos choseRespawnLocation();
-  void startRespawnAnim(const FieldPos &fieldPos);
+  void startRespawnAnim();
 
   Image _coinImg;
   FrameAnimation _rotateAnim;

@@ -21,8 +21,7 @@ int32_t RobotAI::init(const RobotAIConfig &cfg) {
   }
   _getFieldDataCb = cfg.getFieldDataCb;
 
-  _fieldEmptyDataMarker = cfg.fieldEmptyDataMarker;
-  _playerDataMarker = cfg.playerDataMarker;
+  _fieldEnemyMarker = cfg.fieldEnemyMarker;
 
   return SUCCESS;
 }
@@ -66,7 +65,7 @@ bool RobotAI::isForwardDirValid(const FieldPos &currFieldPos,
   }
 
   const auto chosenTile = fieldData[futurePos.row][futurePos.col];
-  if (_fieldEmptyDataMarker == chosenTile || _playerDataMarker == chosenTile) {
+  if (_fieldEnemyMarker != chosenTile) {
     return true;
   }
 

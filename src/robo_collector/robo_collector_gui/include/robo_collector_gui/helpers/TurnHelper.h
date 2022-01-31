@@ -20,14 +20,14 @@ struct TurnHelperConfig {
   std::vector<RobotActInterface> robotActInterfaces;
   EnablePlayerInputCb enablePlayerInputCb;
   GetFieldDataCb getFieldDataCb;
-  char fieldEmptyDataMarker = '!';
-  char playerDataMarker = '?';
+  char fieldEnemyMarker = '!';
 };
 
 class TurnHelper {
 public:
   int32_t init(const TurnHelperConfig& cfg);
   void onRobotFinishAct(int32_t robotId);
+  bool isPlayerTurnActive() const;
 
 private:
   RobotAI _robotAI;
@@ -35,8 +35,7 @@ private:
   std::vector<RobotActInterface> _robotActInterfaces;
   EnablePlayerInputCb _enablePlayerInputCb;
   int32_t _activeRobotId = Defines::PLAYER_ROBOT_IDX;
-  int32_t _maxRobots;
-  int32_t _currTurn = 0;
+  int32_t _maxRobots = 0;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_TURNHELPER_H_ */

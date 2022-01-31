@@ -18,6 +18,7 @@
 using FieldData = std::vector<std::vector<char>>;
 
 using PlayerDamageCb = std::function<void(int32_t)>;
+using IsPlayerTurnActiveCb = std::function<bool()>;
 using SetFieldDataMarkerCb = std::function<void(const FieldPos&, char)>;
 using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;
 using GetFieldDataCb = std::function<const FieldData&()>;
