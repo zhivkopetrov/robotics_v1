@@ -8,6 +8,8 @@
 #include <array>
 
 //Other libraries headers
+#include "robo_collector_interfaces/msg/direction.hpp"
+
 #include "game_engine/Game.h"
 
 //Own components headers

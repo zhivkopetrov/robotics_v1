@@ -8,14 +8,18 @@ project(
     VERSION 1.0.0
 )
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_helpers/find_modules)
+list(
+    APPEND
+    CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake_helpers/find_modules
+)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_helpers/helpers.cmake)
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(robo_collector_interfaces REQUIRED)
-find_package(game_engine REQUIRED)
+find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
 set(_RESOURCE_FOLDER_NAME resources)
@@ -62,6 +66,7 @@ add_executable(
         ${_INC_DIR}/helpers/CollisionWatcher.h
         ${_INC_DIR}/helpers/TurnHelper.h
         ${_INC_DIR}/helpers/GameEndHelper.h
+        ${_INC_DIR}/external_api/MinimalPublisher.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -89,6 +94,7 @@ add_executable(
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
         ${_SRC_DIR}/helpers/GameEndHelper.cpp
+        ${_SRC_DIR}/external_api/MinimalPublisher.cpp
 )
 
 target_include_directories(
@@ -106,7 +112,7 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}
-        game_engine::game_engine
+        ros2_game_engine::ros2_game_engine
 )
 
 ament_target_dependencies(
@@ -121,7 +127,10 @@ enable_target_warnings(${PROJECT_NAME})
 # enable_target_sanitizer(${PROJECT_NAME} "memory")
 
 if(NOT DISABLE_ROS_TOOLING)
-    enable_ros_tooling_for_target(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)
+    enable_ros_tooling_for_target(
+        ${PROJECT_NAME}
+        ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
+    )
 endif()
 
 # Install resources and auto-generated headers and resource bin filles

@@ -16,3 +16,6 @@
 [submodule "src/tools"]
 	path = src/tools
 	url = https://github.com/zhivkopetrov/tools.git
+[submodule "src/lib/ros2_game_engine"]
+	path = src/lib/ros2_game_engine
+	url = https://github.com/zhivkopetrov/ros2_game_engine.git
