@@ -72,6 +72,15 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
   return SUCCESS;
 }
 
+int32_t RoboCollectorGui::initNodes() {
+  if (SUCCESS != initControllerExternalBridge()) {
+    LOGERR("initControllerExternalBridge() failed");
+    return FAILURE;
+  }
+
+  return SUCCESS;
+}
+
 void RoboCollectorGui::deinit() {
   for (auto &robot : _robots) {
     robot.deinit();
@@ -231,6 +240,23 @@ int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig &guiCfg) {
     LOGERR("Error in _turnHelper.init()");
     return FAILURE;
   }
+
+  return SUCCESS;
+}
+
+int32_t RoboCollectorGui::initControllerExternalBridge() {
+  ControllerExternalBridgeOutInterface outInterface;
+  outInterface.invokeActionEventCb = _invokeActionEventCb;
+  outInterface.moveButtonClickCb = std::bind(
+      &RoboCollectorController::onMoveButtonClicked, &_controller, _1);
+
+  _controllerExternalBridge = std::make_shared<ControllerExternalBridge>();
+  if (SUCCESS != _controllerExternalBridge->init(outInterface)) {
+    LOGERR("Error in _controllerExternalBridge.init()");
+    return FAILURE;
+  }
+
+  _registerNodeCb(_controllerExternalBridge);
 
   return SUCCESS;
 }

@@ -11,7 +11,6 @@
 //Own components headers
 #include "robo_collector_gui/RoboCollectorGui.h"
 #include "robo_collector_gui/config/RoboCollectorGuiConfigGenerator.h"
-#include "robo_collector_gui/external_api/MinimalPublisher.h"
 
 static ApplicationConfig generateConfig(int32_t argc, char **args) {
   ApplicationConfig cfg;
@@ -32,6 +31,5 @@ int32_t main(int32_t argc, char **args) {
     return FAILURE;
   }
 
-  const auto publisherNode = std::make_shared<MinimalPublisher>();
-  return app.run({publisherNode});
+  return app.run();
 }

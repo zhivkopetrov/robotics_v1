@@ -66,7 +66,7 @@ add_executable(
         ${_INC_DIR}/helpers/CollisionWatcher.h
         ${_INC_DIR}/helpers/TurnHelper.h
         ${_INC_DIR}/helpers/GameEndHelper.h
-        ${_INC_DIR}/external_api/MinimalPublisher.h
+        ${_INC_DIR}/external_api/ControllerExternalBridge.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -94,7 +94,7 @@ add_executable(
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
         ${_SRC_DIR}/helpers/GameEndHelper.cpp
-        ${_SRC_DIR}/external_api/MinimalPublisher.cpp
+        ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
 )
 
 target_include_directories(
