@@ -25,7 +25,7 @@ int32_t main(int32_t argc, char **args) {
 
   auto communicator = std::make_unique<Ros2Communicator>();
   auto game = RoboCollectorBuilder::createRoboCollectorGui(communicator);
-  app.obtain(std::move(communicator), std::move(game));
+  app.obtain(std::move(game), std::move(communicator));
 
   const auto cfg = RoboCollectorGuiConfigGenerator::generateConfig();
   if (SUCCESS != app.init(cfg)) {
