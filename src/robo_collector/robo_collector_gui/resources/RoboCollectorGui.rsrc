@@ -137,15 +137,41 @@ description=140,140,3,0
 position=0,0
 load=on_init
 
+tag=[HELP_BUTTON]
+type=sprite
+path=p/buttons/help_button.png
+description=140,140,3,0
+position=0,0
+load=on_init
+
+tag=[SETTINGS_BUTTON]
+type=sprite
+path=p/buttons/settings_button.png
+description=140,140,3,0
+position=0,0
+load=on_init
+
 ##### FONTS
 tag=[VINQUE_RG_30]
 type=font
 path=f/vinque_rg_30.ttf
 description=30
 
-##### FONTS
 tag=[VINQUE_RG_75]
 type=font
 path=f/vinque_rg_75.ttf
 description=75
+
+
+##### ROBO_MINER
+
+##### IMAGES
+
+tag=[CRYSTALS]
+type=sprite
+path=p/robo_miner/crystals/crystals.png
+description=120,126,5,0
+position=0,0
+load=on_init
+
 
