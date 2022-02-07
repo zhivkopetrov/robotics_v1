@@ -165,6 +165,43 @@ FieldConfig generateFieldConfig() {
   return cfg;
 }
 
+EngineConfig generateEngineConfig() {
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  auto cfg = getDefaultEngineConfig(projectInstallPrefix,
+      LOADING_SCREEN_RESOURCES_PATH);
+
+  auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
+  windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
+      ResourceFileHeader::getResourcesFolderName()).append(
+      "/p/entities/player_robot.png");
+  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
+  windowCfg.width = WINDOW_WIDTH;
+  windowCfg.height = WINDOW_HEIGHT;
+  windowCfg.displayMode = WindowDisplayMode::WINDOWED;
+  windowCfg.borderMode = WindowBorderMode::BORDERLESS;
+
+  cfg.debugConsoleRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+
+  return cfg;
+}
+
+RoboCollectorGuiConfig generateGameConfig() {
+  RoboCollectorGuiConfig cfg;
+  cfg.fieldCfg = generateFieldConfig();
+  cfg.panelHandlerCfg = generatePanelHandlerConfig();
+  cfg.robotBaseCfg = generateRobotBaseConfig();
+  cfg.coinHandlerCfg = generateCoinHandlerConfig();
+  cfg.controllerCfg = generateRoboCollectorControllerConfig();
+
+  cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
+  cfg.playerFieldMarker = playerFieldMarker;
+  cfg.enemyFieldMarker = enemyFieldMarker;
+
+  return cfg;
+}
+
 } //end anonymous namespace
 
 std::vector<DependencyDescription>
@@ -193,40 +230,10 @@ RoboCollectorGuiConfigGenerator::generateDependencies(
   return dependecies;
 }
 
-EngineConfig RoboCollectorGuiConfigGenerator::generateEngineConfig() {
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  auto cfg = getDefaultEngineConfig(projectInstallPrefix,
-      LOADING_SCREEN_RESOURCES_PATH);
-
-  auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
-  windowCfg.name = PROJECT_FOLDER_NAME;
-  windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
-      ResourceFileHeader::getResourcesFolderName()).append(
-      "/p/entities/player_robot.png");
-  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
-  windowCfg.width = WINDOW_WIDTH;
-  windowCfg.height = WINDOW_HEIGHT;
-  windowCfg.displayMode = WindowDisplayMode::WINDOWED;
-  windowCfg.borderMode = WindowBorderMode::BORDERLESS;
-
-  cfg.debugConsoleRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
-
-  return cfg;
-}
-
-RoboCollectorGuiConfig RoboCollectorGuiConfigGenerator::generateGameConfig() {
-  RoboCollectorGuiConfig cfg;
-  cfg.fieldCfg = generateFieldConfig();
-  cfg.panelHandlerCfg = generatePanelHandlerConfig();
-  cfg.robotBaseCfg = generateRobotBaseConfig();
-  cfg.coinHandlerCfg = generateCoinHandlerConfig();
-  cfg.controllerCfg = generateRoboCollectorControllerConfig();
-
-  cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  cfg.playerFieldMarker = playerFieldMarker;
-  cfg.enemyFieldMarker = enemyFieldMarker;
-
+ApplicationConfig RoboCollectorGuiConfigGenerator::generateConfig() {
+  ApplicationConfig cfg;
+  cfg.engineCfg = generateEngineConfig();
+  cfg.gameCfg = generateGameConfig();
   return cfg;
 }
 
