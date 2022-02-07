@@ -12,12 +12,10 @@
 #include "robo_collector_gui/RoboCollectorGui.h"
 #include "robo_collector_gui/config/RoboCollectorGuiConfigGenerator.h"
 
-static ApplicationConfig generateConfig(int32_t argc, char **args) {
+static ApplicationConfig generateConfig() {
   ApplicationConfig cfg;
   cfg.engineCfg = RoboCollectorGuiConfigGenerator::generateEngineConfig();
   cfg.gameCfg = RoboCollectorGuiConfigGenerator::generateGameConfig();
-  cfg.argc = argc;
-  cfg.args = args;
   return cfg;
 }
 
@@ -25,7 +23,14 @@ int32_t main(int32_t argc, char **args) {
   std::unique_ptr<Game> game = std::make_unique<RoboCollectorGui>();
   Ros2Application app(std::move(game));
 
-  const auto cfg = generateConfig(argc, args);
+  const auto dependencies =
+      RoboCollectorGuiConfigGenerator::generateDependencies(argc, args);
+  if (SUCCESS != app.loadDependencies(dependencies)) {
+    LOGERR("app.loadDependencies() failed");
+    return FAILURE;
+  }
+
+  const auto cfg = generateConfig();
   if (SUCCESS != app.init(cfg)) {
     LOGERR("Ros2Application.init() failed");
     return FAILURE;

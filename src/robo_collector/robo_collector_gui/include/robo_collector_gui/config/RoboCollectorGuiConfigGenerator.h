@@ -18,6 +18,8 @@ class RoboCollectorGuiConfigGenerator {
 public:
   RoboCollectorGuiConfigGenerator() = delete;
 
+  static std::vector<DependencyDescription> generateDependencies(int32_t argc,
+                                                                 char **args);
   static EngineConfig generateEngineConfig();
   static RoboCollectorGuiConfig generateGameConfig();
 };
