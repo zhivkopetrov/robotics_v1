@@ -29,7 +29,7 @@ int32_t main(int32_t argc, char **args) {
 
   const auto cfg = RoboCollectorGuiConfigGenerator::generateConfig();
   if (SUCCESS != app.init(cfg)) {
-    LOGERR("Ros2Application.init() failed");
+    LOGERR("app.init() failed");
     return FAILURE;
   }
 
