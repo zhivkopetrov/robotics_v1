@@ -15,6 +15,12 @@
 
 using namespace std::placeholders;
 
+RoboCollectorGui::RoboCollectorGui(
+    const Ros2CommunicatorInterface &communicatorOutInterface)
+    : _communicatorOutInterface(communicatorOutInterface) {
+
+}
+
 int32_t RoboCollectorGui::init(const std::any &cfg) {
   int32_t err = SUCCESS;
   const auto parsedCfg = [&cfg, &err]() {
@@ -69,10 +75,6 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
-  return SUCCESS;
-}
-
-int32_t RoboCollectorGui::initNodes() {
   if (SUCCESS != initControllerExternalBridge()) {
     LOGERR("initControllerExternalBridge() failed");
     return FAILURE;
@@ -82,6 +84,8 @@ int32_t RoboCollectorGui::initNodes() {
 }
 
 void RoboCollectorGui::deinit() {
+  _communicatorOutInterface.unregisterNodeCb(_controllerExternalBridge);
+
   for (auto &robot : _robots) {
     robot.deinit();
   }
@@ -256,7 +260,7 @@ int32_t RoboCollectorGui::initControllerExternalBridge() {
     return FAILURE;
   }
 
-  _registerNodeCb(_controllerExternalBridge);
+  _communicatorOutInterface.registerNodeCb(_controllerExternalBridge);
 
   return SUCCESS;
 }

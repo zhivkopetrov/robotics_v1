@@ -8,7 +8,8 @@
 #include <array>
 
 //Other libraries headers
-#include "ros2_game_engine/Ros2Game.h"
+#include "game_engine/Game.h"
+#include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
 
 //Own components headers
 #include "robo_collector_gui/field/Field.h"
@@ -27,10 +28,11 @@ struct RoboCollectorGuiConfig;
 struct CoinHandlerConfig;
 struct RoboCollectorControllerConfig;
 
-class RoboCollectorGui final : public Ros2Game {
+class RoboCollectorGui final : public Game {
 public:
+  RoboCollectorGui(const Ros2CommunicatorInterface& communicatorOutInterface);
+
   int32_t init(const std::any& cfg) override;
-  int32_t initNodes() override;
   void deinit() override;
 
   void draw() const override;
@@ -57,6 +59,8 @@ private:
   std::array<Robot, Defines::ROBOTS_CTN> _robots;
 
   std::shared_ptr<ControllerExternalBridge> _controllerExternalBridge;
+
+  Ros2CommunicatorInterface _communicatorOutInterface;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUI_H_ */

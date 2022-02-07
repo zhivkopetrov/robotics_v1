@@ -29,6 +29,7 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_executable(
     ${PROJECT_NAME} 
         ${_INC_DIR}/RoboCollectorGui.h
+        ${_INC_DIR}/builder/RoboCollectorBuilder.h
         ${_INC_DIR}/config/RoboCollectorGuiConfig.h
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
@@ -70,6 +71,7 @@ add_executable(
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
+        ${_SRC_DIR}/builder/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
         ${_SRC_DIR}/field/Field.cpp
         ${_SRC_DIR}/field/FieldPos.cpp
