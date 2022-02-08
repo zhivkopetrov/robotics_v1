@@ -4,34 +4,34 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "ros2_game_engine/Ros2Application.h"
+#include "ros2_game_engine/communicator/Ros2Communicator.h"
+#include "game_engine/Application.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/RoboCollectorGui.h"
+#include "robo_collector_gui/builder/RoboCollectorBuilder.h"
 #include "robo_collector_gui/config/RoboCollectorGuiConfigGenerator.h"
-#include "robo_collector_gui/external_api/MinimalPublisher.h"
-
-static ApplicationConfig generateConfig(int32_t argc, char **args) {
-  ApplicationConfig cfg;
-  cfg.engineCfg = RoboCollectorGuiConfigGenerator::generateEngineConfig();
-  cfg.gameCfg = RoboCollectorGuiConfigGenerator::generateGameConfig();
-  cfg.argc = argc;
-  cfg.args = args;
-  return cfg;
-}
 
 int32_t main(int32_t argc, char **args) {
-  std::unique_ptr<Game> game = std::make_unique<RoboCollectorGui>();
-  Ros2Application app(std::move(game));
+  Application app;
 
-  const auto cfg = generateConfig(argc, args);
-  if (SUCCESS != app.init(cfg)) {
-    LOGERR("Ros2Application.init() failed");
+  const auto dependencies =
+      RoboCollectorGuiConfigGenerator::generateDependencies(argc, args);
+  if (SUCCESS != app.loadDependencies(dependencies)) {
+    LOGERR("app.loadDependencies() failed");
     return FAILURE;
   }
 
-  const auto publisherNode = std::make_shared<MinimalPublisher>();
-  return app.run({publisherNode});
+  auto communicator = std::make_unique<Ros2Communicator>();
+  auto game = RoboCollectorBuilder::createRoboCollectorGui(communicator);
+  app.obtain(std::move(game), std::move(communicator));
+
+  const auto cfg = RoboCollectorGuiConfigGenerator::generateConfig();
+  if (SUCCESS != app.init(cfg)) {
+    LOGERR("app.init() failed");
+    return FAILURE;
+  }
+
+  return app.run();
 }

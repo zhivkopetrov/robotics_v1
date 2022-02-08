@@ -7,7 +7,7 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "game_engine/engine/config/EngineConfig.h"
+#include "game_engine/config/ApplicationConfig.h"
 
 //Own components headers
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
@@ -18,8 +18,10 @@ class RoboCollectorGuiConfigGenerator {
 public:
   RoboCollectorGuiConfigGenerator() = delete;
 
-  static EngineConfig generateEngineConfig();
-  static RoboCollectorGuiConfig generateGameConfig();
+  static std::vector<DependencyDescription> generateDependencies(int32_t argc,
+                                                                 char **args);
+
+  static ApplicationConfig generateConfig();
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUICONFIGGENERATOR_H_ */

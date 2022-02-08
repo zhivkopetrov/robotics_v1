@@ -1,6 +1,5 @@
-int8 DIRECTION_UP = 0
-int8 DIRECTION_RIGHT = 1
-int8 DIRECTION_DOWN = 2
-int8 DIRECTION_LEFT = 3
+int8 FORWARD = 0
+int8 ROTATE_LEFT = 1
+int8 ROTATE_RIGHT = 2
 
-int8 direction
+int8 move_type

@@ -15,6 +15,12 @@
 
 using namespace std::placeholders;
 
+RoboCollectorGui::RoboCollectorGui(
+    const Ros2CommunicatorInterface &communicatorOutInterface)
+    : _communicatorOutInterface(communicatorOutInterface) {
+
+}
+
 int32_t RoboCollectorGui::init(const std::any &cfg) {
   int32_t err = SUCCESS;
   const auto parsedCfg = [&cfg, &err]() {
@@ -69,10 +75,17 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
+  if (SUCCESS != initControllerExternalBridge()) {
+    LOGERR("initControllerExternalBridge() failed");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
 void RoboCollectorGui::deinit() {
+  _communicatorOutInterface.unregisterNodeCb(_controllerExternalBridge);
+
   for (auto &robot : _robots) {
     robot.deinit();
   }
@@ -231,6 +244,23 @@ int32_t RoboCollectorGui::initTurnHelper(const RoboCollectorGuiConfig &guiCfg) {
     LOGERR("Error in _turnHelper.init()");
     return FAILURE;
   }
+
+  return SUCCESS;
+}
+
+int32_t RoboCollectorGui::initControllerExternalBridge() {
+  ControllerExternalBridgeOutInterface outInterface;
+  outInterface.invokeActionEventCb = _invokeActionEventCb;
+  outInterface.moveButtonClickCb = std::bind(
+      &RoboCollectorController::onMoveButtonClicked, &_controller, _1);
+
+  _controllerExternalBridge = std::make_shared<ControllerExternalBridge>();
+  if (SUCCESS != _controllerExternalBridge->init(outInterface)) {
+    LOGERR("Error in _controllerExternalBridge.init()");
+    return FAILURE;
+  }
+
+  _communicatorOutInterface.registerNodeCb(_controllerExternalBridge);
 
   return SUCCESS;
 }
