@@ -5,6 +5,7 @@
 
 //C++ system headers
 #include <cstdint>
+#include <functional>
 
 //Other libraries headers
 #include "manager_utils/input/ButtonBase.h"
@@ -21,6 +22,7 @@ struct CrystalConfig {
   FieldPos fieldPos;
   Point tileOffset;
   CrystalType type;
+  std::function<void(const FieldPos&)> onCrystalClickCb;
 };
 
 class Crystal final : public ButtonBase {
@@ -31,6 +33,9 @@ public:
 private:
   void onLeave(const InputEvent& e) override;
   void onReturn(const InputEvent& e) override;
+
+  std::function<void(const FieldPos&)> _onCrystalClickCb;
+  FieldPos _fieldPos;
 };
 
 #endif /* ROBO_MINER_CRYSTAL_H_ */

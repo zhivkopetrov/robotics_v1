@@ -121,6 +121,10 @@ void RoboCollectorGui::draw() const {
 }
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
+  if (_isMinerGuiActive) {
+    _roboMinerGui.handleEvent(e);
+    return;
+  }
   _controller.handleEvent(e);
 }
 

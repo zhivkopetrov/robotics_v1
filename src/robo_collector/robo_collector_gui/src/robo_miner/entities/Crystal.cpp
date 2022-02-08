@@ -15,8 +15,16 @@
 #include "robo_collector_gui/field/FieldUtils.h"
 
 int32_t Crystal::init(const CrystalConfig& cfg) {
+  if (nullptr == cfg.onCrystalClickCb) {
+    LOGERR("Error, nullptr provided for onCrystalClickCb");
+    return FAILURE;
+  }
+  _onCrystalClickCb = cfg.onCrystalClickCb;
+  _fieldPos = cfg.fieldPos;
+
   create(cfg.rsrcId);
   setFrame(getEnumValue(cfg.type));
+  activateAlphaModulation();
 
   auto pos = FieldUtils::getAbsPos(cfg.fieldPos);
   pos += cfg.tileOffset;
@@ -27,7 +35,7 @@ int32_t Crystal::init(const CrystalConfig& cfg) {
 
 void Crystal::handleEvent(const InputEvent& e) {
   if (TouchEvent::TOUCH_RELEASE == e.type) {
-    //call callback
+    _onCrystalClickCb(_fieldPos);
   }
 }
 

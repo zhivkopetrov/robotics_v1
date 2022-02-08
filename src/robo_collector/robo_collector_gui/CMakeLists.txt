@@ -75,6 +75,7 @@ add_executable(
         ${_INC_DIR}/robo_miner/entities/Crystal.h
         ${_INC_DIR}/robo_miner/field/RoboMinerField.h
         ${_INC_DIR}/robo_miner/field/config/RoboMinerFieldConfig.h
+        ${_INC_DIR}/robo_miner/algorithms/FloodFill.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -109,6 +110,7 @@ add_executable(
         ${_SRC_DIR}/robo_miner/defines/RoboMinerDefines.cpp
         ${_SRC_DIR}/robo_miner/entities/Crystal.cpp
         ${_SRC_DIR}/robo_miner/field/RoboMinerField.cpp
+        ${_SRC_DIR}/robo_miner/algorithms/FloodFill.cpp
 )
 
 target_include_directories(

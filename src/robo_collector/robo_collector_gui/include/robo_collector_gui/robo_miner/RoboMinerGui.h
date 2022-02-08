@@ -6,6 +6,7 @@
 //C++ system headers
 #include <cstdint>
 #include <vector>
+#include <unordered_map>
 
 //Other libraries headers
 
@@ -25,9 +26,15 @@ public:
   void draw() const;
   void handleEvent(const InputEvent &e);
 
+  void onCrystalClicked(const FieldPos& fieldPos);
+
 private:
   std::vector<Crystal> _crystals;
   RoboMinerField _field;
+
+  //key = (currRow * maxCols) + currCol
+  //value = relative crystal id
+  std::unordered_map<int32_t, int32_t> _fieldPosToCrystalIdMapping;
 };
 
 #endif /* ROBO_MINER_ROBOMINERGUI_H_ */

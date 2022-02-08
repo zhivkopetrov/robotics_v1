@@ -25,12 +25,12 @@ int32_t generateMapConfig(FieldData& data) {
   }
 
   data = {
-      {'r', 'r', 'c', 'c', 'c', 'b', 'r'},
-      {'g', 'r', '.', 'c', '.', 'r', 'r'},
-      {'g', 'r', 'r', 'r', 'r', 'r', 'c'},
-      {'r', 'r', 'r', 'c', 'c', 'g', 'g'},
-      {'g', 'b', 'c', 'b', '.', 'r', 'g'},
-      {'g', '.', 'b', 'p', 'p', '.', 'p'},
+      {'r', 'r', '.', '.', '.', 'b', 'r'},
+      {'g', 'r', '.', 'c', 'c', 'r', 'r'},
+      {'g', 'r', 'r', 'r', 'r', 'r', 'g'},
+      {'g', 'r', 'c', 'c', 'c', 'g', 'g'},
+      {'.', 'r', 'c', 'b', 'b', '.', 'g'},
+      {'.', '.', '.', 'p', 'p', '.', '.'},
   };
   return SUCCESS;
 }
@@ -57,8 +57,11 @@ int32_t RoboMinerField::init(const RoboMinerFieldConfig &cfg) {
   return SUCCESS;
 }
 
-const std::vector<std::vector<char>>& RoboMinerField::getFieldData() const {
+const FieldData& RoboMinerField::getFieldData() const {
   return _fieldData;
 }
 
+char RoboMinerField::getEmptyMarker() const {
+  return _emptyDataMarker;
+}
 

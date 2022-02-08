@@ -19,7 +19,9 @@ public:
   int32_t init(const RoboMinerFieldConfig &cfg);
 
   const FieldData& getFieldData() const;
+  char getEmptyMarker() const;
 
+private:
   FieldData _fieldData;
   char _emptyDataMarker = '.';
 };

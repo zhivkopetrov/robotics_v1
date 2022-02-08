@@ -83,7 +83,7 @@ void Field::resetFieldDataMarker(const FieldPos &fieldPos) {
   setFieldDataMarker(fieldPos, _emptyDataMarker);
 }
 
-const std::vector<std::vector<char>>& Field::getFieldData() const {
+const FieldData& Field::getFieldData() const {
   return _fieldData;
 }
 
