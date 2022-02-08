@@ -22,11 +22,15 @@
 #include "robo_collector_gui/controller/RoboCollectorController.h"
 #include "robo_collector_gui/external_api/ControllerExternalBridge.h"
 
+#include "robo_collector_gui/robo_miner/RoboMinerGui.h"
+
 //Forward declarations
 class InputEvent;
 struct RoboCollectorGuiConfig;
 struct CoinHandlerConfig;
 struct RoboCollectorControllerConfig;
+
+struct RoboMinerGuiConfig;
 
 class RoboCollectorGui final : public Game {
 public:
@@ -61,6 +65,10 @@ private:
   std::shared_ptr<ControllerExternalBridge> _controllerExternalBridge;
 
   Ros2CommunicatorInterface _communicatorOutInterface;
+
+  RoboMinerGui _roboMinerGui;
+
+  bool _isMinerGuiActive = true;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUI_H_ */

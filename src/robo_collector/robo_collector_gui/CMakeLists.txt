@@ -68,6 +68,13 @@ add_executable(
         ${_INC_DIR}/helpers/TurnHelper.h
         ${_INC_DIR}/helpers/GameEndHelper.h
         ${_INC_DIR}/external_api/ControllerExternalBridge.h
+        
+        ${_INC_DIR}/robo_miner/RoboMinerGui.h
+        ${_INC_DIR}/robo_miner/defines/RoboMinerDefines.h
+        ${_INC_DIR}/robo_miner/config/RoboMinerGuiConfig.h
+        ${_INC_DIR}/robo_miner/entities/Crystal.h
+        ${_INC_DIR}/robo_miner/field/RoboMinerField.h
+        ${_INC_DIR}/robo_miner/field/config/RoboMinerFieldConfig.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -97,6 +104,11 @@ add_executable(
         ${_SRC_DIR}/helpers/TurnHelper.cpp
         ${_SRC_DIR}/helpers/GameEndHelper.cpp
         ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
+        
+        ${_SRC_DIR}/robo_miner/RoboMinerGui.cpp
+        ${_SRC_DIR}/robo_miner/defines/RoboMinerDefines.cpp
+        ${_SRC_DIR}/robo_miner/entities/Crystal.cpp
+        ${_SRC_DIR}/robo_miner/field/RoboMinerField.cpp
 )
 
 target_include_directories(

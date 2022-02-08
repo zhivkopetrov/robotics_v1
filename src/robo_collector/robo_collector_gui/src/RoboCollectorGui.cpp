@@ -80,6 +80,11 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
+  if (SUCCESS != _roboMinerGui.init(parsedCfg.roboMinerGuiConfig)) {
+    LOGERR("Error, _roboMinerGui.init() failed");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
@@ -94,6 +99,15 @@ void RoboCollectorGui::deinit() {
 }
 
 void RoboCollectorGui::draw() const {
+  if (_isMinerGuiActive) {
+    _map.draw();
+    _field.draw();
+    _panelHandler.draw();
+    _controller.draw();
+    _roboMinerGui.draw();
+    return;
+  }
+
   _map.draw();
   _field.draw();
   _panelHandler.draw();
@@ -264,4 +278,5 @@ int32_t RoboCollectorGui::initControllerExternalBridge() {
 
   return SUCCESS;
 }
+
 

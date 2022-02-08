@@ -187,6 +187,18 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
+RoboMinerGuiConfig generateRoboMinerGuiConfig() {
+  RoboMinerGuiConfig cfg;
+  cfg.crystalRsrcId = RoboCollectorGuiResources::CRYSTALS;
+
+  auto& fieldCfg = cfg.fieldConfig;
+  fieldCfg.emptyTileMarker = emptyFieldMarker;
+  fieldCfg.rows = Defines::FIELD_ROWS;
+  fieldCfg.cols = Defines::FIELD_COLS;
+
+  return cfg;
+}
+
 RoboCollectorGuiConfig generateGameConfig() {
   RoboCollectorGuiConfig cfg;
   cfg.fieldCfg = generateFieldConfig();
@@ -198,6 +210,8 @@ RoboCollectorGuiConfig generateGameConfig() {
   cfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   cfg.playerFieldMarker = playerFieldMarker;
   cfg.enemyFieldMarker = enemyFieldMarker;
+
+  cfg.roboMinerGuiConfig = generateRoboMinerGuiConfig();
 
   return cfg;
 }

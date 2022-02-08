@@ -16,6 +16,8 @@
 #include "robo_collector_gui/entities/coin/config/CoinHandlerConfig.h"
 #include "robo_collector_gui/controller/config/RoboCollectorControllerConfig.h"
 
+#include "robo_collector_gui/robo_miner/config/RoboMinerGuiConfig.h"
+
 //Forward declarations
 
 struct RoboCollectorGuiConfig {
@@ -29,6 +31,8 @@ struct RoboCollectorGuiConfig {
 
   char playerFieldMarker = 'B';
   char enemyFieldMarker = 'E';
+
+  RoboMinerGuiConfig roboMinerGuiConfig;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUICONFIG_H_ */
