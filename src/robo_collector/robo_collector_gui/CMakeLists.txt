@@ -60,7 +60,9 @@ add_executable(
         ${_INC_DIR}/panels/config/CoinPanelConfig.h
         ${_INC_DIR}/panels/config/TimePanelConfig.h
         ${_INC_DIR}/panels/config/PanelHandlerConfig.h
-        ${_INC_DIR}/controller/MoveButton.h
+        ${_INC_DIR}/controller/buttons/MoveButton.h
+        ${_INC_DIR}/controller/buttons/HelpButton.h
+        ${_INC_DIR}/controller/buttons/SettingsButton.h
         ${_INC_DIR}/controller/RoboCollectorController.h
         ${_INC_DIR}/controller/config/RoboCollectorControllerConfig.h
         ${_INC_DIR}/helpers/CollisionObject.h
@@ -99,7 +101,9 @@ add_executable(
         ${_SRC_DIR}/panels/TimePanel.cpp
         ${_SRC_DIR}/panels/CoinPanel.cpp
         ${_SRC_DIR}/panels/HealthPanel.cpp
-        ${_SRC_DIR}/controller/MoveButton.cpp
+        ${_SRC_DIR}/controller/buttons/MoveButton.cpp
+        ${_SRC_DIR}/controller/buttons/HelpButton.cpp
+        ${_SRC_DIR}/controller/buttons/SettingsButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp

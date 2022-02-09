@@ -67,5 +67,11 @@ enum class RotationDir {
   LEFT, RIGHT
 };
 
+enum class GameType {
+  COLLECTOR,
+  MINER,
+  CLEANER
+};
+
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIDEFINES_H_ */
 

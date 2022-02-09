@@ -99,12 +99,16 @@ void RoboCollectorGui::deinit() {
 }
 
 void RoboCollectorGui::draw() const {
-  if (_isMinerGuiActive) {
+  if (GameType::MINER == _gameType) {
     _map.draw();
     _field.draw();
     _panelHandler.draw();
     _controller.draw();
     _roboMinerGui.draw();
+    return;
+  }
+
+  if (GameType::CLEANER == _gameType) {
     return;
   }
 
@@ -121,15 +125,28 @@ void RoboCollectorGui::draw() const {
 }
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
-  if (_isMinerGuiActive) {
+  if (GameType::MINER == _gameType) {
     _roboMinerGui.handleEvent(e);
     return;
   }
+
+  if (GameType::CLEANER == _gameType) {
+    return;
+  }
+
   _controller.handleEvent(e);
 }
 
 void RoboCollectorGui::process() {
   _collisionWatcher.process();
+}
+
+void RoboCollectorGui::activateHelpPage() {
+
+}
+
+void RoboCollectorGui::changeGameType(GameType gameType) {
+  _gameType = gameType;
 }
 
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {

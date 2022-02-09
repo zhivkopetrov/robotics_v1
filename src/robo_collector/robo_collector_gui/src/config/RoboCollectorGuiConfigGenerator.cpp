@@ -101,6 +101,8 @@ RoboCollectorControllerConfig generateRoboCollectorControllerConfig() {
   cfg.moveButtonInfoTextFontId = RoboCollectorGuiResources::VINQUE_RG_30;
   cfg.horDelimiterRsrcId = RoboCollectorGuiResources::HOR_DELIMITER;
   cfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
+  cfg.helpButtonRsrcId = RoboCollectorGuiResources::HELP_BUTTON;
+  cfg.settingsButtonRsrcId = RoboCollectorGuiResources::SETTINGS_BUTTON;
 
   return cfg;
 }

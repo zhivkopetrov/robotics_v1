@@ -19,7 +19,7 @@
 //Forward declarations
 class InputEvent;
 
-struct MoveButtonCfg {
+struct MoveButtonConfig {
   MoveButtonClickCb clickCb;
   Point startPos;
   uint64_t rsrcId = 0;
@@ -31,7 +31,7 @@ struct MoveButtonCfg {
 
 class MoveButton final : public ButtonBase {
 public:
-  int32_t init(const MoveButtonCfg& cfg);
+  int32_t init(const MoveButtonConfig& cfg);
   void handleEvent(const InputEvent& e) override;
   void draw() const;
 

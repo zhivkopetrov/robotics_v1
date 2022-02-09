@@ -44,6 +44,11 @@ public:
 
   void process() override;
 
+  //TODO create a separate help page class
+  void activateHelpPage();
+
+  void changeGameType(GameType gameType);
+
 private:
   int32_t initRobots(const RoboCollectorGuiConfig& guiCfg);
   int32_t initPanelHandler(const PanelHandlerConfig& cfg);
@@ -68,7 +73,7 @@ private:
 
   RoboMinerGui _roboMinerGui;
 
-  bool _isMinerGuiActive = true;
+  GameType _gameType = GameType::COLLECTOR;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUI_H_ */

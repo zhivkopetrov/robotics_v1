@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/controller/MoveButton.h"
+#include "robo_collector_gui/controller/buttons/MoveButton.h"
 
 //C system headers
 
@@ -12,7 +12,7 @@
 
 //Own components headers
 
-int32_t MoveButton::init(const MoveButtonCfg &cfg) {
+int32_t MoveButton::init(const MoveButtonConfig &cfg) {
   if (nullptr == cfg.clickCb) {
     LOGERR("Error, nullptr provided for clickCb for MoveButton with rsrcId: "
         "%#16lX", cfg.rsrcId);

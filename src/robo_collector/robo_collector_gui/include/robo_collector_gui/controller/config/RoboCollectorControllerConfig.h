@@ -20,6 +20,9 @@ struct RoboCollectorControllerConfig {
 
   uint64_t horDelimiterRsrcId = 0;
   uint64_t vertDelimiterRsrcId = 0;
+
+  uint64_t helpButtonRsrcId = 0;
+  uint64_t settingsButtonRsrcId = 0;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORCONTROLLERCONFIG_H_ */
