@@ -25,6 +25,8 @@ public:
 
   void drawOnFbo(Fbo &fbo) const;
 
+  void toggleDebugText();
+
 private:
   Image _tileImg;
   Text _debugText;

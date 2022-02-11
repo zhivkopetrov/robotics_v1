@@ -21,7 +21,8 @@ class InputEvent;
 
 struct RoboCollectorControllerOutInterface {
   RobotActCb robotActCb;
-  //TODO add the callbacks here and pass them on init
+  HelpActivatedCb helpActivatedCb;
+  SettingActivatedCb settingActivatedCb;
 };
 
 class RoboCollectorController {
@@ -31,6 +32,7 @@ public:
   void draw() const;
   void handleEvent(const InputEvent& e);
   void onMoveButtonClicked(MoveType moveType);
+  void lockInput();
   void unlockInput();
 private:
   RobotActCb _robotActCb;

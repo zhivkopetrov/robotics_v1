@@ -17,6 +17,7 @@
 #include "robo_collector_gui/controller/config/RoboCollectorControllerConfig.h"
 
 #include "robo_collector_gui/robo_miner/config/RoboMinerGuiConfig.h"
+#include "robo_collector_gui/robo_cleaner/config/RoboCleanerGuiConfig.h"
 
 //Forward declarations
 
@@ -33,6 +34,7 @@ struct RoboCollectorGuiConfig {
   char enemyFieldMarker = 'E';
 
   RoboMinerGuiConfig roboMinerGuiConfig;
+  RoboCleanerGuiConfig roboCleanerGuiConfig;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUICONFIG_H_ */

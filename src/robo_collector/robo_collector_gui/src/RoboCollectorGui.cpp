@@ -85,6 +85,11 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     return FAILURE;
   }
 
+  if (SUCCESS != _roboCleanerGui.init(parsedCfg.roboCleanerGuiConfig)) {
+    LOGERR("Error, _roboCleanerGui.init() failed");
+    return FAILURE;
+  }
+
   return SUCCESS;
 }
 
@@ -104,11 +109,18 @@ void RoboCollectorGui::draw() const {
     _field.draw();
     _panelHandler.draw();
     _controller.draw();
+    _robots[Defines::PLAYER_ROBOT_IDX].draw();
     _roboMinerGui.draw();
     return;
   }
 
   if (GameType::CLEANER == _gameType) {
+    _map.draw();
+    _field.draw();
+    _panelHandler.draw();
+    _controller.draw();
+    _robots[Defines::PLAYER_ROBOT_IDX].draw();
+    _roboCleanerGui.draw();
     return;
   }
 
@@ -125,6 +137,8 @@ void RoboCollectorGui::draw() const {
 }
 
 void RoboCollectorGui::handleEvent(const InputEvent &e) {
+  _controller.handleEvent(e);
+
   if (GameType::MINER == _gameType) {
     _roboMinerGui.handleEvent(e);
     return;
@@ -133,8 +147,6 @@ void RoboCollectorGui::handleEvent(const InputEvent &e) {
   if (GameType::CLEANER == _gameType) {
     return;
   }
-
-  _controller.handleEvent(e);
 }
 
 void RoboCollectorGui::process() {
@@ -142,11 +154,17 @@ void RoboCollectorGui::process() {
 }
 
 void RoboCollectorGui::activateHelpPage() {
-
+  _field.toggleDebugTexts();
 }
 
 void RoboCollectorGui::changeGameType(GameType gameType) {
   _gameType = gameType;
+
+  if (GameType::COLLECTOR == _gameType) {
+    _controller.unlockInput();
+  } else {
+    _controller.lockInput();
+  }
 }
 
 int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
@@ -253,6 +271,10 @@ int32_t RoboCollectorGui::initController(
   }
   outInterface.robotActCb = std::bind(&Robot::act,
       &_robots[Defines::PLAYER_ROBOT_IDX], _1);
+  outInterface.helpActivatedCb =
+      std::bind(&RoboCollectorGui::activateHelpPage, this);
+  outInterface.settingActivatedCb =
+      std::bind(&RoboCollectorGui::changeGameType, this, _1);
 
   if (SUCCESS != _controller.init(cfg, outInterface)) {
     LOGERR("Error in _controller.init()");

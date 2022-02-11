@@ -14,7 +14,7 @@
 //Own components headers
 
 int32_t SettingsButton::init(const SettingsButtonConfig& cfg) {
-  if (cfg.settingActivatedCb) {
+  if (nullptr == cfg.settingActivatedCb) {
     LOGERR("Error, nullptr provided for SettingActivatedCb");
     return FAILURE;
   }
@@ -22,15 +22,18 @@ int32_t SettingsButton::init(const SettingsButtonConfig& cfg) {
 
   create(cfg.rsrcId);
 
-  constexpr auto buttonX = 1100;
-  constexpr auto buttonY = 600;
+  constexpr auto buttonX = 1680;
+  constexpr auto buttonY = 580;
   setPosition(buttonX, buttonY);
 
   return SUCCESS;
 }
 
 void SettingsButton::handleEvent(const InputEvent& e) {
-  if (TouchEvent::KEYBOARD_RELEASE == e.type) {
+  if (TouchEvent::TOUCH_PRESS == e.type) {
+    setFrame(CLICKED);
+  } else if (TouchEvent::TOUCH_RELEASE == e.type) {
+    setFrame(UNCLICKED);
     changeGameType();
     _settingActivatedCb(_currGameType);
   }

@@ -14,7 +14,7 @@
 //Forward declarations
 
 struct RoboMinerGuiConfig {
-  RoboMinerFieldConfig fieldConfig;
+  RoboMinerFieldConfig fieldCfg;
   uint64_t crystalRsrcId = 0;
 };
 

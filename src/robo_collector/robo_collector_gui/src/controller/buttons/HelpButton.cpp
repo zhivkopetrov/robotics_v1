@@ -13,7 +13,7 @@
 //Own components headers
 
 int32_t HelpButton::init(const HelpButtonConfig& cfg) {
-  if (cfg.helpActivatedCb) {
+  if (nullptr == cfg.helpActivatedCb) {
     LOGERR("Error, nullptr provided for HelpActivatedCb");
     return FAILURE;
   }
@@ -21,15 +21,18 @@ int32_t HelpButton::init(const HelpButtonConfig& cfg) {
 
   create(cfg.rsrcId);
 
-  constexpr auto buttonX = 1100;
-  constexpr auto buttonY = 600;
+  constexpr auto buttonX = 1680;
+  constexpr auto buttonY = 660;
   setPosition(buttonX, buttonY);
 
   return SUCCESS;
 }
 
 void HelpButton::handleEvent(const InputEvent& e) {
-  if (TouchEvent::KEYBOARD_RELEASE == e.type) {
+  if (TouchEvent::TOUCH_PRESS == e.type) {
+    setFrame(CLICKED);
+  } else if (TouchEvent::TOUCH_RELEASE == e.type) {
+    setFrame(UNCLICKED);
     _helpActivatedCb();
   }
 }

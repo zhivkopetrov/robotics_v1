@@ -87,6 +87,15 @@ const FieldData& Field::getFieldData() const {
   return _fieldData;
 }
 
+void Field::toggleDebugTexts() {
+  for (auto& row : _tiles) {
+    for (auto& tile : row) {
+      tile.toggleDebugText();
+    }
+  }
+  updateFieldFbo();
+}
+
 void Field::printFieldData() const {
   std::ostringstream ostr;
   for (const auto& row : _fieldData) {

@@ -23,6 +23,7 @@
 #include "robo_collector_gui/external_api/ControllerExternalBridge.h"
 
 #include "robo_collector_gui/robo_miner/RoboMinerGui.h"
+#include "robo_collector_gui/robo_cleaner/RoboCleanerGui.h"
 
 //Forward declarations
 class InputEvent;
@@ -72,6 +73,7 @@ private:
   Ros2CommunicatorInterface _communicatorOutInterface;
 
   RoboMinerGui _roboMinerGui;
+  RoboCleanerGui _roboCleanerGui;
 
   GameType _gameType = GameType::COLLECTOR;
 };

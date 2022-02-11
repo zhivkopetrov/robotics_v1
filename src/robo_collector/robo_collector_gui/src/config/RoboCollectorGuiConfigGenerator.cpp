@@ -193,10 +193,23 @@ RoboMinerGuiConfig generateRoboMinerGuiConfig() {
   RoboMinerGuiConfig cfg;
   cfg.crystalRsrcId = RoboCollectorGuiResources::CRYSTALS;
 
-  auto& fieldCfg = cfg.fieldConfig;
+  auto& fieldCfg = cfg.fieldCfg;
   fieldCfg.emptyTileMarker = emptyFieldMarker;
   fieldCfg.rows = Defines::FIELD_ROWS;
   fieldCfg.cols = Defines::FIELD_COLS;
+
+  return cfg;
+}
+
+RoboCleanerGuiConfig generateRoboCleanerGuiConfig() {
+  RoboCleanerGuiConfig cfg;
+  cfg.rubbishRsrcId = RoboCollectorGuiResources::RUBBISH;
+  cfg.rubbishFontId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.obstacleRsrcId = RoboCollectorGuiResources::MAP_OBSTACLE;
+
+  auto& energyPanelCfg = cfg.energyPanelCfg;
+  energyPanelCfg.rsrcId = RoboCollectorGuiResources::ENERGY_PANEL;
+  energyPanelCfg.indicatorRsrcId = RoboCollectorGuiResources::ENERGY_INDICATOR;
 
   return cfg;
 }
@@ -214,6 +227,7 @@ RoboCollectorGuiConfig generateGameConfig() {
   cfg.enemyFieldMarker = enemyFieldMarker;
 
   cfg.roboMinerGuiConfig = generateRoboMinerGuiConfig();
+  cfg.roboCleanerGuiConfig = generateRoboCleanerGuiConfig();
 
   return cfg;
 }

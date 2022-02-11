@@ -29,6 +29,7 @@ int32_t Tile::init(const TileConfig &cfg) {
   _debugText.create(cfg.debugFontRsrcId, debugText.c_str(), Colors::WHITE,
       Point(cfg.screenCoordinates.x + DEBUG_TEXT_OFFSET_X,
             cfg.screenCoordinates.y + DEBUG_TEXT_OFFSET_Y));
+  _debugText.hide();
 
   return SUCCESS;
 }
@@ -40,6 +41,13 @@ void Tile::draw() const {
 
 void Tile::drawOnFbo(Fbo &fbo) const {
   fbo.addWidget(_tileImg);
-  fbo.addWidget(_debugText);
+
+  if (_debugText.isVisible()) {
+    fbo.addWidget(_debugText);
+  }
+}
+
+void Tile::toggleDebugText() {
+  _debugText.isVisible() ? _debugText.hide() : _debugText.show();
 }
 

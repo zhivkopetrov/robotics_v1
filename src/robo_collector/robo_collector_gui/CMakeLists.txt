@@ -78,6 +78,12 @@ add_executable(
         ${_INC_DIR}/robo_miner/field/RoboMinerField.h
         ${_INC_DIR}/robo_miner/field/config/RoboMinerFieldConfig.h
         ${_INC_DIR}/robo_miner/algorithms/FloodFill.h
+        
+        ${_INC_DIR}/robo_cleaner/RoboCleanerGui.h
+        ${_INC_DIR}/robo_cleaner/config/RoboCleanerGuiConfig.h
+        ${_INC_DIR}/robo_cleaner/panels/config/EnergyPanelConfig.h
+        ${_INC_DIR}/robo_cleaner/panels/EnergyPanel.h
+        ${_INC_DIR}/robo_cleaner/entities/Rubbish.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -115,6 +121,10 @@ add_executable(
         ${_SRC_DIR}/robo_miner/entities/Crystal.cpp
         ${_SRC_DIR}/robo_miner/field/RoboMinerField.cpp
         ${_SRC_DIR}/robo_miner/algorithms/FloodFill.cpp
+        
+        ${_SRC_DIR}/robo_cleaner/RoboCleanerGui.cpp
+        ${_SRC_DIR}/robo_cleaner/panels/EnergyPanel.cpp
+        ${_SRC_DIR}/robo_cleaner/entities/Rubbish.cpp
 )
 
 target_include_directories(

@@ -31,6 +31,9 @@ public:
 
   const FieldData& getFieldData() const;
 
+  void toggleDebugTexts();
+
+private:
   //for debug purposes
   void printFieldData() const;
 

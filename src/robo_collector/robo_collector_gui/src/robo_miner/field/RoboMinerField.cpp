@@ -19,7 +19,7 @@ int32_t generateMapConfig(FieldData& data) {
   if (rows != Defines::FIELD_ROWS) {
     const auto cols = data[0].size();
     if (cols != Defines::FIELD_COLS) {
-      LOGERR("Only %zux%zu is matrix is supported at the moment", rows, cols);
+      LOGERR("Only %zu%zu is matrix is supported at the moment", rows, cols);
       return FAILURE;
     }
   }

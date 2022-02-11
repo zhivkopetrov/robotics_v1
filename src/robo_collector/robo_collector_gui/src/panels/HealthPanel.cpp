@@ -23,11 +23,12 @@ int32_t HealthPanel::init(const HealthPanelConfig &cfg,
   _gameLostCb = gameLostCb;
 
   constexpr auto panelX = 1250;
+  constexpr auto panelY = 390;
   _panel.create(cfg.rsrcId);
-  _panel.setPosition(panelX, 390);
+  _panel.setPosition(panelX, panelY);
 
   _indicator.create(cfg.indicatorRsrcId);
-  _indicator.setPosition(panelX + 79, 403);
+  _indicator.setPosition(panelX + 79, panelY + 13);
   _indicator.setCropRect(_indicator.getImageRect());
 
   _indicatorText.create(cfg.indicatorFontId, "100%", Colors::RED);

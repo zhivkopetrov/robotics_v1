@@ -11,7 +11,14 @@ tag=[MAP_TILE]
 type=image
 path=p/background/tile.png
 description=empty
-position=100,100
+position=0,0
+load=on_init
+
+tag=[MAP_OBSTACLE]
+type=image
+path=p/background/obstacle.png
+description=empty
+position=0,0
 load=on_init
 
 tag=[PLAYER_ROBOT]
@@ -140,14 +147,14 @@ load=on_init
 tag=[HELP_BUTTON]
 type=sprite
 path=p/buttons/help_button.png
-description=140,140,3,0
+description=70,70,3,0
 position=0,0
 load=on_init
 
 tag=[SETTINGS_BUTTON]
 type=sprite
 path=p/buttons/settings_button.png
-description=140,140,3,0
+description=70,70,3,0
 position=0,0
 load=on_init
 
@@ -174,4 +181,25 @@ description=120,126,5,0
 position=0,0
 load=on_init
 
+##### ROBO_CLEANER
 
+tag=[ENERGY_PANEL]
+type=image
+path=p/robo_cleaner/panels/energy_panel.png
+description=empty
+position=0,0
+load=on_init
+
+tag=[ENERGY_INDICATOR]
+type=image
+path=p/robo_cleaner/panels/energy_indicator.png
+description=empty
+position=0,0
+load=on_init
+
+tag=[RUBBISH]
+type=sprite
+path=p/robo_cleaner/rubbish/rubbish.png
+description=100,100,2,0
+position=0,0
+load=on_init

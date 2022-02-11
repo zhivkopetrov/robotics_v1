@@ -15,7 +15,7 @@
 #include "robo_collector_gui/robo_miner/algorithms/FloodFill.h"
 
 int32_t RoboMinerGui::init(const RoboMinerGuiConfig &cfg) {
-  if (SUCCESS != _field.init(cfg.fieldConfig)) {
+  if (SUCCESS != _field.init(cfg.fieldCfg)) {
     LOGERR("Error, _field.init() failed");
     return FAILURE;
   }
@@ -24,7 +24,7 @@ int32_t RoboMinerGui::init(const RoboMinerGuiConfig &cfg) {
   int32_t totalCrystals = 0;
   for (const auto &row : fieldData) {
     for (const auto marker : row) {
-      if (cfg.fieldConfig.emptyTileMarker != marker) {
+      if (cfg.fieldCfg.emptyTileMarker != marker) {
         ++totalCrystals;
       }
     }
@@ -46,7 +46,7 @@ int32_t RoboMinerGui::init(const RoboMinerGuiConfig &cfg) {
     const auto fieldDataCols = fieldData[row].size();
     for (size_t col = 0; col < fieldDataCols; ++col) {
       const auto marker = fieldData[row][col];
-      if (marker == cfg.fieldConfig.emptyTileMarker) {
+      if (marker == cfg.fieldCfg.emptyTileMarker) {
         continue;
       }
 

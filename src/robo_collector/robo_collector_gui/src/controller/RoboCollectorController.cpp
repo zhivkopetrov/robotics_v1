@@ -13,8 +13,9 @@
 //Own components headers
 
 int32_t RoboCollectorController::init(
-    const RoboCollectorControllerConfig& cfg,
-    const RoboCollectorControllerOutInterface& interface) {;
+    const RoboCollectorControllerConfig &cfg,
+    const RoboCollectorControllerOutInterface &interface) {
+  ;
   if (nullptr == interface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
     return FAILURE;
@@ -25,27 +26,24 @@ int32_t RoboCollectorController::init(
       static_cast<int32_t>(cfg.moveButtonsRsrcIds.size());
   if (cfg.maxMoveButtons != rsrcIdsSize) {
     LOGERR(
-      "Error, moveButtonsRsrcIds.size() is: %d, while it should be exactly: %d",
-      rsrcIdsSize, cfg.maxMoveButtons);
+        "Error, moveButtonsRsrcIds.size() is: %d, while it should be exactly: %d",
+        rsrcIdsSize, cfg.maxMoveButtons);
     return FAILURE;
   }
 
   MoveButtonConfig moveButtonCfg;
   moveButtonCfg.clickCb = std::bind(
-    &RoboCollectorController::onMoveButtonClicked, this, std::placeholders::_1);
+      &RoboCollectorController::onMoveButtonClicked, this,
+      std::placeholders::_1);
   moveButtonCfg.infoTextFontId = cfg.moveButtonInfoTextFontId;
-  const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsPos {
-    Point(1435, 695), Point(1285, 830), Point(1585, 830)
-  };
-  const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsInfoTextPos {
-    Point(1470, 835), Point(1280, 965), Point(1580, 965)
-  };
+  const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsPos { Point(1435,
+      695), Point(1285, 830), Point(1585, 830) };
+  const std::array<Point, Defines::MOVE_BUTTONS_CTN> buttonsInfoTextPos { Point(
+      1470, 835), Point(1280, 965), Point(1580, 965) };
   const std::array<std::string, Defines::MOVE_BUTTONS_CTN> buttonsInfoTextContent {
-    "Move", "Rotate Left", "Rotate Right"
-  };
+      "Move", "Rotate Left", "Rotate Right" };
   const std::array<MoveType, Defines::MOVE_BUTTONS_CTN> buttonsMoveType {
-    MoveType::FORWARD, MoveType::ROTATE_LEFT, MoveType::ROTATE_RIGHT
-  };
+      MoveType::FORWARD, MoveType::ROTATE_LEFT, MoveType::ROTATE_RIGHT };
 
   for (auto i = 0; i < Defines::MOVE_BUTTONS_CTN; ++i) {
     moveButtonCfg.rsrcId = cfg.moveButtonsRsrcIds[i];
@@ -66,9 +64,17 @@ int32_t RoboCollectorController::init(
   _vertDelimiter.setPosition(1200, 550);
 
   HelpButtonConfig helpBtnCfg;
-  //TODO pass callback
+  helpBtnCfg.helpActivatedCb = interface.helpActivatedCb;
   helpBtnCfg.rsrcId = cfg.helpButtonRsrcId;
   if (SUCCESS != _helpButton.init(helpBtnCfg)) {
+    LOGERR("Error, _helpButton.init() failed");
+    return FAILURE;
+  }
+
+  SettingsButtonConfig settingsBtnCfg;
+  settingsBtnCfg.settingActivatedCb = interface.settingActivatedCb;
+  settingsBtnCfg.rsrcId = cfg.settingsButtonRsrcId;
+  if (SUCCESS != _settingsButton.init(settingsBtnCfg)) {
     LOGERR("Error, _helpButton.init() failed");
     return FAILURE;
   }
@@ -90,35 +96,38 @@ void RoboCollectorController::draw() const {
 }
 
 void RoboCollectorController::handleEvent(const InputEvent &e) {
-  for (auto& button : _moveButtons) {
-    if(button.isInputUnlocked() && button.containsEvent(e)) {
+  for (auto &button : _moveButtons) {
+    if (button.isInputUnlocked() && button.containsEvent(e)) {
       button.handleEvent(e);
       return;
     }
   }
 
-  if(_helpButton.isInputUnlocked() && _helpButton.containsEvent(e)) {
+  if (_helpButton.isInputUnlocked() && _helpButton.containsEvent(e)) {
     _helpButton.handleEvent(e);
     return;
   }
 
-  if(_settingsButton.isInputUnlocked() && _settingsButton.containsEvent(e)) {
+  if (_settingsButton.isInputUnlocked() && _settingsButton.containsEvent(e)) {
     _settingsButton.handleEvent(e);
     return;
   }
 }
 
 void RoboCollectorController::onMoveButtonClicked(MoveType moveType) {
-  for (auto& button : _moveButtons) {
-    button.lockInput();
-  }
+  lockInput();
   _robotActCb(moveType);
 }
 
-void RoboCollectorController::unlockInput() {
-  for (auto& button : _moveButtons) {
-      button.unlockInput();
-    }
+void RoboCollectorController::lockInput() {
+  for (auto &button : _moveButtons) {
+    button.lockInput();
+  }
 }
 
+void RoboCollectorController::unlockInput() {
+  for (auto &button : _moveButtons) {
+    button.unlockInput();
+  }
+}
 
