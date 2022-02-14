@@ -11,7 +11,7 @@
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/entities/robot/RobotAI.h"
+#include "robo_collector_gui/layout/entities/robot/RobotAI.h"
 
 //Forward declarations
 

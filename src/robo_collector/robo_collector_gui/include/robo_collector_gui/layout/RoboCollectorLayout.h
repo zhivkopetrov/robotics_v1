@@ -13,13 +13,13 @@
 #include "robo_common/layout/animators/GameEndAnimator.h"
 
 //Own components headers
-#include "robo_collector_gui/layout/RoboCollectorLayoutInterfaces.h"
-#include "robo_collector_gui/panels/PanelHandler.h"
-#include "robo_collector_gui/entities/coin/CoinHandler.h"
-#include "robo_collector_gui/controller/RoboCollectorController.h"
+#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInterfaces.h"
+#include "robo_collector_gui/layout/panels/PanelHandler.h"
+#include "robo_collector_gui/layout/entities/coin/CoinHandler.h"
+#include "robo_collector_gui/layout/controller/RoboCollectorController.h"
 
-#include "robo_collector_gui/robo_miner/RoboMinerGui.h"
-#include "robo_collector_gui/robo_cleaner/RoboCleanerGui.h"
+#include "robo_collector_gui/layout/robo_miner/RoboMinerGui.h"
+#include "robo_collector_gui/layout/robo_cleaner/RoboCleanerGui.h"
 
 //Forward declarations
 class InputEvent;

@@ -12,12 +12,12 @@
 #include "robo_common/layout/entities/robot/config/RobotBaseConfig.h"
 
 //Own components headers
-#include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
-#include "robo_collector_gui/entities/coin/config/CoinHandlerConfig.h"
-#include "robo_collector_gui/controller/config/RoboCollectorControllerConfig.h"
+#include "robo_collector_gui/layout/panels/config/PanelHandlerConfig.h"
+#include "robo_collector_gui/layout/entities/coin/config/CoinHandlerConfig.h"
+#include "robo_collector_gui/layout/controller/config/RoboCollectorControllerConfig.h"
 
-#include "robo_collector_gui/robo_miner/config/RoboMinerGuiConfig.h"
-#include "robo_collector_gui/robo_cleaner/config/RoboCleanerGuiConfig.h"
+#include "robo_collector_gui/layout/robo_miner/config/RoboMinerGuiConfig.h"
+#include "robo_collector_gui/layout/robo_cleaner/config/RoboCleanerGuiConfig.h"
 
 //Forward declarations
 

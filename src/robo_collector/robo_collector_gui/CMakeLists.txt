@@ -35,73 +35,73 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
-        ${_INC_DIR}/layout/RoboCollectorLayout.h
-        ${_INC_DIR}/layout/RoboCollectorLayoutInterfaces.h
-        ${_INC_DIR}/layout/RoboCollectorLayoutInitHelper.h
-        ${_INC_DIR}/layout/config/RoboCollectorLayoutConfig.h
-        ${_INC_DIR}/entities/robot/RobotAI.h
-        ${_INC_DIR}/entities/coin/Coin.h
-        ${_INC_DIR}/entities/coin/CoinHandler.h
-        ${_INC_DIR}/entities/coin/config/CoinHandlerConfig.h
-        ${_INC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.h
-        ${_INC_DIR}/entities/coin/animation/CoinRespawnAnim.h
-        ${_INC_DIR}/panels/PanelHandler.h
-        ${_INC_DIR}/panels/CoinPanel.h
-        ${_INC_DIR}/panels/config/CoinPanelConfig.h
-        ${_INC_DIR}/panels/config/PanelHandlerConfig.h
-        ${_INC_DIR}/controller/buttons/MoveButton.h
-        ${_INC_DIR}/controller/buttons/HelpButton.h
-        ${_INC_DIR}/controller/buttons/SettingsButton.h
-        ${_INC_DIR}/controller/RoboCollectorController.h
-        ${_INC_DIR}/controller/config/RoboCollectorControllerConfig.h
         ${_INC_DIR}/helpers/TurnHelper.h
         ${_INC_DIR}/helpers/RoboCollectorGuiInitHelper.h
         ${_INC_DIR}/external_api/ControllerExternalBridge.h
+        ${_INC_DIR}/layout/RoboCollectorLayout.h
+        ${_INC_DIR}/layout/helpers/RoboCollectorLayoutInterfaces.h
+        ${_INC_DIR}/layout/helpers/RoboCollectorLayoutInitHelper.h
+        ${_INC_DIR}/layout/config/RoboCollectorLayoutConfig.h
+        ${_INC_DIR}/layout/entities/robot/RobotAI.h
+        ${_INC_DIR}/layout/entities/coin/Coin.h
+        ${_INC_DIR}/layout/entities/coin/CoinHandler.h
+        ${_INC_DIR}/layout/entities/coin/config/CoinHandlerConfig.h
+        ${_INC_DIR}/layout/entities/coin/animation/CoinCollectAnimEndCb.h
+        ${_INC_DIR}/layout/entities/coin/animation/CoinRespawnAnim.h
+        ${_INC_DIR}/layout/panels/PanelHandler.h
+        ${_INC_DIR}/layout/panels/CoinPanel.h
+        ${_INC_DIR}/layout/panels/config/CoinPanelConfig.h
+        ${_INC_DIR}/layout/panels/config/PanelHandlerConfig.h
+        ${_INC_DIR}/layout/controller/buttons/MoveButton.h
+        ${_INC_DIR}/layout/controller/buttons/HelpButton.h
+        ${_INC_DIR}/layout/controller/buttons/SettingsButton.h
+        ${_INC_DIR}/layout/controller/RoboCollectorController.h
+        ${_INC_DIR}/layout/controller/config/RoboCollectorControllerConfig.h
         
-        ${_INC_DIR}/robo_miner/RoboMinerGui.h
-        ${_INC_DIR}/robo_miner/defines/RoboMinerDefines.h
-        ${_INC_DIR}/robo_miner/config/RoboMinerGuiConfig.h
-        ${_INC_DIR}/robo_miner/entities/Crystal.h
-        ${_INC_DIR}/robo_miner/field/RoboMinerField.h
-        ${_INC_DIR}/robo_miner/field/config/RoboMinerFieldConfig.h
-        ${_INC_DIR}/robo_miner/algorithms/FloodFill.h
+        ${_INC_DIR}/layout/robo_miner/RoboMinerGui.h
+        ${_INC_DIR}/layout/robo_miner/defines/RoboMinerDefines.h
+        ${_INC_DIR}/layout/robo_miner/config/RoboMinerGuiConfig.h
+        ${_INC_DIR}/layout/robo_miner/entities/Crystal.h
+        ${_INC_DIR}/layout/robo_miner/field/RoboMinerField.h
+        ${_INC_DIR}/layout/robo_miner/field/config/RoboMinerFieldConfig.h
+        ${_INC_DIR}/layout/robo_miner/algorithms/FloodFill.h
         
-        ${_INC_DIR}/robo_cleaner/RoboCleanerGui.h
-        ${_INC_DIR}/robo_cleaner/config/RoboCleanerGuiConfig.h
-        ${_INC_DIR}/robo_cleaner/panels/config/EnergyPanelConfig.h
-        ${_INC_DIR}/robo_cleaner/panels/EnergyPanel.h
-        ${_INC_DIR}/robo_cleaner/entities/Rubbish.h
+        ${_INC_DIR}/layout/robo_cleaner/RoboCleanerGui.h
+        ${_INC_DIR}/layout/robo_cleaner/config/RoboCleanerGuiConfig.h
+        ${_INC_DIR}/layout/robo_cleaner/panels/config/EnergyPanelConfig.h
+        ${_INC_DIR}/layout/robo_cleaner/panels/EnergyPanel.h
+        ${_INC_DIR}/layout/robo_cleaner/entities/Rubbish.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
         ${_SRC_DIR}/builder/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
-        ${_SRC_DIR}/layout/RoboCollectorLayout.cpp
-        ${_SRC_DIR}/layout/RoboCollectorLayoutInitHelper.cpp
-        ${_SRC_DIR}/entities/robot/RobotAI.cpp
-        ${_SRC_DIR}/entities/coin/Coin.cpp
-        ${_SRC_DIR}/entities/coin/CoinHandler.cpp
-        ${_SRC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.cpp
-        ${_SRC_DIR}/entities/coin/animation/CoinRespawnAnim.cpp
-        ${_SRC_DIR}/panels/PanelHandler.cpp
-        ${_SRC_DIR}/panels/CoinPanel.cpp
-        ${_SRC_DIR}/controller/buttons/MoveButton.cpp
-        ${_SRC_DIR}/controller/buttons/HelpButton.cpp
-        ${_SRC_DIR}/controller/buttons/SettingsButton.cpp
-        ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
         ${_SRC_DIR}/helpers/RoboCollectorGuiInitHelper.cpp
         ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
+        ${_SRC_DIR}/layout/RoboCollectorLayout.cpp
+        ${_SRC_DIR}/layout/helpers/RoboCollectorLayoutInitHelper.cpp
+        ${_SRC_DIR}/layout/entities/robot/RobotAI.cpp
+        ${_SRC_DIR}/layout/entities/coin/Coin.cpp
+        ${_SRC_DIR}/layout/entities/coin/CoinHandler.cpp
+        ${_SRC_DIR}/layout/entities/coin/animation/CoinCollectAnimEndCb.cpp
+        ${_SRC_DIR}/layout/entities/coin/animation/CoinRespawnAnim.cpp
+        ${_SRC_DIR}/layout/panels/PanelHandler.cpp
+        ${_SRC_DIR}/layout/panels/CoinPanel.cpp
+        ${_SRC_DIR}/layout/controller/buttons/MoveButton.cpp
+        ${_SRC_DIR}/layout/controller/buttons/HelpButton.cpp
+        ${_SRC_DIR}/layout/controller/buttons/SettingsButton.cpp
+        ${_SRC_DIR}/layout/controller/RoboCollectorController.cpp
         
-        ${_SRC_DIR}/robo_miner/RoboMinerGui.cpp
-        ${_SRC_DIR}/robo_miner/defines/RoboMinerDefines.cpp
-        ${_SRC_DIR}/robo_miner/entities/Crystal.cpp
-        ${_SRC_DIR}/robo_miner/field/RoboMinerField.cpp
-        ${_SRC_DIR}/robo_miner/algorithms/FloodFill.cpp
+        ${_SRC_DIR}/layout/robo_miner/RoboMinerGui.cpp
+        ${_SRC_DIR}/layout/robo_miner/defines/RoboMinerDefines.cpp
+        ${_SRC_DIR}/layout/robo_miner/entities/Crystal.cpp
+        ${_SRC_DIR}/layout/robo_miner/field/RoboMinerField.cpp
+        ${_SRC_DIR}/layout/robo_miner/algorithms/FloodFill.cpp
         
-        ${_SRC_DIR}/robo_cleaner/RoboCleanerGui.cpp
-        ${_SRC_DIR}/robo_cleaner/panels/EnergyPanel.cpp
-        ${_SRC_DIR}/robo_cleaner/entities/Rubbish.cpp
+        ${_SRC_DIR}/layout/robo_cleaner/RoboCleanerGui.cpp
+        ${_SRC_DIR}/layout/robo_cleaner/panels/EnergyPanel.cpp
+        ${_SRC_DIR}/layout/robo_cleaner/entities/Rubbish.cpp
 )
 
 target_include_directories(

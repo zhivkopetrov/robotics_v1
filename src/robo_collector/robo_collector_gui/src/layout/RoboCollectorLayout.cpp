@@ -6,7 +6,7 @@
 //C++ system headers
 
 //Other libraries headers
-#include "robo_collector_gui/layout/RoboCollectorLayoutInitHelper.h"
+#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInitHelper.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
