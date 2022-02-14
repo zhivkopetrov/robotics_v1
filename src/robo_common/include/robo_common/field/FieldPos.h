@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_FIELDPOS_H_
-#define ROBO_COLLECTOR_GUI_FIELDPOS_H_
+#ifndef ROBO_COMMON_FIELDPOS_H_
+#define ROBO_COMMON_FIELDPOS_H_
 
 //C system headers
 
@@ -22,4 +22,4 @@ struct FieldPos {
   int32_t col { 0 };
 };
 
-#endif /* ROBO_COLLECTOR_GUI_FIELDPOS_H_ */
+#endif /* ROBO_COMMON_FIELDPOS_H_ */

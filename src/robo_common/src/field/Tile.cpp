@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/field/Tile.h"
+#include "robo_common/field/Tile.h"
 
 //C system headers
 
@@ -11,7 +11,7 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "robo_collector_gui/field/config/TileConfig.h"
+#include "robo_common/field/config/TileConfig.h"
 
 namespace {
 constexpr auto DEBUG_TEXT_OFFSET_X = 10;

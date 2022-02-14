@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_HEALTHPANELCONFIG_H_
-#define ROBO_COLLECTOR_GUI_HEALTHPANELCONFIG_H_
+#ifndef ROBO_COMMON_INDICATORPANELCONFIG_H_
+#define ROBO_COMMON_INDICATORPANELCONFIG_H_
 
 //C system headers
 
@@ -10,11 +10,11 @@
 
 //Own components headers
 
-struct HealthPanelConfig {
+struct IndicatorPanelConfig {
   uint64_t rsrcId = 0;
   uint64_t indicatorRsrcId = 0;
   uint64_t indicatorFontId = 0;
   int32_t indicatorReduceTimerId = 0;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_HEALTHPANELCONFIG_H_ */
+#endif /* ROBO_COMMON_INDICATORPANELCONFIG_H_ */

@@ -10,7 +10,6 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/field/FieldPos.h"
 
 namespace {
 constexpr auto ANIM_STEPS = 6;

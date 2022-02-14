@@ -8,9 +8,9 @@
 #include <vector>
 
 //Other libraries headers
+#include "robo_common/field/config/FieldConfig.h"
 
 //Own components headers
-#include "robo_collector_gui/field/config/FieldConfig.h"
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
 #include "robo_collector_gui/entities/robot/config/RobotBaseConfig.h"
 #include "robo_collector_gui/entities/coin/config/CoinHandlerConfig.h"

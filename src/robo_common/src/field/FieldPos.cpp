@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/field/FieldPos.h"
+#include "robo_common/field/FieldPos.h"
 
 //C system headers
 

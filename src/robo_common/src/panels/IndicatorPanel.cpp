@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/panels/HealthPanel.h"
+#include "robo_common/panels/IndicatorPanel.h"
 
 //C system headers
 
@@ -12,15 +12,15 @@
 
 //Own components headers
 
-int32_t HealthPanel::init(const HealthPanelConfig &cfg,
-                          const GameLostCb &gameLostCb) {
+int32_t IndicatorPanel::init(const IndicatorPanelConfig &cfg,
+                             const IndicatorDepletedCb &indicatorDepletedCb) {
   _indicatorReduceTimerId = cfg.indicatorReduceTimerId;
 
-  if (nullptr == gameLostCb) {
-    LOGERR("Error, nullptr provided for GameLostCb");
+  if (nullptr == indicatorDepletedCb) {
+    LOGERR("Error, nullptr provided for IndicatorDepletedCb");
     return FAILURE;
   }
-  _gameLostCb = gameLostCb;
+  _indicatorDepletedCb = indicatorDepletedCb;
 
   constexpr auto panelX = 1250;
   constexpr auto panelY = 390;
@@ -37,21 +37,21 @@ int32_t HealthPanel::init(const HealthPanelConfig &cfg,
   return SUCCESS;
 }
 
-void HealthPanel::draw() const {
+void IndicatorPanel::draw() const {
   _panel.draw();
   _indicator.draw();
   _indicatorText.draw();
 }
 
-void HealthPanel::decreaseHealthIndicator(int32_t damage) {
-  _damageTicksLeft += damage;
+void IndicatorPanel::decreaseIndicator(int32_t delta) {
+  _damageTicksLeft += delta;
   if (!isActiveTimerId(_indicatorReduceTimerId)) {
     constexpr auto timerInterval = 20;
     startTimer(timerInterval, _indicatorReduceTimerId, TimerType::PULSE);
   }
 }
 
-void HealthPanel::onTimeout(const int32_t timerId) {
+void IndicatorPanel::onTimeout(const int32_t timerId) {
   if (timerId == _indicatorReduceTimerId) {
     processIndicatorReduceAnim();
   } else {
@@ -59,12 +59,12 @@ void HealthPanel::onTimeout(const int32_t timerId) {
   }
 }
 
-void HealthPanel::processIndicatorReduceAnim() {
+void IndicatorPanel::processIndicatorReduceAnim() {
   auto cropRectangle = _indicator.getCropRect();
   auto &remainingHealth = cropRectangle.w;
   if (0 == remainingHealth) {
     stopTimer(_indicatorReduceTimerId);
-    _gameLostCb();
+    _indicatorDepletedCb();
     return;
   }
 
@@ -79,7 +79,7 @@ void HealthPanel::processIndicatorReduceAnim() {
   setAndCenterIndicatorText();
 }
 
-void HealthPanel::setAndCenterIndicatorText() {
+void IndicatorPanel::setAndCenterIndicatorText() {
   const auto totalHealth = _indicator.getImageWidth();
   const auto indicatorCropRect = _indicator.getCropRect();
   const auto remainingHealth = indicatorCropRect.w;
@@ -98,8 +98,8 @@ void HealthPanel::setAndCenterIndicatorText() {
   }
 
   const auto indicatorTextWidth = _indicatorText.getImageWidth();
-  const auto textPos = WidgetAligner::getPosition(
-      indicatorTextWidth, _indicatorText.getImageHeight(),
-      widgetAlignArea, WidgetAlignment::CENTER_CENTER);
+  const auto textPos = WidgetAligner::getPosition(indicatorTextWidth,
+      _indicatorText.getImageHeight(), widgetAlignArea,
+      WidgetAlignment::CENTER_CENTER);
   _indicatorText.setPosition(textPos);
 }

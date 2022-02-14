@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_FIELDUTILS_H_
-#define ROBO_COLLECTOR_GUI_FIELDUTILS_H_
+#ifndef ROBO_COMMON_FIELDUTILS_H_
+#define ROBO_COMMON_FIELDUTILS_H_
 
 //C system headers
 
@@ -11,8 +11,8 @@
 #include "utils/drawing/Point.h"
 
 //Own components headers
-#include "robo_collector_gui/field/FieldPos.h"
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
+#include "robo_common/field/FieldPos.h"
+#include "robo_common/defines/RoboCommonDefines.h"
 
 //Forward declarations
 class Robot;
@@ -32,4 +32,4 @@ public:
   static FieldPos getAdjacentPos(Direction dir, const FieldPos &fieldPos);
 };
 
-#endif /* ROBO_COLLECTOR_GUI_FIELDUTILS_H_ */
+#endif /* ROBO_COMMON_FIELDUTILS_H_ */

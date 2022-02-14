@@ -7,9 +7,9 @@
 #include <cstdint>
 
 //Other libraries headers
+#include "robo_common/defines/RoboCommonDefines.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 
 //Forward declarations
 struct RoboMinerFieldConfig;

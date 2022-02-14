@@ -6,13 +6,13 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_common/field/FieldUtils.h"
 #include "sdl_utils/input/InputEvent.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/field/FieldUtils.h"
 
 int32_t Crystal::init(const CrystalConfig& cfg) {
   if (nullptr == cfg.onCrystalClickCb) {

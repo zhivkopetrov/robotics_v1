@@ -7,15 +7,15 @@
 #include <cstdint>
 
 //Other libraries headers
+#include "robo_common/panels/config/TimePanelConfig.h"
+#include "robo_common/panels/config/IndicatorPanelConfig.h"
 
 //Own components headers
-#include "robo_collector_gui/panels/config/TimePanelConfig.h"
 #include "robo_collector_gui/panels/config/CoinPanelConfig.h"
-#include "robo_collector_gui/panels/config/HealthPanelConfig.h"
 
 struct PanelHandlerConfig {
   TimePanelConfig timePanelCfg;
-  HealthPanelConfig healthPanelCfg;
+  IndicatorPanelConfig healthPanelCfg;
   CoinPanelConfig coinPanelCfg;
 };
 

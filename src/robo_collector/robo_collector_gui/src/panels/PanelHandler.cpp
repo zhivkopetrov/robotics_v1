@@ -38,7 +38,7 @@ void PanelHandler::draw() const {
 }
 
 void PanelHandler::decreaseHealthIndicator(int32_t damage) {
-  _healthPanel.decreaseHealthIndicator(damage);
+  _healthPanel.decreaseIndicator(damage);
 }
 
 void PanelHandler::increaseCollectedCoins(int32_t coins) {

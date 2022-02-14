@@ -7,12 +7,12 @@
 #include <array>
 
 //Other libraries headers
+#include "robo_common/field/FieldUtils.h"
 #include "utils/rng/Rng.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/field/FieldUtils.h"
 
 int32_t RobotAI::init(const RobotAIConfig &cfg) {
   if (nullptr == cfg.getFieldDataCb) {

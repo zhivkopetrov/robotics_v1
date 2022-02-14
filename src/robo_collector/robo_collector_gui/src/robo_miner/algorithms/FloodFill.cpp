@@ -10,7 +10,7 @@
 //Other libraries headers
 
 //Own components headers
-#include "robo_collector_gui/field/FieldUtils.h"
+#include "robo_common/field/FieldUtils.h"
 
 namespace {
 

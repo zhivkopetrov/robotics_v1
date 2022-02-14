@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_TILECONFIG_H_
-#define ROBO_COLLECTOR_GUI_TILECONFIG_H_
+#ifndef ROBO_COMMON_TILECONFIG_H_
+#define ROBO_COMMON_TILECONFIG_H_
 
 //C system headers
 
@@ -21,5 +21,5 @@ struct TileConfig {
   int32_t col = 0;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_TILECONFIG_H_ */
+#endif /* ROBO_COMMON_TILECONFIG_H_ */
 

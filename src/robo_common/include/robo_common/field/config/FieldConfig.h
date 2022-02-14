@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_FIELDCONFIG_H_
-#define ROBO_COLLECTOR_GUI_FIELDCONFIG_H_
+#ifndef ROBO_COMMON_FIELDCONFIG_H_
+#define ROBO_COMMON_FIELDCONFIG_H_
 
 //C system headers
 
@@ -10,7 +10,7 @@
 #include "utils/drawing/Rectangle.h"
 
 //Own components headers
-#include "robo_collector_gui/field/config/TileConfig.h"
+#include "robo_common/field/config/TileConfig.h"
 
 //Forward declarations
 
@@ -25,5 +25,5 @@ struct FieldConfig {
   char emptyTileMarker = '.';
 };
 
-#endif /* ROBO_COLLECTOR_GUI_FIELDCONFIG_H_ */
+#endif /* ROBO_COMMON_FIELDCONFIG_H_ */
 

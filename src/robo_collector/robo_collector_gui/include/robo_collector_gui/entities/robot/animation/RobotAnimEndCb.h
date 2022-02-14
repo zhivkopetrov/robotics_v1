@@ -8,11 +8,11 @@
 #include <functional>
 
 //Other libraries headers
+#include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_common/field/FieldPos.h"
 #include "manager_utils/drawing/animation/AnimationEndCb.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
-#include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
 

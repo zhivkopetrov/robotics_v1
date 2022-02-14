@@ -19,6 +19,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(robo_collector_interfaces REQUIRED)
+find_package(robo_common REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -34,12 +35,6 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
-        ${_INC_DIR}/field/Field.h
-        ${_INC_DIR}/field/FieldPos.h
-        ${_INC_DIR}/field/FieldUtils.h
-        ${_INC_DIR}/field/Tile.h
-        ${_INC_DIR}/field/config/FieldConfig.h
-        ${_INC_DIR}/field/config/TileConfig.h
         ${_INC_DIR}/entities/robot/Robot.h
         ${_INC_DIR}/entities/robot/RobotAI.h
         ${_INC_DIR}/entities/robot/RobotUtils.h
@@ -53,12 +48,8 @@ add_executable(
         ${_INC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.h
         ${_INC_DIR}/entities/coin/animation/CoinRespawnAnim.h
         ${_INC_DIR}/panels/PanelHandler.h
-        ${_INC_DIR}/panels/TimePanel.h
         ${_INC_DIR}/panels/CoinPanel.h
-        ${_INC_DIR}/panels/HealthPanel.h
-        ${_INC_DIR}/panels/config/HealthPanelConfig.h
         ${_INC_DIR}/panels/config/CoinPanelConfig.h
-        ${_INC_DIR}/panels/config/TimePanelConfig.h
         ${_INC_DIR}/panels/config/PanelHandlerConfig.h
         ${_INC_DIR}/controller/buttons/MoveButton.h
         ${_INC_DIR}/controller/buttons/HelpButton.h
@@ -89,10 +80,6 @@ add_executable(
         ${_SRC_DIR}/RoboCollectorGui.cpp
         ${_SRC_DIR}/builder/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
-        ${_SRC_DIR}/field/Field.cpp
-        ${_SRC_DIR}/field/FieldPos.cpp
-        ${_SRC_DIR}/field/FieldUtils.cpp
-        ${_SRC_DIR}/field/Tile.cpp
         ${_SRC_DIR}/entities/robot/Robot.cpp
         ${_SRC_DIR}/entities/robot/RobotAI.cpp
         ${_SRC_DIR}/entities/robot/RobotUtils.cpp
@@ -104,9 +91,7 @@ add_executable(
         ${_SRC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/animation/CoinRespawnAnim.cpp
         ${_SRC_DIR}/panels/PanelHandler.cpp
-        ${_SRC_DIR}/panels/TimePanel.cpp
         ${_SRC_DIR}/panels/CoinPanel.cpp
-        ${_SRC_DIR}/panels/HealthPanel.cpp
         ${_SRC_DIR}/controller/buttons/MoveButton.cpp
         ${_SRC_DIR}/controller/buttons/HelpButton.cpp
         ${_SRC_DIR}/controller/buttons/SettingsButton.cpp
@@ -142,6 +127,7 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}
+        robo_common::robo_common
         ros2_game_engine::ros2_game_engine
 )
 

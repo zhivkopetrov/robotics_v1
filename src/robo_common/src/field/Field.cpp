@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/field/Field.h"
+#include "robo_common/field/Field.h"
 
 //C system headers
 
@@ -11,7 +11,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/field/config/FieldConfig.h"
+#include "robo_common/field/config/FieldConfig.h"
 
 int32_t Field::init(const FieldConfig &cfg) {
   if (0 >= cfg.rows || 0 >= cfg.cols) {

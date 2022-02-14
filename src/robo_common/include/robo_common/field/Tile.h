@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_TILE_H_
-#define ROBO_COLLECTOR_GUI_TILE_H_
+#ifndef ROBO_COMMON_TILE_H_
+#define ROBO_COMMON_TILE_H_
 
 //C system headers
 
@@ -32,4 +32,4 @@ private:
   Text _debugText;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_TILE_H_ */
+#endif /* ROBO_COMMON_TILE_H_ */

@@ -12,7 +12,6 @@
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
-#include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
 

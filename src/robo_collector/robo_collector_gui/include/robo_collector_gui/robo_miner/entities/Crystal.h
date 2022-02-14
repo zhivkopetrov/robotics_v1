@@ -8,10 +8,10 @@
 #include <functional>
 
 //Other libraries headers
+#include "robo_common/field/FieldPos.h"
 #include "manager_utils/input/ButtonBase.h"
 
 //Own components headers
-#include "robo_collector_gui/field/FieldPos.h"
 #include "robo_collector_gui/robo_miner/defines/RoboMinerDefines.h"
 
 //Forward declarations

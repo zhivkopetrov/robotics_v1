@@ -8,6 +8,7 @@
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include "robo_common/defines/RoboCommonDefines.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -152,15 +153,19 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
-  constexpr auto GAME_FIELD_WIDTH = Defines::FIELD_COLS * Defines::TILE_WIDTH;
-  constexpr auto GAME_FIELD_HEIGHT = Defines::FIELD_ROWS * Defines::TILE_HEIGHT;
+  constexpr auto GAME_FIELD_WIDTH =
+      RoboCommonDefines::FIELD_COLS * RoboCommonDefines::TILE_WIDTH;
+  constexpr auto GAME_FIELD_HEIGHT =
+      RoboCommonDefines::FIELD_ROWS * RoboCommonDefines::TILE_HEIGHT;
 
-  cfg.rows = Defines::FIELD_ROWS;
-  cfg.cols = Defines::FIELD_COLS;
-  cfg.fieldDimensions = { Defines::FIRST_TILE_X_POS, Defines::FIRST_TILE_Y_POS,
-      GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT };
-  cfg.tileWidth = Defines::TILE_WIDTH;
-  cfg.tileHeight = Defines::TILE_HEIGHT;
+  cfg.rows = RoboCommonDefines::FIELD_ROWS;
+  cfg.cols = RoboCommonDefines::FIELD_COLS;
+  cfg.fieldDimensions = {
+      RoboCommonDefines::FIRST_TILE_X_POS, RoboCommonDefines::FIRST_TILE_Y_POS,
+      GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT
+  };
+  cfg.tileWidth = RoboCommonDefines::TILE_WIDTH;
+  cfg.tileHeight = RoboCommonDefines::TILE_HEIGHT;
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
@@ -195,8 +200,8 @@ RoboMinerGuiConfig generateRoboMinerGuiConfig() {
 
   auto& fieldCfg = cfg.fieldCfg;
   fieldCfg.emptyTileMarker = emptyFieldMarker;
-  fieldCfg.rows = Defines::FIELD_ROWS;
-  fieldCfg.cols = Defines::FIELD_COLS;
+  fieldCfg.rows = RoboCommonDefines::FIELD_ROWS;
+  fieldCfg.cols = RoboCommonDefines::FIELD_COLS;
 
   return cfg;
 }

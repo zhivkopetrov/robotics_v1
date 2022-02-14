@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_FIELD_H_
-#define ROBO_COLLECTOR_GUI_FIELD_H_
+#ifndef ROBO_COMMON_FIELD_H_
+#define ROBO_COMMON_FIELD_H_
 
 //C system headers
 
@@ -11,9 +11,9 @@
 #include "manager_utils/drawing/Fbo.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/field/Tile.h"
-#include "robo_collector_gui/field/FieldPos.h"
+#include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_common/field/Tile.h"
+#include "robo_common/field/FieldPos.h"
 
 //Forward declarations
 struct FieldConfig;
@@ -43,4 +43,4 @@ private:
   char _emptyDataMarker = '.';
 };
 
-#endif /* ROBO_COLLECTOR_GUI_FIELD_H_ */
+#endif /* ROBO_COMMON_FIELD_H_ */

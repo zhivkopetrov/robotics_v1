@@ -8,10 +8,10 @@
 #include <vector>
 
 //Other libraries headers
+#include "robo_common/field/FieldPos.h"
 #include "manager_utils/drawing/Image.h"
 
 //Own components headers
-#include "robo_collector_gui/field/FieldPos.h"
 
 //Forward declarations
 

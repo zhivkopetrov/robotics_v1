@@ -6,12 +6,12 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_common/panels/TimePanel.h"
+#include "robo_common/panels/IndicatorPanel.h"
 
 //Own components headers
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
-#include "robo_collector_gui/panels/TimePanel.h"
 #include "robo_collector_gui/panels/CoinPanel.h"
-#include "robo_collector_gui/panels/HealthPanel.h"
 
 //Forward declarations
 
@@ -31,7 +31,7 @@ public:
 private:
   TimePanel _timePanel;
   CoinPanel _coinPanel;
-  HealthPanel _healthPanel;
+  IndicatorPanel _healthPanel;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_ */

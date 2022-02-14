@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/panels/TimePanel.h"
+#include "robo_common/panels/TimePanel.h"
 
 //C system headers
 
@@ -14,12 +14,12 @@
 //Own components headers
 
 int32_t TimePanel::init(const TimePanelConfig &cfg,
-                        const GameLostCb& gameLostCb) {
-  if (nullptr == gameLostCb) {
-    LOGERR("Error, nullptr provided for GameLostCb");
+                        const IndicatorDepletedCb &indicatorDepletedCb) {
+  if (nullptr == indicatorDepletedCb) {
+    LOGERR("Error, nullptr provided for IndicatorDepletedCb");
     return FAILURE;
   }
-  _gameLostCb = gameLostCb;
+  _indicatorDepletedCb = indicatorDepletedCb;
 
   constexpr auto panelX = 1250;
   constexpr auto panelY = 50;
@@ -69,7 +69,7 @@ void TimePanel::processClockTick() {
   if (0 == _remainingSeconds) {
     stopTimer(_clockTimerId);
     stopTimer(_blinkTimerId);
-    _gameLostCb();
+    _indicatorDepletedCb();
     return;
   }
 

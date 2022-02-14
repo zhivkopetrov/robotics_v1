@@ -6,13 +6,13 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_common/field/FieldUtils.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "robo_collector_gui/helpers/CollisionWatcher.h"
-#include "robo_collector_gui/field/FieldUtils.h"
 
 int32_t Robot::init(const RobotConfig &cfg,
                     const RobotAnimatorConfigBase &robotAnimCfgBase,

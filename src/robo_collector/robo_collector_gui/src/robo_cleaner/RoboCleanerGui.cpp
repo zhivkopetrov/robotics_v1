@@ -6,13 +6,13 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_common/field/FieldUtils.h"
 #include "sdl_utils/input/InputEvent.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "robo_collector_gui/robo_cleaner/config/RoboCleanerGuiConfig.h"
-#include "robo_collector_gui/field/FieldUtils.h"
 
 namespace {
 //TODO remove this temporary hack

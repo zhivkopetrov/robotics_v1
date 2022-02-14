@@ -8,11 +8,11 @@
 #include <array>
 
 //Other libraries headers
-#include "game_engine/Game.h"
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
+#include "game_engine/Game.h"
+#include "robo_common/field/Field.h"
 
 //Own components headers
-#include "robo_collector_gui/field/Field.h"
 #include "robo_collector_gui/entities/robot/Robot.h"
 #include "robo_collector_gui/panels/PanelHandler.h"
 #include "robo_collector_gui/entities/coin/CoinHandler.h"

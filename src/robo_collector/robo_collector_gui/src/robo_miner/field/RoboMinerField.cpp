@@ -16,9 +16,9 @@ namespace {
 //TODO remove this temporary hack
 int32_t generateMapConfig(FieldData& data) {
   const auto rows = data.size();
-  if (rows != Defines::FIELD_ROWS) {
+  if (rows != RoboCommonDefines::FIELD_ROWS) {
     const auto cols = data[0].size();
-    if (cols != Defines::FIELD_COLS) {
+    if (cols != RoboCommonDefines::FIELD_COLS) {
       LOGERR("Only %zu%zu is matrix is supported at the moment", rows, cols);
       return FAILURE;
     }

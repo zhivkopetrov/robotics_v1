@@ -9,7 +9,7 @@
 //Other libraries headers
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
+#include "robo_common/defines/RoboCommonDefines.h"
 
 //Forward declarations
 

@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_HEALTHPANEL_H_
-#define ROBO_COLLECTOR_GUI_HEALTHPANEL_H_
+#ifndef ROBO_COMMON_INDICATORPANEL_H_
+#define ROBO_COMMON_INDICATORPANEL_H_
 
 //C system headers
 
@@ -12,18 +12,18 @@
 #include "manager_utils/time/TimerClient.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/panels/config/HealthPanelConfig.h"
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "robo_common/panels/config/IndicatorPanelConfig.h"
 
 //Forward declarations
 
-class HealthPanel: public TimerClient {
+class IndicatorPanel: public TimerClient {
 public:
-  int32_t init(const HealthPanelConfig &cfg, const GameLostCb &gameLostCb);
+  int32_t init(const IndicatorPanelConfig &cfg,
+               const IndicatorDepletedCb &indicatorDepletedCb);
   void draw() const;
 
-  /* 1 damage == 1px */
-  void decreaseHealthIndicator(int32_t damage);
+  void decreaseIndicator(int32_t delta);
 
 private:
   void onTimeout(const int32_t timerId) final;
@@ -37,7 +37,7 @@ private:
   int32_t _indicatorReduceTimerId = 0;
   int32_t _damageTicksLeft = 0;
 
-  GameLostCb _gameLostCb;
+  IndicatorDepletedCb _indicatorDepletedCb;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_HEALTHPANEL_H_ */
+#endif /* ROBO_COMMON_INDICATORPANEL_H_ */

@@ -7,6 +7,7 @@
 #include <cmath>
 
 //Other libraries headers
+#include "robo_common/field/FieldUtils.h"
 #include "utils/rng/Rng.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
@@ -14,7 +15,6 @@
 
 //Own components headers
 #include "robo_collector_gui/helpers/CollisionWatcher.h"
-#include "robo_collector_gui/field/FieldUtils.h"
 
 namespace {
 constexpr auto TARGET_COLLECT_ANIM_X = 1285;

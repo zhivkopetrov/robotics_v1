@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robo_common</name>
+  <version>1.0.0</version>
+  <description>robot common utilities lib.</description>
+  <license file="LICENSE_apache_2_0">Apache-2.0</license>
+  <author>Zhivko Petrov</author>
+  <maintainer email="zhivkopetrov90@gmail.com">Zhivko Petrov</maintainer>
+
+  <buildtool_depend>cmake</buildtool_depend>
+  
+  <build_depend>manager_utils</build_depend>
+
+  <exec_depend>manager_utils</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">ament_cmake</exec_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+
+</package>

@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/field/FieldUtils.h"
+#include "robo_common/field/FieldUtils.h"
 
 //C system headers
 
@@ -14,21 +14,26 @@
 
 FieldPos FieldUtils::getFieldPos(const Point &absPos) {
   return FieldPos(
-      (absPos.y - Defines::FIRST_TILE_Y_POS) / Defines::TILE_HEIGHT,
-      (absPos.x - Defines::FIRST_TILE_X_POS) / Defines::TILE_WIDTH);
+      (absPos.y - RoboCommonDefines::FIRST_TILE_Y_POS) /
+        RoboCommonDefines::TILE_HEIGHT,
+      (absPos.x - RoboCommonDefines::FIRST_TILE_X_POS) /
+        RoboCommonDefines::TILE_WIDTH);
 }
 
 Point FieldUtils::getAbsPos(const FieldPos &boardPos) {
-  return Point(Defines::FIRST_TILE_X_POS + boardPos.col * Defines::TILE_WIDTH,
-      Defines::FIRST_TILE_Y_POS + boardPos.row * Defines::TILE_HEIGHT);
+  return Point(
+      RoboCommonDefines::FIRST_TILE_X_POS +
+        (boardPos.col * RoboCommonDefines::TILE_WIDTH),
+      RoboCommonDefines::FIRST_TILE_Y_POS +
+        (boardPos.row * RoboCommonDefines::TILE_HEIGHT));
 }
 
 bool FieldUtils::isInsideField(const FieldPos &fieldPos) {
-  if (0 > fieldPos.row || Defines::FIELD_ROWS <= fieldPos.row) {
+  if (0 > fieldPos.row || RoboCommonDefines::FIELD_ROWS <= fieldPos.row) {
     return false;
   }
 
-  if (0 > fieldPos.col || Defines::FIELD_COLS <= fieldPos.col) {
+  if (0 > fieldPos.col || RoboCommonDefines::FIELD_COLS <= fieldPos.col) {
     return false;
   }
 
@@ -36,9 +41,10 @@ bool FieldUtils::isInsideField(const FieldPos &fieldPos) {
 }
 
 bool FieldUtils::isInsideField(const Point &absPos) {
-  const Rectangle boundary(Defines::FIRST_TILE_X_POS, Defines::FIRST_TILE_Y_POS,
-      Defines::FIELD_COLS * Defines::TILE_WIDTH,
-      Defines::FIELD_ROWS * Defines::TILE_HEIGHT);
+  const Rectangle boundary(RoboCommonDefines::FIRST_TILE_X_POS,
+      RoboCommonDefines::FIRST_TILE_Y_POS,
+      RoboCommonDefines::FIELD_COLS * RoboCommonDefines::TILE_WIDTH,
+      RoboCommonDefines::FIELD_ROWS * RoboCommonDefines::TILE_HEIGHT);
 
   return boundary.isPointInRect(absPos);
 }
@@ -64,8 +70,7 @@ FieldPos FieldUtils::getAdjacentPos(Direction dir, const FieldPos &fieldPos) {
     break;
 
   default:
-    LOGERR("Error, received unknown dir: %d", getEnumValue(dir))
-    ;
+    LOGERR("Error, received unknown dir: %d", getEnumValue(dir));
     break;
   }
 
