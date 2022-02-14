@@ -55,6 +55,7 @@ add_executable(
         ${_INC_DIR}/controller/RoboCollectorController.h
         ${_INC_DIR}/controller/config/RoboCollectorControllerConfig.h
         ${_INC_DIR}/helpers/TurnHelper.h
+        ${_INC_DIR}/helpers/RoboCollectorGuiInitHelper.h
         ${_INC_DIR}/external_api/ControllerExternalBridge.h
         
         ${_INC_DIR}/robo_miner/RoboMinerGui.h
@@ -89,6 +90,7 @@ add_executable(
         ${_SRC_DIR}/controller/buttons/SettingsButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
+        ${_SRC_DIR}/helpers/RoboCollectorGuiInitHelper.cpp
         ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
         
         ${_SRC_DIR}/robo_miner/RoboMinerGui.cpp

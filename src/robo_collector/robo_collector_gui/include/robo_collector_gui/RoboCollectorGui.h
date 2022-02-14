@@ -5,7 +5,6 @@
 
 //C++ system headers
 #include <cstdint>
-#include <array>
 
 //Other libraries headers
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
@@ -19,12 +18,11 @@
 
 //Forward declarations
 class InputEvent;
-struct RoboCollectorLayoutConfig;
-struct RoboCollectorGuiConfig;
-struct RoboMinerGuiConfig;
 
 class RoboCollectorGui final : public Game {
 public:
+  friend class RoboCollectorGuiInitHelper;
+
   RoboCollectorGui(const Ros2CommunicatorInterface &communicatorOutInterface);
 
   int32_t init(const std::any &cfg) override;
@@ -36,18 +34,11 @@ public:
   void process() override;
 
 private:
-  int32_t initLayout(const RoboCollectorLayoutConfig &cfg);
-  int32_t initTurnHelper(const RoboCollectorLayoutInterface &interface,
-                         char fieldEnemyMarker);
-  int32_t initControllerExternalBridge(
-      const RoboCollectorLayoutInterface &interface);
-
   RoboCollectorLayout _layout;
   TurnHelper _turnHelper;
   CollisionWatcher _collisionWatcher;
 
   std::shared_ptr<ControllerExternalBridge> _controllerExternalBridge;
-
   Ros2CommunicatorInterface _communicatorOutInterface;
 };
 
