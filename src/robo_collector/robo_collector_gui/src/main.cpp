@@ -10,7 +10,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/builder/RoboCollectorBuilder.h"
+#include "robo_collector_gui/helpers/RoboCollectorBuilder.h"
 #include "robo_collector_gui/config/RoboCollectorGuiConfigGenerator.h"
 
 int32_t main(int32_t argc, char **args) {

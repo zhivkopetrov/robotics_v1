@@ -30,11 +30,11 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_executable(
     ${PROJECT_NAME} 
         ${_INC_DIR}/RoboCollectorGui.h
-        ${_INC_DIR}/builder/RoboCollectorBuilder.h
         ${_INC_DIR}/config/RoboCollectorGuiConfig.h
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
+        ${_INC_DIR}/helpers/RoboCollectorBuilder.h
         ${_INC_DIR}/helpers/TurnHelper.h
         ${_INC_DIR}/helpers/RoboCollectorGuiInitHelper.h
         ${_INC_DIR}/external_api/ControllerExternalBridge.h
@@ -74,9 +74,9 @@ add_executable(
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
-        ${_SRC_DIR}/builder/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
+        ${_SRC_DIR}/helpers/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/helpers/RoboCollectorGuiInitHelper.cpp
         ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
         ${_SRC_DIR}/layout/RoboCollectorLayout.cpp
