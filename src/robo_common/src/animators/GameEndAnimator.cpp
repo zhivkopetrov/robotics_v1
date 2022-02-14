@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_common/helpers/GameEndHelper.h"
+#include "robo_common/animators/GameEndAnimator.h"
 
 //C system headers
 
@@ -11,18 +11,18 @@
 
 //Own components headers
 
-int32_t GameEndHelper::init() {
+int32_t GameEndAnimator::init() {
   return SUCCESS;
 }
 
-void GameEndHelper::draw() const {
+void GameEndAnimator::draw() const {
 
 }
 
-void GameEndHelper::gameWon() {
+void GameEndAnimator::gameWon() {
   LOGG("You've Won");
 }
 
-void GameEndHelper::gameLost() {
+void GameEndAnimator::gameLost() {
   LOGR("You've Lost");
 }

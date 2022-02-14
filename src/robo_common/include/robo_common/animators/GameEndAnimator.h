@@ -1,5 +1,5 @@
-#ifndef ROBO_COMMON_GAMEENDHELPER_H_
-#define ROBO_COMMON_GAMEENDHELPER_H_
+#ifndef ROBO_COMMON_GAMEENDANIMATOR_H_
+#define ROBO_COMMON_GAMEENDANIMATOR_H_
 
 //C system headers
 
@@ -12,7 +12,7 @@
 
 //Forward declarations
 
-class GameEndHelper {
+class GameEndAnimator {
 public:
   int32_t init();
   void draw() const;
@@ -24,4 +24,4 @@ public:
 private:
 };
 
-#endif /* ROBO_COMMON_GAMEENDHELPER_H_ */
+#endif /* ROBO_COMMON_GAMEENDANIMATOR_H_ */

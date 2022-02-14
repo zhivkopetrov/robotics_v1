@@ -43,7 +43,7 @@ add_library(
         ${_INC_DIR}/entities/robot/animation/PlayerDamageAnimEndCb.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
-        ${_INC_DIR}/helpers/GameEndHelper.h
+        ${_INC_DIR}/animators/GameEndAnimator.h
         
         ${_SRC_DIR}/field/Field.cpp
         ${_SRC_DIR}/field/FieldPos.cpp
@@ -57,7 +57,7 @@ add_library(
         ${_SRC_DIR}/entities/robot/animation/RobotAnimEndCb.cpp
         ${_SRC_DIR}/entities/robot/animation/PlayerDamageAnimEndCb.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
-        ${_SRC_DIR}/helpers/GameEndHelper.cpp
+        ${_SRC_DIR}/animators/GameEndAnimator.cpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
