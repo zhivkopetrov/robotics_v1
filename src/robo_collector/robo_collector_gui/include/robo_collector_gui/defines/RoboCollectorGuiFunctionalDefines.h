@@ -8,7 +8,7 @@
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonDefines.h"
-#include "robo_common/field/FieldPos.h"
+#include "robo_common/layout/field/FieldPos.h"
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"

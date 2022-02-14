@@ -8,7 +8,7 @@
 #include <vector>
 
 //Other libraries headers
-#include "robo_common/field/FieldPos.h"
+#include "robo_common/layout/field/FieldPos.h"
 #include "manager_utils/drawing/Image.h"
 
 //Own components headers

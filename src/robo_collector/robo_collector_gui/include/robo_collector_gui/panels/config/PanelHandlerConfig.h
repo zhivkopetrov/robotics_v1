@@ -7,8 +7,8 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "robo_common/panels/config/TimePanelConfig.h"
-#include "robo_common/panels/config/IndicatorPanelConfig.h"
+#include "robo_common/layout/panels/config/TimePanelConfig.h"
+#include "robo_common/layout/panels/config/IndicatorPanelConfig.h"
 
 //Own components headers
 #include "robo_collector_gui/panels/config/CoinPanelConfig.h"

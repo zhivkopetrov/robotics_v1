@@ -8,9 +8,9 @@
 #include <array>
 
 //Other libraries headers
-#include "robo_common/field/Field.h"
-#include "robo_common/entities/robot/Robot.h"
-#include "robo_common/animators/GameEndAnimator.h"
+#include "robo_common/layout/field/Field.h"
+#include "robo_common/layout/entities/robot/Robot.h"
+#include "robo_common/layout/animators/GameEndAnimator.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/RoboCollectorLayoutInterfaces.h"

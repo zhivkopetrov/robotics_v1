@@ -25,41 +25,41 @@ add_library(
     ${PROJECT_NAME} 
     STATIC
         ${_INC_DIR}/defines/RoboCommonDefines.h
-        ${_INC_DIR}/field/Field.h
-        ${_INC_DIR}/field/FieldPos.h
-        ${_INC_DIR}/field/FieldUtils.h
-        ${_INC_DIR}/field/Tile.h
-        ${_INC_DIR}/field/config/FieldConfig.h
-        ${_INC_DIR}/field/config/TileConfig.h
-        ${_INC_DIR}/panels/TimePanel.h
-        ${_INC_DIR}/panels/IndicatorPanel.h
-        ${_INC_DIR}/panels/config/IndicatorPanelConfig.h
-        ${_INC_DIR}/panels/config/TimePanelConfig.h
-        ${_INC_DIR}/entities/robot/Robot.h
-        ${_INC_DIR}/entities/robot/RobotInitHelper.h
-        ${_INC_DIR}/entities/robot/RobotUtils.h
-        ${_INC_DIR}/entities/robot/config/RobotBaseConfig.h
-        ${_INC_DIR}/entities/robot/animation/RobotAnimator.h
-        ${_INC_DIR}/entities/robot/animation/RobotAnimEndCb.h
-        ${_INC_DIR}/entities/robot/animation/PlayerDamageAnimEndCb.h
+        ${_INC_DIR}/layout/field/Field.h
+        ${_INC_DIR}/layout/field/FieldPos.h
+        ${_INC_DIR}/layout/field/FieldUtils.h
+        ${_INC_DIR}/layout/field/Tile.h
+        ${_INC_DIR}/layout/field/config/FieldConfig.h
+        ${_INC_DIR}/layout/field/config/TileConfig.h
+        ${_INC_DIR}/layout/panels/TimePanel.h
+        ${_INC_DIR}/layout/panels/IndicatorPanel.h
+        ${_INC_DIR}/layout/panels/config/IndicatorPanelConfig.h
+        ${_INC_DIR}/layout/panels/config/TimePanelConfig.h
+        ${_INC_DIR}/layout/entities/robot/Robot.h
+        ${_INC_DIR}/layout/entities/robot/RobotInitHelper.h
+        ${_INC_DIR}/layout/entities/robot/RobotUtils.h
+        ${_INC_DIR}/layout/entities/robot/config/RobotBaseConfig.h
+        ${_INC_DIR}/layout/entities/robot/animation/RobotAnimator.h
+        ${_INC_DIR}/layout/entities/robot/animation/RobotAnimEndCb.h
+        ${_INC_DIR}/layout/entities/robot/animation/PlayerDamageAnimEndCb.h
+        ${_INC_DIR}/layout/animators/GameEndAnimator.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
-        ${_INC_DIR}/animators/GameEndAnimator.h
         
-        ${_SRC_DIR}/field/Field.cpp
-        ${_SRC_DIR}/field/FieldPos.cpp
-        ${_SRC_DIR}/field/FieldUtils.cpp
-        ${_SRC_DIR}/field/Tile.cpp
-        ${_SRC_DIR}/panels/TimePanel.cpp
-        ${_SRC_DIR}/panels/IndicatorPanel.cpp
-        ${_SRC_DIR}/entities/robot/Robot.cpp
-        ${_SRC_DIR}/entities/robot/RobotInitHelper.cpp
-        ${_SRC_DIR}/entities/robot/RobotUtils.cpp
-        ${_SRC_DIR}/entities/robot/animation/RobotAnimator.cpp
-        ${_SRC_DIR}/entities/robot/animation/RobotAnimEndCb.cpp
-        ${_SRC_DIR}/entities/robot/animation/PlayerDamageAnimEndCb.cpp
+        ${_SRC_DIR}/layout/field/Field.cpp
+        ${_SRC_DIR}/layout/field/FieldPos.cpp
+        ${_SRC_DIR}/layout/field/FieldUtils.cpp
+        ${_SRC_DIR}/layout/field/Tile.cpp
+        ${_SRC_DIR}/layout/panels/TimePanel.cpp
+        ${_SRC_DIR}/layout/panels/IndicatorPanel.cpp
+        ${_SRC_DIR}/layout/entities/robot/Robot.cpp
+        ${_SRC_DIR}/layout/entities/robot/RobotInitHelper.cpp
+        ${_SRC_DIR}/layout/entities/robot/RobotUtils.cpp
+        ${_SRC_DIR}/layout/entities/robot/animation/RobotAnimator.cpp
+        ${_SRC_DIR}/layout/entities/robot/animation/RobotAnimEndCb.cpp
+        ${_SRC_DIR}/layout/entities/robot/animation/PlayerDamageAnimEndCb.cpp
+        ${_SRC_DIR}/layout/animators/GameEndAnimator.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
-        ${_SRC_DIR}/animators/GameEndAnimator.cpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

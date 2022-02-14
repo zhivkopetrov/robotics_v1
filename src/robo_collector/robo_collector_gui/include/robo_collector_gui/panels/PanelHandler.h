@@ -6,8 +6,8 @@
 //C++ system headers
 
 //Other libraries headers
-#include "robo_common/panels/TimePanel.h"
-#include "robo_common/panels/IndicatorPanel.h"
+#include "robo_common/layout/panels/TimePanel.h"
+#include "robo_common/layout/panels/IndicatorPanel.h"
 
 //Own components headers
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"

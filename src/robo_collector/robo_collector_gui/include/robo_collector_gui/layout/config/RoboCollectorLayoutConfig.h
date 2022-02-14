@@ -8,8 +8,8 @@
 #include <vector>
 
 //Other libraries headers
-#include "robo_common/field/config/FieldConfig.h"
-#include "robo_common/entities/robot/config/RobotBaseConfig.h"
+#include "robo_common/layout/field/config/FieldConfig.h"
+#include "robo_common/layout/entities/robot/config/RobotBaseConfig.h"
 
 //Own components headers
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"

@@ -7,7 +7,6 @@
 
 //Other libraries headers
 #include "robo_collector_gui/layout/RoboCollectorLayoutInitHelper.h"
-#include "sdl_utils/input/InputEvent.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
