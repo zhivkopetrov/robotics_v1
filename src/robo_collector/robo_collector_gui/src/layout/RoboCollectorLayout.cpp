@@ -6,6 +6,7 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_collector_gui/layout/RoboCollectorLayoutInitHelper.h"
 #include "sdl_utils/input/InputEvent.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -15,8 +16,8 @@
 int32_t RoboCollectorLayout::init(
     const RoboCollectorLayoutConfig &cfg,
     const RoboCollectorLayoutOutInterface &interface) {
-  if (SUCCESS != _initHelper.init(cfg, interface, *this)) {
-    LOGERR("Error, RoboCollectorLayoutInitHelper.init() failed");
+  if (SUCCESS != RoboCollectorLayoutInitHelper::init(cfg, interface, *this)) {
+    LOGERR("Error, RoboCollectorLayoutInitHelper::init() failed");
     return FAILURE;
   }
 

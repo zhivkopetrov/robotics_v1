@@ -13,7 +13,7 @@
 #include "robo_common/animators/GameEndAnimator.h"
 
 //Own components headers
-#include "robo_collector_gui/layout/RoboCollectorLayoutInitHelper.h"
+#include "robo_collector_gui/layout/RoboCollectorLayoutInterfaces.h"
 #include "robo_collector_gui/panels/PanelHandler.h"
 #include "robo_collector_gui/entities/coin/CoinHandler.h"
 #include "robo_collector_gui/controller/RoboCollectorController.h"
@@ -23,13 +23,15 @@
 
 //Forward declarations
 class InputEvent;
+class RoboCollectorLayoutInitHelper;
+struct RoboCollectorLayoutConfig;
 
 class RoboCollectorLayout {
 public:
   friend class RoboCollectorLayoutInitHelper;
 
-  int32_t init(const RoboCollectorLayoutConfig& cfg,
-               const RoboCollectorLayoutOutInterface& interface);
+  int32_t init(const RoboCollectorLayoutConfig &cfg,
+               const RoboCollectorLayoutOutInterface &interface);
   RoboCollectorLayoutInterface produceInterface();
   void deinit();
   void draw() const;
@@ -48,8 +50,6 @@ private:
   RoboCollectorController _controller;
   std::array<Robot, Defines::ROBOTS_CTN> _robots;
   GameEndAnimator _gameEndAnimator;
-
-  RoboCollectorLayoutInitHelper _initHelper;
 
   RoboMinerGui _roboMinerGui;
   RoboCleanerGui _roboCleanerGui;

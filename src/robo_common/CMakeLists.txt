@@ -36,6 +36,7 @@ add_library(
         ${_INC_DIR}/panels/config/IndicatorPanelConfig.h
         ${_INC_DIR}/panels/config/TimePanelConfig.h
         ${_INC_DIR}/entities/robot/Robot.h
+        ${_INC_DIR}/entities/robot/RobotInitHelper.h
         ${_INC_DIR}/entities/robot/RobotUtils.h
         ${_INC_DIR}/entities/robot/config/RobotBaseConfig.h
         ${_INC_DIR}/entities/robot/animation/RobotAnimator.h
@@ -52,6 +53,7 @@ add_library(
         ${_SRC_DIR}/panels/TimePanel.cpp
         ${_SRC_DIR}/panels/IndicatorPanel.cpp
         ${_SRC_DIR}/entities/robot/Robot.cpp
+        ${_SRC_DIR}/entities/robot/RobotInitHelper.cpp
         ${_SRC_DIR}/entities/robot/RobotUtils.cpp
         ${_SRC_DIR}/entities/robot/animation/RobotAnimator.cpp
         ${_SRC_DIR}/entities/robot/animation/RobotAnimEndCb.cpp

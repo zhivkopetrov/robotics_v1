@@ -15,6 +15,7 @@
 
 //Forward declarations
 class CollisionWatcher;
+class RobotInitHelper;
 
 struct RobotOutInterface {
   PlayerDamageCb playerDamageCb;
@@ -35,6 +36,8 @@ struct RobotConfig {
 
 class Robot final : public CollisionObject {
 public:
+  friend class RobotInitHelper;
+
   int32_t init(const RobotConfig &cfg,
                const RobotAnimatorConfigBase &robotAnimCfgBase,
                const RobotOutInterface &interface);
@@ -52,8 +55,6 @@ public:
   void onCollisionImpact();
 
 private:
-  int32_t initOutInterface(const RobotOutInterface &interface);
-  int32_t initRobotAnimator(const RobotAnimatorConfigBase &robotAnimCfgBase);
   void onInitEnd();
 
   void registerCollision(const Rectangle &intersectRect,

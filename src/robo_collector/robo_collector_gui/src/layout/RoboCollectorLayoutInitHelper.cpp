@@ -10,6 +10,7 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/layout/RoboCollectorLayoutInterfaces.h"
 #include "robo_collector_gui/layout/config/RoboCollectorLayoutConfig.h"
 #include "robo_collector_gui/layout/RoboCollectorLayout.h"
 

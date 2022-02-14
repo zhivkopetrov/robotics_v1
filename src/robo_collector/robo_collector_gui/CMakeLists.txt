@@ -36,6 +36,7 @@ add_executable(
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
         ${_INC_DIR}/layout/RoboCollectorLayout.h
+        ${_INC_DIR}/layout/RoboCollectorLayoutInterfaces.h
         ${_INC_DIR}/layout/RoboCollectorLayoutInitHelper.h
         ${_INC_DIR}/layout/config/RoboCollectorLayoutConfig.h
         ${_INC_DIR}/entities/robot/RobotAI.h

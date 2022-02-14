@@ -12,20 +12,15 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_common/entities/robot/RobotInitHelper.h"
 #include "robo_common/helpers/CollisionWatcher.h"
 
 int32_t Robot::init(const RobotConfig &cfg,
                     const RobotAnimatorConfigBase &robotAnimCfgBase,
                     const RobotOutInterface &interface) {
-  _state = cfg;
-
-  if (SUCCESS != initOutInterface(interface)) {
-    LOGERR("Error, initOutInterface() failed");
-    return FAILURE;
-  }
-
-  if (SUCCESS != initRobotAnimator(robotAnimCfgBase)) {
-    LOGERR("Error, initOutInterface() failed");
+  if (SUCCESS !=
+      RobotInitHelper::init(cfg, robotAnimCfgBase, interface, *this)) {
+    LOGERR("Error, RobotInitHelper::init() failed");
     return FAILURE;
   }
 
@@ -56,14 +51,12 @@ void Robot::act(MoveType moveType) {
   case MoveType::FORWARD:
     move();
     break;
-
   case MoveType::ROTATE_LEFT:
     _animator.startRotAnim(_state.fieldPos, _state.dir, RotationDir::LEFT);
     break;
   case MoveType::ROTATE_RIGHT:
     _animator.startRotAnim(_state.fieldPos, _state.dir, RotationDir::RIGHT);
     break;
-
   default:
     LOGERR("Error, received unsupported moveType: %d", getEnumValue(moveType));
     break;
@@ -83,69 +76,6 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
   }
 
   _outInterface.finishRobotActCb(_state.robotId);
-}
-
-int32_t Robot::initOutInterface(const RobotOutInterface &interface) {
-  _outInterface = interface;
-
-  if (nullptr == _outInterface.playerDamageCb) {
-    LOGERR("Error, nullptr provided for playerDamageCb");
-    return FAILURE;
-  }
-
-  // only player robot should report damage callback
-  if (RoboCommonDefines::PLAYER_ROBOT_IDX != _state.robotId) {
-    _outInterface.playerDamageCb = nullptr;
-  }
-
-  if (nullptr == _outInterface.setFieldDataMarkerCb) {
-    LOGERR("Error, nullptr provided for setFieldDataMarkerCb");
-    return FAILURE;
-  }
-
-  if (nullptr == _outInterface.resetFieldDataMarkerCb) {
-    LOGERR("Error, nullptr provided for resetFieldDataMarkerCb");
-    return FAILURE;
-  }
-
-  if (nullptr == _outInterface.finishRobotActCb) {
-    LOGERR("Error, nullptr provided for finishRobotActCb");
-    return FAILURE;
-  }
-
-  if (nullptr == _outInterface.getFieldDataCb) {
-    LOGERR("Error, nullptr provided for getFieldDataCb");
-    return FAILURE;
-  }
-
-  if (nullptr == _outInterface.collisionWatcher) {
-    LOGERR("Error, nullptr provided for collisionWatcher");
-    return FAILURE;
-  }
-
-  return SUCCESS;
-}
-
-int32_t Robot::initRobotAnimator(
-    const RobotAnimatorConfigBase &robotAnimCfgBase) {
-  using namespace std::placeholders;
-
-  RobotAnimatorConfig cfg;
-  cfg.baseCfg = robotAnimCfgBase;
-  cfg.startDir = _state.dir;
-  cfg.startPos = _state.fieldPos;
-  cfg.onMoveAnimEndCb = std::bind(&Robot::onMoveAnimEnd, this, _1, _2);
-  cfg.collisionImpactAnimEndCb =
-      std::bind(&Robot::onCollisionImpactAnimEnd, this, _1);
-  cfg.collisionImpactCb = std::bind(&Robot::onCollisionImpact, this);
-  cfg.getRobotFieldPosCb = std::bind(&Robot::getFieldPos, this);
-
-  if (SUCCESS != _animator.init(cfg)) {
-    LOGERR("Error, RobotAnimator.init() failed");
-    return FAILURE;
-  }
-
-  return SUCCESS;
 }
 
 void Robot::onInitEnd() {
