@@ -15,15 +15,7 @@
 
 //Forward declarations
 
-using PlayerDamageCb = std::function<void(int32_t)>;
 using IsPlayerTurnActiveCb = std::function<bool()>;
-using SetFieldDataMarkerCb = std::function<void(const FieldPos&, char)>;
-using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;
-using GetFieldDataCb = std::function<const FieldData&()>;
-using RobotActCb = std::function<void(MoveType)>;
-using GetRobotFieldPosCb = std::function<FieldPos()>;
-using GetRobotDirCb = std::function<Direction()>;
-using FinishRobotActCb = std::function<void(int32_t)>;
 using EnablePlayerInputCb = std::function<void()>;
 using MoveButtonClickCb = std::function<void(MoveType)>;
 using IncrCollectedCoinsCb = std::function<void(int32_t)>;

@@ -1,12 +1,11 @@
 //Corresponding header
-#include "robo_collector_gui/entities/robot/animation/RobotAnimEndCb.h"
+#include "robo_common/entities/robot/animation/RobotAnimEndCb.h"
 
 //C system headers
 
 //C++ system headers
 
 //Other libraries headers
-#include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 

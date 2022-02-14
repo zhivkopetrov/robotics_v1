@@ -35,13 +35,7 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
-        ${_INC_DIR}/entities/robot/Robot.h
         ${_INC_DIR}/entities/robot/RobotAI.h
-        ${_INC_DIR}/entities/robot/RobotUtils.h
-        ${_INC_DIR}/entities/robot/config/RobotBaseConfig.h
-        ${_INC_DIR}/entities/robot/animation/RobotAnimator.h
-        ${_INC_DIR}/entities/robot/animation/RobotAnimEndCb.h
-        ${_INC_DIR}/entities/robot/animation/PlayerDamageAnimEndCb.h
         ${_INC_DIR}/entities/coin/Coin.h
         ${_INC_DIR}/entities/coin/CoinHandler.h
         ${_INC_DIR}/entities/coin/config/CoinHandlerConfig.h
@@ -56,10 +50,7 @@ add_executable(
         ${_INC_DIR}/controller/buttons/SettingsButton.h
         ${_INC_DIR}/controller/RoboCollectorController.h
         ${_INC_DIR}/controller/config/RoboCollectorControllerConfig.h
-        ${_INC_DIR}/helpers/CollisionObject.h
-        ${_INC_DIR}/helpers/CollisionWatcher.h
         ${_INC_DIR}/helpers/TurnHelper.h
-        ${_INC_DIR}/helpers/GameEndHelper.h
         ${_INC_DIR}/external_api/ControllerExternalBridge.h
         
         ${_INC_DIR}/robo_miner/RoboMinerGui.h
@@ -80,12 +71,7 @@ add_executable(
         ${_SRC_DIR}/RoboCollectorGui.cpp
         ${_SRC_DIR}/builder/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
-        ${_SRC_DIR}/entities/robot/Robot.cpp
         ${_SRC_DIR}/entities/robot/RobotAI.cpp
-        ${_SRC_DIR}/entities/robot/RobotUtils.cpp
-        ${_SRC_DIR}/entities/robot/animation/RobotAnimator.cpp
-        ${_SRC_DIR}/entities/robot/animation/RobotAnimEndCb.cpp
-        ${_SRC_DIR}/entities/robot/animation/PlayerDamageAnimEndCb.cpp
         ${_SRC_DIR}/entities/coin/Coin.cpp
         ${_SRC_DIR}/entities/coin/CoinHandler.cpp
         ${_SRC_DIR}/entities/coin/animation/CoinCollectAnimEndCb.cpp
@@ -96,9 +82,7 @@ add_executable(
         ${_SRC_DIR}/controller/buttons/HelpButton.cpp
         ${_SRC_DIR}/controller/buttons/SettingsButton.cpp
         ${_SRC_DIR}/controller/RoboCollectorController.cpp
-        ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
-        ${_SRC_DIR}/helpers/GameEndHelper.cpp
         ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
         
         ${_SRC_DIR}/robo_miner/RoboMinerGui.cpp

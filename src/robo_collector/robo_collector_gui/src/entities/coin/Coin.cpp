@@ -8,13 +8,13 @@
 
 //Other libraries headers
 #include "robo_common/field/FieldUtils.h"
+#include "robo_common/helpers/CollisionWatcher.h"
 #include "utils/rng/Rng.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/helpers/CollisionWatcher.h"
 
 namespace {
 constexpr auto TARGET_COLLECT_ANIM_X = 1285;

@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/entities/robot/Robot.h"
+#include "robo_common/entities/robot/Robot.h"
 
 //C system headers
 
@@ -12,7 +12,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/helpers/CollisionWatcher.h"
+#include "robo_common/helpers/CollisionWatcher.h"
 
 int32_t Robot::init(const RobotConfig &cfg,
                     const RobotAnimatorConfigBase &robotAnimCfgBase,
@@ -94,7 +94,7 @@ int32_t Robot::initOutInterface(const RobotOutInterface &interface) {
   }
 
   // only player robot should report damage callback
-  if (Defines::PLAYER_ROBOT_IDX != _state.robotId) {
+  if (RoboCommonDefines::PLAYER_ROBOT_IDX != _state.robotId) {
     _outInterface.playerDamageCb = nullptr;
   }
 

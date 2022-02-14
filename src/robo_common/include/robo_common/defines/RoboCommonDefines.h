@@ -18,6 +18,10 @@
 using FieldData = std::vector<std::vector<char>>;
 
 namespace RoboCommonDefines {
+enum RobotDefines {
+  PLAYER_ROBOT_IDX = 0
+};
+
 enum FieldDefines {
   FIELD_ROWS = 6,
   FIELD_COLS = 7,

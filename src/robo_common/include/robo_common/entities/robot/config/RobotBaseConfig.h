@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_ROBOTBASECONFIG_H_
-#define ROBO_COLLECTOR_GUI_ROBOTBASECONFIG_H_
+#ifndef ROBO_COMMON_ROBOTBASECONFIG_H_
+#define ROBO_COMMON_ROBOTBASECONFIG_H_
 
 //C system headers
 
@@ -22,4 +22,4 @@ struct RobotBaseConfig {
   int32_t robotDamageAnimStartTimerId = 0;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_ROBOTBASECONFIG_H_ */
+#endif /* ROBO_COMMON_ROBOTBASECONFIG_H_ */

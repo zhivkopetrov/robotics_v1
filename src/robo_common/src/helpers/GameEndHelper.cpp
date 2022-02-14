@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/helpers/GameEndHelper.h"
+#include "robo_common/helpers/GameEndHelper.h"
 
 //C system headers
 

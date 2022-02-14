@@ -9,10 +9,10 @@
 
 //Other libraries headers
 #include "robo_common/field/config/FieldConfig.h"
+#include "robo_common/entities/robot/config/RobotBaseConfig.h"
 
 //Own components headers
 #include "robo_collector_gui/panels/config/PanelHandlerConfig.h"
-#include "robo_collector_gui/entities/robot/config/RobotBaseConfig.h"
 #include "robo_collector_gui/entities/coin/config/CoinHandlerConfig.h"
 #include "robo_collector_gui/controller/config/RoboCollectorControllerConfig.h"
 

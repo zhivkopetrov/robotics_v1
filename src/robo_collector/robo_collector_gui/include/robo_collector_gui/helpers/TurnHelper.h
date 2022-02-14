@@ -34,7 +34,7 @@ private:
 
   std::vector<RobotActInterface> _robotActInterfaces;
   EnablePlayerInputCb _enablePlayerInputCb;
-  int32_t _activeRobotId = Defines::PLAYER_ROBOT_IDX;
+  int32_t _activeRobotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
   int32_t _maxRobots = 0;
 };
 

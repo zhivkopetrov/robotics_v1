@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_ROBOTANIMENDCB_H_
-#define ROBO_COLLECTOR_GUI_ROBOTANIMENDCB_H_
+#ifndef ROBO_COMMON_ROBOTANIMENDCB_H_
+#define ROBO_COMMON_ROBOTANIMENDCB_H_
 
 //C system headers
 
@@ -8,11 +8,11 @@
 #include <functional>
 
 //Other libraries headers
-#include "robo_common/defines/RoboCommonDefines.h"
-#include "robo_common/field/FieldPos.h"
 #include "manager_utils/drawing/animation/AnimationEndCb.h"
 
 //Own components headers
+#include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_common/field/FieldPos.h"
 
 //Forward declarations
 
@@ -38,4 +38,4 @@ private:
   RobotAnimEndCbReport _status = RobotAnimEndCbReport::ENABLE;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_ROBOTANIMENDCB_H_ */
+#endif /* ROBO_COMMON_ROBOTANIMENDCB_H_ */

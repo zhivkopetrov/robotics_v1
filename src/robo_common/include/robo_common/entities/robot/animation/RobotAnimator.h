@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_ROBOTANIMATOR_H_
-#define ROBO_COLLECTOR_GUI_ROBOTANIMATOR_H_
+#ifndef ROBO_COMMON_ROBOTANIMATOR_H_
+#define ROBO_COMMON_ROBOTANIMATOR_H_
 
 //C system headers
 
@@ -14,9 +14,9 @@
 #include "manager_utils/time/TimerClient.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/entities/robot/animation/RobotAnimEndCb.h"
-#include "robo_collector_gui/entities/robot/animation/PlayerDamageAnimEndCb.h"
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "robo_common/entities/robot/animation/RobotAnimEndCb.h"
+#include "robo_common/entities/robot/animation/PlayerDamageAnimEndCb.h"
 
 //Forward declarations
 
@@ -106,4 +106,4 @@ private:
   GetRobotFieldPosCb _getRobotFieldPosCb;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_ROBOTANIMATOR_H_ */
+#endif /* ROBO_COMMON_ROBOTANIMATOR_H_ */

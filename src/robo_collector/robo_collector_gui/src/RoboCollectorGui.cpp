@@ -109,7 +109,7 @@ void RoboCollectorGui::draw() const {
     _field.draw();
     _panelHandler.draw();
     _controller.draw();
-    _robots[Defines::PLAYER_ROBOT_IDX].draw();
+    _robots[RoboCommonDefines::PLAYER_ROBOT_IDX].draw();
     _roboMinerGui.draw();
     return;
   }
@@ -119,7 +119,7 @@ void RoboCollectorGui::draw() const {
     _field.draw();
     _panelHandler.draw();
     _controller.draw();
-    _robots[Defines::PLAYER_ROBOT_IDX].draw();
+    _robots[RoboCommonDefines::PLAYER_ROBOT_IDX].draw();
     _roboCleanerGui.draw();
     return;
   }
@@ -194,7 +194,7 @@ int32_t RoboCollectorGui::initRobots(const RoboCollectorGuiConfig &guiCfg) {
   RobotAnimatorConfigBase animatorCfgBase;
   animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
   for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
-    if (Defines::PLAYER_ROBOT_IDX == i) {
+    if (RoboCommonDefines::PLAYER_ROBOT_IDX == i) {
       animatorCfgBase.robotRsrcId = baseCfg.playerRsrcId;
       animatorCfgBase.frameId = 0;
       cfg.fieldMarker = guiCfg.playerFieldMarker;
@@ -270,7 +270,7 @@ int32_t RoboCollectorGui::initController(
     return FAILURE;
   }
   outInterface.robotActCb = std::bind(&Robot::act,
-      &_robots[Defines::PLAYER_ROBOT_IDX], _1);
+      &_robots[RoboCommonDefines::PLAYER_ROBOT_IDX], _1);
   outInterface.helpActivatedCb =
       std::bind(&RoboCollectorGui::activateHelpPage, this);
   outInterface.settingActivatedCb =

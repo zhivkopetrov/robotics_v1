@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_ENTITIES_ROBOTUTILS_H_
-#define ROBO_COLLECTOR_GUI_ENTITIES_ROBOTUTILS_H_
+#ifndef ROBO_COMMON_ROBOTUTILS_H_
+#define ROBO_COMMON_ROBOTUTILS_H_
 
 //C system headers
 
@@ -22,4 +22,4 @@ public:
   static double getRotationDegFromDir(Direction dir);
 };
 
-#endif /* ROBO_COLLECTOR_GUI_ENTITIES_ROBOTUTILS_H_ */
+#endif /* ROBO_COMMON_ROBOTUTILS_H_ */

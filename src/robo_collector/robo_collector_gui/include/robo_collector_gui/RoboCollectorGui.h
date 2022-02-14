@@ -11,14 +11,14 @@
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
 #include "game_engine/Game.h"
 #include "robo_common/field/Field.h"
+#include "robo_common/entities/robot/Robot.h"
+#include "robo_common/helpers/CollisionWatcher.h"
+#include "robo_common/helpers/GameEndHelper.h"
 
 //Own components headers
-#include "robo_collector_gui/entities/robot/Robot.h"
 #include "robo_collector_gui/panels/PanelHandler.h"
 #include "robo_collector_gui/entities/coin/CoinHandler.h"
-#include "robo_collector_gui/helpers/CollisionWatcher.h"
 #include "robo_collector_gui/helpers/TurnHelper.h"
-#include "robo_collector_gui/helpers/GameEndHelper.h"
 #include "robo_collector_gui/controller/RoboCollectorController.h"
 #include "robo_collector_gui/external_api/ControllerExternalBridge.h"
 

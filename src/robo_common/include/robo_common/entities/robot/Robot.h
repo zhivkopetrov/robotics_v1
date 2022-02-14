@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_ROBOT_H_
-#define ROBO_COLLECTOR_GUI_ROBOT_H_
+#ifndef ROBO_COMMON_ROBOT_H_
+#define ROBO_COMMON_ROBOT_H_
 
 //C system headers
 
@@ -9,9 +9,9 @@
 //Other libraries headers
 
 //Own components headers
-#include "robo_collector_gui/helpers/CollisionObject.h"
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/entities/robot/animation/RobotAnimator.h"
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "robo_common/helpers/CollisionObject.h"
+#include "robo_common/entities/robot/animation/RobotAnimator.h"
 
 //Forward declarations
 class CollisionWatcher;
@@ -68,4 +68,4 @@ private:
   CollisionWatchStatus _currCollisionWatchStatus = CollisionWatchStatus::OFF;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_ROBOT_H_ */
+#endif /* ROBO_COMMON_ROBOT_H_ */

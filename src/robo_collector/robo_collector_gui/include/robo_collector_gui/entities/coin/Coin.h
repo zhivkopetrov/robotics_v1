@@ -7,13 +7,14 @@
 #include <cstdint>
 
 //Other libraries headers
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "robo_common/field/FieldPos.h"
+#include "robo_common/helpers/CollisionObject.h"
 #include "manager_utils/drawing/animation/FrameAnimation.h"
 #include "manager_utils/drawing/animation/PositionAnimation.h"
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/helpers/CollisionObject.h"
 #include "robo_collector_gui/entities/coin/animation/CoinRespawnAnim.h"
 #include "robo_collector_gui/entities/coin/animation/CoinCollectAnimEndCb.h"
 

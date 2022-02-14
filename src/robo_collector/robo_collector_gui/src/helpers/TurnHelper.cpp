@@ -35,7 +35,7 @@ int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
 void TurnHelper::onRobotFinishAct(int32_t robotId) {
   const auto lastRobotIdx = _maxRobots - 1;
   if (lastRobotIdx == robotId) {
-    _activeRobotId = Defines::PLAYER_ROBOT_IDX;
+    _activeRobotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
     _enablePlayerInputCb();
   } else {
     _activeRobotId = robotId + 1;
@@ -44,6 +44,6 @@ void TurnHelper::onRobotFinishAct(int32_t robotId) {
 }
 
 bool TurnHelper::isPlayerTurnActive() const {
-  return Defines::PLAYER_ROBOT_IDX == _activeRobotId;
+  return RoboCommonDefines::PLAYER_ROBOT_IDX == _activeRobotId;
 }
 

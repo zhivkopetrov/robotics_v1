@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_COLLISIONOBJECT_H_
-#define ROBO_COLLECTOR_GUI_COLLISIONOBJECT_H_
+#ifndef ROBO_COMMON_COLLISIONOBJECT_H_
+#define ROBO_COMMON_COLLISIONOBJECT_H_
 
 //C system headers
 
@@ -35,4 +35,4 @@ protected:
   CollisionObjHandle _collisionObjHandle = 0xFFFFFFFF;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_COLLISIONOBJECT_H_ */
+#endif /* ROBO_COMMON_COLLISIONOBJECT_H_ */

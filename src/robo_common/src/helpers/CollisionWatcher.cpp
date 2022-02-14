@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/helpers/CollisionWatcher.h"
+#include "robo_common/helpers/CollisionWatcher.h"
 
 //C system headers
 

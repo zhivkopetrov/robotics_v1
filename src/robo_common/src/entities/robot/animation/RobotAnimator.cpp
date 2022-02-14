@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/entities/robot/animation/RobotAnimator.h"
+#include "robo_common/entities/robot/animation/RobotAnimator.h"
 
 //C system headers
 
@@ -12,7 +12,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_collector_gui/entities/robot/RobotUtils.h"
+#include "robo_common/entities/robot/RobotUtils.h"
 
 namespace {
 constexpr auto TOTAL_COLLISION_ANIM_STEPS = 32;
@@ -123,7 +123,7 @@ void RobotAnimator::startCollisionImpactAnim(RobotEndTurn status) {
   constexpr auto timerInterval = 40;
   startTimer(timerInterval, _robotCollisionAnimTimerId, TimerType::PULSE);
 
-  if (Defines::PLAYER_ROBOT_IDX == _robotId) {
+  if (RoboCommonDefines::PLAYER_ROBOT_IDX == _robotId) {
     configurePlayerDamageAnim();
     _playerDamageAnim.start();
   }

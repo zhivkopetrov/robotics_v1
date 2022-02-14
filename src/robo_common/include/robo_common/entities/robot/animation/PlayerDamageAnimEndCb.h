@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_PLAYERDAMAGEANIMENDCB_H_
-#define ROBO_COLLECTOR_GUI_PLAYERDAMAGEANIMENDCB_H_
+#ifndef ROBO_COMMON_PLAYERDAMAGEANIMENDCB_H_
+#define ROBO_COMMON_PLAYERDAMAGEANIMENDCB_H_
 
 //C system headers
 
@@ -22,8 +22,6 @@ public:
 
 private:
   std::function<void()> _onPlayerDamageAnimEndCb;
-
-private:
 };
 
-#endif /* ROBO_COLLECTOR_GUI_PLAYERDAMAGEANIMENDCB_H_ */
+#endif /* ROBO_COMMON_PLAYERDAMAGEANIMENDCB_H_ */
