@@ -12,7 +12,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_common/layout/entities/robot/RobotInitHelper.h"
+#include "robo_common/layout/entities/robot/helpers/RobotInitHelper.h"
 #include "robo_common/helpers/CollisionWatcher.h"
 
 int32_t Robot::init(const RobotConfig &cfg,

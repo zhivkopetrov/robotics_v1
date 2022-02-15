@@ -8,24 +8,24 @@
 #include <vector>
 
 //Other libraries headers
+#include "robo_common/layout/helpers/RoboCommonLayoutInterfaces.h"
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
-#include "robo_collector_gui/layout/entities/robot/RobotAI.h"
 
 //Forward declarations
 class CollisionWatcher;
 
 struct RoboCollectorLayoutInterface {
+  RoboCommonLayoutInterface commonLayoutInterface;
   EnablePlayerInputCb enablePlayerInputCb;
-  GetFieldDataCb getFieldDataCb;
   MoveButtonClickCb moveButtonClickCb;
-  std::vector<RobotActInterface> robotActInterfaces;
+  std::vector<RobotActInterface> enemyRobotActInterfaces;
 };
 
 struct RoboCollectorLayoutOutInterface {
-  IsPlayerTurnActiveCb isPlayerTurnActiveCb;
   FinishRobotActCb finishRobotActCb;
+  IsPlayerTurnActiveCb isPlayerTurnActiveCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 

@@ -8,8 +8,7 @@
 #include <vector>
 
 //Other libraries headers
-#include "robo_common/layout/field/config/FieldConfig.h"
-#include "robo_common/layout/entities/robot/config/RobotBaseConfig.h"
+#include "robo_common/layout/config/RoboCommonLayoutConfig.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/panels/config/PanelHandlerConfig.h"
@@ -22,16 +21,11 @@
 //Forward declarations
 
 struct RoboCollectorLayoutConfig {
-  FieldConfig fieldCfg;
+  RoboCommonLayoutConfig commonLayoutCfg;
+
   PanelHandlerConfig panelHandlerCfg;
-  RobotBaseConfig robotBaseCfg;
   CoinHandlerConfig coinHandlerCfg;
   RoboCollectorControllerConfig controllerCfg;
-
-  uint64_t mapRsrcId = 0;
-
-  char playerFieldMarker = 'B';
-  char enemyFieldMarker = 'E';
 
   RoboMinerGuiConfig roboMinerGuiCfg;
   RoboCleanerGuiConfig roboCleanerGuiCfg;

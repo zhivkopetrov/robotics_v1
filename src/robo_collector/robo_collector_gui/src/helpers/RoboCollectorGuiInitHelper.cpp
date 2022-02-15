@@ -21,7 +21,7 @@ int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
     try {
       localCfg = std::any_cast<const RoboCollectorGuiConfig&>(cfg);
     } catch (const std::bad_any_cast &e) {
-      LOGERR("std::any_cast<GuiConfig&> failed, %s", e.what());
+      LOGERR("std::any_cast<RoboCollectorGuiConfig&> failed, %s", e.what());
       err = FAILURE;
     }
     return localCfg;
@@ -31,14 +31,14 @@ int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
     return FAILURE;
   }
 
-  if (SUCCESS != initLayout(parsedCfg.layoutCfg, gui)) {
+  RoboCollectorLayoutInterface layoutInterface;
+  if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
     return FAILURE;
   }
 
-  const auto layoutInterface = gui._layout.produceInterface();
   if (SUCCESS != initTurnHelper(layoutInterface,
-          parsedCfg.layoutCfg.enemyFieldMarker, gui)) {
+          parsedCfg.layoutCfg.commonLayoutCfg.enemyFieldMarker, gui)) {
     LOGERR("initTurnHelper() failed");
     return FAILURE;
   }
@@ -52,17 +52,18 @@ int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
 }
 
 int32_t RoboCollectorGuiInitHelper::initLayout(
-    const RoboCollectorLayoutConfig &cfg, RoboCollectorGui &gui) {
+    const RoboCollectorLayoutConfig &cfg,
+    RoboCollectorLayoutInterface &interface, RoboCollectorGui &gui) {
   using namespace std::placeholders;
 
-  RoboCollectorLayoutOutInterface interface;
-  interface.collisionWatcher = &gui._collisionWatcher;
-  interface.isPlayerTurnActiveCb = std::bind(&TurnHelper::isPlayerTurnActive,
-      &gui._turnHelper);
-  interface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
-      &gui._turnHelper, _1);
+  RoboCollectorLayoutOutInterface outInterface;
+  outInterface.collisionWatcher = &gui._collisionWatcher;
+  outInterface.isPlayerTurnActiveCb =
+      std::bind(&TurnHelper::isPlayerTurnActive, &gui._turnHelper);
+  outInterface.finishRobotActCb =
+      std::bind(&TurnHelper::onRobotFinishAct, &gui._turnHelper, _1);
 
-  if (SUCCESS != gui._layout.init(cfg, interface)) {
+  if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
     return FAILURE;
   }
@@ -75,10 +76,15 @@ int32_t RoboCollectorGuiInitHelper::initTurnHelper(
     RoboCollectorGui &gui) {
   TurnHelperConfig cfg;
   cfg.enablePlayerInputCb = interface.enablePlayerInputCb;
-  cfg.getFieldDataCb = interface.getFieldDataCb;
+  cfg.getFieldDataCb = interface.commonLayoutInterface.getFieldDataCb;
   cfg.fieldEnemyMarker = fieldEnemyMarker;
   cfg.maxRobots = Defines::ROBOTS_CTN;
-  cfg.robotActInterfaces = interface.robotActInterfaces;
+  cfg.robotActInterfaces.reserve(Defines::ROBOTS_CTN);
+  cfg.robotActInterfaces.push_back(
+      interface.commonLayoutInterface.playerRobotActInterface);
+  cfg.robotActInterfaces.insert(cfg.robotActInterfaces.end(),
+      interface.enemyRobotActInterfaces.begin(),
+      interface.enemyRobotActInterfaces.end());
 
   if (SUCCESS != gui._turnHelper.init(cfg)) {
     LOGERR("Error in _turnHelper.init()");
@@ -99,8 +105,6 @@ int32_t RoboCollectorGuiInitHelper::initControllerExternalBridge(
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;
   }
-
-  gui._communicatorOutInterface.registerNodeCb(gui._controllerExternalBridge);
 
   return SUCCESS;
 }

@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_common/layout/entities/robot/RobotUtils.h"
+#include "robo_common/layout/entities/robot/helpers/RobotUtils.h"
 
 //C system headers
 

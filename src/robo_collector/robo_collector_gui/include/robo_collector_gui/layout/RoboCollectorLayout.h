@@ -8,9 +8,7 @@
 #include <array>
 
 //Other libraries headers
-#include "robo_common/layout/field/Field.h"
-#include "robo_common/layout/entities/robot/Robot.h"
-#include "robo_common/layout/animators/GameEndAnimator.h"
+#include "robo_common/layout/RoboCommonLayout.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInterfaces.h"
@@ -31,8 +29,8 @@ public:
   friend class RoboCollectorLayoutInitHelper;
 
   int32_t init(const RoboCollectorLayoutConfig &cfg,
-               const RoboCollectorLayoutOutInterface &interface);
-  RoboCollectorLayoutInterface produceInterface();
+               const RoboCollectorLayoutOutInterface &outInterface,
+               RoboCollectorLayoutInterface& interface);
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent &e);
@@ -43,13 +41,13 @@ public:
   void changeGameType(GameType gameType);
 
 private:
-  Image _map;
+  void produceInterface(RoboCollectorLayoutInterface& interface);
+
+  RoboCommonLayout _commonLayout;
   PanelHandler _panelHandler;
-  Field _field;
   CoinHandler _coinHandler;
   RoboCollectorController _controller;
-  std::array<Robot, Defines::ROBOTS_CTN> _robots;
-  GameEndAnimator _gameEndAnimator;
+  std::array<Robot, Defines::ENEMIES_CTN> _enemyRobots;
 
   RoboMinerGui _roboMinerGui;
   RoboCleanerGui _roboCleanerGui;

@@ -24,6 +24,7 @@ public:
 
 private:
   static int32_t initLayout(const RoboCollectorLayoutConfig &cfg,
+                            RoboCollectorLayoutInterface& interface, //out param
                             RoboCollectorGui &gui);
   static int32_t initTurnHelper(const RoboCollectorLayoutInterface &interface,
                                 char fieldEnemyMarker, RoboCollectorGui &gui);

@@ -39,7 +39,7 @@ private:
   CollisionWatcher _collisionWatcher;
 
   std::shared_ptr<ControllerExternalBridge> _controllerExternalBridge;
-  Ros2CommunicatorInterface _communicatorOutInterface;
+  Ros2CommunicatorInterface _communicatorInterface;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUI_H_ */

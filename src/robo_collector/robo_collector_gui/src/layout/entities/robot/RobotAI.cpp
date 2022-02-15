@@ -7,6 +7,7 @@
 #include <array>
 
 //Other libraries headers
+#include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
 #include "robo_common/layout/field/FieldUtils.h"
 #include "utils/rng/Rng.h"
 #include "utils/ErrorCode.h"

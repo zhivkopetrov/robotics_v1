@@ -222,18 +222,18 @@ RoboCleanerGuiConfig generateRoboCleanerGuiConfig() {
 RoboCollectorGuiConfig generateGameConfig() {
   RoboCollectorGuiConfig cfg;
   auto& layoutCfg = cfg.layoutCfg;
-  layoutCfg.fieldCfg = generateFieldConfig();
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
-  layoutCfg.robotBaseCfg = generateRobotBaseConfig();
   layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
   layoutCfg.controllerCfg = generateRoboCollectorControllerConfig();
-
-  layoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  layoutCfg.playerFieldMarker = playerFieldMarker;
-  layoutCfg.enemyFieldMarker = enemyFieldMarker;
-
   layoutCfg.roboMinerGuiCfg = generateRoboMinerGuiConfig();
   layoutCfg.roboCleanerGuiCfg = generateRoboCleanerGuiConfig();
+
+  auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  commonLayoutCfg.fieldCfg = generateFieldConfig();
+  commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
+  commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
+  commonLayoutCfg.playerFieldMarker = playerFieldMarker;
+  commonLayoutCfg.enemyFieldMarker = enemyFieldMarker;
 
   return cfg;
 }

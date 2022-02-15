@@ -14,7 +14,7 @@
 
 RoboCollectorGui::RoboCollectorGui(
     const Ros2CommunicatorInterface &communicatorOutInterface)
-    : _communicatorOutInterface(communicatorOutInterface) {
+    : _communicatorInterface(communicatorOutInterface) {
 
 }
 
@@ -23,11 +23,13 @@ int32_t RoboCollectorGui::init(const std::any &cfg) {
     LOGERR("Error, RoboCollectorGuiInitHelper::init() failed");
     return FAILURE;
   }
+
+  _communicatorInterface.registerNodeCb(_controllerExternalBridge);
   return SUCCESS;
 }
 
 void RoboCollectorGui::deinit() {
-  _communicatorOutInterface.unregisterNodeCb(_controllerExternalBridge);
+  _communicatorInterface.unregisterNodeCb(_controllerExternalBridge);
   _layout.deinit();
 }
 

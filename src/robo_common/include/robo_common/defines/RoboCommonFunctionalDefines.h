@@ -23,5 +23,7 @@ using GetRobotFieldPosCb = std::function<FieldPos()>;
 using GetRobotDirCb = std::function<Direction()>;
 using FinishRobotActCb = std::function<void(int32_t)>;
 using IndicatorDepletedCb = std::function<void()>;
+using GameLostCb = IndicatorDepletedCb;
+using GameWonCb = std::function<void()>;
 
 #endif /* ROBO_COMMON_ROBOCOMMONFUNCTIONALDEFINES_H_ */

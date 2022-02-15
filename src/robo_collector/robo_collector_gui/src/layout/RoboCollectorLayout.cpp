@@ -14,36 +14,36 @@
 
 int32_t RoboCollectorLayout::init(
     const RoboCollectorLayoutConfig &cfg,
-    const RoboCollectorLayoutOutInterface &interface) {
-  if (SUCCESS != RoboCollectorLayoutInitHelper::init(cfg, interface, *this)) {
+    const RoboCollectorLayoutOutInterface &outInterface,
+    RoboCollectorLayoutInterface& interface) {
+  if (SUCCESS != RoboCollectorLayoutInitHelper::init(
+      cfg, outInterface, interface.commonLayoutInterface, *this)) {
     LOGERR("Error, RoboCollectorLayoutInitHelper::init() failed");
     return FAILURE;
   }
 
+  produceInterface(interface);
   return SUCCESS;
 }
 
-RoboCollectorLayoutInterface RoboCollectorLayout::produceInterface() {
+void RoboCollectorLayout::produceInterface(
+    RoboCollectorLayoutInterface& interface) {
   using namespace std::placeholders;
 
-  RoboCollectorLayoutInterface interface;
   interface.enablePlayerInputCb = std::bind(
       &RoboCollectorController::unlockInput, &_controller);
-  interface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
   interface.moveButtonClickCb = std::bind(
       &RoboCollectorController::onMoveButtonClicked, &_controller, _1);
-  for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
-    interface.robotActInterfaces.emplace_back(
-        std::bind(&Robot::act, &_robots[i], _1),
-        std::bind(&Robot::getFieldPos, &_robots[i]),
-        std::bind(&Robot::getDirection, &_robots[i]));
+  for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
+    interface.enemyRobotActInterfaces.emplace_back(
+        std::bind(&Robot::act, &_enemyRobots[i], _1),
+        std::bind(&Robot::getFieldPos, &_enemyRobots[i]),
+        std::bind(&Robot::getDirection, &_enemyRobots[i]));
   }
-
-  return interface;
 }
 
 void RoboCollectorLayout::deinit() {
-  for (auto &robot : _robots) {
+  for (auto &robot : _enemyRobots) {
     robot.deinit();
   }
   _coinHandler.deinit();
@@ -51,35 +51,26 @@ void RoboCollectorLayout::deinit() {
 
 void RoboCollectorLayout::draw() const {
   if (GameType::MINER == _gameType) {
-    _map.draw();
-    _field.draw();
     _panelHandler.draw();
     _controller.draw();
-    _robots[RoboCommonDefines::PLAYER_ROBOT_IDX].draw();
     _roboMinerGui.draw();
     return;
   }
 
   if (GameType::CLEANER == _gameType) {
-    _map.draw();
-    _field.draw();
     _panelHandler.draw();
     _controller.draw();
-    _robots[RoboCommonDefines::PLAYER_ROBOT_IDX].draw();
     _roboCleanerGui.draw();
     return;
   }
 
-  _map.draw();
-  _field.draw();
+  _commonLayout.draw();
   _panelHandler.draw();
   _coinHandler.draw();
   _controller.draw();
-  for (const auto &robot : _robots) {
+  for (const auto &robot : _enemyRobots) {
     robot.draw();
   }
-
-  _gameEndAnimator.draw();
 }
 
 void RoboCollectorLayout::handleEvent(const InputEvent &e) {
@@ -96,7 +87,7 @@ void RoboCollectorLayout::handleEvent(const InputEvent &e) {
 }
 
 void RoboCollectorLayout::activateHelpPage() {
-  _field.toggleDebugTexts();
+  _commonLayout.activateHelpPage();
 }
 
 void RoboCollectorLayout::changeGameType(GameType gameType) {

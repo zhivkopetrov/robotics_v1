@@ -18,37 +18,40 @@ using namespace std::placeholders;
 
 int32_t RoboCollectorLayoutInitHelper::init(
     const RoboCollectorLayoutConfig &cfg,
-    const RoboCollectorLayoutOutInterface &interface,
+    const RoboCollectorLayoutOutInterface &outInterface,
+    RoboCommonLayoutInterface &commonInterface,
     RoboCollectorLayout &layout) {
-  layout._map.create(cfg.mapRsrcId);
+  RoboCommonLayoutOutInterface commonOutInterface;
+  commonOutInterface.collisionWatcher = outInterface.collisionWatcher;
+  commonOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
+  commonOutInterface.playerDamageCb = std::bind(
+      &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
 
-  if (SUCCESS != layout._field.init(cfg.fieldCfg)) {
-    LOGERR("Error in _field.init()");
+  if (SUCCESS != layout._commonLayout.init(
+      cfg.commonLayoutCfg, commonOutInterface, commonInterface)) {
+    LOGERR("_commonLayout.init() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != initPanelHandler(cfg.panelHandlerCfg, layout)) {
+  if (SUCCESS !=
+      initPanelHandler(cfg.panelHandlerCfg, commonInterface, layout)) {
     LOGERR("initPanelHandler() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != initRobots(cfg, interface, layout)) {
+  if (SUCCESS != initRobots(cfg, outInterface, commonInterface, layout)) {
     LOGERR("initRobots() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != initCoinHandler(cfg.coinHandlerCfg, interface, layout)) {
+  if (SUCCESS != initCoinHandler(
+      cfg.coinHandlerCfg, outInterface, commonInterface, layout)) {
     LOGERR("initCoinHandler() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != initController(cfg.controllerCfg, layout)) {
+  if (SUCCESS != initController(cfg.controllerCfg, commonInterface, layout)) {
     LOGERR("initController() failed");
-    return FAILURE;
-  }
-
-  if (SUCCESS != layout._gameEndAnimator.init()) {
-    LOGERR("_gameEndAnimator.init() failed");
     return FAILURE;
   }
 
@@ -67,58 +70,53 @@ int32_t RoboCollectorLayoutInitHelper::init(
 
 int32_t RoboCollectorLayoutInitHelper::initRobots(
     const RoboCollectorLayoutConfig &layoutCfg,
-    const RoboCollectorLayoutOutInterface &interface,
+    const RoboCollectorLayoutOutInterface &outInterface,
+    const RoboCommonLayoutInterface& commonInterface,
     RoboCollectorLayout &layout) {
-  const auto &baseCfg = layoutCfg.robotBaseCfg;
-  RobotOutInterface outInterface;
+  const auto &baseCfg = layoutCfg.commonLayoutCfg.robotBaseCfg;
+  RobotOutInterface robotOutInterface;
 
-  outInterface.collisionWatcher = interface.collisionWatcher;
-  outInterface.playerDamageCb = std::bind(
+  robotOutInterface.collisionWatcher = outInterface.collisionWatcher;
+  robotOutInterface.playerDamageCb = std::bind(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
-  outInterface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
-      &layout._field, _1, _2);
-  outInterface.resetFieldDataMarkerCb = std::bind(&Field::resetFieldDataMarker,
-      &layout._field, _1);
-  outInterface.getFieldDataCb = std::bind(&Field::getFieldData, &layout._field);
-  outInterface.finishRobotActCb = interface.finishRobotActCb;
+  robotOutInterface.setFieldDataMarkerCb = commonInterface.setFieldDataMarkerCb;
+  robotOutInterface.resetFieldDataMarkerCb =
+      commonInterface.resetFieldDataMarkerCb;
+  robotOutInterface.getFieldDataCb = commonInterface.getFieldDataCb;
+  robotOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
 
-  const std::array<FieldPos, Defines::ROBOTS_CTN> robotsFieldPos { FieldPos(
-      layoutCfg.fieldCfg.rows - 1, layoutCfg.fieldCfg.cols - 1), FieldPos(
-      layoutCfg.fieldCfg.rows - 1, 0), FieldPos(0, 0), FieldPos(0,
-      layoutCfg.fieldCfg.cols - 1) };
+  const auto &fieldCfg = layoutCfg.commonLayoutCfg.fieldCfg;
+  const std::array<FieldPos, Defines::ENEMIES_CTN> robotsFieldPos { FieldPos(
+      fieldCfg.rows - 1, 0), FieldPos(0, 0), FieldPos(0, fieldCfg.cols - 1) };
 
-  const std::array<Direction, Defines::ROBOTS_CTN> robotsInitialDirs {
-      Direction::UP, Direction::UP, Direction::DOWN, Direction::DOWN };
+  const std::array<Direction, Defines::ENEMIES_CTN> robotsInitialDirs {
+      Direction::UP, Direction::DOWN, Direction::DOWN };
 
   RobotConfig cfg;
   RobotAnimatorConfigBase animatorCfgBase;
   animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
-  for (auto i = 0; i < Defines::ROBOTS_CTN; ++i) {
-    if (RoboCommonDefines::PLAYER_ROBOT_IDX == i) {
-      animatorCfgBase.robotRsrcId = baseCfg.playerRsrcId;
-      animatorCfgBase.frameId = 0;
-      cfg.fieldMarker = layoutCfg.playerFieldMarker;
-      cfg.enemyFieldMarker = layoutCfg.enemyFieldMarker;
-    } else {
-      animatorCfgBase.robotRsrcId = baseCfg.enemiesRsrcId;
-      animatorCfgBase.frameId = i - 1;
-      cfg.fieldMarker = layoutCfg.enemyFieldMarker;
-      cfg.enemyFieldMarker = layoutCfg.playerFieldMarker;
-    }
-    cfg.robotId = i;
-    animatorCfgBase.robotId = i;
+  constexpr auto playerIdOffset = 1; //+1, because Player robot has index 0
+  for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
+    animatorCfgBase.robotRsrcId = baseCfg.enemiesRsrcId;
+    animatorCfgBase.frameId = i;
+    cfg.fieldMarker = layoutCfg.commonLayoutCfg.enemyFieldMarker;
+    cfg.enemyFieldMarker = layoutCfg.commonLayoutCfg.playerFieldMarker;
+    cfg.robotId = i + playerIdOffset;
+    animatorCfgBase.robotId = i + playerIdOffset;
     cfg.fieldPos = robotsFieldPos[i];
     cfg.dir = robotsInitialDirs[i];
-    animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId + i;
+    animatorCfgBase.moveAnimTimerId =
+        baseCfg.moveAnimStartTimerId + i + playerIdOffset;
     animatorCfgBase.wallCollisionAnimTimerId =
-        baseCfg.wallCollisionAnimStartTimerId + i;
+        baseCfg.wallCollisionAnimStartTimerId + i + playerIdOffset;
     animatorCfgBase.robotCollisionAnimTimerId =
-        baseCfg.robotCollisionAnimStartTimerId + i;
-    animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId
-        + i;
+        baseCfg.robotCollisionAnimStartTimerId + i + playerIdOffset;
+    animatorCfgBase.robotDamageAnimTimerId =
+        baseCfg.robotDamageAnimStartTimerId + i + playerIdOffset;
 
-    if (SUCCESS != layout._robots[i].init(cfg, animatorCfgBase, outInterface)) {
-      LOGERR("Error in _robots[%d].init()", i);
+    if (SUCCESS !=
+        layout._enemyRobots[i].init(cfg, animatorCfgBase, robotOutInterface)) {
+      LOGERR("Error in _enemyRobots[%d].init()", i);
       return FAILURE;
     }
   }
@@ -127,12 +125,12 @@ int32_t RoboCollectorLayoutInitHelper::initRobots(
 }
 
 int32_t RoboCollectorLayoutInitHelper::initPanelHandler(
-    const PanelHandlerConfig &cfg, RoboCollectorLayout &layout) {
+    const PanelHandlerConfig &cfg,
+    RoboCommonLayoutInterface &commonInterface,
+    RoboCollectorLayout &layout) {
   PanelHandlerOutInterface outInterface;
-  outInterface.gameWonCb = std::bind(&GameEndAnimator::gameWon,
-      &layout._gameEndAnimator);
-  outInterface.gameLostCb = std::bind(&GameEndAnimator::gameLost,
-      &layout._gameEndAnimator);
+  outInterface.gameWonCb = commonInterface.gameWonCb;
+  outInterface.gameLostCb = commonInterface.gameLostCb;
 
   if (SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");
@@ -145,14 +143,13 @@ int32_t RoboCollectorLayoutInitHelper::initPanelHandler(
 int32_t RoboCollectorLayoutInitHelper::initCoinHandler(
     const CoinHandlerConfig &cfg,
     const RoboCollectorLayoutOutInterface &interface,
+    const RoboCommonLayoutInterface& commonInterface,
     RoboCollectorLayout &layout) {
   CoinOutInterface outInterface;
   outInterface.collisionWatcher = interface.collisionWatcher;
-  outInterface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
-      &layout._field, _1, _2);
-  outInterface.resetFieldDataMarkerCb = std::bind(&Field::resetFieldDataMarker,
-      &layout._field, _1);
-  outInterface.getFieldDataCb = std::bind(&Field::getFieldData, &layout._field);
+  outInterface.setFieldDataMarkerCb = commonInterface.setFieldDataMarkerCb;
+  outInterface.resetFieldDataMarkerCb = commonInterface.resetFieldDataMarkerCb;
+  outInterface.getFieldDataCb = commonInterface.getFieldDataCb;
   outInterface.incrCollectedCoinsCb = std::bind(
       &PanelHandler::increaseCollectedCoins, &layout._panelHandler, _1);
   outInterface.isPlayerTurnActiveCb = interface.isPlayerTurnActiveCb;
@@ -166,15 +163,11 @@ int32_t RoboCollectorLayoutInitHelper::initCoinHandler(
 }
 
 int32_t RoboCollectorLayoutInitHelper::initController(
-    const RoboCollectorControllerConfig &cfg, RoboCollectorLayout &layout) {
+    const RoboCollectorControllerConfig &cfg,
+    const RoboCommonLayoutInterface& commonInterface,
+    RoboCollectorLayout &layout) {
   RoboCollectorControllerOutInterface outInterface;
-
-  if (layout._robots.empty()) {
-    LOGERR("Error, robots array is empty!");
-    return FAILURE;
-  }
-  outInterface.robotActCb = std::bind(&Robot::act,
-      &layout._robots[RoboCommonDefines::PLAYER_ROBOT_IDX], _1);
+  outInterface.robotActCb = commonInterface.playerRobotActInterface.actCb;
   outInterface.helpActivatedCb = std::bind(
       &RoboCollectorLayout::activateHelpPage, &layout);
   outInterface.settingActivatedCb = std::bind(

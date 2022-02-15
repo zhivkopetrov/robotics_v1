@@ -6,11 +6,11 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "manager_utils/drawing/NumberCounter.h"
 #include "manager_utils/drawing/Text.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/layout/panels/config/CoinPanelConfig.h"
 
 //Forward declarations

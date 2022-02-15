@@ -12,19 +12,7 @@
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 
 //Forward declarations
-
-struct RobotActInterface {
-  RobotActInterface(const RobotActCb inputActCb,
-                    GetRobotFieldPosCb inputGetFieldPosCb,
-                    GetRobotDirCb inputGetDirCb)
-      : actCb(inputActCb), getFieldPosCb(inputGetFieldPosCb),
-        getDirCb(inputGetDirCb) {
-  }
-
-  RobotActCb actCb;
-  GetRobotFieldPosCb getFieldPosCb;
-  GetRobotDirCb getDirCb;
-};
+struct RobotActInterface;
 
 struct RobotAIConfig {
   GetFieldDataCb getFieldDataCb;

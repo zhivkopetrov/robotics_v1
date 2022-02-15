@@ -25,6 +25,8 @@ add_library(
     ${PROJECT_NAME} 
     STATIC
         ${_INC_DIR}/defines/RoboCommonDefines.h
+        ${_INC_DIR}/layout/RoboCommonLayout.h
+        ${_INC_DIR}/layout/config/RoboCommonLayoutConfig.h
         ${_INC_DIR}/layout/field/Field.h
         ${_INC_DIR}/layout/field/FieldPos.h
         ${_INC_DIR}/layout/field/FieldUtils.h
@@ -36,16 +38,19 @@ add_library(
         ${_INC_DIR}/layout/panels/config/IndicatorPanelConfig.h
         ${_INC_DIR}/layout/panels/config/TimePanelConfig.h
         ${_INC_DIR}/layout/entities/robot/Robot.h
-        ${_INC_DIR}/layout/entities/robot/RobotInitHelper.h
-        ${_INC_DIR}/layout/entities/robot/RobotUtils.h
+        ${_INC_DIR}/layout/entities/robot/helpers/RobotActInterface.h
+        ${_INC_DIR}/layout/entities/robot/helpers/RobotInitHelper.h
+        ${_INC_DIR}/layout/entities/robot/helpers/RobotUtils.h
         ${_INC_DIR}/layout/entities/robot/config/RobotBaseConfig.h
         ${_INC_DIR}/layout/entities/robot/animation/RobotAnimator.h
         ${_INC_DIR}/layout/entities/robot/animation/RobotAnimEndCb.h
         ${_INC_DIR}/layout/entities/robot/animation/PlayerDamageAnimEndCb.h
         ${_INC_DIR}/layout/animators/GameEndAnimator.h
+        ${_INC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
         
+        ${_SRC_DIR}/layout/RoboCommonLayout.cpp
         ${_SRC_DIR}/layout/field/Field.cpp
         ${_SRC_DIR}/layout/field/FieldPos.cpp
         ${_SRC_DIR}/layout/field/FieldUtils.cpp
@@ -53,12 +58,13 @@ add_library(
         ${_SRC_DIR}/layout/panels/TimePanel.cpp
         ${_SRC_DIR}/layout/panels/IndicatorPanel.cpp
         ${_SRC_DIR}/layout/entities/robot/Robot.cpp
-        ${_SRC_DIR}/layout/entities/robot/RobotInitHelper.cpp
-        ${_SRC_DIR}/layout/entities/robot/RobotUtils.cpp
+        ${_SRC_DIR}/layout/entities/robot/helpers/RobotInitHelper.cpp
+        ${_SRC_DIR}/layout/entities/robot/helpers/RobotUtils.cpp
         ${_SRC_DIR}/layout/entities/robot/animation/RobotAnimator.cpp
         ${_SRC_DIR}/layout/entities/robot/animation/RobotAnimEndCb.cpp
         ${_SRC_DIR}/layout/entities/robot/animation/PlayerDamageAnimEndCb.cpp
         ${_SRC_DIR}/layout/animators/GameEndAnimator.cpp
+        ${_SRC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
 )
 

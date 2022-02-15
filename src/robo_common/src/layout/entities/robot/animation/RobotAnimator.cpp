@@ -12,7 +12,7 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_common/layout/entities/robot/RobotUtils.h"
+#include "robo_common/layout/entities/robot/helpers/RobotUtils.h"
 
 namespace {
 constexpr auto TOTAL_COLLISION_ANIM_STEPS = 32;
