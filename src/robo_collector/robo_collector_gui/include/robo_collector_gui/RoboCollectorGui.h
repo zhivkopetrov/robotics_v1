@@ -14,7 +14,7 @@
 //Own components headers
 #include "robo_collector_gui/layout/RoboCollectorLayout.h"
 #include "robo_collector_gui/helpers/TurnHelper.h"
-#include "robo_collector_gui/external_api/ControllerExternalBridge.h"
+#include "robo_collector_gui/external_api/CollectorControllerExternalBridge.h"
 
 //Forward declarations
 class InputEvent;
@@ -38,7 +38,7 @@ private:
   TurnHelper _turnHelper;
   CollisionWatcher _collisionWatcher;
 
-  std::shared_ptr<ControllerExternalBridge> _controllerExternalBridge;
+  std::shared_ptr<CollectorControllerExternalBridge> _controllerExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;
 };
 

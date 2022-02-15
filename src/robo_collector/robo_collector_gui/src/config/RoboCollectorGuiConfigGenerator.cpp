@@ -14,6 +14,7 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "generated/RoboCollectorGuiResources.h"
 
@@ -194,18 +195,6 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
-RoboMinerGuiConfig generateRoboMinerGuiConfig() {
-  RoboMinerGuiConfig cfg;
-  cfg.crystalRsrcId = RoboCollectorGuiResources::CRYSTALS;
-
-  auto& fieldCfg = cfg.fieldCfg;
-  fieldCfg.emptyTileMarker = emptyFieldMarker;
-  fieldCfg.rows = RoboCommonDefines::FIELD_ROWS;
-  fieldCfg.cols = RoboCommonDefines::FIELD_COLS;
-
-  return cfg;
-}
-
 RoboCleanerGuiConfig generateRoboCleanerGuiConfig() {
   RoboCleanerGuiConfig cfg;
   cfg.rubbishRsrcId = RoboCollectorGuiResources::RUBBISH;
@@ -225,7 +214,6 @@ RoboCollectorGuiConfig generateGameConfig() {
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
   layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
   layoutCfg.controllerCfg = generateRoboCollectorControllerConfig();
-  layoutCfg.roboMinerGuiCfg = generateRoboMinerGuiConfig();
   layoutCfg.roboCleanerGuiCfg = generateRoboCleanerGuiConfig();
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;

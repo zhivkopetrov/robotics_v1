@@ -12,6 +12,7 @@
 //Own components headers
 #include "robo_collector_gui/RoboCollectorGui.h"
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
+#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInterfaces.h"
 
 int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
                                          RoboCollectorGui &gui) {
@@ -96,11 +97,12 @@ int32_t RoboCollectorGuiInitHelper::initTurnHelper(
 
 int32_t RoboCollectorGuiInitHelper::initControllerExternalBridge(
     const RoboCollectorLayoutInterface &interface, RoboCollectorGui &gui) {
-  ControllerExternalBridgeOutInterface outInterface;
+  CollectorControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.moveButtonClickCb = interface.moveButtonClickCb;
 
-  gui._controllerExternalBridge = std::make_shared<ControllerExternalBridge>();
+  gui._controllerExternalBridge =
+      std::make_shared<CollectorControllerExternalBridge>();
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;

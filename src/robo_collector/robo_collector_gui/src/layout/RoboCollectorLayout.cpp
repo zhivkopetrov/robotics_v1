@@ -6,11 +6,14 @@
 //C++ system headers
 
 //Other libraries headers
-#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInitHelper.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInterfaces.h"
+#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInitHelper.h"
+
+using namespace std::placeholders;
 
 int32_t RoboCollectorLayout::init(
     const RoboCollectorLayoutConfig &cfg,
@@ -28,8 +31,6 @@ int32_t RoboCollectorLayout::init(
 
 void RoboCollectorLayout::produceInterface(
     RoboCollectorLayoutInterface& interface) {
-  using namespace std::placeholders;
-
   interface.enablePlayerInputCb = std::bind(
       &RoboCollectorController::unlockInput, &_controller);
   interface.moveButtonClickCb = std::bind(
@@ -43,6 +44,7 @@ void RoboCollectorLayout::produceInterface(
 }
 
 void RoboCollectorLayout::deinit() {
+  _commonLayout.deinit();
   for (auto &robot : _enemyRobots) {
     robot.deinit();
   }
@@ -53,7 +55,6 @@ void RoboCollectorLayout::draw() const {
   if (GameType::MINER == _gameType) {
     _panelHandler.draw();
     _controller.draw();
-    _roboMinerGui.draw();
     return;
   }
 
@@ -75,15 +76,6 @@ void RoboCollectorLayout::draw() const {
 
 void RoboCollectorLayout::handleEvent(const InputEvent &e) {
   _controller.handleEvent(e);
-
-  if (GameType::MINER == _gameType) {
-    _roboMinerGui.handleEvent(e);
-    return;
-  }
-
-  if (GameType::CLEANER == _gameType) {
-    return;
-  }
 }
 
 void RoboCollectorLayout::activateHelpPage() {

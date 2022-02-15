@@ -55,11 +55,6 @@ int32_t RoboCollectorLayoutInitHelper::init(
     return FAILURE;
   }
 
-  if (SUCCESS != layout._roboMinerGui.init(cfg.roboMinerGuiCfg)) {
-    LOGERR("Error, _roboMinerGui.init() failed");
-    return FAILURE;
-  }
-
   if (SUCCESS != layout._roboCleanerGui.init(cfg.roboCleanerGuiCfg)) {
     LOGERR("Error, _roboCleanerGui.init() failed");
     return FAILURE;

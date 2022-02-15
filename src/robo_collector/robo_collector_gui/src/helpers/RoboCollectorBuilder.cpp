@@ -6,8 +6,6 @@
 //C++ system headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
-#include "utils/Log.h"
 
 //Own components headers
 #include "ros2_game_engine/communicator/Ros2Communicator.h"

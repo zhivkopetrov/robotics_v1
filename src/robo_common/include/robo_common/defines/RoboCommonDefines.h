@@ -8,8 +8,6 @@
 #include <vector>
 
 //Other libraries headers
-#include "manager_utils/drawing/Image.h"
-#include "manager_utils/drawing/Text.h"
 
 //Own components headers
 

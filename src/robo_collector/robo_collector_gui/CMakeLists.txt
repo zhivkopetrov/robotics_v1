@@ -37,7 +37,7 @@ add_executable(
         ${_INC_DIR}/helpers/RoboCollectorBuilder.h
         ${_INC_DIR}/helpers/TurnHelper.h
         ${_INC_DIR}/helpers/RoboCollectorGuiInitHelper.h
-        ${_INC_DIR}/external_api/ControllerExternalBridge.h
+        ${_INC_DIR}/external_api/CollectorControllerExternalBridge.h
         ${_INC_DIR}/layout/RoboCollectorLayout.h
         ${_INC_DIR}/layout/helpers/RoboCollectorLayoutInterfaces.h
         ${_INC_DIR}/layout/helpers/RoboCollectorLayoutInitHelper.h
@@ -58,14 +58,6 @@ add_executable(
         ${_INC_DIR}/layout/controller/RoboCollectorController.h
         ${_INC_DIR}/layout/controller/config/RoboCollectorControllerConfig.h
         
-        ${_INC_DIR}/layout/robo_miner/RoboMinerGui.h
-        ${_INC_DIR}/layout/robo_miner/defines/RoboMinerDefines.h
-        ${_INC_DIR}/layout/robo_miner/config/RoboMinerGuiConfig.h
-        ${_INC_DIR}/layout/robo_miner/entities/Crystal.h
-        ${_INC_DIR}/layout/robo_miner/field/RoboMinerField.h
-        ${_INC_DIR}/layout/robo_miner/field/config/RoboMinerFieldConfig.h
-        ${_INC_DIR}/layout/robo_miner/algorithms/FloodFill.h
-        
         ${_INC_DIR}/layout/robo_cleaner/RoboCleanerGui.h
         ${_INC_DIR}/layout/robo_cleaner/config/RoboCleanerGuiConfig.h
         ${_INC_DIR}/layout/robo_cleaner/panels/config/EnergyPanelConfig.h
@@ -78,7 +70,7 @@ add_executable(
         ${_SRC_DIR}/helpers/TurnHelper.cpp
         ${_SRC_DIR}/helpers/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/helpers/RoboCollectorGuiInitHelper.cpp
-        ${_SRC_DIR}/external_api/ControllerExternalBridge.cpp
+        ${_SRC_DIR}/external_api/CollectorControllerExternalBridge.cpp
         ${_SRC_DIR}/layout/RoboCollectorLayout.cpp
         ${_SRC_DIR}/layout/helpers/RoboCollectorLayoutInitHelper.cpp
         ${_SRC_DIR}/layout/entities/robot/RobotAI.cpp
@@ -92,12 +84,6 @@ add_executable(
         ${_SRC_DIR}/layout/controller/buttons/HelpButton.cpp
         ${_SRC_DIR}/layout/controller/buttons/SettingsButton.cpp
         ${_SRC_DIR}/layout/controller/RoboCollectorController.cpp
-        
-        ${_SRC_DIR}/layout/robo_miner/RoboMinerGui.cpp
-        ${_SRC_DIR}/layout/robo_miner/defines/RoboMinerDefines.cpp
-        ${_SRC_DIR}/layout/robo_miner/entities/Crystal.cpp
-        ${_SRC_DIR}/layout/robo_miner/field/RoboMinerField.cpp
-        ${_SRC_DIR}/layout/robo_miner/algorithms/FloodFill.cpp
         
         ${_SRC_DIR}/layout/robo_cleaner/RoboCleanerGui.cpp
         ${_SRC_DIR}/layout/robo_cleaner/panels/EnergyPanel.cpp

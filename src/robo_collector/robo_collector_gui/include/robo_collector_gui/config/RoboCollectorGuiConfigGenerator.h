@@ -10,7 +10,6 @@
 #include "game_engine/config/ApplicationConfig.h"
 
 //Own components headers
-#include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
 
 //Forward declarations
 

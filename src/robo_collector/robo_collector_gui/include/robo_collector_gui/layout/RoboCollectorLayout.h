@@ -11,18 +11,18 @@
 #include "robo_common/layout/RoboCommonLayout.h"
 
 //Own components headers
-#include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInterfaces.h"
 #include "robo_collector_gui/layout/panels/PanelHandler.h"
 #include "robo_collector_gui/layout/entities/coin/CoinHandler.h"
 #include "robo_collector_gui/layout/controller/RoboCollectorController.h"
 
-#include "robo_collector_gui/layout/robo_miner/RoboMinerGui.h"
 #include "robo_collector_gui/layout/robo_cleaner/RoboCleanerGui.h"
 
 //Forward declarations
 class InputEvent;
 class RoboCollectorLayoutInitHelper;
 struct RoboCollectorLayoutConfig;
+struct RoboCollectorLayoutOutInterface;
+struct RoboCollectorLayoutInterface;
 
 class RoboCollectorLayout {
 public:
@@ -49,7 +49,6 @@ private:
   RoboCollectorController _controller;
   std::array<Robot, Defines::ENEMIES_CTN> _enemyRobots;
 
-  RoboMinerGui _roboMinerGui;
   RoboCleanerGui _roboCleanerGui;
 
   GameType _gameType = GameType::COLLECTOR;
