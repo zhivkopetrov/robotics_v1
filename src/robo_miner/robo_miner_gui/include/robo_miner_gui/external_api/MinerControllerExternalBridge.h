@@ -18,6 +18,7 @@
 
 struct MinerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
+  RobotActCb robotActCb;
 };
 
 class MinerControllerExternalBridge: public rclcpp::Node {
@@ -44,9 +45,6 @@ private:
 
   rclcpp::Service<robo_miner_interfaces::srv::RobotMove>::SharedPtr
     _robotMoveService;
-
-  //TODO remove me after test
-  int32_t _dummy = 0;
 };
 
 #endif /* ROBO_MINER_GUI_MINERCONTROLLEREXTERNALBRIDGE_H_ */

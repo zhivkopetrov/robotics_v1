@@ -17,18 +17,22 @@ using robo_miner_interfaces::srv::RobotMove;
 
 namespace {
 //TODO create separate message helper utility file
-MoveType getMoveType(int8_t moveType) {
+int32_t getMoveType(int8_t moveType, MoveType& outMoveType) {
   switch (moveType) {
   case RobotMoveType::FORWARD:
-    return MoveType::FORWARD;
+    outMoveType = MoveType::FORWARD;
+    break;
   case RobotMoveType::ROTATE_LEFT:
-    return MoveType::ROTATE_LEFT;
+    outMoveType = MoveType::ROTATE_LEFT;
+    break;
   case RobotMoveType::ROTATE_RIGHT:
-    return MoveType::ROTATE_RIGHT;
+    outMoveType = MoveType::ROTATE_RIGHT;
+    break;
   default:
     LOGERR("Error, received unsupported RobotMoveType: %hhu", moveType);
-    return MoveType::FORWARD;
+    return FAILURE;
   }
+  return SUCCESS;
 }
 
 //TODO create a separate topic contants header file
@@ -48,6 +52,11 @@ int32_t MinerControllerExternalBridge::init(
     return FAILURE;
   }
 
+  if (nullptr == _outInterface.robotActCb) {
+    LOGERR("Error, nullptr provided for RobotActCb");
+    return FAILURE;
+  }
+
   using namespace std::placeholders;
   constexpr auto QoS = 10;
   _playerDirSubscriber = create_subscription<RobotMoveType>(
@@ -62,12 +71,16 @@ int32_t MinerControllerExternalBridge::init(
 
 void MinerControllerExternalBridge::onMoveMsg(
     const RobotMoveType::SharedPtr msg) {
-  const auto moveType = getMoveType(msg->move_type);
-  const auto f = [this, moveType]() {
+  MoveType moveType;
+  const auto err = getMoveType(msg->move_type, moveType);
+  if (FAILURE == err) {
+    return;
+  }
+
+  const auto f = [moveType]() {
 //    _outInterface.moveButtonClickCb(moveType);
     //TODO remove me after test
     if (MoveType::FORWARD == moveType) {
-      ++_dummy;
     }
   };
 
@@ -77,9 +90,16 @@ void MinerControllerExternalBridge::onMoveMsg(
 void MinerControllerExternalBridge::handleService(
     const std::shared_ptr<robo_miner_interfaces::srv::RobotMove::Request> request,
     std::shared_ptr<robo_miner_interfaces::srv::RobotMove::Response> response) {
-  const auto moveType = getMoveType(request->robot_move_type.move_type);
-  const auto f = [moveType, &response]() {
-    response->success = (MoveType::FORWARD == moveType) ? true : false;
+  MoveType moveType;
+  const auto err = getMoveType(request->robot_move_type.move_type, moveType);
+  if (FAILURE == err) {
+    response->success = false;
+    return;
+  }
+
+  const auto f = [this, moveType, &response]() {
+    _outInterface.robotActCb(moveType);
+    response->success = true;
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);

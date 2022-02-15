@@ -24,10 +24,11 @@ public:
 
 private:
   static int32_t initLayout(const RoboMinerLayoutConfig &cfg,
-                            RoboMinerLayoutInterface& interface, //out param
-                            RoboMinerGui &gui);
+                            RoboMinerLayoutInterface &interface, //out param
+      RoboMinerGui &gui);
 
-  static int32_t initControllerExternalBridge(RoboMinerGui &gui);
+  static int32_t initControllerExternalBridge(
+      const RoboMinerLayoutInterface &interface, RoboMinerGui &gui);
 };
 
 #endif /* ROBO_MINER_GUI_ROBOMINERGUIINITHELPER_H_ */

@@ -37,7 +37,7 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
     return FAILURE;
   }
 
-  if (SUCCESS != initControllerExternalBridge(gui)) {
+  if (SUCCESS != initControllerExternalBridge(layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
     return FAILURE;
   }
@@ -64,9 +64,11 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
 }
 
 int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
-    RoboMinerGui &gui) {
+    const RoboMinerLayoutInterface &interface, RoboMinerGui &gui) {
   MinerControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
+  outInterface.robotActCb =
+      interface.commonLayoutInterface.playerRobotActInterface.actCb;
 
   gui._controllerExternalBridge =
       std::make_shared<MinerControllerExternalBridge>();
