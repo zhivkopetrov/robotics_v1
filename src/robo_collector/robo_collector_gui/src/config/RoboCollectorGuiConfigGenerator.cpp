@@ -21,7 +21,6 @@
 namespace {
 //TODO parse the params from config
 constexpr auto PROJECT_FOLDER_NAME = "robo_collector_gui";
-constexpr auto LOADING_SCREEN_RESOURCES_PATH = "p/loading_screen/";
 
 //screen
 constexpr auto WINDOW_X = 72;
@@ -176,8 +175,7 @@ FieldConfig generateFieldConfig() {
 EngineConfig generateEngineConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  auto cfg = getDefaultEngineConfig(projectInstallPrefix,
-      LOADING_SCREEN_RESOURCES_PATH);
+  auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
   windowCfg.name = PROJECT_FOLDER_NAME;
@@ -195,26 +193,12 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
-RoboCleanerGuiConfig generateRoboCleanerGuiConfig() {
-  RoboCleanerGuiConfig cfg;
-  cfg.rubbishRsrcId = RoboCollectorGuiResources::RUBBISH;
-  cfg.rubbishFontId = RoboCollectorGuiResources::VINQUE_RG_30;
-  cfg.obstacleRsrcId = RoboCollectorGuiResources::MAP_OBSTACLE;
-
-  auto& energyPanelCfg = cfg.energyPanelCfg;
-  energyPanelCfg.rsrcId = RoboCollectorGuiResources::ENERGY_PANEL;
-  energyPanelCfg.indicatorRsrcId = RoboCollectorGuiResources::ENERGY_INDICATOR;
-
-  return cfg;
-}
-
 RoboCollectorGuiConfig generateGameConfig() {
   RoboCollectorGuiConfig cfg;
   auto& layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
   layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
   layoutCfg.controllerCfg = generateRoboCollectorControllerConfig();
-  layoutCfg.roboCleanerGuiCfg = generateRoboCleanerGuiConfig();
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();

@@ -19,7 +19,7 @@ using IsPlayerTurnActiveCb = std::function<bool()>;
 using EnablePlayerInputCb = std::function<void()>;
 using MoveButtonClickCb = std::function<void(MoveType)>;
 using IncrCollectedCoinsCb = std::function<void(int32_t)>;
-using SettingActivatedCb = std::function<void(GameType)>;
+using SettingActivatedCb = std::function<void()>;
 using HelpActivatedCb = std::function<void()>;
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIFUNCTIONALDEFINES_H_ */

@@ -57,12 +57,6 @@ add_executable(
         ${_INC_DIR}/layout/controller/buttons/SettingsButton.h
         ${_INC_DIR}/layout/controller/RoboCollectorController.h
         ${_INC_DIR}/layout/controller/config/RoboCollectorControllerConfig.h
-        
-        ${_INC_DIR}/layout/robo_cleaner/RoboCleanerGui.h
-        ${_INC_DIR}/layout/robo_cleaner/config/RoboCleanerGuiConfig.h
-        ${_INC_DIR}/layout/robo_cleaner/panels/config/EnergyPanelConfig.h
-        ${_INC_DIR}/layout/robo_cleaner/panels/EnergyPanel.h
-        ${_INC_DIR}/layout/robo_cleaner/entities/Rubbish.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -84,10 +78,6 @@ add_executable(
         ${_SRC_DIR}/layout/controller/buttons/HelpButton.cpp
         ${_SRC_DIR}/layout/controller/buttons/SettingsButton.cpp
         ${_SRC_DIR}/layout/controller/RoboCollectorController.cpp
-        
-        ${_SRC_DIR}/layout/robo_cleaner/RoboCleanerGui.cpp
-        ${_SRC_DIR}/layout/robo_cleaner/panels/EnergyPanel.cpp
-        ${_SRC_DIR}/layout/robo_cleaner/entities/Rubbish.cpp
 )
 
 target_include_directories(

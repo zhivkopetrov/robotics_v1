@@ -15,8 +15,6 @@
 #include "robo_collector_gui/layout/entities/coin/config/CoinHandlerConfig.h"
 #include "robo_collector_gui/layout/controller/config/RoboCollectorControllerConfig.h"
 
-#include "robo_collector_gui/layout/robo_cleaner/config/RoboCleanerGuiConfig.h"
-
 //Forward declarations
 
 struct RoboCollectorLayoutConfig {
@@ -25,8 +23,6 @@ struct RoboCollectorLayoutConfig {
   PanelHandlerConfig panelHandlerCfg;
   CoinHandlerConfig coinHandlerCfg;
   RoboCollectorControllerConfig controllerCfg;
-
-  RoboCleanerGuiConfig roboCleanerGuiCfg;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUTCONFIG_H_ */

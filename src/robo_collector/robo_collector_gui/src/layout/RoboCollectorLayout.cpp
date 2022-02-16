@@ -52,19 +52,6 @@ void RoboCollectorLayout::deinit() {
 }
 
 void RoboCollectorLayout::draw() const {
-  if (GameType::MINER == _gameType) {
-    _panelHandler.draw();
-    _controller.draw();
-    return;
-  }
-
-  if (GameType::CLEANER == _gameType) {
-    _panelHandler.draw();
-    _controller.draw();
-    _roboCleanerGui.draw();
-    return;
-  }
-
   _commonLayout.draw();
   _panelHandler.draw();
   _coinHandler.draw();
@@ -82,13 +69,7 @@ void RoboCollectorLayout::activateHelpPage() {
   _commonLayout.activateHelpPage();
 }
 
-void RoboCollectorLayout::changeGameType(GameType gameType) {
-  _gameType = gameType;
+void RoboCollectorLayout::settingsActivated() {
 
-  if (GameType::COLLECTOR == _gameType) {
-    _controller.unlockInput();
-  } else {
-    _controller.lockInput();
-  }
 }
 

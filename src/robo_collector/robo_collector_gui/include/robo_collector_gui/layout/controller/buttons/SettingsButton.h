@@ -26,10 +26,7 @@ public:
   void handleEvent(const InputEvent& e) override;
 
 private:
-  void changeGameType();
-
   SettingActivatedCb _settingActivatedCb;
-  GameType _currGameType = GameType::COLLECTOR;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_SETTINGSBUTTON_H_ */

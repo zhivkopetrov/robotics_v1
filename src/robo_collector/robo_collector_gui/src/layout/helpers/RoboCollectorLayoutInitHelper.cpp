@@ -55,11 +55,6 @@ int32_t RoboCollectorLayoutInitHelper::init(
     return FAILURE;
   }
 
-  if (SUCCESS != layout._roboCleanerGui.init(cfg.roboCleanerGuiCfg)) {
-    LOGERR("Error, _roboCleanerGui.init() failed");
-    return FAILURE;
-  }
-
   return SUCCESS;
 }
 
@@ -165,8 +160,8 @@ int32_t RoboCollectorLayoutInitHelper::initController(
   outInterface.robotActCb = commonInterface.playerRobotActInterface.actCb;
   outInterface.helpActivatedCb = std::bind(
       &RoboCollectorLayout::activateHelpPage, &layout);
-  outInterface.settingActivatedCb = std::bind(
-      &RoboCollectorLayout::changeGameType, &layout, _1);
+  outInterface.settingActivatedCb =
+      std::bind(&RoboCollectorLayout::settingsActivated, &layout);
 
   if (SUCCESS != layout._controller.init(cfg, outInterface)) {
     LOGERR("Error in _controller.init()");

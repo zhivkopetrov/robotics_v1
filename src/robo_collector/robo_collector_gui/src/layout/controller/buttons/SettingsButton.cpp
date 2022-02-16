@@ -34,26 +34,7 @@ void SettingsButton::handleEvent(const InputEvent& e) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
     setFrame(UNCLICKED);
-    changeGameType();
-    _settingActivatedCb(_currGameType);
-  }
-}
-
-void SettingsButton::changeGameType() {
-  switch (_currGameType) {
-  case GameType::COLLECTOR:
-    _currGameType = GameType::MINER;
-    break;
-  case GameType::MINER:
-    _currGameType = GameType::CLEANER;
-    break;
-  case GameType::CLEANER:
-    _currGameType = GameType::COLLECTOR;
-    break;
-  default:
-    LOGERR("Error, received unsupported GameType: %d",
-        getEnumValue(_currGameType));
-    break;
+    _settingActivatedCb();
   }
 }
 

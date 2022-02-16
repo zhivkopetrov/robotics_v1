@@ -15,8 +15,6 @@
 #include "robo_collector_gui/layout/entities/coin/CoinHandler.h"
 #include "robo_collector_gui/layout/controller/RoboCollectorController.h"
 
-#include "robo_collector_gui/layout/robo_cleaner/RoboCleanerGui.h"
-
 //Forward declarations
 class InputEvent;
 class RoboCollectorLayoutInitHelper;
@@ -38,7 +36,7 @@ public:
   //TODO create a separate help page class
   void activateHelpPage();
 
-  void changeGameType(GameType gameType);
+  void settingsActivated();
 
 private:
   void produceInterface(RoboCollectorLayoutInterface& interface);
@@ -48,10 +46,6 @@ private:
   CoinHandler _coinHandler;
   RoboCollectorController _controller;
   std::array<Robot, Defines::ENEMIES_CTN> _enemyRobots;
-
-  RoboCleanerGui _roboCleanerGui;
-
-  GameType _gameType = GameType::COLLECTOR;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUT_H_ */
