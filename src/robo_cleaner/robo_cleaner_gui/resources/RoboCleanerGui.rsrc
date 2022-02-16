@@ -28,13 +28,6 @@ description=empty
 position=0,0
 load=on_init
 
-tag=[ENEMY_ROBOTS]
-type=sprite
-path=p/entities/enemy_robots.png
-description=160,160,3,0
-position=0,0
-load=on_init
-
 tag=[STAR_SINGLE]
 type=image
 path=p/stars/star_single.png
@@ -63,23 +56,16 @@ description=empty
 position=0,0
 load=on_init
 
-tag=[DAMAGE_MARKER]
+tag=[ENERGY_PANEL]
 type=image
-path=p/entities/damage_marker.png
+path=p/panels/energy_panel.png
 description=empty
 position=0,0
 load=on_init
 
-tag=[COIN_PANEL]
+tag=[ENERGY_INDICATOR]
 type=image
-path=p/panels/coin_panel.png
-description=empty
-position=0,0
-load=on_init
-
-tag=[TIME_PANEL]
-type=image
-path=p/panels/time_panel.png
+path=p/panels/energy_indicator.png
 description=empty
 position=0,0
 load=on_init
@@ -98,63 +84,17 @@ description=48,404,2,0
 position=0,0
 load=on_init
 
-##### ANIMATIONS
-
-tag=[COIN_ANIM_GOLD]
+tag=[RUBBISH]
 type=sprite
-path=p/coin_animations/gold/coin_anim_gold.png
-description=100,100,10,0
+path=p/entities/rubbish.png
+description=100,100,2,0
 position=0,0
 load=on_init
 
-tag=[COIN_ANIM_SILVER]
-type=sprite
-path=p/coin_animations/silver/coin_anim_silver.png
-description=100,100,10,0
-position=0,0
-load=on_init
-
-tag=[COIN_ANIM_BRONZE]
-type=sprite
-path=p/coin_animations/bronze/coin_anim_bronze.png
-description=100,100,10,0
-position=0,0
-load=on_init
-
-##### BUTTONS
-
-tag=[UP_BUTTON]
-type=sprite
-path=p/buttons/up_button.png
-description=140,140,3,0
-position=0,0
-load=on_init
-
-tag=[LEFT_BUTTON]
-type=sprite
-path=p/buttons/left_button.png
-description=140,140,3,0
-position=0,0
-load=on_init
-
-tag=[RIGHT_BUTTON]
-type=sprite
-path=p/buttons/right_button.png
-description=140,140,3,0
-position=0,0
-load=on_init
-
-tag=[HELP_BUTTON]
-type=sprite
-path=p/buttons/help_button.png
-description=70,70,3,0
-position=0,0
-load=on_init
-
-tag=[SETTINGS_BUTTON]
-type=sprite
-path=p/buttons/settings_button.png
-description=70,70,3,0
+tag=[DAMAGE_MARKER]
+type=image
+path=p/entities/damage_marker.png
+description=empty
 position=0,0
 load=on_init
 
@@ -169,37 +109,3 @@ type=font
 path=f/vinque_rg_75.ttf
 description=75
 
-
-##### ROBO_MINER
-
-##### IMAGES
-
-tag=[CRYSTALS]
-type=sprite
-path=p/robo_miner/crystals/crystals.png
-description=120,126,5,0
-position=0,0
-load=on_init
-
-##### ROBO_CLEANER
-
-tag=[ENERGY_PANEL]
-type=image
-path=p/robo_cleaner/panels/energy_panel.png
-description=empty
-position=0,0
-load=on_init
-
-tag=[ENERGY_INDICATOR]
-type=image
-path=p/robo_cleaner/panels/energy_indicator.png
-description=empty
-position=0,0
-load=on_init
-
-tag=[RUBBISH]
-type=sprite
-path=p/robo_cleaner/rubbish/rubbish.png
-description=100,100,2,0
-position=0,0
-load=on_init

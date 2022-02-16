@@ -46,7 +46,6 @@ RobotBaseConfig generateRobotBaseConfig() {
   RobotBaseConfig cfg;
 
   cfg.playerRsrcId = RoboCleanerGuiResources::PLAYER_ROBOT;
-  cfg.enemiesRsrcId = RoboCleanerGuiResources::ENEMY_ROBOTS;
   cfg.damageMarkerRsrcId = RoboCleanerGuiResources::DAMAGE_MARKER;
   cfg.moveAnimStartTimerId = ROBOT_MOVE_ANIM_TIMER_ID;
   cfg.wallCollisionAnimStartTimerId = ROBOT_WALL_COLLISION_ANIM_TIMER_ID;
