@@ -1,0 +1,31 @@
+/* This file is auto-generated. Do not modify it. */
+
+/* Resource Builder Tool version 1.0 */
+/* Author: Zhivko Petrov */
+
+#ifndef SRC_ROBO_MINER_ROBO_MINER_GUI_RESOURCES_H_
+#define SRC_ROBO_MINER_ROBO_MINER_GUI_RESOURCES_H_
+
+#include <cstdint>
+
+namespace RoboMinerGuiResources
+{
+  enum ResourceTags : uint64_t
+  {
+    MAP = 0x50F97991CE94C9BC,
+    MAP_TILE = 0xE311B3D838C81E71,
+    PLAYER_ROBOT = 0x79318CA9C3556C10,
+    STAR_SINGLE = 0x86518DED92E03EBE,
+    STARS = 0xB6F146314B2A08D4,
+    HEALTH_PANEL = 0x8DF7ACDAA833451F,
+    HEALTH_INDICATOR = 0x47A8FA33A2F9F010,
+    DAMAGE_MARKER = 0x861DBFC99AF7A483,
+    CRYSTALS = 0xC1ED651431568598,
+    HOR_DELIMITER = 0x646E835630C3A191,
+    VERT_DELIMITER = 0xB1A38BE38D6E5889,
+    VINQUE_RG_30 = 0x6C0AB16CE8E4D511,
+    VINQUE_RG_75 = 0xEED7D2CC01F1845F,
+  }; /* enum ResourceTags */
+} /* namespace RoboMinerGuiResources */
+
+#endif /* SRC_ROBO_MINER_ROBO_MINER_GUI_RESOURCES_H_ */
