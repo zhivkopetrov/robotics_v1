@@ -13,7 +13,8 @@
 //Own components headers
 
 int32_t IndicatorPanel::init(const IndicatorPanelConfig &cfg,
-                             const IndicatorDepletedCb &indicatorDepletedCb) {
+                             const IndicatorDepletedCb &indicatorDepletedCb,
+                             const Point& pos) {
   _indicatorReduceTimerId = cfg.indicatorReduceTimerId;
 
   if (nullptr == indicatorDepletedCb) {
@@ -22,13 +23,11 @@ int32_t IndicatorPanel::init(const IndicatorPanelConfig &cfg,
   }
   _indicatorDepletedCb = indicatorDepletedCb;
 
-  constexpr auto panelX = 1250;
-  constexpr auto panelY = 390;
   _panel.create(cfg.rsrcId);
-  _panel.setPosition(panelX, panelY);
+  _panel.setPosition(pos);
 
   _indicator.create(cfg.indicatorRsrcId);
-  _indicator.setPosition(panelX + 79, panelY + 13);
+  _indicator.setPosition(pos.x + 79, pos.y + 13);
   _indicator.setCropRect(_indicator.getImageRect());
 
   _indicatorText.create(cfg.indicatorFontId, "100%", Colors::RED);

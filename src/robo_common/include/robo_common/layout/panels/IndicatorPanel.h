@@ -20,7 +20,8 @@
 class IndicatorPanel: public TimerClient {
 public:
   int32_t init(const IndicatorPanelConfig &cfg,
-               const IndicatorDepletedCb &indicatorDepletedCb);
+               const IndicatorDepletedCb &indicatorDepletedCb,
+               const Point &pos);
   void draw() const;
 
   void decreaseIndicator(int32_t delta);

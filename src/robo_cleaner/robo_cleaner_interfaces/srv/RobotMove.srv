@@ -1,0 +1,3 @@
+RobotMoveType robot_move_type
+---
+bool success

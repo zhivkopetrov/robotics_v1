@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_miner_gui/layout/panels/PanelHandler.h"
+#include "robo_cleaner_gui/layout/panels/PanelHandler.h"
 
 //C system headers
 
@@ -13,10 +13,17 @@
 
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
-  const auto panelPos = Point(1250, 390);
+  auto panelPos = Point(1250, 390);
   if (SUCCESS !=
       _healthPanel.init(cfg.healthPanelCfg, interface.gameLostCb, panelPos)) {
     LOGERR("Error, _healthPanel.init() failed");
+    return FAILURE;
+  }
+
+  panelPos.y += 95;
+  if (SUCCESS != _energyPanel.init(
+      cfg.energyPanelCfg, interface.energyDepletedCb, panelPos)) {
+    LOGERR("Error, _energyPanel.init() failed");
     return FAILURE;
   }
 
@@ -25,9 +32,14 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
 
 void PanelHandler::draw() const {
   _healthPanel.draw();
+  _energyPanel.draw();
 }
 
-void PanelHandler::decreaseHealthIndicator(int32_t damage) {
-  _healthPanel.decreaseIndicator(damage);
+void PanelHandler::decreaseHealthIndicator(int32_t delta) {
+  _healthPanel.decreaseIndicator(delta);
+}
+
+void PanelHandler::decreaseEnergyIndicator(int32_t delta) {
+  _energyPanel.decreaseIndicator(delta);
 }
 
