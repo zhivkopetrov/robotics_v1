@@ -9,11 +9,11 @@
 
 //Other libraries headers
 #include "robo_common/layout/config/RoboCommonLayoutConfig.h"
+#include "robo_collector_common/layout/controller/config/RoboCollectorControllerConfig.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/panels/config/PanelHandlerConfig.h"
 #include "robo_collector_gui/layout/entities/coin/config/CoinHandlerConfig.h"
-#include "robo_collector_gui/layout/controller/config/RoboCollectorControllerConfig.h"
 
 //Forward declarations
 

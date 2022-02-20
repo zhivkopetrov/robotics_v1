@@ -9,11 +9,11 @@
 
 //Other libraries headers
 #include "robo_common/layout/RoboCommonLayout.h"
+#include "robo_collector_common/layout/controller/RoboCollectorController.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/panels/PanelHandler.h"
 #include "robo_collector_gui/layout/entities/coin/CoinHandler.h"
-#include "robo_collector_gui/layout/controller/RoboCollectorController.h"
 
 //Forward declarations
 class InputEvent;

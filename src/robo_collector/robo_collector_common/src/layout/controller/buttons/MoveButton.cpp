@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/layout/controller/buttons/MoveButton.h"
+#include "robo_collector_common/layout/controller/buttons/MoveButton.h"
 
 //C system headers
 

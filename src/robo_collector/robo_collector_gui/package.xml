@@ -13,13 +13,13 @@
   <build_depend>ament_index_cpp</build_depend>
   
   <build_depend>robo_collector_interfaces</build_depend>
-  <build_depend>robo_common</build_depend>
+  <build_depend>robo_collector_common</build_depend>
   <build_depend>ros2_game_engine</build_depend>
 
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>ament_index_cpp</exec_depend>
   <exec_depend>robo_collector_interfaces</exec_depend>
-  <exec_depend>robo_common</exec_depend>
+  <exec_depend>robo_collector_common</exec_depend>
   <exec_depend>ros2_game_engine</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>

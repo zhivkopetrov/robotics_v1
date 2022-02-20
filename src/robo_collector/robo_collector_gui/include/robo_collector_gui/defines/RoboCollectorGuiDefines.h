@@ -18,13 +18,6 @@ enum RobotDefines {
   ROBOTS_CTN = 4
 };
 
-enum MoveButtonDefines {
-  BUTTON_FORWARD,
-  BUTTON_ROTATE_LEFT,
-  BUTTON_ROTATE_RIGHT,
-  MOVE_BUTTONS_CTN
-};
-
 enum CoinDefines {
   GOLD_COIN,
   SILVER_COIN,

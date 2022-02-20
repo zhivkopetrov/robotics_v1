@@ -1,20 +1,18 @@
-#ifndef ROBO_COLLECTOR_GUI_MOVEBUTTON_H_
-#define ROBO_COLLECTOR_GUI_MOVEBUTTON_H_
+#ifndef ROBO_COLLECTOR_COMMON_MOVEBUTTON_H_
+#define ROBO_COLLECTOR_COMMON_MOVEBUTTON_H_
 
 //C system headers
 
 //C++ system headers
 #include <cstdint>
 #include <string>
-#include <functional>
 
 //Other libraries headers
 #include "manager_utils/input/ButtonBase.h"
 #include "manager_utils/drawing/Text.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
+#include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 
 //Forward declarations
 class InputEvent;
@@ -41,4 +39,4 @@ private:
   Text _infoText;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_MOVEBUTTON_H_ */
+#endif /* ROBO_COLLECTOR_COMMON_MOVEBUTTON_H_ */

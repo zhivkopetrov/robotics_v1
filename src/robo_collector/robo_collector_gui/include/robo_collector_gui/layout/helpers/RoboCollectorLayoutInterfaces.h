@@ -9,6 +9,7 @@
 
 //Other libraries headers
 #include "robo_common/layout/helpers/RoboCommonLayoutInterfaces.h"
+#include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 
 //Own components headers
 #include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"

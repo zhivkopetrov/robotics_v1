@@ -19,7 +19,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(robo_collector_interfaces REQUIRED)
-find_package(robo_common REQUIRED)
+find_package(robo_collector_common REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -52,11 +52,6 @@ add_executable(
         ${_INC_DIR}/layout/panels/CoinPanel.h
         ${_INC_DIR}/layout/panels/config/CoinPanelConfig.h
         ${_INC_DIR}/layout/panels/config/PanelHandlerConfig.h
-        ${_INC_DIR}/layout/controller/buttons/MoveButton.h
-        ${_INC_DIR}/layout/controller/buttons/HelpButton.h
-        ${_INC_DIR}/layout/controller/buttons/SettingsButton.h
-        ${_INC_DIR}/layout/controller/RoboCollectorController.h
-        ${_INC_DIR}/layout/controller/config/RoboCollectorControllerConfig.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
@@ -74,10 +69,6 @@ add_executable(
         ${_SRC_DIR}/layout/entities/coin/animation/CoinRespawnAnim.cpp
         ${_SRC_DIR}/layout/panels/PanelHandler.cpp
         ${_SRC_DIR}/layout/panels/CoinPanel.cpp
-        ${_SRC_DIR}/layout/controller/buttons/MoveButton.cpp
-        ${_SRC_DIR}/layout/controller/buttons/HelpButton.cpp
-        ${_SRC_DIR}/layout/controller/buttons/SettingsButton.cpp
-        ${_SRC_DIR}/layout/controller/RoboCollectorController.cpp
 )
 
 target_include_directories(
@@ -95,7 +86,7 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}
-        robo_common::robo_common
+        robo_collector_common::robo_collector_common
         ros2_game_engine::ros2_game_engine
 )
 

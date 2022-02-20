@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_HELPBUTTON_H_
-#define ROBO_COLLECTOR_GUI_HELPBUTTON_H_
+#ifndef ROBO_COLLECTOR_COMMON_HELPBUTTON_H_
+#define ROBO_COLLECTOR_COMMON_HELPBUTTON_H_
 
 //C system headers
 
@@ -10,7 +10,7 @@
 #include "manager_utils/input/ButtonBase.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
+#include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 
 //Forward declarations
 class InputEvent;
@@ -29,4 +29,4 @@ private:
   HelpActivatedCb _helpActivatedCb;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_HELPBUTTON_H_ */
+#endif /* ROBO_COLLECTOR_COMMON_HELPBUTTON_H_ */

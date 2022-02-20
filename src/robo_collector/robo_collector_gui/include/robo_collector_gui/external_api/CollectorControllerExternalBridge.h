@@ -9,10 +9,10 @@
 #include <rclcpp/node.hpp>
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"
 #include "robo_collector_interfaces/srv/get_current_coins.hpp"
+#include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 #include "game_engine/defines/ActionEventDefines.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 
 //Forward declarations
 
