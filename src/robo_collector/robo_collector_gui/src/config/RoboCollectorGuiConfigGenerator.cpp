@@ -33,6 +33,7 @@ constexpr auto playerFieldMarker = 'B'; //B for Blinky
 constexpr auto enemyFieldMarker = 'E'; //E for Enemy
 constexpr auto emptyFieldMarker = '.';
 constexpr auto totalGameSeconds = 180;
+constexpr auto LOCAL_CONTROLLER_ENABLED = false;
 
 enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_START,
@@ -104,6 +105,7 @@ RoboCollectorControllerConfig generateRoboCollectorControllerConfig() {
   cfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
   cfg.helpButtonRsrcId = RoboCollectorGuiResources::HELP_BUTTON;
   cfg.settingsButtonRsrcId = RoboCollectorGuiResources::SETTINGS_BUTTON;
+  cfg.isEnabled = LOCAL_CONTROLLER_ENABLED;
 
   return cfg;
 }

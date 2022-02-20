@@ -35,6 +35,7 @@ public:
   void onMoveButtonClicked(MoveType moveType);
   void lockInput();
   void unlockInput();
+  bool isEnabled() const;
 private:
   RobotActCb _robotActCb;
   std::array<MoveButton, Defines::MOVE_BUTTONS_CTN> _moveButtons;
@@ -45,6 +46,8 @@ private:
   //TODO animate them
   Image _horDelimiter;
   Image _vertDelimiter;
+
+  bool _isEnabled = false;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORCONTROLLER_H_ */

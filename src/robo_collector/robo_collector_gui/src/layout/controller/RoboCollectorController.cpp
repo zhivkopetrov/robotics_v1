@@ -15,7 +15,6 @@
 int32_t RoboCollectorController::init(
     const RoboCollectorControllerConfig &cfg,
     const RoboCollectorControllerOutInterface &interface) {
-  ;
   if (nullptr == interface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
     return FAILURE;
@@ -79,6 +78,8 @@ int32_t RoboCollectorController::init(
     return FAILURE;
   }
 
+  _isEnabled = cfg.isEnabled;
+
   return SUCCESS;
 }
 
@@ -129,5 +130,9 @@ void RoboCollectorController::unlockInput() {
   for (auto &button : _moveButtons) {
     button.unlockInput();
   }
+}
+
+bool RoboCollectorController::isEnabled() const {
+  return _isEnabled;
 }
 

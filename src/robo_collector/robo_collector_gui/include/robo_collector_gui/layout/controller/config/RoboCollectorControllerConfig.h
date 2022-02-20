@@ -23,6 +23,8 @@ struct RoboCollectorControllerConfig {
 
   uint64_t helpButtonRsrcId = 0;
   uint64_t settingsButtonRsrcId = 0;
+
+  bool isEnabled = false;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORCONTROLLERCONFIG_H_ */

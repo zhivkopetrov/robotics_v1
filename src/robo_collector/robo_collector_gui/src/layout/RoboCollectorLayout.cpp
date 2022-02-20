@@ -55,14 +55,19 @@ void RoboCollectorLayout::draw() const {
   _commonLayout.draw();
   _panelHandler.draw();
   _coinHandler.draw();
-  _controller.draw();
   for (const auto &robot : _enemyRobots) {
     robot.draw();
+  }
+
+  if (_controller.isEnabled()) {
+    _controller.draw();
   }
 }
 
 void RoboCollectorLayout::handleEvent(const InputEvent &e) {
-  _controller.handleEvent(e);
+  if (_controller.isEnabled()) {
+    _controller.handleEvent(e);
+  }
 }
 
 void RoboCollectorLayout::activateHelpPage() {
