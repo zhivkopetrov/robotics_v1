@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLER_H_
-#define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLER_H_
+#ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORUICONTROLLER_H_
+#define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORUICONTROLLER_H_
 
 //C system headers
 
@@ -14,21 +14,21 @@
 #include "robo_collector_common/layout/controller/buttons/MoveButton.h"
 #include "robo_collector_common/layout/controller/buttons/HelpButton.h"
 #include "robo_collector_common/layout/controller/buttons/SettingsButton.h"
-#include "robo_collector_common/layout/controller/config/RoboCollectorControllerConfig.h"
+#include "robo_collector_common/layout/controller/config/RoboCollectorUiControllerConfig.h"
 
 //Forward declarations
 class InputEvent;
 
-struct RoboCollectorControllerOutInterface {
+struct RoboCollectorUiControllerOutInterface {
   RobotActCb robotActCb;
   HelpActivatedCb helpActivatedCb;
   SettingActivatedCb settingActivatedCb;
 };
 
-class RoboCollectorController {
+class RoboCollectorUiController {
 public:
-  int32_t init(const RoboCollectorControllerConfig& cfg,
-               const RoboCollectorControllerOutInterface& interface);
+  int32_t init(const RoboCollectorUiControllerConfig& cfg,
+               const RoboCollectorUiControllerOutInterface& interface);
   void draw() const;
   void handleEvent(const InputEvent& e);
   void onMoveButtonClicked(MoveType moveType);
@@ -56,4 +56,4 @@ private:
   bool _isEnabled = false;
 };
 
-#endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLER_H_ */
+#endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORUICONTROLLER_H_ */

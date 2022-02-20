@@ -28,13 +28,13 @@ add_library(
         ${_INC_DIR}/layout/controller/buttons/MoveButton.h
         ${_INC_DIR}/layout/controller/buttons/HelpButton.h
         ${_INC_DIR}/layout/controller/buttons/SettingsButton.h
-        ${_INC_DIR}/layout/controller/RoboCollectorController.h
-        ${_INC_DIR}/layout/controller/config/RoboCollectorControllerConfig.h
+        ${_INC_DIR}/layout/controller/RoboCollectorUiController.h
+        ${_INC_DIR}/layout/controller/config/RoboCollectorUiControllerConfig.h
      
         ${_SRC_DIR}/layout/controller/buttons/MoveButton.cpp
         ${_SRC_DIR}/layout/controller/buttons/HelpButton.cpp
         ${_SRC_DIR}/layout/controller/buttons/SettingsButton.cpp
-        ${_SRC_DIR}/layout/controller/RoboCollectorController.cpp
+        ${_SRC_DIR}/layout/controller/RoboCollectorUiController.cpp
 )
 
 target_include_directories(

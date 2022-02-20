@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_common/layout/controller/RoboCollectorController.h"
+#include "robo_collector_common/layout/controller/RoboCollectorUiController.h"
 
 //C system headers
 
@@ -12,9 +12,9 @@
 
 //Own components headers
 
-int32_t RoboCollectorController::init(
-    const RoboCollectorControllerConfig &cfg,
-    const RoboCollectorControllerOutInterface &interface) {
+int32_t RoboCollectorUiController::init(
+    const RoboCollectorUiControllerConfig &cfg,
+    const RoboCollectorUiControllerOutInterface &interface) {
   if (nullptr == interface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
     return FAILURE;
@@ -31,7 +31,7 @@ int32_t RoboCollectorController::init(
 
   MoveButtonConfig moveButtonCfg;
   moveButtonCfg.clickCb = std::bind(
-      &RoboCollectorController::onMoveButtonClicked, this,
+      &RoboCollectorUiController::onMoveButtonClicked, this,
       std::placeholders::_1);
   moveButtonCfg.infoTextFontId = cfg.moveButtonInfoTextFontId;
   const std::array<Point, MOVE_BUTTONS_CTN> buttonsPos { Point(1435,
@@ -82,7 +82,7 @@ int32_t RoboCollectorController::init(
   return SUCCESS;
 }
 
-void RoboCollectorController::draw() const {
+void RoboCollectorUiController::draw() const {
   for (const auto &button : _moveButtons) {
     button.draw();
   }
@@ -95,7 +95,7 @@ void RoboCollectorController::draw() const {
 //  _vertDelimiter.draw();
 }
 
-void RoboCollectorController::handleEvent(const InputEvent &e) {
+void RoboCollectorUiController::handleEvent(const InputEvent &e) {
   for (auto &button : _moveButtons) {
     if (button.isInputUnlocked() && button.containsEvent(e)) {
       button.handleEvent(e);
@@ -114,24 +114,24 @@ void RoboCollectorController::handleEvent(const InputEvent &e) {
   }
 }
 
-void RoboCollectorController::onMoveButtonClicked(MoveType moveType) {
+void RoboCollectorUiController::onMoveButtonClicked(MoveType moveType) {
   lockInput();
   _robotActCb(moveType);
 }
 
-void RoboCollectorController::lockInput() {
+void RoboCollectorUiController::lockInput() {
   for (auto &button : _moveButtons) {
     button.lockInput();
   }
 }
 
-void RoboCollectorController::unlockInput() {
+void RoboCollectorUiController::unlockInput() {
   for (auto &button : _moveButtons) {
     button.unlockInput();
   }
 }
 
-bool RoboCollectorController::isEnabled() const {
+bool RoboCollectorUiController::isEnabled() const {
   return _isEnabled;
 }
 

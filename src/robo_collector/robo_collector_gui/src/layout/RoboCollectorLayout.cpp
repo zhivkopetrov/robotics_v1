@@ -32,9 +32,9 @@ int32_t RoboCollectorLayout::init(
 void RoboCollectorLayout::produceInterface(
     RoboCollectorLayoutInterface& interface) {
   interface.enablePlayerInputCb = std::bind(
-      &RoboCollectorController::unlockInput, &_controller);
+      &RoboCollectorUiController::unlockInput, &_controller);
   interface.moveButtonClickCb = std::bind(
-      &RoboCollectorController::onMoveButtonClicked, &_controller, _1);
+      &RoboCollectorUiController::onMoveButtonClicked, &_controller, _1);
   for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
     interface.enemyRobotActInterfaces.emplace_back(
         std::bind(&Robot::act, &_enemyRobots[i], _1),

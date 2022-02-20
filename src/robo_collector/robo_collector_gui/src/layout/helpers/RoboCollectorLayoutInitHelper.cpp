@@ -153,10 +153,10 @@ int32_t RoboCollectorLayoutInitHelper::initCoinHandler(
 }
 
 int32_t RoboCollectorLayoutInitHelper::initController(
-    const RoboCollectorControllerConfig &cfg,
+    const RoboCollectorUiControllerConfig &cfg,
     const RoboCommonLayoutInterface& commonInterface,
     RoboCollectorLayout &layout) {
-  RoboCollectorControllerOutInterface outInterface;
+  RoboCollectorUiControllerOutInterface outInterface;
   outInterface.robotActCb = commonInterface.playerRobotActInterface.actCb;
   outInterface.helpActivatedCb = std::bind(
       &RoboCollectorLayout::activateHelpPage, &layout);

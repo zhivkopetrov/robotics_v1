@@ -9,7 +9,7 @@
 
 //Other libraries headers
 #include "robo_common/layout/RoboCommonLayout.h"
-#include "robo_collector_common/layout/controller/RoboCollectorController.h"
+#include "robo_collector_common/layout/controller/RoboCollectorUiController.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/panels/PanelHandler.h"
@@ -44,7 +44,7 @@ private:
   RoboCommonLayout _commonLayout;
   PanelHandler _panelHandler;
   CoinHandler _coinHandler;
-  RoboCollectorController _controller;
+  RoboCollectorUiController _controller;
   std::array<Robot, Defines::ENEMIES_CTN> _enemyRobots;
 };
 

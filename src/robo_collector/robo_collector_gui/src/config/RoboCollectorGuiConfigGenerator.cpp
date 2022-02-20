@@ -33,7 +33,7 @@ constexpr auto playerFieldMarker = 'B'; //B for Blinky
 constexpr auto enemyFieldMarker = 'E'; //E for Enemy
 constexpr auto emptyFieldMarker = '.';
 constexpr auto totalGameSeconds = 180;
-constexpr auto LOCAL_CONTROLLER_ENABLED = true;
+constexpr auto LOCAL_CONTROLLER_ENABLED = false;
 
 enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_START,
@@ -93,8 +93,8 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-RoboCollectorControllerConfig generateRoboCollectorControllerConfig() {
-  RoboCollectorControllerConfig cfg;
+RoboCollectorUiControllerConfig generateRoboCollectorUiControllerConfig() {
+  RoboCollectorUiControllerConfig cfg;
 
   cfg.moveButtonsRsrcIds = { RoboCollectorGuiResources::UP_BUTTON,
       RoboCollectorGuiResources::LEFT_BUTTON,
@@ -199,7 +199,7 @@ RoboCollectorGuiConfig generateGameConfig() {
   auto& layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
   layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
-  layoutCfg.controllerCfg = generateRoboCollectorControllerConfig();
+  layoutCfg.controllerCfg = generateRoboCollectorUiControllerConfig();
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();

@@ -13,7 +13,7 @@
 
 //Forward declarations
 
-struct RoboCollectorControllerConfig {
+struct RoboCollectorUiControllerConfig {
   std::vector<uint64_t> moveButtonsRsrcIds;
   uint64_t moveButtonInfoTextFontId = 0;
   int32_t maxMoveButtons = 0;
