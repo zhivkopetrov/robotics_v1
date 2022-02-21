@@ -23,7 +23,8 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_library(
     ${PROJECT_NAME}
-    STATIC 
+    STATIC
+        ${_INC_DIR}/defines/RoboCollectorTopics.h
         ${_INC_DIR}/defines/RoboCollectorFunctionalDefines.h
         ${_INC_DIR}/layout/controller/buttons/MoveButton.h
         ${_INC_DIR}/layout/controller/buttons/HelpButton.h

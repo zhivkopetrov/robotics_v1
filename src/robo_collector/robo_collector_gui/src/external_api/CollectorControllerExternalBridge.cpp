@@ -6,6 +6,7 @@
 //C++ system headers
 
 //Other libraries headers
+#include "robo_collector_common/defines/RoboCollectorTopics.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -28,9 +29,6 @@ MoveType getMoveType(const int8_t moveType) {
   }
 }
 
-//TODO create a separate topic constants header file
-constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
-constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enableInput";
 }
 
 CollectorControllerExternalBridge::CollectorControllerExternalBridge()
