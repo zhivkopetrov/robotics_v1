@@ -166,7 +166,7 @@ int32_t RoboCollectorLayoutInitHelper::initController(
   RoboCollectorUiControllerConfig cfg;
   cfg.horDelimiterRsrcId = baseCfg.horDelimiterRsrcId;
   cfg.vertDelimiterRsrcId = baseCfg.vertDelimiterRsrcId;
-  cfg.isEnabled = baseCfg.isEnabled;
+  cfg.localControllerMode = baseCfg.localControllerMode;
 
   constexpr size_t moveButtonsCount = 3;
   if (moveButtonsCount != baseCfg.moveButtonsRsrcIds.size()) {

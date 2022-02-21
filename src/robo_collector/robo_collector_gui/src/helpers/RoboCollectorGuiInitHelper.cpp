@@ -59,10 +59,10 @@ int32_t RoboCollectorGuiInitHelper::initLayout(
 
   RoboCollectorLayoutOutInterface outInterface;
   outInterface.collisionWatcher = &gui._collisionWatcher;
-  outInterface.isPlayerTurnActiveCb =
-      std::bind(&TurnHelper::isPlayerTurnActive, &gui._turnHelper);
-  outInterface.finishRobotActCb =
-      std::bind(&TurnHelper::onRobotFinishAct, &gui._turnHelper, _1);
+  outInterface.isPlayerTurnActiveCb = std::bind(&TurnHelper::isPlayerTurnActive,
+      &gui._turnHelper);
+  outInterface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
+      &gui._turnHelper, _1);
 
   if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
@@ -101,8 +101,8 @@ int32_t RoboCollectorGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.moveButtonClickCb = interface.moveButtonClickCb;
 
-  gui._controllerExternalBridge =
-      std::make_shared<CollectorControllerExternalBridge>();
+  gui._controllerExternalBridge = std::make_shared<
+      CollectorControllerExternalBridge>();
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;

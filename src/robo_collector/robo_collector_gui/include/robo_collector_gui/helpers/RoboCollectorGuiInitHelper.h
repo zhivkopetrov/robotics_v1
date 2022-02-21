@@ -24,10 +24,11 @@ public:
 
 private:
   static int32_t initLayout(const RoboCollectorLayoutConfig &cfg,
-                            RoboCollectorLayoutInterface& interface, //out param
-                            RoboCollectorGui &gui);
+                            RoboCollectorLayoutInterface &interface, //out param
+      RoboCollectorGui &gui);
   static int32_t initTurnHelper(const RoboCollectorLayoutInterface &interface,
-                                char fieldEnemyMarker, RoboCollectorGui &gui);
+                                char fieldEnemyMarker,
+                                RoboCollectorGui &gui);
   static int32_t initControllerExternalBridge(
       const RoboCollectorLayoutInterface &interface, RoboCollectorGui &gui);
 };

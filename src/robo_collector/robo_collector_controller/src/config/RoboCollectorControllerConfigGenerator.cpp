@@ -27,7 +27,7 @@ constexpr auto WINDOW_WIDTH = 648;
 constexpr auto WINDOW_HEIGHT = 553;
 
 //misc
-constexpr auto LOCAL_CONTROLLER_ENABLED = true;
+constexpr auto LOCAL_CONTROLLER_MODE = LocalControllerMode::ENABLED;
 
 enum TimerId {
 
@@ -44,7 +44,7 @@ RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig() {
   cfg.vertDelimiterRsrcId = RoboCollectorControllerResources::VERT_DELIMITER;
   cfg.helpButtonRsrcId = RoboCollectorControllerResources::HELP_BUTTON;
   cfg.settingsButtonRsrcId = RoboCollectorControllerResources::SETTINGS_BUTTON;
-  cfg.isEnabled = LOCAL_CONTROLLER_ENABLED;
+  cfg.localControllerMode = LOCAL_CONTROLLER_MODE;
 
   return cfg;
 }

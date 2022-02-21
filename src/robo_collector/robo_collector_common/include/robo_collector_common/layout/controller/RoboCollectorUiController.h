@@ -24,7 +24,7 @@ struct RoboCollectorUiControllerConfig {
   HelpButtonConfig helpBtnCfg;
   uint64_t horDelimiterRsrcId = 0;
   uint64_t vertDelimiterRsrcId = 0;
-  bool isEnabled = false;
+  LocalControllerMode localControllerMode = LocalControllerMode::DISABLED;
 };
 
 struct RoboCollectorUiControllerOutInterface {
@@ -54,7 +54,7 @@ private:
   Image _horDelimiter;
   Image _vertDelimiter;
 
-  bool _isEnabled = false;
+  LocalControllerMode _mode = LocalControllerMode::DISABLED;
 };
 
 #endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORUICONTROLLER_H_ */

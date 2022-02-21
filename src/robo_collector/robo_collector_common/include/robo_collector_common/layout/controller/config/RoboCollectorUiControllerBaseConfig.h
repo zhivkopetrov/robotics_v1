@@ -13,6 +13,11 @@
 
 //Forward declarations
 
+enum class LocalControllerMode {
+  ENABLED,
+  DISABLED
+};
+
 struct RoboCollectorUiControllerBaseConfig {
   std::vector<uint64_t> moveButtonsRsrcIds;
   uint64_t moveButtonInfoTextFontId = 0;
@@ -23,7 +28,7 @@ struct RoboCollectorUiControllerBaseConfig {
   uint64_t helpButtonRsrcId = 0;
   uint64_t settingsButtonRsrcId = 0;
 
-  bool isEnabled = false;
+  LocalControllerMode localControllerMode = LocalControllerMode::DISABLED;
 };
 
 #endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERBASECONFIG_H_ */

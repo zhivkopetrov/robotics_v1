@@ -51,7 +51,7 @@ int32_t RoboCollectorUiController::init(
     return FAILURE;
   }
 
-  _isEnabled = cfg.isEnabled;
+  _mode = cfg.localControllerMode;
 
   return SUCCESS;
 }
@@ -106,6 +106,6 @@ void RoboCollectorUiController::unlockInput() {
 }
 
 bool RoboCollectorUiController::isEnabled() const {
-  return _isEnabled;
+  return LocalControllerMode::ENABLED == _mode;
 }
 
