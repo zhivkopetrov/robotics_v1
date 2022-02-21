@@ -7,6 +7,7 @@
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
+#include "std_msgs/msg/empty.hpp"
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"
 #include "robo_collector_interfaces/srv/get_current_coins.hpp"
 #include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
@@ -27,27 +28,26 @@ public:
 
   int32_t init(const CollectorControllerExternalBridgeOutInterface &interface);
 
+  void publishEnablePlayerInput();
+
 private:
-  void onMoveMsg(
-      const robo_collector_interfaces::msg::RobotMoveType::SharedPtr msg);
+  typedef std_msgs::msg::Empty Empty;
+  typedef robo_collector_interfaces::msg::RobotMoveType RobotMoveType;
+  typedef robo_collector_interfaces::srv::GetCurrentCoins GetCurrentCoins;
+
+  void onMoveMsg(const RobotMoveType::SharedPtr msg);
 
   //TODO remove after test
-  void handleService(
-      const std::shared_ptr<
-          robo_collector_interfaces::srv::GetCurrentCoins::Request> request,
-      std::shared_ptr<
-          robo_collector_interfaces::srv::GetCurrentCoins::Response> response);
+  void handleService(const std::shared_ptr<GetCurrentCoins::Request> request,
+                     std::shared_ptr<GetCurrentCoins::Response> response);
 
   CollectorControllerExternalBridgeOutInterface _outInterface;
 
-  rclcpp::Subscription<robo_collector_interfaces::msg::RobotMoveType>::SharedPtr
-    _playerDirSubscriber;
+  rclcpp::Subscription<RobotMoveType>::SharedPtr _playerActSubscriber;
+  rclcpp::Publisher<Empty>::SharedPtr _playerEnableInputPublisher;
 
   //TODO remove after test
-  rclcpp::Service<robo_collector_interfaces::srv::GetCurrentCoins>::SharedPtr
-    _getCoinsService;
-
-  //TODO remove after test
+  rclcpp::Service<GetCurrentCoins>::SharedPtr _getCoinsService;
   int64_t _coins = 0;
 };
 

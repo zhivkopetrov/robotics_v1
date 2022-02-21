@@ -14,6 +14,8 @@
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
 #include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInterfaces.h"
 
+using namespace std::placeholders;
+
 int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
                                          RoboCollectorGui &gui) {
   int32_t err = SUCCESS;
@@ -32,6 +34,10 @@ int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
     return FAILURE;
   }
 
+  //allocate memory for the external bridge in order to attach it's callbacks
+  gui._controllerExternalBridge =
+      std::make_shared<CollectorControllerExternalBridge>();
+
   RoboCollectorLayoutInterface layoutInterface;
   if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
@@ -39,7 +45,8 @@ int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
   }
 
   if (SUCCESS != initTurnHelper(layoutInterface,
-          parsedCfg.layoutCfg.commonLayoutCfg.enemyFieldMarker, gui)) {
+      parsedCfg.layoutCfg.controllerCfg.localControllerMode,
+      parsedCfg.layoutCfg.commonLayoutCfg.enemyFieldMarker, gui)) {
     LOGERR("initTurnHelper() failed");
     return FAILURE;
   }
@@ -55,7 +62,6 @@ int32_t RoboCollectorGuiInitHelper::init(const std::any &cfg,
 int32_t RoboCollectorGuiInitHelper::initLayout(
     const RoboCollectorLayoutConfig &cfg,
     RoboCollectorLayoutInterface &interface, RoboCollectorGui &gui) {
-  using namespace std::placeholders;
 
   RoboCollectorLayoutOutInterface outInterface;
   outInterface.collisionWatcher = &gui._collisionWatcher;
@@ -73,10 +79,18 @@ int32_t RoboCollectorGuiInitHelper::initLayout(
 }
 
 int32_t RoboCollectorGuiInitHelper::initTurnHelper(
-    const RoboCollectorLayoutInterface &interface, char fieldEnemyMarker,
+    const RoboCollectorLayoutInterface &interface,
+    LocalControllerMode localControllerMode, char fieldEnemyMarker,
     RoboCollectorGui &gui) {
   TurnHelperConfig cfg;
-  cfg.enablePlayerInputCb = interface.enablePlayerInputCb;
+  if (LocalControllerMode::ENABLED == localControllerMode) {
+    cfg.enablePlayerInputCb = interface.enablePlayerInputCb;
+  } else {
+    cfg.enablePlayerInputCb = std::bind(
+        &CollectorControllerExternalBridge::publishEnablePlayerInput,
+        gui._controllerExternalBridge.get());
+  }
+
   cfg.getFieldDataCb = interface.commonLayoutInterface.getFieldDataCb;
   cfg.fieldEnemyMarker = fieldEnemyMarker;
   cfg.maxRobots = Defines::ROBOTS_CTN;
@@ -101,8 +115,6 @@ int32_t RoboCollectorGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.moveButtonClickCb = interface.moveButtonClickCb;
 
-  gui._controllerExternalBridge = std::make_shared<
-      CollectorControllerExternalBridge>();
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;

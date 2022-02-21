@@ -15,6 +15,7 @@
 class RoboCollectorGui;
 struct RoboCollectorLayoutConfig;
 struct RoboCollectorLayoutInterface;
+enum class LocalControllerMode;
 
 class RoboCollectorGuiInitHelper {
 public:
@@ -27,6 +28,7 @@ private:
                             RoboCollectorLayoutInterface &interface, //out param
       RoboCollectorGui &gui);
   static int32_t initTurnHelper(const RoboCollectorLayoutInterface &interface,
+                                LocalControllerMode localControllerMode,
                                 char fieldEnemyMarker,
                                 RoboCollectorGui &gui);
   static int32_t initControllerExternalBridge(

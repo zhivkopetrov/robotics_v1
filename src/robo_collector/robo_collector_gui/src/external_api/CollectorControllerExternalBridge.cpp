@@ -11,13 +11,11 @@
 
 //Own components headers
 
-using robo_collector_interfaces::msg::RobotMoveType;
-using robo_collector_interfaces::srv::GetCurrentCoins;
-
 namespace {
 //TODO create separate message helper utility file
-MoveType getMoveType(const RobotMoveType::SharedPtr &msg) {
-  switch (msg->move_type) {
+MoveType getMoveType(const int8_t moveType) {
+  using robo_collector_interfaces::msg::RobotMoveType;
+  switch (moveType) {
   case RobotMoveType::FORWARD:
     return MoveType::FORWARD;
   case RobotMoveType::ROTATE_LEFT:
@@ -25,13 +23,14 @@ MoveType getMoveType(const RobotMoveType::SharedPtr &msg) {
   case RobotMoveType::ROTATE_RIGHT:
     return MoveType::ROTATE_RIGHT;
   default:
-    LOGERR("Error, received unsupported RobotMoveType: %hhu", msg->move_type);
+    LOGERR("Error, received unsupported RobotMoveType: %hhu", moveType);
     return MoveType::FORWARD;
   }
 }
 
-//TODO create a separate topic contants header file
+//TODO create a separate topic constants header file
 constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
+constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enableInput";
 }
 
 CollectorControllerExternalBridge::CollectorControllerExternalBridge()
@@ -52,21 +51,28 @@ int32_t CollectorControllerExternalBridge::init(
   }
 
   using namespace std::placeholders;
-  constexpr auto QoS = 10;
-  _playerDirSubscriber = create_subscription<RobotMoveType>(
-      ROBOT_MOVE_TYPE_TOPIC, QoS,
+  constexpr auto queueSize = 10;
+  _playerActSubscriber = create_subscription<RobotMoveType>(
+      ROBOT_MOVE_TYPE_TOPIC, queueSize,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
 
   _getCoinsService = create_service<GetCurrentCoins>("getCurrentCoins",
       std::bind(&CollectorControllerExternalBridge::handleService, this, _1,
           _2));
 
+  _playerEnableInputPublisher = create_publisher<Empty>(
+      ENABLE_ROBOT_INPUT_TOPIC, queueSize);
+
   return SUCCESS;
+}
+
+void CollectorControllerExternalBridge::publishEnablePlayerInput() {
+  _playerEnableInputPublisher->publish(Empty());
 }
 
 void CollectorControllerExternalBridge::onMoveMsg(
     const RobotMoveType::SharedPtr msg) {
-  const auto moveType = getMoveType(msg);
+  const auto moveType = getMoveType(msg->move_type);
   const auto f = [this, moveType]() {
     _outInterface.moveButtonClickCb(moveType);
   };

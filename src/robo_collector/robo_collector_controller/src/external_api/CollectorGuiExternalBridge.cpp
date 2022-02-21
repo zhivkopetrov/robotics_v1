@@ -54,12 +54,12 @@ int32_t CollectorGuiExternalBridge::init(
   }
 
   using namespace std::placeholders;
-  constexpr auto QoS = 10;
+  constexpr auto queueSize = 10;
   _robotActPublisher =
-      create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC, QoS);
+      create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC, queueSize);
 
   _enableRobotTurn = create_subscription<Empty>(
-      ENABLE_ROBOT_INPUT_TOPIC, QoS,
+      ENABLE_ROBOT_INPUT_TOPIC, queueSize,
       std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1));
 
   return SUCCESS;
