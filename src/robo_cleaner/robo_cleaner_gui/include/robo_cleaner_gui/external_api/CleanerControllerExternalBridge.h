@@ -19,6 +19,7 @@
 struct CleanerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
+  SystemShutdownCb systemShutdownCb;
 };
 
 class CleanerControllerExternalBridge: public rclcpp::Node {
@@ -26,6 +27,8 @@ public:
   CleanerControllerExternalBridge();
 
   int32_t init(const CleanerControllerExternalBridgeOutInterface &interface);
+
+  void publishShutdownController();
 
 private:
   void onMoveMsg(

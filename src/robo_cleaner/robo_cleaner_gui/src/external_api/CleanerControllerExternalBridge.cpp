@@ -69,6 +69,15 @@ int32_t CleanerControllerExternalBridge::init(
   return SUCCESS;
 }
 
+void CleanerControllerExternalBridge::publishShutdownController() {
+  //TODO publish on a topic
+
+  const auto f = [this]() {
+    _outInterface.systemShutdownCb();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
 void CleanerControllerExternalBridge::onMoveMsg(
     const RobotMoveType::SharedPtr msg) {
   MoveType moveType;

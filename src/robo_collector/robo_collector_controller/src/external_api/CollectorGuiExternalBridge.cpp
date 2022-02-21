@@ -53,12 +53,17 @@ int32_t CollectorGuiExternalBridge::init(
 
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
-  _robotActPublisher =
-      create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC, queueSize);
+  _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,
+      queueSize);
 
-  _enableRobotTurn = create_subscription<Empty>(
+  _enableRobotTurnSubscription = create_subscription<Empty>(
       ENABLE_ROBOT_INPUT_TOPIC, queueSize,
       std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1));
+
+  _shutdownControllerSubscription = create_subscription<Empty>(
+      SHUTDOWN_CONTROLLER_TOPIC, queueSize,
+      std::bind(&CollectorGuiExternalBridge::onControllerShutdownMsg, this,
+          _1));
 
   return SUCCESS;
 }
@@ -79,11 +84,19 @@ void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) {
 
 void CollectorGuiExternalBridge::onEnableRobotTurnMsg(
     [[maybe_unused]]const Empty::SharedPtr msg) {
-  const auto f = [this](){
+  const auto f = [this]() {
     _outInterface.enablePlayerInputCb();
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
+void CollectorGuiExternalBridge::onControllerShutdownMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.systemShutdownCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
 

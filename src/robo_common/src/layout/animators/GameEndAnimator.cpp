@@ -11,7 +11,13 @@
 
 //Own components headers
 
-int32_t GameEndAnimator::init() {
+int32_t GameEndAnimator::init(const ShutdownGameCb& shutdownGameCb) {
+  if (nullptr == shutdownGameCb) {
+    LOGERR("Error, nullptr provided for ShutdownGameCb");
+    return FAILURE;
+  }
+  _shutdownGameCb = shutdownGameCb;
+
   return SUCCESS;
 }
 
@@ -21,8 +27,14 @@ void GameEndAnimator::draw() const {
 
 void GameEndAnimator::startGameWonAnim() {
   LOGG("You've Won");
+
+  //TODO add animation and invoke shutdownGameCb on animation end
+  _shutdownGameCb();
 }
 
 void GameEndAnimator::startGameLostAnim() {
   LOGR("You've Lost");
+
+  //TODO add animation and invoke shutdownGameCb on animation end
+  _shutdownGameCb();
 }

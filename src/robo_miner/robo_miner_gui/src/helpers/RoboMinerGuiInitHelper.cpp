@@ -31,6 +31,10 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
     return FAILURE;
   }
 
+  //allocate memory for the external bridge in order to attach it's callbacks
+  gui._controllerExternalBridge =
+      std::make_shared<MinerControllerExternalBridge>();
+
   RoboMinerLayoutInterface layoutInterface;
   if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
@@ -54,6 +58,9 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb =
       std::bind(&RoboMinerGui::onRobotTurnFinish, &gui, _1);
+  outInterface.shutdownGameCb = std::bind(
+      &MinerControllerExternalBridge::publishShutdownController,
+      gui._controllerExternalBridge.get());
 
   if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
@@ -69,9 +76,8 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotActCb =
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
+  outInterface.systemShutdownCb = gui._systemShutdownCb;
 
-  gui._controllerExternalBridge =
-      std::make_shared<MinerControllerExternalBridge>();
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;

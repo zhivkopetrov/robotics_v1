@@ -25,6 +25,7 @@ struct RoboCollectorLayoutInterface {
 };
 
 struct RoboCollectorLayoutOutInterface {
+  ShutdownGameCb shutdownGameCb;
   FinishRobotActCb finishRobotActCb;
   IsPlayerTurnActiveCb isPlayerTurnActiveCb;
   CollisionWatcher *collisionWatcher = nullptr;

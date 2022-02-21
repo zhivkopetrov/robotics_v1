@@ -22,6 +22,7 @@ int32_t RoboCollectorLayoutInitHelper::init(
     RoboCommonLayoutInterface &commonInterface,
     RoboCollectorLayout &layout) {
   RoboCommonLayoutOutInterface commonOutInterface;
+  commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
   commonOutInterface.collisionWatcher = outInterface.collisionWatcher;
   commonOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
   commonOutInterface.playerDamageCb = std::bind(

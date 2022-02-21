@@ -19,6 +19,7 @@
 struct CollectorGuiExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   EnablePlayerInputCb enablePlayerInputCb;
+  SystemShutdownCb systemShutdownCb;
 };
 
 class CollectorGuiExternalBridge: public rclcpp::Node {
@@ -36,11 +37,13 @@ private:
   typedef std_msgs::msg::Empty Empty;
 
   void onEnableRobotTurnMsg(const Empty::SharedPtr msg);
+  void onControllerShutdownMsg(const Empty::SharedPtr msg);
 
   CollectorGuiExternalBridgeOutInterface _outInterface;
   rclcpp::Publisher<RobotMoveType>::SharedPtr _robotActPublisher;
 
-  rclcpp::Subscription<Empty>::SharedPtr _enableRobotTurn;
+  rclcpp::Subscription<Empty>::SharedPtr _enableRobotTurnSubscription;
+  rclcpp::Subscription<Empty>::SharedPtr _shutdownControllerSubscription;
 };
 
 #endif /* ROBO_COLLECTOR_CONTROLLER_COLLECTORGUIEXTERNALBRIDGE_H_ */

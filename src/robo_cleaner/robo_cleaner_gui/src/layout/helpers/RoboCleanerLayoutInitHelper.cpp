@@ -26,6 +26,7 @@ int32_t RoboCleanerLayoutInitHelper::init(
   commonOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
   commonOutInterface.playerDamageCb = std::bind(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
+  commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
 
   if (SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {

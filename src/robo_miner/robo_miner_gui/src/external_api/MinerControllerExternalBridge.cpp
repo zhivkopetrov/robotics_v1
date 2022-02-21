@@ -69,6 +69,15 @@ int32_t MinerControllerExternalBridge::init(
   return SUCCESS;
 }
 
+void MinerControllerExternalBridge::publishShutdownController() {
+  //TODO publish on a topic
+
+  const auto f = [this]() {
+    _outInterface.systemShutdownCb();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
 void MinerControllerExternalBridge::onMoveMsg(
     const RobotMoveType::SharedPtr msg) {
   MoveType moveType;

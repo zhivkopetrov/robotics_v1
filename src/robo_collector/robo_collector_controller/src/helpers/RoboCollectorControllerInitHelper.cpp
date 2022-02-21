@@ -84,6 +84,7 @@ int32_t RoboCollectorControllerInitHelper::initControllerExternalBridge(
   CollectorGuiExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = controller._invokeActionEventCb;
   outInterface.enablePlayerInputCb = interface.enablePlayerInputCb;
+  outInterface.systemShutdownCb = controller._systemShutdownCb;
 
   if (SUCCESS != controller._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

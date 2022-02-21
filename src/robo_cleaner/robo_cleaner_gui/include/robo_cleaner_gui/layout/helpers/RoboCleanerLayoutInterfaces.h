@@ -20,6 +20,7 @@ struct RoboCleanerLayoutInterface {
 };
 
 struct RoboCleanerLayoutOutInterface {
+  ShutdownGameCb shutdownGameCb;
   FinishRobotActCb finishRobotActCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };

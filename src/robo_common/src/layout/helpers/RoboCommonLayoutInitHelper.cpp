@@ -24,7 +24,7 @@ int32_t RoboCommonLayoutInitHelper::init(
     return FAILURE;
   }
 
-  if (SUCCESS != layout._gameEndAnimator.init()) {
+  if (SUCCESS != layout._gameEndAnimator.init(outInterface.shutdownGameCb)) {
     LOGERR("_gameEndAnimator.init() failed");
     return FAILURE;
   }

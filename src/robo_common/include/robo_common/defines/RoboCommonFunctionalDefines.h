@@ -25,7 +25,6 @@ using FinishRobotActCb = std::function<void(int32_t)>;
 using IndicatorDepletedCb = std::function<void()>;
 using StartGameLostAnimCb = IndicatorDepletedCb;
 using StartGameWonAnimCb = std::function<void()>;
-//using GameLostCb = std::function<void()>;
-//using GameWonCb = std::function<void()>;
+using ShutdownGameCb = std::function<void()>;
 
 #endif /* ROBO_COMMON_ROBOCOMMONFUNCTIONALDEFINES_H_ */

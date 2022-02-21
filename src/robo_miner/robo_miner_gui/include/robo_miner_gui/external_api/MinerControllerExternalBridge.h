@@ -19,6 +19,7 @@
 struct MinerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
+  SystemShutdownCb systemShutdownCb;
 };
 
 class MinerControllerExternalBridge: public rclcpp::Node {
@@ -26,6 +27,8 @@ public:
   MinerControllerExternalBridge();
 
   int32_t init(const MinerControllerExternalBridgeOutInterface &interface);
+
+  void publishShutdownController();
 
 private:
   void onMoveMsg(

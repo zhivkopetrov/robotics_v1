@@ -9,19 +9,20 @@
 //Other libraries headers
 
 //Own components headers
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 
 //Forward declarations
 
 class GameEndAnimator {
 public:
-  int32_t init();
+  int32_t init(const ShutdownGameCb& shutdownGameCb);
   void draw() const;
 
-  //TODO animate
   void startGameWonAnim();
   void startGameLostAnim();
 
 private:
+  ShutdownGameCb _shutdownGameCb;
 };
 
 #endif /* ROBO_COMMON_GAMEENDANIMATOR_H_ */

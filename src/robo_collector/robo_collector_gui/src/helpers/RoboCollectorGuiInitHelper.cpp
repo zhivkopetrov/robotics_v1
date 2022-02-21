@@ -69,6 +69,9 @@ int32_t RoboCollectorGuiInitHelper::initLayout(
       &gui._turnHelper);
   outInterface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
       &gui._turnHelper, _1);
+  outInterface.shutdownGameCb = std::bind(
+      &CollectorControllerExternalBridge::publishShutdownController,
+      gui._controllerExternalBridge.get());
 
   if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");

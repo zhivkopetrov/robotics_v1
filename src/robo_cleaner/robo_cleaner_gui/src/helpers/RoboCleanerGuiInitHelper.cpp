@@ -31,6 +31,10 @@ int32_t RoboCleanerGuiInitHelper::init(const std::any &cfg, RoboCleanerGui &gui)
     return FAILURE;
   }
 
+  //allocate memory for the external bridge in order to attach it's callbacks
+  gui._controllerExternalBridge =
+      std::make_shared<CleanerControllerExternalBridge>();
+
   RoboCleanerLayoutInterface layoutInterface;
   if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
@@ -54,6 +58,9 @@ int32_t RoboCleanerGuiInitHelper::initLayout(const RoboCleanerLayoutConfig &cfg,
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb =
       std::bind(&RoboCleanerGui::onRobotTurnFinish, &gui, _1);
+  outInterface.shutdownGameCb = std::bind(
+      &CleanerControllerExternalBridge::publishShutdownController,
+      gui._controllerExternalBridge.get());
 
   if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
@@ -70,8 +77,6 @@ int32_t RoboCleanerGuiInitHelper::initControllerExternalBridge(
   outInterface.robotActCb =
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
 
-  gui._controllerExternalBridge =
-      std::make_shared<CleanerControllerExternalBridge>();
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;
