@@ -21,6 +21,8 @@ public:
   void draw() const;
   void increaseCollectedCoins(int32_t coins);
 
+  void onTargetCoinsReached(uint64_t targetCoins);
+
 private:
   NumberCounter _numberPanel;
   Text _totalCoinsText;

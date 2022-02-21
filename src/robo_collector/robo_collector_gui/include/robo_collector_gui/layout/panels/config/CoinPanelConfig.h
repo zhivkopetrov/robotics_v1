@@ -11,6 +11,7 @@
 //Own components headers
 
 struct CoinPanelConfig {
+  uint64_t targetCoins = 0;
   uint64_t rsrcId = 0;
   uint64_t fontId = 0;
   int32_t incrTimerId = 0;

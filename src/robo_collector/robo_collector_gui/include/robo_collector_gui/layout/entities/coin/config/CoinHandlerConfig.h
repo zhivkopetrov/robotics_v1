@@ -16,6 +16,7 @@
 struct CoinHandlerConfig {
   std::vector<uint64_t> animRsrcIds;
   std::vector<char> fieldMarkers;
+  uint64_t targetWinCoins = 0;
   int32_t maxCoins = 0;
   int32_t rotateAnimFirstTimerId = 0;
   int32_t collectAnimFirstTimerId = 0;

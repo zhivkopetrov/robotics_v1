@@ -29,11 +29,12 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
-constexpr auto playerFieldMarker = 'B'; //B for Blinky
-constexpr auto enemyFieldMarker = 'E'; //E for Enemy
-constexpr auto emptyFieldMarker = '.';
-constexpr auto totalGameSeconds = 180;
+constexpr auto PLAYER_FIELD_MARKER = 'B'; //B for Blinky
+constexpr auto ENEMY_FIELD_MARKER = 'E'; //E for Enemy
+constexpr auto EMPTY_FIELD_MARKER = '.';
+constexpr auto TOTAL_GAME_SECONDS = 180;
 constexpr auto LOCAL_CONTROLLER_MODE = LocalControllerMode::DISABLED;
+constexpr auto TARGET_WIN_COINS = 30;
 
 enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_START,
@@ -118,10 +119,11 @@ CoinHandlerConfig generateCoinHandlerConfig() {
   cfg.fieldMarkers = { 'g', 's', 'b' //gold, silver, bronze
       };
   cfg.maxCoins = Defines::COINS_CTN;
+  cfg.targetWinCoins = TARGET_WIN_COINS;
   cfg.rotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
   cfg.collectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
   cfg.respawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
-  cfg.fieldEmptyMarker = emptyFieldMarker;
+  cfg.fieldEmptyMarker = EMPTY_FIELD_MARKER;
 
   return cfg;
 }
@@ -137,6 +139,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
 
   auto &coinPanelCfg = cfg.coinPanelCfg;
+  coinPanelCfg.targetCoins = TARGET_WIN_COINS;
   coinPanelCfg.rsrcId = RoboCollectorGuiResources::COIN_PANEL;
   coinPanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
   coinPanelCfg.incrTimerId = COIN_PANEL_INCR_TIMER_ID;
@@ -147,7 +150,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   timePanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
   timePanelCfg.clockTimerId = TIME_PANEL_CLOCK_TIMER_ID;
   timePanelCfg.blinkTimerId = TIME_PANEL_BLINK_TIMER_ID;
-  timePanelCfg.totalSeconds = totalGameSeconds;
+  timePanelCfg.totalSeconds = TOTAL_GAME_SECONDS;
 
   return cfg;
 }
@@ -205,8 +208,8 @@ RoboCollectorGuiConfig generateGameConfig() {
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = playerFieldMarker;
-  commonLayoutCfg.enemyFieldMarker = enemyFieldMarker;
+  commonLayoutCfg.playerFieldMarker = PLAYER_FIELD_MARKER;
+  commonLayoutCfg.enemyFieldMarker = ENEMY_FIELD_MARKER;
 
   return cfg;
 }

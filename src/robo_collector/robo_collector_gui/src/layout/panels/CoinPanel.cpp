@@ -32,12 +32,20 @@ int32_t CoinPanel::init(const CoinPanelConfig& cfg,
   numberPanelCfg.startValue = 0;
   numberPanelCfg.boundaryRect = Rectangle(panelX + 50, panelY + 15, 346, 120);
 
+  auto& triggerCfg = numberPanelCfg.triggerCfg;
+  triggerCfg.isIncreasingTrigger = true;
+  triggerCfg.value = cfg.targetCoins;
+  triggerCfg.triggerCb =
+      std::bind(&CoinPanel::onTargetCoinsReached, this, std::placeholders::_1);
+
   if (SUCCESS != _numberPanel.init(numberPanelCfg)) {
     LOGERR("Error, _numberPanel.init() failed");
     return FAILURE;
   }
 
-  _totalCoinsText.create(cfg.fontId, "/ 30", lightGoldColor,
+  std::string textContent = "/ ";
+  textContent.append(std::to_string(cfg.targetCoins));
+  _totalCoinsText.create(cfg.fontId, textContent.c_str(), lightGoldColor,
       Point(panelX + 290, panelY + 30));
 
   return SUCCESS;
@@ -50,7 +58,9 @@ void CoinPanel::draw() const {
 
 void CoinPanel::increaseCollectedCoins(int32_t coins) {
   _numberPanel.increaseWith(coins);
+}
 
-  //TODO invoke win CB
+void CoinPanel::onTargetCoinsReached([[maybe_unused]]uint64_t targetCoins) {
+  _gameWonCb();
 }
 
