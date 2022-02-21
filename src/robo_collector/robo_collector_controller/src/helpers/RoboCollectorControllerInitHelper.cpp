@@ -33,6 +33,10 @@ int32_t RoboCollectorControllerInitHelper::init(
     return FAILURE;
   }
 
+  //allocate memory for the external bridge in order to attach it's callbacks
+  controller._controllerExternalBridge =
+      std::make_shared<CollectorGuiExternalBridge>();
+
   RoboCollectorControllerLayoutInterface layoutInterface;
   if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, controller)) {
     LOGERR("Error, initLayout() failed");
@@ -81,8 +85,6 @@ int32_t RoboCollectorControllerInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = controller._invokeActionEventCb;
   outInterface.enablePlayerInputCb = interface.enablePlayerInputCb;
 
-  controller._controllerExternalBridge =
-      std::make_shared<CollectorGuiExternalBridge>();
   if (SUCCESS != controller._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return FAILURE;

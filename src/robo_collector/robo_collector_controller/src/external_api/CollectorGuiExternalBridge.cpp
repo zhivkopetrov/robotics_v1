@@ -30,7 +30,7 @@ int8_t getMoveTypeField(MoveType moveType) {
   }
 }
 
-//TODO create a separate topic contants header file
+//TODO create a separate topic constants header file
 constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
 constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enableInput";
 }
@@ -76,10 +76,7 @@ void CollectorGuiExternalBridge::publishToggleHelp() {
 void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) {
   RobotMoveType msg;
   msg.move_type = getMoveTypeField(moveType);
-  LOGC("about to publish: %hhu", msg.move_type);
-
   _robotActPublisher->publish(msg);
-  LOGC("publish successful");
 }
 
 void CollectorGuiExternalBridge::onEnableRobotTurnMsg(

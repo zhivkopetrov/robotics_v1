@@ -80,7 +80,7 @@ ament_target_dependencies(
 
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
-# enable_target_sanitizer(${PROJECT_NAME} "memory")
+# enable_target_sanitizer(${PROJECT_NAME} "address")
 
 if(NOT DISABLE_ROS_TOOLING)
     enable_ros_tooling_for_target(
