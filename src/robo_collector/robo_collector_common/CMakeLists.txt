@@ -29,7 +29,7 @@ add_library(
         ${_INC_DIR}/layout/controller/buttons/HelpButton.h
         ${_INC_DIR}/layout/controller/buttons/SettingsButton.h
         ${_INC_DIR}/layout/controller/RoboCollectorUiController.h
-        ${_INC_DIR}/layout/controller/config/RoboCollectorUiControllerConfig.h
+        ${_INC_DIR}/layout/controller/config/RoboCollectorUiControllerBaseConfig.h
      
         ${_SRC_DIR}/layout/controller/buttons/MoveButton.cpp
         ${_SRC_DIR}/layout/controller/buttons/HelpButton.cpp

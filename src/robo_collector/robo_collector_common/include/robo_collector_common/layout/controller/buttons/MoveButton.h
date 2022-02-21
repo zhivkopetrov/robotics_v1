@@ -18,7 +18,6 @@
 class InputEvent;
 
 struct MoveButtonConfig {
-  MoveButtonClickCb clickCb;
   Point startPos;
   uint64_t rsrcId = 0;
   MoveType moveType = MoveType::UNKNOWN;
@@ -29,7 +28,7 @@ struct MoveButtonConfig {
 
 class MoveButton final : public ButtonBase {
 public:
-  int32_t init(const MoveButtonConfig& cfg);
+  int32_t init(const MoveButtonConfig& cfg, const MoveButtonClickCb& clickCb);
   void handleEvent(const InputEvent& e) override;
   void draw() const;
 

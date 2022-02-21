@@ -16,13 +16,14 @@
 class InputEvent;
 
 struct SettingsButtonConfig {
-  SettingActivatedCb settingActivatedCb;
   uint64_t rsrcId = 0;
+  Point pos;
 };
 
 class SettingsButton final : public ButtonBase {
 public:
-  int32_t init(const SettingsButtonConfig& cfg);
+  int32_t init(const SettingsButtonConfig& cfg,
+               const SettingActivatedCb& settingActivatedCb);
   void handleEvent(const InputEvent& e) override;
 
 private:

@@ -16,7 +16,6 @@
 //Forward declarations
 
 using IsPlayerTurnActiveCb = std::function<bool()>;
-using EnablePlayerInputCb = std::function<void()>;
 using IncrCollectedCoinsCb = std::function<void(int32_t)>;
 
 #endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIFUNCTIONALDEFINES_H_ */

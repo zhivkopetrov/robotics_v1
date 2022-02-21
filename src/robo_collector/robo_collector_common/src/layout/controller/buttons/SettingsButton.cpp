@@ -13,18 +13,16 @@
 
 //Own components headers
 
-int32_t SettingsButton::init(const SettingsButtonConfig& cfg) {
-  if (nullptr == cfg.settingActivatedCb) {
+int32_t SettingsButton::init(const SettingsButtonConfig& cfg,
+                             const SettingActivatedCb& settingActivatedCb) {
+  if (nullptr == settingActivatedCb) {
     LOGERR("Error, nullptr provided for SettingActivatedCb");
     return FAILURE;
   }
-  _settingActivatedCb = cfg.settingActivatedCb;
+  _settingActivatedCb = settingActivatedCb;
 
   create(cfg.rsrcId);
-
-  constexpr auto buttonX = 1680;
-  constexpr auto buttonY = 580;
-  setPosition(buttonX, buttonY);
+  setPosition(cfg.pos);
 
   return SUCCESS;
 }

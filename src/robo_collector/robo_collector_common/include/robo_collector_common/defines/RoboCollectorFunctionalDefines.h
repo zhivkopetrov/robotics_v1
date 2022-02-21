@@ -17,5 +17,6 @@
 using MoveButtonClickCb = std::function<void(MoveType)>;
 using SettingActivatedCb = std::function<void()>;
 using HelpActivatedCb = std::function<void()>;
+using EnablePlayerInputCb = std::function<void()>;
 
 #endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORFUNCTIONALDEFINES_H_ */

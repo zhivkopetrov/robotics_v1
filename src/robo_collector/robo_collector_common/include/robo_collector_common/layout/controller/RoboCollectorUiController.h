@@ -5,7 +5,6 @@
 
 //C++ system headers
 #include <cstdint>
-#include <array>
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
@@ -14,10 +13,19 @@
 #include "robo_collector_common/layout/controller/buttons/MoveButton.h"
 #include "robo_collector_common/layout/controller/buttons/HelpButton.h"
 #include "robo_collector_common/layout/controller/buttons/SettingsButton.h"
-#include "robo_collector_common/layout/controller/config/RoboCollectorUiControllerConfig.h"
+#include "robo_collector_common/layout/controller/config/RoboCollectorUiControllerBaseConfig.h"
 
 //Forward declarations
 class InputEvent;
+
+struct RoboCollectorUiControllerConfig {
+  std::vector<MoveButtonConfig> moveButtonsCfgs;
+  SettingsButtonConfig settingsBtnCfg;
+  HelpButtonConfig helpBtnCfg;
+  uint64_t horDelimiterRsrcId = 0;
+  uint64_t vertDelimiterRsrcId = 0;
+  bool isEnabled = false;
+};
 
 struct RoboCollectorUiControllerOutInterface {
   RobotActCb robotActCb;
@@ -36,15 +44,8 @@ public:
   void unlockInput();
   bool isEnabled() const;
 private:
-  enum MoveButtonDefines {
-    BUTTON_FORWARD,
-    BUTTON_ROTATE_LEFT,
-    BUTTON_ROTATE_RIGHT,
-    MOVE_BUTTONS_CTN
-  };
-
   RobotActCb _robotActCb;
-  std::array<MoveButton, MOVE_BUTTONS_CTN> _moveButtons;
+  std::vector<MoveButton> _moveButtons;
 
   HelpButton _helpButton;
   SettingsButton _settingsButton;

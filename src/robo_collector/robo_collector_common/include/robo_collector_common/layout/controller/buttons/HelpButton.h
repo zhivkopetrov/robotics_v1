@@ -16,13 +16,14 @@
 class InputEvent;
 
 struct HelpButtonConfig {
-  HelpActivatedCb helpActivatedCb;
   uint64_t rsrcId = 0;
+  Point pos;
 };
 
 class HelpButton final : public ButtonBase {
 public:
-  int32_t init(const HelpButtonConfig& cfg);
+  int32_t init(const HelpButtonConfig& cfg,
+               const HelpActivatedCb& helpActivatedCb);
   void handleEvent(const InputEvent& e) override;
 
 private:

@@ -17,7 +17,7 @@ struct RoboCollectorLayoutOutInterface;
 struct RoboCollectorLayoutConfig;
 struct PanelHandlerConfig;
 struct CoinHandlerConfig;
-struct RoboCollectorUiControllerConfig;
+struct RoboCollectorUiControllerBaseConfig;
 struct RoboCommonLayoutInterface;
 
 class RoboCollectorLayoutInitHelper {
@@ -46,7 +46,7 @@ private:
       RoboCollectorLayout &layout);
 
   static int32_t initController(
-      const RoboCollectorUiControllerConfig &guiCfg,
+      const RoboCollectorUiControllerBaseConfig &baseCfg,
       const RoboCommonLayoutInterface &commonInterface,
       RoboCollectorLayout &layout);
 };

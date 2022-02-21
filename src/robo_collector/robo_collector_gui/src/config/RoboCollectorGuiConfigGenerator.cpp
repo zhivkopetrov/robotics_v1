@@ -93,8 +93,8 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-RoboCollectorUiControllerConfig generateRoboCollectorUiControllerConfig() {
-  RoboCollectorUiControllerConfig cfg;
+RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig() {
+  RoboCollectorUiControllerBaseConfig cfg;
 
   cfg.moveButtonsRsrcIds = { RoboCollectorGuiResources::UP_BUTTON,
       RoboCollectorGuiResources::LEFT_BUTTON,

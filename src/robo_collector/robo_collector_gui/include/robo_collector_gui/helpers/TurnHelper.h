@@ -9,9 +9,9 @@
 
 //Other libraries headers
 #include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
+#include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 
 //Own components headers
-#include "robo_collector_gui/defines/RoboCollectorGuiFunctionalDefines.h"
 #include "robo_collector_gui/layout/entities/robot/RobotAI.h"
 
 //Forward declarations

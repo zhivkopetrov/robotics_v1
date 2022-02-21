@@ -12,18 +12,16 @@
 
 //Own components headers
 
-int32_t HelpButton::init(const HelpButtonConfig& cfg) {
-  if (nullptr == cfg.helpActivatedCb) {
+int32_t HelpButton::init(const HelpButtonConfig& cfg,
+                         const HelpActivatedCb& helpActivatedCb) {
+  if (nullptr == helpActivatedCb) {
     LOGERR("Error, nullptr provided for HelpActivatedCb");
     return FAILURE;
   }
-  _helpActivatedCb = cfg.helpActivatedCb;
+  _helpActivatedCb = helpActivatedCb;
 
   create(cfg.rsrcId);
-
-  constexpr auto buttonX = 1680;
-  constexpr auto buttonY = 660;
-  setPosition(buttonX, buttonY);
+  setPosition(cfg.pos);
 
   return SUCCESS;
 }

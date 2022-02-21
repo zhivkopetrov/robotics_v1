@@ -12,13 +12,14 @@
 
 //Own components headers
 
-int32_t MoveButton::init(const MoveButtonConfig &cfg) {
-  if (nullptr == cfg.clickCb) {
+int32_t MoveButton::init(const MoveButtonConfig &cfg,
+                         const MoveButtonClickCb& clickCb) {
+  if (nullptr == clickCb) {
     LOGERR("Error, nullptr provided for clickCb for MoveButton with rsrcId: "
         "%#16lX", cfg.rsrcId);
     return FAILURE;
   }
-  _clickCb = cfg.clickCb;
+  _clickCb = clickCb;
 
   if (MoveType::UNKNOWN == cfg.moveType) {
     LOGERR("MoveType::UNKNOWN detected for MoveButton with rsrcId: %#16lX",

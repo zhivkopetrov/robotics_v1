@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERCONFIG_H_
-#define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERCONFIG_H_
+#ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERBASECONFIG_H_
+#define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERBASECONFIG_H_
 
 //C system headers
 
@@ -13,10 +13,9 @@
 
 //Forward declarations
 
-struct RoboCollectorUiControllerConfig {
+struct RoboCollectorUiControllerBaseConfig {
   std::vector<uint64_t> moveButtonsRsrcIds;
   uint64_t moveButtonInfoTextFontId = 0;
-  int32_t maxMoveButtons = 0;
 
   uint64_t horDelimiterRsrcId = 0;
   uint64_t vertDelimiterRsrcId = 0;
@@ -27,4 +26,4 @@ struct RoboCollectorUiControllerConfig {
   bool isEnabled = false;
 };
 
-#endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERCONFIG_H_ */
+#endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORCONTROLLERBASECONFIG_H_ */
