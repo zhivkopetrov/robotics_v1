@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robo_collector_controller</name>
+  <version>0.0.0</version>
+  <description>robo_collector_controller app</description>
+  <maintainer email="zhivko.petrov@ocado.com">Zhivko Petrov</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <build_depend>rclcpp</build_depend>
+  <build_depend>ament_index_cpp</build_depend>
+  
+  <build_depend>robo_collector_interfaces</build_depend>
+  <build_depend>robo_collector_common</build_depend>
+  <build_depend>ros2_game_engine</build_depend>
+
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>ament_index_cpp</exec_depend>
+  <exec_depend>robo_collector_interfaces</exec_depend>
+  <exec_depend>robo_collector_common</exec_depend>
+  <exec_depend>ros2_game_engine</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
