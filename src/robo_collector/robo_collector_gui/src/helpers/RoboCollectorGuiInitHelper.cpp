@@ -114,6 +114,7 @@ int32_t RoboCollectorGuiInitHelper::initControllerExternalBridge(
   CollectorControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.moveButtonClickCb = interface.moveButtonClickCb;
+  outInterface.systemShutdownCb = gui._systemShutdownCb;
 
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

@@ -16,8 +16,8 @@
 //Forward declarations
 
 struct PanelHandlerOutInterface {
-  GameLostCb gameLostCb;
-  GameWonCb gameWonCb;
+  StartGameLostAnimCb startGameLostAnimCb;
+  StartGameWonAnimCb startGameWonAnimCb;
   EnergyDepletedCb energyDepletedCb;
 };
 

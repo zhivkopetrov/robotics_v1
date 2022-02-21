@@ -14,18 +14,20 @@
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
   const auto panelPos = Point(1250, 390);
-  if (SUCCESS !=
-      _healthPanel.init(cfg.healthPanelCfg, interface.gameLostCb, panelPos)) {
+  if (SUCCESS != _healthPanel.init(
+      cfg.healthPanelCfg, interface.startGameLostAnimCb, panelPos)) {
     LOGERR("Error, _healthPanel.init() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != _timePanel.init(cfg.timePanelCfg, interface.gameLostCb)) {
+  if (SUCCESS !=
+      _timePanel.init(cfg.timePanelCfg, interface.startGameLostAnimCb)) {
     LOGERR("Error, _timePanel.init() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != _coinPanel.init(cfg.coinPanelCfg, interface.gameWonCb)) {
+  if (SUCCESS !=
+      _coinPanel.init(cfg.coinPanelCfg, interface.startGameWonAnimCb)) {
     LOGERR("Error, _coinPanel.init() failed");
     return FAILURE;
   }

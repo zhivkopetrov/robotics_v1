@@ -18,8 +18,8 @@ public:
   void draw() const;
 
   //TODO animate
-  void gameWon();
-  void gameLost();
+  void startGameWonAnim();
+  void startGameLostAnim();
 
 private:
 };

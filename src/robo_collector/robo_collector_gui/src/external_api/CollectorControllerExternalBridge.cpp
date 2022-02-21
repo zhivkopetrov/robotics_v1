@@ -47,6 +47,10 @@ int32_t CollectorControllerExternalBridge::init(
     LOGERR("Error, nullptr provided for MoveButtonClickCb");
     return FAILURE;
   }
+  if (nullptr == _outInterface.systemShutdownCb) {
+    LOGERR("Error, nullptr provided for SystemShutdownCb");
+    return FAILURE;
+  }
 
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
@@ -61,11 +65,23 @@ int32_t CollectorControllerExternalBridge::init(
   _playerEnableInputPublisher = create_publisher<Empty>(
       ENABLE_ROBOT_INPUT_TOPIC, queueSize);
 
+  _shutdownControllerPublisher = create_publisher<Empty>(
+      SHUTDOWN_CONTROLLER_TOPIC, queueSize);
+
   return SUCCESS;
 }
 
 void CollectorControllerExternalBridge::publishEnablePlayerInput() {
   _playerEnableInputPublisher->publish(Empty());
+}
+
+void CollectorControllerExternalBridge::publishShutdownController() {
+  _shutdownControllerPublisher->publish(Empty());
+
+  const auto f = [this]() {
+    _outInterface.systemShutdownCb();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 void CollectorControllerExternalBridge::onMoveMsg(

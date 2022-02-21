@@ -13,5 +13,6 @@
 
 constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
 constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enableInput";
+constexpr auto SHUTDOWN_CONTROLLER_TOPIC = "shutdownController";
 
 #endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORTOPICS_H_ */

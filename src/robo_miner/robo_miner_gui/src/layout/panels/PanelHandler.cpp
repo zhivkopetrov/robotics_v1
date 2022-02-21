@@ -14,8 +14,8 @@
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
   const auto panelPos = Point(1250, 390);
-  if (SUCCESS !=
-      _healthPanel.init(cfg.healthPanelCfg, interface.gameLostCb, panelPos)) {
+  if (SUCCESS != _healthPanel.init(
+      cfg.healthPanelCfg, interface.startGameLostAnimCb, panelPos)) {
     LOGERR("Error, _healthPanel.init() failed");
     return FAILURE;
   }

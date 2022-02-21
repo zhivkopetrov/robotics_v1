@@ -20,6 +20,7 @@
 struct CollectorControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   MoveButtonClickCb moveButtonClickCb;
+  SystemShutdownCb systemShutdownCb;
 };
 
 class CollectorControllerExternalBridge: public rclcpp::Node {
@@ -29,6 +30,8 @@ public:
   int32_t init(const CollectorControllerExternalBridgeOutInterface &interface);
 
   void publishEnablePlayerInput();
+
+  void publishShutdownController();
 
 private:
   typedef std_msgs::msg::Empty Empty;
@@ -45,6 +48,7 @@ private:
 
   rclcpp::Subscription<RobotMoveType>::SharedPtr _playerActSubscriber;
   rclcpp::Publisher<Empty>::SharedPtr _playerEnableInputPublisher;
+  rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
 
   //TODO remove after test
   rclcpp::Service<GetCurrentCoins>::SharedPtr _getCoinsService;

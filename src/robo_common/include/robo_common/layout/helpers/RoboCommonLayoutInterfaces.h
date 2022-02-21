@@ -20,8 +20,8 @@ struct RoboCommonLayoutInterface {
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDataCb getFieldDataCb;
   RobotActInterface playerRobotActInterface;
-  GameLostCb gameLostCb;
-  GameWonCb gameWonCb;
+  StartGameLostAnimCb startGameLostAnimCb;
+  StartGameWonAnimCb startGameWonAnimCb;
 };
 
 struct RoboCommonLayoutOutInterface {

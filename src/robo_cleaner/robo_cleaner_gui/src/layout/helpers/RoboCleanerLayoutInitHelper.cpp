@@ -51,8 +51,8 @@ int32_t RoboCleanerLayoutInitHelper::initPanelHandler(
     const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
     RoboCleanerLayout &layout) {
   PanelHandlerOutInterface outInterface;
-  outInterface.gameWonCb = commonInterface.gameWonCb;
-  outInterface.gameLostCb = commonInterface.gameLostCb;
+  outInterface.startGameWonAnimCb = commonInterface.startGameWonAnimCb;
+  outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
   outInterface.energyDepletedCb =
       std::bind(&RoboCleanerLayout::onEnergyDepleted, &layout);
 

@@ -19,10 +19,10 @@ void GameEndAnimator::draw() const {
 
 }
 
-void GameEndAnimator::gameWon() {
+void GameEndAnimator::startGameWonAnim() {
   LOGG("You've Won");
 }
 
-void GameEndAnimator::gameLost() {
+void GameEndAnimator::startGameLostAnim() {
   LOGR("You've Lost");
 }

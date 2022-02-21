@@ -12,12 +12,12 @@
 //Own components headers
 
 int32_t CoinPanel::init(const CoinPanelConfig& cfg,
-                        const GameWonCb &gameWonCb) {
-  if (nullptr == gameWonCb) {
-    LOGERR("Error, nullptr provided for GameWonCb");
+                        const StartGameWonAnimCb &startGameWonAnimCb) {
+  if (nullptr == startGameWonAnimCb) {
+    LOGERR("Error, nullptr provided for StartGameWonAnimCb");
     return FAILURE;
   }
-  _gameWonCb = gameWonCb;
+  _startGameWonAnimCb = startGameWonAnimCb;
 
   constexpr auto panelX = 1250;
   constexpr auto panelY = 215;
@@ -61,6 +61,6 @@ void CoinPanel::increaseCollectedCoins(int32_t coins) {
 }
 
 void CoinPanel::onTargetCoinsReached([[maybe_unused]]uint64_t targetCoins) {
-  _gameWonCb();
+  _startGameWonAnimCb();
 }
 

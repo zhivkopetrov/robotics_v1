@@ -17,7 +17,8 @@
 
 class CoinPanel {
 public:
-  int32_t init(const CoinPanelConfig& cfg, const GameWonCb &gameWonCb);
+  int32_t init(const CoinPanelConfig& cfg,
+               const StartGameWonAnimCb &startGameWonAnimCb);
   void draw() const;
   void increaseCollectedCoins(int32_t coins);
 
@@ -27,7 +28,7 @@ private:
   NumberCounter _numberPanel;
   Text _totalCoinsText;
 
-  GameWonCb _gameWonCb;
+  StartGameWonAnimCb _startGameWonAnimCb;
 };
 
 #endif /* ROBO_COLLECTOR_COINPANEL_H_ */

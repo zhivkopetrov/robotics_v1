@@ -57,8 +57,8 @@ int32_t RoboMinerLayoutInitHelper::initPanelHandler(
     const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
     RoboMinerLayout &layout) {
   PanelHandlerOutInterface outInterface;
-  outInterface.gameWonCb = commonInterface.gameWonCb;
-  outInterface.gameLostCb = commonInterface.gameLostCb;
+  outInterface.startGameWonAnimCb = commonInterface.startGameWonAnimCb;
+  outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
 
   if (SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");
