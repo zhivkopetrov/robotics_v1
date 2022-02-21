@@ -18,6 +18,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_helpers/helpers.cmake)
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(robo_collector_interfaces REQUIRED)
 find_package(robo_collector_common REQUIRED)
 find_package(ros2_game_engine REQUIRED)
@@ -71,9 +72,10 @@ target_link_libraries(
 
 ament_target_dependencies(
     ${PROJECT_NAME}
-        robo_collector_interfaces
         rclcpp
         ament_index_cpp
+        robo_collector_interfaces
+        std_msgs
 )
 
 set_target_cpp_standard(${PROJECT_NAME} 20)

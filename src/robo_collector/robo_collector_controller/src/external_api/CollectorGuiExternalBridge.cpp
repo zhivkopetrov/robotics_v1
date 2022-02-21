@@ -12,12 +12,11 @@
 
 //Own components headers
 
-
-  using robo_collector_interfaces::msg::RobotMoveType;
-
 namespace {
 //TODO create separate message helper utility file
 int8_t getMoveTypeField(MoveType moveType) {
+  using robo_collector_interfaces::msg::RobotMoveType;
+
   switch (moveType) {
   case MoveType::FORWARD:
     return RobotMoveType::FORWARD;
@@ -33,6 +32,7 @@ int8_t getMoveTypeField(MoveType moveType) {
 
 //TODO create a separate topic contants header file
 constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
+constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enableInput";
 }
 
 CollectorGuiExternalBridge::CollectorGuiExternalBridge()
@@ -58,24 +58,37 @@ int32_t CollectorGuiExternalBridge::init(
   _robotActPublisher =
       create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC, QoS);
 
+  _enableRobotTurn = create_subscription<Empty>(
+      ENABLE_ROBOT_INPUT_TOPIC, QoS,
+      std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1));
+
   return SUCCESS;
 }
 
-void CollectorGuiExternalBridge::publishToggleSettings() const {
+void CollectorGuiExternalBridge::publishToggleSettings() {
 
 }
 
-void CollectorGuiExternalBridge::publishToggleHelp() const {
+void CollectorGuiExternalBridge::publishToggleHelp() {
 
 }
 
-void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) const {
-  LOGC("Inside publishRobotAct");
+void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) {
   RobotMoveType msg;
   msg.move_type = getMoveTypeField(moveType);
   LOGC("about to publish: %hhu", msg.move_type);
+
   _robotActPublisher->publish(msg);
   LOGC("publish successful");
+}
+
+void CollectorGuiExternalBridge::onEnableRobotTurnMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this](){
+    _outInterface.enablePlayerInputCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 
