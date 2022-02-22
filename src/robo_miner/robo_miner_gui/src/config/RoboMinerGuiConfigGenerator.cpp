@@ -32,13 +32,20 @@ constexpr auto WINDOW_HEIGHT = 1053;
 constexpr auto playerFieldMarker = 'B'; //B for Blinky
 constexpr auto emptyFieldMarker = '.';
 
+//TODO compute from the field config
+constexpr auto TOTAL_FIELD_TILES = 42;
+constexpr auto LONGEST_CRYSTALS_SEQ_CTN = 17;
+
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
   ROBOT_WALL_COLLISION_ANIM_TIMER_ID,
   ROBOT_COLLISION_ANIM_TIMER_ID,
   ROBOT_DAMAGE_ANIM_TIMER_ID,
-
-  HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID
+  HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID,
+  TILE_PANEL_INCR_TIMER_ID,
+  TILE_PANEL_DECR_TIMER_ID,
+  CRYSTAL_PANEL_INCR_TIMER_ID,
+  CRYSTAL_PANEL_DECR_TIMER_ID,
 };
 
 RobotBaseConfig generateRobotBaseConfig() {
@@ -63,6 +70,20 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   healthPanelCfg.indicatorFontId = RoboMinerGuiResources::VINQUE_RG_30;
   healthPanelCfg.indicatorReduceTimerId =
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
+
+  auto &tilePanelCfg = cfg.tilePanelCfg;
+  tilePanelCfg.targetNumber = TOTAL_FIELD_TILES;
+  tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
+  tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
+  tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
+  tilePanelCfg.decrTimerId = TILE_PANEL_DECR_TIMER_ID;
+
+  auto &crystalPanelCfg = cfg.crystalPanelCfg;
+  crystalPanelCfg.targetNumber = LONGEST_CRYSTALS_SEQ_CTN;
+  crystalPanelCfg.rsrcId = RoboMinerGuiResources::CRYSTAL_PANEL;
+  crystalPanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
+  crystalPanelCfg.incrTimerId = CRYSTAL_PANEL_INCR_TIMER_ID;
+  crystalPanelCfg.decrTimerId = CRYSTAL_PANEL_DECR_TIMER_ID;
 
   return cfg;
 }

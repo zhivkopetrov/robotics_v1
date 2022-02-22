@@ -60,6 +60,8 @@ int32_t RoboMinerLayoutInitHelper::initPanelHandler(
   PanelHandlerOutInterface outInterface;
   outInterface.startGameWonAnimCb = commonInterface.startGameWonAnimCb;
   outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
+  outInterface.startAchievementWonAnimCb =
+      commonInterface.startAchievementWonAnimCb;
 
   if (SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");

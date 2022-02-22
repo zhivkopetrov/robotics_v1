@@ -20,6 +20,7 @@ public:
 
   void startGameWonAnim();
   void startGameLostAnim();
+  void startAchievementWonAnim(Achievement achievement);
 
 private:
   ShutdownGameCb _shutdownGameCb;

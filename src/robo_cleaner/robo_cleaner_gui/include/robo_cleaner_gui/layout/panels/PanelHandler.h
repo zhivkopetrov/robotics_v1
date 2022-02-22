@@ -18,6 +18,7 @@
 struct PanelHandlerOutInterface {
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
+  StartAchievementWonAnimCb startAchievementWonAnimCb;
   EnergyDepletedCb energyDepletedCb;
 };
 

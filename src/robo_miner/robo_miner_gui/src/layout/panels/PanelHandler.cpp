@@ -13,7 +13,36 @@
 
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
-  auto panelPos = Point(1250, 390);
+  const auto achievementWonCb = interface.startAchievementWonAnimCb;
+  auto panelPos = Point(1250, 50);
+  const auto lightGoldColor = Color(0xD4AF37FF);
+  NumberCounterPanelUtilityConfig numberCounterPanelUtilityCfg;
+  numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb](){
+    achievementWonCb(Achievement::SINGLE_STAR);
+  };
+
+  numberCounterPanelUtilityCfg.pos = panelPos;
+  numberCounterPanelUtilityCfg.textColor = lightGoldColor;
+  if (SUCCESS !=
+      _tilePanel.init(cfg.tilePanelCfg, numberCounterPanelUtilityCfg)) {
+    LOGERR("Error, tilePanelCfg.init() failed");
+    return FAILURE;
+  }
+
+  //TODO attach gameWonCb on end of triple star animation
+
+  panelPos.y += 165;
+  numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb](){
+    achievementWonCb(Achievement::TRIPLE_STAR);
+  };
+  numberCounterPanelUtilityCfg.pos = panelPos;
+  if (SUCCESS !=
+      _crystalPanel.init(cfg.crystalPanelCfg, numberCounterPanelUtilityCfg)) {
+    LOGERR("Error, _crystalPanel.init() failed");
+    return FAILURE;
+  }
+
+  panelPos.y += 175;
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
   indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
   indicatorUtilityCfg.pos = panelPos;
@@ -26,6 +55,8 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
 }
 
 void PanelHandler::draw() const {
+  _tilePanel.draw();
+  _crystalPanel.draw();
   _healthPanel.draw();
 }
 

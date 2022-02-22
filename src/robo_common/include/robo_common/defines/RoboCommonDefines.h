@@ -48,4 +48,10 @@ enum class RotationDir {
   LEFT, RIGHT
 };
 
+enum class Achievement {
+  SINGLE_STAR,
+  DOUBLE_STAR,
+  TRIPLE_STAR
+};
+
 #endif /* ROBO_COMMON_ROBOCOMMONDEFINES_H_ */

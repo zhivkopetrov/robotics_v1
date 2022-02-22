@@ -12,10 +12,9 @@
 //Own components headers
 #include "robo_common/layout/helpers/RoboCommonLayoutInitHelper.h"
 
-int32_t RoboCommonLayout::init(
-    const RoboCommonLayoutConfig &cfg,
-    const RoboCommonLayoutOutInterface &outInterface,
-    RoboCommonLayoutInterface &interface) {
+int32_t RoboCommonLayout::init(const RoboCommonLayoutConfig &cfg,
+                               const RoboCommonLayoutOutInterface &outInterface,
+                               RoboCommonLayoutInterface &interface) {
   if (SUCCESS != RoboCommonLayoutInitHelper::init(cfg, outInterface, *this)) {
     LOGERR("Error, RoboCommonLayoutInitHelper::init() failed");
     return FAILURE;
@@ -44,19 +43,20 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
   using namespace std::placeholders;
 
   RoboCommonLayoutInterface interface;
-  interface.setFieldDataMarkerCb =
-      std::bind(&Field::setFieldDataMarker, &_field, _1, _2);
-  interface.resetFieldDataMarkerCb =
-      std::bind(&Field::resetFieldDataMarker, &_field, _1);
+  interface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
+      &_field, _1, _2);
+  interface.resetFieldDataMarkerCb = std::bind(&Field::resetFieldDataMarker,
+      &_field, _1);
   interface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
-  interface.playerRobotActInterface = {
-      std::bind(&Robot::act, &_playerRobot,_1),
-      std::bind(&Robot::getFieldPos, &_playerRobot),
-      std::bind(&Robot::getDirection, &_playerRobot) };
-  interface.startGameWonAnimCb =
-      std::bind(&GameEndAnimator::startGameWonAnim, &_gameEndAnimator);
-  interface.startGameLostAnimCb =
-      std::bind(&GameEndAnimator::startGameLostAnim, &_gameEndAnimator);
+  interface.playerRobotActInterface = { std::bind(&Robot::act, &_playerRobot,
+      _1), std::bind(&Robot::getFieldPos, &_playerRobot), std::bind(
+      &Robot::getDirection, &_playerRobot) };
+  interface.startGameWonAnimCb = std::bind(&GameEndAnimator::startGameWonAnim,
+      &_gameEndAnimator);
+  interface.startGameLostAnimCb = std::bind(&GameEndAnimator::startGameLostAnim,
+      &_gameEndAnimator);
+  interface.startAchievementWonAnimCb = std::bind(
+      &GameEndAnimator::startAchievementWonAnim, &_gameEndAnimator, _1);
 
   return interface;
 }

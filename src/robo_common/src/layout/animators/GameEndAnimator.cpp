@@ -6,6 +6,7 @@
 //C++ system headers
 
 //Other libraries headers
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -38,3 +39,22 @@ void GameEndAnimator::startGameLostAnim() {
   //TODO add animation and invoke shutdownGameCb on animation end
   _shutdownGameCb();
 }
+
+void GameEndAnimator::startAchievementWonAnim(Achievement achievement) {
+  switch (achievement) {
+  case Achievement::SINGLE_STAR:
+    LOGG("You've Won Single Star");
+    break;
+  case Achievement::DOUBLE_STAR:
+    LOGG("You've Won Double Star");
+    break;
+  case Achievement::TRIPLE_STAR:
+    LOGG("You've Won Tripple Star");
+    break;
+  default:
+    LOGERR("Error, received unsupported Achievement value: %d",
+        getEnumValue(achievement));
+    break;
+  }
+}
+

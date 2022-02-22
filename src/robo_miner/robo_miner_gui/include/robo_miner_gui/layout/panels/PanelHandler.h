@@ -8,6 +8,7 @@
 //Other libraries headers
 #include "robo_common/layout/panels/TimePanel.h"
 #include "robo_common/layout/panels/IndicatorPanel.h"
+#include "robo_common/layout/panels/NumberCounterPanel.h"
 
 //Own components headers
 #include "robo_miner_gui/layout/panels/config/PanelHandlerConfig.h"
@@ -17,6 +18,7 @@
 struct PanelHandlerOutInterface {
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
+  StartAchievementWonAnimCb startAchievementWonAnimCb;
 };
 
 class PanelHandler {
@@ -27,6 +29,8 @@ public:
   void decreaseHealthIndicator(int32_t damage);
 
 private:
+  NumberCounterPanel _tilePanel;
+  NumberCounterPanel _crystalPanel;
   IndicatorPanel _healthPanel;
 };
 
