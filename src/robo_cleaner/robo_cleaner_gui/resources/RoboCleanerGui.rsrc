@@ -42,6 +42,20 @@ description=160,160,3,0
 position=0,0
 load=on_init
 
+tag=[TILE_PANEL]
+type=image
+path=p/panels/tile_panel.png
+description=empty
+position=0,0
+load=on_init
+
+tag=[RUBBISH_PANEL]
+type=image
+path=p/panels/rubbish_panel.png
+description=empty
+position=0,0
+load=on_init
+
 tag=[HEALTH_PANEL]
 type=image
 path=p/panels/health_panel.png

@@ -4,13 +4,13 @@
 # Author: Zhivko Petrov
 
 # All static widgets count:
-13                  
+15                  
 
 # All dynamic widgets count:
 0                   
 
 # Size of all files in kBytes:
-691                 
+717                 
 
 0x50F97991CE94C9BC
 p/background/map.png
@@ -53,6 +53,22 @@ p/stars/stars.png
 0 0 160 160
 0 160 160 160
 0 320 160 160
+
+0xBF7E702AC81CA5AF
+p/panels/tile_panel.png
+6
+0
+0 0 500 150
+1
+0 0 500 150
+
+0xB557D3FAC0655057
+p/panels/crystal_panel.png
+20
+0
+0 0 500 150
+1
+0 0 500 150
 
 0x8DF7ACDAA833451F
 p/panels/health_panel.png

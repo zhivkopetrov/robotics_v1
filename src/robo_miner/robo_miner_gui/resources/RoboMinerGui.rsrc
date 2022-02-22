@@ -35,6 +35,20 @@ description=160,160,3,0
 position=0,0
 load=on_init
 
+tag=[TILE_PANEL]
+type=image
+path=p/panels/tile_panel.png
+description=empty
+position=0,0
+load=on_init
+
+tag=[CRYSTAL_PANEL]
+type=image
+path=p/panels/crystal_panel.png
+description=empty
+position=0,0
+load=on_init
+
 tag=[HEALTH_PANEL]
 type=image
 path=p/panels/health_panel.png
