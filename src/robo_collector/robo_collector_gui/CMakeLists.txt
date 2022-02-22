@@ -49,8 +49,6 @@ add_executable(
         ${_INC_DIR}/layout/entities/coin/animation/CoinCollectAnimEndCb.h
         ${_INC_DIR}/layout/entities/coin/animation/CoinRespawnAnim.h
         ${_INC_DIR}/layout/panels/PanelHandler.h
-        ${_INC_DIR}/layout/panels/CoinPanel.h
-        ${_INC_DIR}/layout/panels/config/CoinPanelConfig.h
         ${_INC_DIR}/layout/panels/config/PanelHandlerConfig.h
      
         ${_SRC_DIR}/main.cpp
@@ -68,7 +66,6 @@ add_executable(
         ${_SRC_DIR}/layout/entities/coin/animation/CoinCollectAnimEndCb.cpp
         ${_SRC_DIR}/layout/entities/coin/animation/CoinRespawnAnim.cpp
         ${_SRC_DIR}/layout/panels/PanelHandler.cpp
-        ${_SRC_DIR}/layout/panels/CoinPanel.cpp
 )
 
 target_include_directories(

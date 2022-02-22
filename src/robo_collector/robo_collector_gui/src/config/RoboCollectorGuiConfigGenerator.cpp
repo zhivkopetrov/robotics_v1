@@ -139,7 +139,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
 
   auto &coinPanelCfg = cfg.coinPanelCfg;
-  coinPanelCfg.targetCoins = TARGET_WIN_COINS;
+  coinPanelCfg.targetNumber = TARGET_WIN_COINS;
   coinPanelCfg.rsrcId = RoboCollectorGuiResources::COIN_PANEL;
   coinPanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
   coinPanelCfg.incrTimerId = COIN_PANEL_INCR_TIMER_ID;

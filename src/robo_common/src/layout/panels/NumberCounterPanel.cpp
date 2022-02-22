@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_collector_gui/layout/panels/CoinPanel.h"
+#include "robo_common/layout/panels/NumberCounterPanel.h"
 
 //C system headers
 
@@ -11,13 +11,14 @@
 
 //Own components headers
 
-int32_t CoinPanel::init(const CoinPanelConfig& cfg,
-                        const StartGameWonAnimCb &startGameWonAnimCb) {
-  if (nullptr == startGameWonAnimCb) {
+int32_t NumberCounterPanel::init(
+    const NumberCounterPanelConfig& cfg,
+    const NumberCounterTargetReachedCb &targetReachedCb) {
+  if (nullptr == targetReachedCb) {
     LOGERR("Error, nullptr provided for StartGameWonAnimCb");
     return FAILURE;
   }
-  _startGameWonAnimCb = startGameWonAnimCb;
+  _targetReachedCb = targetReachedCb;
 
   constexpr auto panelX = 1250;
   constexpr auto panelY = 215;
@@ -34,9 +35,9 @@ int32_t CoinPanel::init(const CoinPanelConfig& cfg,
 
   auto& triggerCfg = numberPanelCfg.triggerCfg;
   triggerCfg.isIncreasingTrigger = true;
-  triggerCfg.value = cfg.targetCoins;
-  triggerCfg.triggerCb =
-      std::bind(&CoinPanel::onTargetCoinsReached, this, std::placeholders::_1);
+  triggerCfg.value = cfg.targetNumber;
+  triggerCfg.triggerCb = std::bind(
+      &NumberCounterPanel::onTargetCounterReached, this, std::placeholders::_1);
 
   if (SUCCESS != _numberPanel.init(numberPanelCfg)) {
     LOGERR("Error, _numberPanel.init() failed");
@@ -44,23 +45,24 @@ int32_t CoinPanel::init(const CoinPanelConfig& cfg,
   }
 
   std::string textContent = "/ ";
-  textContent.append(std::to_string(cfg.targetCoins));
+  textContent.append(std::to_string(cfg.targetNumber));
   _totalCoinsText.create(cfg.fontId, textContent.c_str(), lightGoldColor,
       Point(panelX + 290, panelY + 30));
 
   return SUCCESS;
 }
 
-void CoinPanel::draw() const {
+void NumberCounterPanel::draw() const {
   _numberPanel.draw();
   _totalCoinsText.draw();
 }
 
-void CoinPanel::increaseCollectedCoins(int32_t coins) {
-  _numberPanel.increaseWith(coins);
+void NumberCounterPanel::increaseCounter(int32_t delta) {
+  _numberPanel.increaseWith(delta);
 }
 
-void CoinPanel::onTargetCoinsReached([[maybe_unused]]uint64_t targetCoins) {
-  _startGameWonAnimCb();
+void NumberCounterPanel::onTargetCounterReached(
+    [[maybe_unused]]uint64_t target) {
+  _targetReachedCb();
 }
 

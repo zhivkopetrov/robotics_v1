@@ -46,6 +46,6 @@ void PanelHandler::decreaseHealthIndicator(int32_t damage) {
 }
 
 void PanelHandler::increaseCollectedCoins(int32_t coins) {
-  _coinPanel.increaseCollectedCoins(coins);
+  _coinPanel.increaseCounter(coins);
 }
 

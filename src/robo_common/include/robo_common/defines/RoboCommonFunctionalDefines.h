@@ -23,8 +23,9 @@ using GetRobotFieldPosCb = std::function<FieldPos()>;
 using GetRobotDirCb = std::function<Direction()>;
 using FinishRobotActCb = std::function<void(int32_t)>;
 using IndicatorDepletedCb = std::function<void()>;
+using NumberCounterTargetReachedCb = std::function<void()>;
+using ShutdownGameCb = NumberCounterTargetReachedCb;
 using StartGameLostAnimCb = IndicatorDepletedCb;
 using StartGameWonAnimCb = std::function<void()>;
-using ShutdownGameCb = std::function<void()>;
 
 #endif /* ROBO_COMMON_ROBOCOMMONFUNCTIONALDEFINES_H_ */

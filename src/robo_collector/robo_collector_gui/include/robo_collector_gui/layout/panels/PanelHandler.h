@@ -8,10 +8,10 @@
 //Other libraries headers
 #include "robo_common/layout/panels/TimePanel.h"
 #include "robo_common/layout/panels/IndicatorPanel.h"
+#include "robo_common/layout/panels/NumberCounterPanel.h"
 
 //Own components headers
 #include "robo_collector_gui/layout/panels/config/PanelHandlerConfig.h"
-#include "robo_collector_gui/layout/panels/CoinPanel.h"
 
 //Forward declarations
 
@@ -30,7 +30,7 @@ public:
 
 private:
   TimePanel _timePanel;
-  CoinPanel _coinPanel;
+  NumberCounterPanel _coinPanel;
   IndicatorPanel _healthPanel;
 };
 

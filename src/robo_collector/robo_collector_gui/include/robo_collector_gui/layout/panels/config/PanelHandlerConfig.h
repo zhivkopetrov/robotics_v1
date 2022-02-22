@@ -9,14 +9,14 @@
 //Other libraries headers
 #include "robo_common/layout/panels/config/TimePanelConfig.h"
 #include "robo_common/layout/panels/config/IndicatorPanelConfig.h"
+#include "robo_common/layout/panels/config/NumberCounterPanelConfig.h"
 
 //Own components headers
-#include "robo_collector_gui/layout/panels/config/CoinPanelConfig.h"
 
 struct PanelHandlerConfig {
   TimePanelConfig timePanelCfg;
   IndicatorPanelConfig healthPanelCfg;
-  CoinPanelConfig coinPanelCfg;
+  NumberCounterPanelConfig coinPanelCfg;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_PANELS_PANELHANDLERCONFIG_H_ */
