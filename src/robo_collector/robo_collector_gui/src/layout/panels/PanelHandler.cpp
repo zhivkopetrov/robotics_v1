@@ -13,22 +13,33 @@
 
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
-  const auto panelPos = Point(1250, 390);
-  if (SUCCESS != _healthPanel.init(
-      cfg.healthPanelCfg, interface.startGameLostAnimCb, panelPos)) {
-    LOGERR("Error, _healthPanel.init() failed");
-    return FAILURE;
-  }
-
-  if (SUCCESS !=
-      _timePanel.init(cfg.timePanelCfg, interface.startGameLostAnimCb)) {
+  auto panelPos = Point(1250, 50);
+  TimePanelUtilityConfig timePanelUtilityCfg;
+  timePanelUtilityCfg.timeFinishedCb = interface.startGameLostAnimCb;
+  timePanelUtilityCfg.pos = panelPos;
+  if (SUCCESS != _timePanel.init(cfg.timePanelCfg, timePanelUtilityCfg)) {
     LOGERR("Error, _timePanel.init() failed");
     return FAILURE;
   }
 
+  panelPos.y += 165;
+  const auto lightGoldColor = Color(0xD4AF37FF);
+  NumberCounterPanelUtilityConfig numberCounterPanelUtilityCfg;
+  numberCounterPanelUtilityCfg.targetReachedCb = interface.startGameWonAnimCb;
+  numberCounterPanelUtilityCfg.pos = panelPos;
+  numberCounterPanelUtilityCfg.textColor = lightGoldColor;
   if (SUCCESS !=
-      _coinPanel.init(cfg.coinPanelCfg, interface.startGameWonAnimCb)) {
+      _coinPanel.init(cfg.coinPanelCfg, numberCounterPanelUtilityCfg)) {
     LOGERR("Error, _coinPanel.init() failed");
+    return FAILURE;
+  }
+
+  panelPos.y += 175;
+  IndicatorPanelUtilityConfig indicatorUtilityCfg;
+  indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
+  indicatorUtilityCfg.pos = panelPos;
+  if (SUCCESS != _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
+    LOGERR("Error, _healthPanel.init() failed");
     return FAILURE;
   }
 

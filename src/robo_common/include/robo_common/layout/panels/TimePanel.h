@@ -17,10 +17,15 @@
 
 //Forward declarations
 
-class TimePanel : public TimerClient {
+struct TimePanelUtilityConfig {
+  IndicatorDepletedCb timeFinishedCb;
+  Point pos;
+};
+
+class TimePanel: public TimerClient {
 public:
-  int32_t init(const TimePanelConfig& cfg,
-               const IndicatorDepletedCb &indicatorDepletedCb);
+  int32_t init(const TimePanelConfig &cfg,
+               const TimePanelUtilityConfig &utilityCfg);
   void draw() const;
 
 private:
@@ -40,7 +45,7 @@ private:
   int32_t _blinkTimerId = 0;
   int32_t _remainingSeconds = 0;
 
-  IndicatorDepletedCb _indicatorDepletedCb;
+  IndicatorDepletedCb _timeFinishedCb;
 };
 
 #endif /* ROBO_COMMON_TIMEPANEL_H_ */

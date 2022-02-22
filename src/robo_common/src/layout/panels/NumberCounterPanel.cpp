@@ -13,25 +13,24 @@
 
 int32_t NumberCounterPanel::init(
     const NumberCounterPanelConfig& cfg,
-    const NumberCounterTargetReachedCb &targetReachedCb) {
-  if (nullptr == targetReachedCb) {
+    const NumberCounterPanelUtilityConfig &utilityCfg) {
+  if (nullptr == utilityCfg.targetReachedCb) {
     LOGERR("Error, nullptr provided for StartGameWonAnimCb");
     return FAILURE;
   }
-  _targetReachedCb = targetReachedCb;
+  _targetReachedCb = utilityCfg.targetReachedCb;
 
-  constexpr auto panelX = 1250;
-  constexpr auto panelY = 215;
-  const auto lightGoldColor = Color(0xD4AF37FF);
+
   NumberCounterConfig numberPanelCfg;
   numberPanelCfg.backgroundRsrcId = cfg.rsrcId;
-  numberPanelCfg.backgroundRsrcPos = Point(panelX, panelY);
+  numberPanelCfg.backgroundRsrcPos = Point(utilityCfg.pos);
   numberPanelCfg.fontId = cfg.fontId;
-  numberPanelCfg.fontColor = lightGoldColor;
+  numberPanelCfg.fontColor = utilityCfg.textColor;
   numberPanelCfg.incrTimerId = cfg.incrTimerId;
   numberPanelCfg.decrTimerId = cfg.decrTimerId;
   numberPanelCfg.startValue = 0;
-  numberPanelCfg.boundaryRect = Rectangle(panelX + 50, panelY + 15, 346, 120);
+  numberPanelCfg.boundaryRect =
+      Rectangle(utilityCfg.pos.x + 50, utilityCfg.pos.y + 15, 346, 120);
 
   auto& triggerCfg = numberPanelCfg.triggerCfg;
   triggerCfg.isIncreasingTrigger = true;
@@ -46,8 +45,8 @@ int32_t NumberCounterPanel::init(
 
   std::string textContent = "/ ";
   textContent.append(std::to_string(cfg.targetNumber));
-  _totalCoinsText.create(cfg.fontId, textContent.c_str(), lightGoldColor,
-      Point(panelX + 290, panelY + 30));
+  _totalCoinsText.create(cfg.fontId, textContent.c_str(), utilityCfg.textColor,
+      Point(utilityCfg.pos.x + 290, utilityCfg.pos.y + 30));
 
   return SUCCESS;
 }

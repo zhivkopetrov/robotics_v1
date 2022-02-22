@@ -14,21 +14,19 @@
 //Own components headers
 
 int32_t TimePanel::init(const TimePanelConfig &cfg,
-                        const IndicatorDepletedCb &indicatorDepletedCb) {
-  if (nullptr == indicatorDepletedCb) {
+                        const TimePanelUtilityConfig &utilityCfg) {
+  if (nullptr == utilityCfg.timeFinishedCb) {
     LOGERR("Error, nullptr provided for IndicatorDepletedCb");
     return FAILURE;
   }
-  _indicatorDepletedCb = indicatorDepletedCb;
+  _timeFinishedCb = utilityCfg.timeFinishedCb;
 
-  constexpr auto panelX = 1250;
-  constexpr auto panelY = 50;
   _clockTimerId = cfg.clockTimerId;
   _blinkTimerId = cfg.blinkTimerId;
   _remainingSeconds = cfg.totalSeconds;
 
   _panel.create(cfg.rsrcId);
-  _panel.setPosition(panelX, panelY);
+  _panel.setPosition(utilityCfg.pos);
 
   constexpr auto textOffsetFromPanelX = 146;
   constexpr auto textOffsetFromPanelY = 12;
@@ -37,8 +35,9 @@ int32_t TimePanel::init(const TimePanelConfig &cfg,
 
   const auto startColor = getStartColor(cfg.totalSeconds);
   _timeText.create(cfg.fontId, "0", startColor);
-  _textBoundRect = Rectangle(panelX + textOffsetFromPanelX,
-      panelY + textOffsetFromPanelY, textBoundaryWidth, textBoundaryHeight);
+  _textBoundRect = Rectangle(utilityCfg.pos.x + textOffsetFromPanelX,
+      utilityCfg.pos.y + textOffsetFromPanelY, textBoundaryWidth,
+      textBoundaryHeight);
   setTextContent();
 
   constexpr auto timerInterval = 1000;
@@ -69,7 +68,7 @@ void TimePanel::processClockTick() {
   if (0 == _remainingSeconds) {
     stopTimer(_clockTimerId);
     stopTimer(_blinkTimerId);
-    _indicatorDepletedCb();
+    _timeFinishedCb();
     return;
   }
 
@@ -113,5 +112,4 @@ Color TimePanel::getStartColor(int32_t totalSeconds) const {
 
   return Colors::RED;
 }
-
 

@@ -14,15 +14,18 @@
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
   auto panelPos = Point(1250, 390);
-  if (SUCCESS != _healthPanel.init(
-      cfg.healthPanelCfg, interface.startGameLostAnimCb, panelPos)) {
+  IndicatorPanelUtilityConfig indicatorUtilityCfg;
+  indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
+  indicatorUtilityCfg.pos = panelPos;
+  if (SUCCESS != _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
     LOGERR("Error, _healthPanel.init() failed");
     return FAILURE;
   }
 
   panelPos.y += 95;
-  if (SUCCESS != _energyPanel.init(
-      cfg.energyPanelCfg, interface.energyDepletedCb, panelPos)) {
+  indicatorUtilityCfg.indicatorDepletedCb = interface.energyDepletedCb;
+  indicatorUtilityCfg.pos = panelPos;
+  if (SUCCESS != _energyPanel.init(cfg.energyPanelCfg, indicatorUtilityCfg)) {
     LOGERR("Error, _energyPanel.init() failed");
     return FAILURE;
   }

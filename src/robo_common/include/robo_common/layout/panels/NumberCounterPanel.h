@@ -15,10 +15,16 @@
 
 //Forward declarations
 
+struct NumberCounterPanelUtilityConfig {
+  NumberCounterTargetReachedCb targetReachedCb;
+  Point pos;
+  Color textColor = Colors::BLACK;
+};
+
 class NumberCounterPanel {
 public:
   int32_t init(const NumberCounterPanelConfig& cfg,
-               const NumberCounterTargetReachedCb &targetReachedCb);
+               const NumberCounterPanelUtilityConfig &utilityCfg);
   void draw() const;
   void increaseCounter(int32_t delta);
 
