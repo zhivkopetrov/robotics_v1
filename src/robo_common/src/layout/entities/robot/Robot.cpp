@@ -116,7 +116,8 @@ Rectangle Robot::getBoundary() const {
 void Robot::move() {
   const auto futurePos = FieldUtils::getAdjacentPos(_state.dir,
       _state.fieldPos);
-  if (FieldUtils::isInsideField(futurePos)) {
+  if (FieldUtils::isInsideField(
+      futurePos, _outInterface.getFieldDescriptionCb())) {
     _currCollisionWatchStatus = CollisionWatchStatus::ON;
     _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
         _currCollisionWatchStatus);

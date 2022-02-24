@@ -20,7 +20,7 @@ struct TurnHelperConfig {
   int32_t maxRobots = 0;
   std::vector<RobotActInterface> robotActInterfaces;
   EnablePlayerInputCb enablePlayerInputCb;
-  GetFieldDataCb getFieldDataCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
   char fieldEnemyMarker = '!';
 };
 

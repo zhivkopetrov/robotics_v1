@@ -23,7 +23,7 @@ class CollisionWatcher;
 struct CoinOutInterface {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
-  GetFieldDataCb getFieldDataCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
   IncrCollectedCoinsCb incrCollectedCoinsCb;
   IsPlayerTurnActiveCb isPlayerTurnActiveCb;
   CollisionWatcher *collisionWatcher = nullptr;

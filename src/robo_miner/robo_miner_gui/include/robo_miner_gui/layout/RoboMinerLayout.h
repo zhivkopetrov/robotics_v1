@@ -5,16 +5,13 @@
 
 //C++ system headers
 #include <cstdint>
-#include <vector>
-#include <unordered_map>
 
 //Other libraries headers
 #include "robo_common/layout/RoboCommonLayout.h"
 
 //Own components headers
 #include "robo_miner_gui/layout/panels/PanelHandler.h"
-#include "robo_miner_gui/layout/entities/Crystal.h"
-#include "robo_miner_gui/layout/field/RoboMinerField.h"
+#include "robo_miner_gui/layout/entities/CrystalHandler.h"
 
 //Forward declarations
 class InputEvent;
@@ -34,17 +31,10 @@ public:
   void draw() const;
   void handleEvent(const InputEvent &e);
 
-  void onCrystalClicked(const FieldPos& fieldPos);
-
 private:
   RoboCommonLayout _commonLayout;
-  std::vector<Crystal> _crystals;
-  RoboMinerField _field;
   PanelHandler _panelHandler;
-
-  //key = (currRow * maxCols) + currCol
-  //value = relative crystal id
-  std::unordered_map<int32_t, int32_t> _fieldPosToCrystalIdMapping;
+  CrystalHandler _crystalHandler;
 };
 
 #endif /* ROBO_MINER_GUI_ROBOMINERLAYOUT_H_ */

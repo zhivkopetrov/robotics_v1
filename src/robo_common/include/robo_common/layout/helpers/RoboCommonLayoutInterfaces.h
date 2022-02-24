@@ -18,7 +18,7 @@ class CollisionWatcher;
 struct RoboCommonLayoutInterface {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
-  GetFieldDataCb getFieldDataCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
   RobotActInterface playerRobotActInterface;
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;

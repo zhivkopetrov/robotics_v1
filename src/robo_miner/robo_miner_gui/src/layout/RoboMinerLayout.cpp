@@ -35,41 +35,11 @@ void RoboMinerLayout::deinit() {
 void RoboMinerLayout::draw() const {
   _commonLayout.draw();
   _panelHandler.draw();
-  for (const auto &crystal : _crystals) {
-    crystal.draw();
-  }
+  _crystalHandler.draw();
 }
 
 void RoboMinerLayout::handleEvent(const InputEvent &e) {
-  for (auto &crystal : _crystals) {
-    if (crystal.isInputUnlocked() && crystal.containsEvent(e)) {
-      crystal.handleEvent(e);
-      break;
-    }
-  }
+  _crystalHandler.handleEvent(e);
 }
 
-void RoboMinerLayout::onCrystalClicked(const FieldPos &fieldPos) {
-  //restore previous opacity
-  for (auto &crystal : _crystals) {
-    crystal.setOpacity(FULL_OPACITY);
-  }
-
-  const auto &fieldData = _field.getFieldData();
-  const int32_t maxCols = static_cast<int32_t>(fieldData[0].size());
-  const auto emptyMarker = _field.getEmptyMarker();
-  const auto localCrystalSequence = FloodFill::findLocalCrystalSequence(
-      fieldData, fieldPos, emptyMarker);
-  for (const auto &pos : localCrystalSequence) {
-    const auto key = (pos.row * maxCols) + pos.col;
-    const auto it = _fieldPosToCrystalIdMapping.find(key);
-    if (_fieldPosToCrystalIdMapping.end() == it) {
-      LOGERR("No entry found for fieldPosToCrystalIdMapping key: %d", key);
-      continue;
-    }
-
-    const auto crystalId = it->second;
-    _crystals[crystalId].setOpacity(FULL_OPACITY / 2);
-  }
-}
 

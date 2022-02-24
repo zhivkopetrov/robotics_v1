@@ -10,7 +10,6 @@
 //Other libraries headers
 
 //Own components headers
-#include "robo_common/layout/field/FieldUtils.h"
 
 namespace {
 
@@ -18,11 +17,20 @@ constexpr auto PROCESSED_MARKER = '0';
 
 bool isValidMove(char searchMarker, const FieldData &data,
                  const FieldPos &location) {
-  if (!FieldUtils::isInsideField(location)) {
+  if (0 > location.row) {
     return false;
   }
 
-  if (PROCESSED_MARKER == data[location.row][location.col]) {
+  if (static_cast<int32_t>(data.size()) <= location.row) {
+    return false;
+  }
+
+  if (0 > location.col) {
+    return false;
+  }
+
+  if (!data[0].empty() &&
+      static_cast<int32_t>(data[0].size()) <= location.col) {
     return false;
   }
 
@@ -56,29 +64,35 @@ void DFSSearch(char searchMarker, FieldData &data,
   }
 }
 
-std::vector<FieldPos> findLocalSequence(int32_t currRow, int32_t currCol,
-                                        char emptyMarker, FieldData &data,
-                                        std::stack<FieldPos> &dataPath) {
+std::vector<FieldPos> findLocalSequence(
+    const std::vector<char> &nonCrystalMarkers, int32_t currRow,
+    int32_t currCol, FieldData &data, std::stack<FieldPos> &dataPath) {
   std::vector<FieldPos> sequence;
   const char currMarker = data[currRow][currCol];
 
-  if ( (PROCESSED_MARKER != currMarker) && (emptyMarker != currMarker)) {
-    const FieldPos fieldPos { currRow, currCol };
-    dataPath.push(fieldPos);
-    sequence.push_back(fieldPos);
-
-    data[currRow][currCol] = PROCESSED_MARKER;
-
-    DFSSearch(currMarker, data, dataPath, sequence);
+  if (PROCESSED_MARKER == currMarker) {
+    return sequence;
   }
 
+  for (const auto marker : nonCrystalMarkers) {
+    if (marker == currMarker) {
+      return sequence;
+    }
+  }
+
+  const FieldPos fieldPos { currRow, currCol };
+  dataPath.push(fieldPos);
+  sequence.push_back(fieldPos);
+  data[currRow][currCol] = PROCESSED_MARKER;
+
+  DFSSearch(currMarker, data, dataPath, sequence);
   return sequence;
 }
 
 } //end anonymous namespace
 
 std::vector<FieldPos> FloodFill::findLongestCrystalSequence(
-    const FieldData &data, char emptyMarker) {
+    const FieldData &data, const std::vector<char> &nonCrystalMarkers) {
   auto localData = data; //will be modified
   const int32_t dataRows = static_cast<int32_t>(data.size());
   const int32_t dataCols = static_cast<int32_t>(data[0].size());
@@ -89,8 +103,8 @@ std::vector<FieldPos> FloodFill::findLongestCrystalSequence(
 
   for (int32_t row = 0; row < dataRows; ++row) {
     for (int32_t col = 0; col < dataCols; ++col) {
-      currCrystalSequence = findLocalSequence(row, col, emptyMarker, localData,
-          dataPath);
+      currCrystalSequence = findLocalSequence(nonCrystalMarkers, row, col,
+          localData, dataPath);
 
       if (currCrystalSequence.size() > longestCrystalSequence.size()) {
         longestCrystalSequence = currCrystalSequence;
@@ -102,11 +116,12 @@ std::vector<FieldPos> FloodFill::findLongestCrystalSequence(
 }
 
 std::vector<FieldPos> FloodFill::findLocalCrystalSequence(
-    const FieldData &data, const FieldPos &fieldPos, char emptyMarker) {
+    const FieldData &data, const std::vector<char> &nonCrystalMarkers,
+    const FieldPos &fieldPos) {
   auto localData = data; //will be modified
   std::stack<FieldPos> dataPath;
 
-  return findLocalSequence(fieldPos.row, fieldPos.col, emptyMarker, localData,
-      dataPath);
+  return findLocalSequence(nonCrystalMarkers, fieldPos.row, fieldPos.col,
+      localData, dataPath);
 }
 

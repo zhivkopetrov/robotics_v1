@@ -60,8 +60,8 @@ int32_t RobotInitHelper::initOutInterface(const RobotOutInterface &interface,
     return FAILURE;
   }
 
-  if (nullptr == robot._outInterface.getFieldDataCb) {
-    LOGERR("Error, nullptr provided for getFieldDataCb");
+  if (nullptr == robot._outInterface.getFieldDescriptionCb) {
+    LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
     return FAILURE;
   }
 
@@ -86,6 +86,7 @@ int32_t RobotInitHelper::initAnimator(
       std::bind(&Robot::onCollisionImpactAnimEnd, &robot, _1);
   cfg.collisionImpactCb = std::bind(&Robot::onCollisionImpact, &robot);
   cfg.getRobotFieldPosCb = std::bind(&Robot::getFieldPos, &robot);
+  cfg.getFieldDescriptionCb = robot._outInterface.getFieldDescriptionCb;
 
   if (SUCCESS != robot._animator.init(cfg)) {
     LOGERR("Error, RobotAnimator.init() failed");

@@ -28,10 +28,16 @@ constexpr auto WINDOW_Y = 27;
 constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
-//misc
+//field
+constexpr auto FIELD_ROWS = 6;
+constexpr auto FIELD_COLS = 7;
+constexpr auto TILE_WIDTH_HEIGHT = 160;
 constexpr auto PLAYER_FIELD_MARKER = 'B'; //B for Blinky
 constexpr auto ENEMY_FIELD_MARKER = 'E'; //E for Enemy
-constexpr auto EMPTY_FIELD_MARKER = '.';
+constexpr auto FIELD_EMPTY_MARKER = '.';
+constexpr auto FIELD_HARD_OBSTACLE_MARKER = '#';
+
+//misc
 constexpr auto TOTAL_GAME_SECONDS = 180;
 constexpr auto LOCAL_CONTROLLER_MODE = LocalControllerMode::DISABLED;
 constexpr auto TARGET_WIN_COINS = 30;
@@ -123,7 +129,7 @@ CoinHandlerConfig generateCoinHandlerConfig() {
   cfg.rotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
   cfg.collectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
   cfg.respawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
-  cfg.fieldEmptyMarker = EMPTY_FIELD_MARKER;
+  cfg.fieldEmptyMarker = FIELD_EMPTY_MARKER;
 
   return cfg;
 }
@@ -157,21 +163,17 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
-  constexpr auto GAME_FIELD_WIDTH =
-      RoboCommonDefines::FIELD_COLS * RoboCommonDefines::TILE_WIDTH;
-  constexpr auto GAME_FIELD_HEIGHT =
-      RoboCommonDefines::FIELD_ROWS * RoboCommonDefines::TILE_HEIGHT;
+  cfg.description.data.resize(
+      FIELD_ROWS, std::vector<char>(FIELD_COLS, FIELD_EMPTY_MARKER));
 
-  cfg.rows = RoboCommonDefines::FIELD_ROWS;
-  cfg.cols = RoboCommonDefines::FIELD_COLS;
-  cfg.fieldDimensions = {
-      RoboCommonDefines::FIRST_TILE_X_POS, RoboCommonDefines::FIRST_TILE_Y_POS,
-      GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT
-  };
-  cfg.tileWidth = RoboCommonDefines::TILE_WIDTH;
-  cfg.tileHeight = RoboCommonDefines::TILE_HEIGHT;
+  cfg.description.rows = FIELD_ROWS;
+  cfg.description.cols = FIELD_COLS;
+  cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
+  cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.description.emptyDataMarker = FIELD_EMPTY_MARKER;
+  cfg.description.hardObstacleMarker = FIELD_HARD_OBSTACLE_MARKER;
 
   return cfg;
 }

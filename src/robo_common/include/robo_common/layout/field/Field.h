@@ -30,17 +30,19 @@ public:
   void resetFieldDataMarker(const FieldPos &fieldPos);
 
   const FieldData& getFieldData() const;
+  const FieldDescription& getDescription() const;
 
   void toggleDebugTexts();
 
 private:
+  int32_t initTiles(const FieldConfig &cfg);
+
   //for debug purposes
   void printFieldData() const;
 
   Fbo _fieldFbo;
-  std::vector<std::vector<Tile>> _tiles;
-  FieldData _fieldData;
-  char _emptyDataMarker = '.';
+  std::vector<Tile> _tiles; //2D matrix tile layout as 1D representation
+  FieldDescription _description;
 };
 
 #endif /* ROBO_COMMON_FIELD_H_ */

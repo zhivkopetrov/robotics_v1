@@ -32,8 +32,9 @@ private:
                                   RoboCommonLayoutInterface &commonInterface,
                                   RoboMinerLayout &layout);
 
-  static int32_t initCrystals(uint64_t crystalRsrcId, char emptyTileMarker,
-                              RoboMinerLayout &layout);
+  static int32_t initCrystalHandler(uint64_t crystalRsrcId,
+                                    RoboCommonLayoutInterface &commonInterface,
+                                    RoboMinerLayout &layout);
 };
 
 #endif /* ROBO_MINER_GUI_ROBOMINERLAYOUTINITHELPER_H_ */

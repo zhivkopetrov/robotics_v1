@@ -5,7 +5,6 @@
 
 //C++ system headers
 #include <cstdint>
-#include <array>
 
 //Other libraries headers
 #include "utils/drawing/Point.h"
@@ -21,13 +20,14 @@ class FieldUtils {
 public:
   FieldUtils() = delete;
 
-  static FieldPos getFieldPos(const Point &absPos);
+  static FieldPos getFieldPos(const Point &absPos,
+                              const FieldDescription &descr);
 
-  static Point getAbsPos(const FieldPos &fieldPos);
+  static Point getAbsPos(const FieldPos &fieldPos,
+                         const FieldDescription &descr);
 
-  static bool isInsideField(const FieldPos &fieldPos);
-
-  static bool isInsideField(const Point &absPos);
+  static bool isInsideField(const FieldPos &fieldPos,
+                            const FieldDescription &descr);
 
   static FieldPos getAdjacentPos(Direction dir, const FieldPos &fieldPos);
 };

@@ -51,8 +51,8 @@ int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
       std::bind(&Field::setFieldDataMarker, &layout._field, _1, _2);
   robotOutInterface.resetFieldDataMarkerCb =
       std::bind(&Field::resetFieldDataMarker, &layout._field, _1);
-  robotOutInterface.getFieldDataCb =
-      std::bind(&Field::getFieldData, &layout._field);
+  robotOutInterface.getFieldDescriptionCb =
+      std::bind(&Field::getDescription, &layout._field);
 
   const auto &baseCfg = layoutCfg.robotBaseCfg;
   RobotConfig cfg;
@@ -64,8 +64,8 @@ int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
   cfg.enemyFieldMarker = layoutCfg.enemyFieldMarker;
   cfg.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
   animatorCfgBase.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
-  cfg.fieldPos =
-      FieldPos(layoutCfg.fieldCfg.rows - 1, layoutCfg.fieldCfg.cols - 1);
+  cfg.fieldPos = FieldPos(layoutCfg.fieldCfg.description.rows - 1,
+                          layoutCfg.fieldCfg.description.cols - 1);
   cfg.dir = Direction::UP;
   animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId;
   animatorCfgBase.wallCollisionAnimTimerId =

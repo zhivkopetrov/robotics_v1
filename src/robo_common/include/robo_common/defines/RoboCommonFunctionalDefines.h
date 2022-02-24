@@ -17,7 +17,7 @@
 using PlayerDamageCb = std::function<void(int32_t)>;
 using SetFieldDataMarkerCb = std::function<void(const FieldPos&, char)>;
 using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;
-using GetFieldDataCb = std::function<const FieldData&()>;
+using GetFieldDescriptionCb = std::function<const FieldDescription&()>;
 using RobotActCb = std::function<void(MoveType)>;
 using GetRobotFieldPosCb = std::function<FieldPos()>;
 using GetRobotDirCb = std::function<Direction()>;

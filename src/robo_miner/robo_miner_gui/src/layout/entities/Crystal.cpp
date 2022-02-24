@@ -20,13 +20,20 @@ int32_t Crystal::init(const CrystalConfig& cfg) {
     return FAILURE;
   }
   _crystalClickCb = cfg.crystalClickCb;
+
+  if (nullptr == cfg.getFieldDescriptionCb) {
+    LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
+    return FAILURE;
+  }
+  _getFieldDescriptionCb = cfg.getFieldDescriptionCb;
+
   _fieldPos = cfg.fieldPos;
 
   create(cfg.rsrcId);
   setFrame(getEnumValue(cfg.type));
   activateAlphaModulation();
 
-  auto pos = FieldUtils::getAbsPos(cfg.fieldPos);
+  auto pos = FieldUtils::getAbsPos(cfg.fieldPos, _getFieldDescriptionCb());
   pos += cfg.tileOffset;
   setPosition(pos);
 

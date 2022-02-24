@@ -7,22 +7,16 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "utils/drawing/Rectangle.h"
 
 //Own components headers
-#include "robo_common/layout/field/config/TileConfig.h"
+#include "robo_common/defines/RoboCommonDefines.h"
 
 //Forward declarations
 
 struct FieldConfig {
-  Rectangle fieldDimensions;
+  FieldDescription description;
   uint64_t tileRsrcId = 0;
   uint64_t debugFontRsrcId = 0;
-  int32_t tileWidth = 0;
-  int32_t tileHeight = 0;
-  int32_t rows = 0;
-  int32_t cols = 0;
-  char emptyTileMarker = '.';
 };
 
 #endif /* ROBO_COMMON_FIELDCONFIG_H_ */

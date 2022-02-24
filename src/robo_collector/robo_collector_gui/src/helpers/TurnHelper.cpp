@@ -13,7 +13,7 @@
 
 int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
   RobotAIConfig robotAiCfg;
-  robotAiCfg.getFieldDataCb = cfg.getFieldDataCb;
+  robotAiCfg.getFieldDescriptionCb = cfg.getFieldDescriptionCb;
   robotAiCfg.fieldEnemyMarker = cfg.fieldEnemyMarker;
   if (SUCCESS != _robotAI.init(robotAiCfg)) {
     LOGERR("Error, robotAI.init() failed");

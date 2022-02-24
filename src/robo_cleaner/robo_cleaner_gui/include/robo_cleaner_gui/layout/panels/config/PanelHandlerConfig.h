@@ -9,10 +9,13 @@
 //Other libraries headers
 #include "robo_common/layout/panels/config/TimePanelConfig.h"
 #include "robo_common/layout/panels/config/IndicatorPanelConfig.h"
+#include "robo_common/layout/panels/config/NumberCounterPanelConfig.h"
 
 //Own components headers
 
 struct PanelHandlerConfig {
+  NumberCounterPanelConfig tilePanelCfg;
+  NumberCounterPanelConfig rubbishPanelCfg;
   IndicatorPanelConfig healthPanelCfg;
   IndicatorPanelConfig energyPanelCfg;
 };

@@ -8,6 +8,7 @@
 //Other libraries headers
 #include "robo_common/layout/panels/TimePanel.h"
 #include "robo_common/layout/panels/IndicatorPanel.h"
+#include "robo_common/layout/panels/NumberCounterPanel.h"
 
 //Own components headers
 #include "robo_cleaner_gui/defines/RoboCleanerGuiFunctionalDefines.h"
@@ -31,6 +32,8 @@ public:
   void decreaseEnergyIndicator(int32_t delta);
 
 private:
+  NumberCounterPanel _tilePanel;
+  NumberCounterPanel _rubbishPanel;
   IndicatorPanel _healthPanel;
   IndicatorPanel _energyPanel;
 };

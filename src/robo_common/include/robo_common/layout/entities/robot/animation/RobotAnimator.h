@@ -47,6 +47,7 @@ struct RobotAnimatorConfig {
   std::function<void(RobotEndTurn)> collisionImpactAnimEndCb;
   std::function<void()> collisionImpactCb;
   GetRobotFieldPosCb getRobotFieldPosCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
 };
 
 class RobotAnimator: public TimerClient {
@@ -104,6 +105,7 @@ private:
   std::function<void(RobotEndTurn)> _collisionImpactAnimEndCb;
   std::function<void()> _collisionImpactCb;
   GetRobotFieldPosCb _getRobotFieldPosCb;
+  GetFieldDescriptionCb _getFieldDescriptionCb;
 };
 
 #endif /* ROBO_COMMON_ROBOTANIMATOR_H_ */

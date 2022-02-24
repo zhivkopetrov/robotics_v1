@@ -13,6 +13,12 @@
 
 int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
+  //TODO attach gameWonCb on end of triple star animation
+  //SINGLE_STAR will be don't collect silver coins
+  //DOUBLE_STAR will be to collect at least 3 bronze coins
+  //TRIPLE_STAR will be to finish the game
+  //            with at least 1 minute left on the timer
+
   auto panelPos = Point(1250, 50);
   TimePanelUtilityConfig timePanelUtilityCfg;
   timePanelUtilityCfg.timeFinishedCb = interface.startGameLostAnimCb;

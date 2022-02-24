@@ -94,7 +94,8 @@ int32_t RoboCollectorGuiInitHelper::initTurnHelper(
         gui._controllerExternalBridge.get());
   }
 
-  cfg.getFieldDataCb = interface.commonLayoutInterface.getFieldDataCb;
+  cfg.getFieldDescriptionCb =
+      interface.commonLayoutInterface.getFieldDescriptionCb;
   cfg.fieldEnemyMarker = fieldEnemyMarker;
   cfg.maxRobots = Defines::ROBOTS_CTN;
   cfg.robotActInterfaces.reserve(Defines::ROBOTS_CTN);

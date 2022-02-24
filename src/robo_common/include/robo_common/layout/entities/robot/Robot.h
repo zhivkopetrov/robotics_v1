@@ -21,7 +21,7 @@ struct RobotOutInterface {
   PlayerDamageCb playerDamageCb;
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
-  GetFieldDataCb getFieldDataCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
   FinishRobotActCb finishRobotActCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };

@@ -73,12 +73,14 @@ int32_t RoboCollectorLayoutInitHelper::initRobots(
   robotOutInterface.setFieldDataMarkerCb = commonInterface.setFieldDataMarkerCb;
   robotOutInterface.resetFieldDataMarkerCb =
       commonInterface.resetFieldDataMarkerCb;
-  robotOutInterface.getFieldDataCb = commonInterface.getFieldDataCb;
+  robotOutInterface.getFieldDescriptionCb =
+      commonInterface.getFieldDescriptionCb;
   robotOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
 
   const auto &fieldCfg = layoutCfg.commonLayoutCfg.fieldCfg;
-  const std::array<FieldPos, Defines::ENEMIES_CTN> robotsFieldPos { FieldPos(
-      fieldCfg.rows - 1, 0), FieldPos(0, 0), FieldPos(0, fieldCfg.cols - 1) };
+  const std::array<FieldPos, Defines::ENEMIES_CTN> robotsFieldPos {
+    FieldPos(fieldCfg.description.rows - 1, 0), FieldPos(0, 0),
+    FieldPos(0, fieldCfg.description.cols - 1) };
 
   const std::array<Direction, Defines::ENEMIES_CTN> robotsInitialDirs {
       Direction::UP, Direction::DOWN, Direction::DOWN };
@@ -142,7 +144,7 @@ int32_t RoboCollectorLayoutInitHelper::initCoinHandler(
   outInterface.collisionWatcher = interface.collisionWatcher;
   outInterface.setFieldDataMarkerCb = commonInterface.setFieldDataMarkerCb;
   outInterface.resetFieldDataMarkerCb = commonInterface.resetFieldDataMarkerCb;
-  outInterface.getFieldDataCb = commonInterface.getFieldDataCb;
+  outInterface.getFieldDescriptionCb = commonInterface.getFieldDescriptionCb;
   outInterface.incrCollectedCoinsCb = std::bind(
       &PanelHandler::increaseCollectedCoins, &layout._panelHandler, _1);
   outInterface.isPlayerTurnActiveCb = interface.isPlayerTurnActiveCb;

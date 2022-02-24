@@ -12,41 +12,35 @@
 
 //Own components headers
 
-FieldPos FieldUtils::getFieldPos(const Point &absPos) {
+FieldPos FieldUtils::getFieldPos(const Point &absPos,
+                                 const FieldDescription &descr) {
   return FieldPos(
-      (absPos.y - RoboCommonDefines::FIRST_TILE_Y_POS) /
-        RoboCommonDefines::TILE_HEIGHT,
-      (absPos.x - RoboCommonDefines::FIRST_TILE_X_POS) /
-        RoboCommonDefines::TILE_WIDTH);
+      (absPos.y - RoboCommonDefines::FIRST_TILE_Y_POS) / descr.tileHeight,
+      (absPos.x - RoboCommonDefines::FIRST_TILE_X_POS) / descr.tileWidth);
 }
 
-Point FieldUtils::getAbsPos(const FieldPos &boardPos) {
+Point FieldUtils::getAbsPos(const FieldPos &boardPos,
+                            const FieldDescription &descr) {
   return Point(
-      RoboCommonDefines::FIRST_TILE_X_POS +
-        (boardPos.col * RoboCommonDefines::TILE_WIDTH),
-      RoboCommonDefines::FIRST_TILE_Y_POS +
-        (boardPos.row * RoboCommonDefines::TILE_HEIGHT));
+      RoboCommonDefines::FIRST_TILE_X_POS + (boardPos.col * descr.tileWidth),
+      RoboCommonDefines::FIRST_TILE_Y_POS + (boardPos.row * descr.tileHeight));
 }
 
-bool FieldUtils::isInsideField(const FieldPos &fieldPos) {
-  if (0 > fieldPos.row || RoboCommonDefines::FIELD_ROWS <= fieldPos.row) {
+bool FieldUtils::isInsideField(const FieldPos &fieldPos,
+                               const FieldDescription &descr) {
+  if (0 > fieldPos.row || descr.rows <= fieldPos.row) {
     return false;
   }
 
-  if (0 > fieldPos.col || RoboCommonDefines::FIELD_COLS <= fieldPos.col) {
+  if (0 > fieldPos.col || descr.cols <= fieldPos.col) {
+    return false;
+  }
+
+  if (descr.hardObstacleMarker == descr.data[fieldPos.row][fieldPos.col]) {
     return false;
   }
 
   return true;
-}
-
-bool FieldUtils::isInsideField(const Point &absPos) {
-  const Rectangle boundary(RoboCommonDefines::FIRST_TILE_X_POS,
-      RoboCommonDefines::FIRST_TILE_Y_POS,
-      RoboCommonDefines::FIELD_COLS * RoboCommonDefines::TILE_WIDTH,
-      RoboCommonDefines::FIELD_ROWS * RoboCommonDefines::TILE_HEIGHT);
-
-  return boundary.isPointInRect(absPos);
 }
 
 FieldPos FieldUtils::getAdjacentPos(Direction dir, const FieldPos &fieldPos) {

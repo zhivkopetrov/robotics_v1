@@ -16,14 +16,13 @@
 //Own components headers
 
 int32_t RobotAI::init(const RobotAIConfig &cfg) {
-  if (nullptr == cfg.getFieldDataCb) {
-    LOGERR("Error, nullptr provided for RobotAIConfig getFieldDataCb");
+  if (nullptr == cfg.getFieldDescriptionCb) {
+    LOGERR("Error, nullptr provided for RobotAIConfig GetFieldDescriptionCb");
     return FAILURE;
   }
-  _getFieldDataCb = cfg.getFieldDataCb;
+  _getFieldDescriptionCb = cfg.getFieldDescriptionCb;
 
   _fieldEnemyMarker = cfg.fieldEnemyMarker;
-
   return SUCCESS;
 }
 
@@ -59,13 +58,13 @@ void RobotAI::makeMove(const RobotActInterface& actInterface) {
 
 bool RobotAI::isForwardDirValid(const FieldPos &currFieldPos,
                                 Direction currDir) const {
-  const auto &fieldData = _getFieldDataCb();
+  const auto &fieldDescr = _getFieldDescriptionCb();
   const auto futurePos = FieldUtils::getAdjacentPos(currDir, currFieldPos);
-  if (!FieldUtils::isInsideField(futurePos)) {
+  if (!FieldUtils::isInsideField(futurePos, fieldDescr)) {
     return false;
   }
 
-  const auto chosenTile = fieldData[futurePos.row][futurePos.col];
+  const auto chosenTile = fieldDescr.data[futurePos.row][futurePos.col];
   if (_fieldEnemyMarker != chosenTile) {
     return true;
   }

@@ -20,10 +20,11 @@ public:
   FloodFill() = delete;
 
   static std::vector<FieldPos> findLongestCrystalSequence(
-      const FieldData &data, char emptyMarker);
+      const FieldData &data, const std::vector<char> &nonCrystalMarkers);
 
   static std::vector<FieldPos> findLocalCrystalSequence(
-      const FieldData &data, const FieldPos& fieldPos, char emptyMarker);
+      const FieldData &data, const std::vector<char> &nonCrystalMarkers,
+      const FieldPos &fieldPos);
 };
 
 #endif /* ROBO_MINER_GUI_FLOODFILL_H_ */

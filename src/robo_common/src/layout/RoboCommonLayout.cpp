@@ -47,7 +47,7 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
       &_field, _1, _2);
   interface.resetFieldDataMarkerCb = std::bind(&Field::resetFieldDataMarker,
       &_field, _1);
-  interface.getFieldDataCb = std::bind(&Field::getFieldData, &_field);
+  interface.getFieldDescriptionCb = std::bind(&Field::getDescription, &_field);
   interface.playerRobotActInterface = { std::bind(&Robot::act, &_playerRobot,
       _1), std::bind(&Robot::getFieldPos, &_playerRobot), std::bind(
       &Robot::getDirection, &_playerRobot) };

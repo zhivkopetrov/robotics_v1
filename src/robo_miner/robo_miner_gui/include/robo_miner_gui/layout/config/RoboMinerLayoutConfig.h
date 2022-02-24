@@ -11,7 +11,6 @@
 #include "robo_common/layout/config/RoboCommonLayoutConfig.h"
 
 //Own components headers
-#include "robo_miner_gui/layout/field/config/RoboMinerFieldConfig.h"
 #include "robo_miner_gui/layout/panels/config/PanelHandlerConfig.h"
 
 //Forward declarations
@@ -19,7 +18,6 @@
 struct RoboMinerLayoutConfig {
   RoboCommonLayoutConfig commonLayoutCfg;
 
-  RoboMinerFieldConfig fieldCfg;
   PanelHandlerConfig panelHandlerCfg;
   uint64_t crystalRsrcId = 0;
 };

@@ -15,7 +15,7 @@
 struct RobotActInterface;
 
 struct RobotAIConfig {
-  GetFieldDataCb getFieldDataCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
   char fieldEnemyMarker = '!';
 };
 
@@ -28,7 +28,7 @@ public:
 private:
   bool isForwardDirValid(const FieldPos &currFieldPos, Direction currDir) const;
 
-  GetFieldDataCb _getFieldDataCb;
+  GetFieldDescriptionCb _getFieldDescriptionCb;
   char _fieldEnemyMarker = '!';
 };
 

@@ -4,6 +4,8 @@
 //C system headers
 
 //C++ system headers
+#include <array>
+#include <algorithm>
 
 //Other libraries headers
 #include "utils/data_type/EnumClassUtils.h"
@@ -45,5 +47,16 @@ CrystalType getCrystalType(char marker) {
     LOGERR("Error, received unsupported crystal marker: %c", marker);
     return CrystalType::RED;
   }
+}
+
+bool isCrystalMarker(char marker) {
+  constexpr auto crystalTypes = 5;
+  constexpr std::array<char, crystalTypes> crystalMarkers {
+    'c', 'p', 'b', 'g', 'r'
+  };
+
+  const auto it =
+      std::find(crystalMarkers.begin(), crystalMarkers.end(), marker);
+  return it != crystalMarkers.end();
 }
 

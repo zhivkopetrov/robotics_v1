@@ -8,7 +8,7 @@
 #include <functional>
 
 //Other libraries headers
-#include "robo_common/layout/field/FieldPos.h"
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "manager_utils/input/ButtonBase.h"
 
 //Own components headers
@@ -23,6 +23,7 @@ struct CrystalConfig {
   Point tileOffset;
   CrystalType type;
   CrystalClickedCb crystalClickCb;
+  GetFieldDescriptionCb getFieldDescriptionCb;
 };
 
 class Crystal final : public ButtonBase {
@@ -34,8 +35,9 @@ private:
   void onLeave(const InputEvent& e) override;
   void onReturn(const InputEvent& e) override;
 
-  CrystalClickedCb _crystalClickCb;
   FieldPos _fieldPos;
+  CrystalClickedCb _crystalClickCb;
+  GetFieldDescriptionCb _getFieldDescriptionCb;
 };
 
 #endif /* ROBO_MINER_GUI_CRYSTAL_H_ */

@@ -29,8 +29,12 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
-constexpr auto playerFieldMarker = 'B'; //B for Blinky
-constexpr auto emptyFieldMarker = '.';
+constexpr auto PLAYER_FIELD_MARKER = 'B'; //B for Blinky
+constexpr auto ENEMY_FIELD_MARKER = '.';
+
+//TODO compute from the field config
+constexpr auto TOTAL_FIELD_TILES = 42;
+constexpr auto RUBBISH_CLEANS_CTN = 63;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -39,7 +43,11 @@ enum TimerId {
   ROBOT_DAMAGE_ANIM_TIMER_ID,
 
   HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID,
-  ENERGY_PANEL_REDUCE_INDICATOR_TIMER_ID
+  ENERGY_PANEL_REDUCE_INDICATOR_TIMER_ID,
+  TILE_PANEL_INCR_TIMER_ID,
+  TILE_PANEL_DECR_TIMER_ID,
+  RUBBISH_PANEL_INCR_TIMER_ID,
+  RUBBISH_PANEL_DECR_TIMER_ID,
 };
 
 RobotBaseConfig generateRobotBaseConfig() {
@@ -57,6 +65,20 @@ RobotBaseConfig generateRobotBaseConfig() {
 
 PanelHandlerConfig generatePanelHandlerConfig() {
   PanelHandlerConfig cfg;
+
+  auto &tilePanelCfg = cfg.tilePanelCfg;
+  tilePanelCfg.targetNumber = TOTAL_FIELD_TILES;
+  tilePanelCfg.rsrcId = RoboCleanerGuiResources::TILE_PANEL;
+  tilePanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
+  tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
+  tilePanelCfg.decrTimerId = TILE_PANEL_DECR_TIMER_ID;
+
+  auto &rubbishPanelCfg = cfg.rubbishPanelCfg;
+  rubbishPanelCfg.targetNumber = RUBBISH_CLEANS_CTN;
+  rubbishPanelCfg.rsrcId = RoboCleanerGuiResources::RUBBISH_PANEL;
+  rubbishPanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
+  rubbishPanelCfg.incrTimerId = RUBBISH_PANEL_INCR_TIMER_ID;
+  rubbishPanelCfg.decrTimerId = RUBBISH_PANEL_DECR_TIMER_ID;
 
   auto &healthPanelCfg = cfg.healthPanelCfg;
   healthPanelCfg.rsrcId = RoboCleanerGuiResources::HEALTH_PANEL;
@@ -127,7 +149,7 @@ RoboCleanerGuiConfig generateGameConfig() {
   fieldCfg.rubbishFontId = RoboCleanerGuiResources::VINQUE_RG_30;
   fieldCfg.obstacleRsrcId = RoboCleanerGuiResources::MAP_OBSTACLE;
 
-  fieldCfg.emptyTileMarker = emptyFieldMarker;
+  fieldCfg.emptyTileMarker = PLAYER_FIELD_MARKER;
   fieldCfg.rows = RoboCommonDefines::FIELD_ROWS;
   fieldCfg.cols = RoboCommonDefines::FIELD_COLS;
 
@@ -135,7 +157,7 @@ RoboCleanerGuiConfig generateGameConfig() {
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = playerFieldMarker;
+  commonLayoutCfg.playerFieldMarker = ENEMY_FIELD_MARKER;
 
   return cfg;
 }

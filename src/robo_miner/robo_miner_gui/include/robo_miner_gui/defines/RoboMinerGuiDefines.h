@@ -22,5 +22,6 @@ enum class CrystalType {
 
 char getCrystalMarker(CrystalType type);
 CrystalType getCrystalType(char marker);
+bool isCrystalMarker(char marker);
 
 #endif /* ROBO_MINER_GUI_ROBOMINERDEFINES_H_ */
