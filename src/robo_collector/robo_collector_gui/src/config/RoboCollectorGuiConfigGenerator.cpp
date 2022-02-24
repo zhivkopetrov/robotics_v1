@@ -32,10 +32,6 @@ constexpr auto WINDOW_HEIGHT = 1053;
 constexpr auto FIELD_ROWS = 6;
 constexpr auto FIELD_COLS = 7;
 constexpr auto TILE_WIDTH_HEIGHT = 160;
-constexpr auto PLAYER_FIELD_MARKER = 'B'; //B for Blinky
-constexpr auto ENEMY_FIELD_MARKER = 'E'; //E for Enemy
-constexpr auto FIELD_EMPTY_MARKER = '.';
-constexpr auto FIELD_HARD_OBSTACLE_MARKER = '#';
 
 //misc
 constexpr auto TOTAL_GAME_SECONDS = 180;
@@ -129,7 +125,7 @@ CoinHandlerConfig generateCoinHandlerConfig() {
   cfg.rotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
   cfg.collectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
   cfg.respawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
-  cfg.fieldEmptyMarker = FIELD_EMPTY_MARKER;
+  cfg.fieldEmptyMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
 
   return cfg;
 }
@@ -163,8 +159,8 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
-  cfg.description.data.resize(
-      FIELD_ROWS, std::vector<char>(FIELD_COLS, FIELD_EMPTY_MARKER));
+  cfg.description.data.resize(FIELD_ROWS,
+      std::vector<char>(FIELD_COLS, RoboCommonDefines::EMPTY_TILE_MARKER));
 
   cfg.description.rows = FIELD_ROWS;
   cfg.description.cols = FIELD_COLS;
@@ -172,8 +168,8 @@ FieldConfig generateFieldConfig() {
   cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
-  cfg.description.emptyDataMarker = FIELD_EMPTY_MARKER;
-  cfg.description.hardObstacleMarker = FIELD_HARD_OBSTACLE_MARKER;
+  cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
+  cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
 
   return cfg;
 }
@@ -201,34 +197,33 @@ EngineConfig generateEngineConfig() {
 
 RoboCollectorGuiConfig generateGameConfig() {
   RoboCollectorGuiConfig cfg;
-  auto& layoutCfg = cfg.layoutCfg;
+  auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
   layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
   layoutCfg.controllerCfg = generateRoboCollectorUiControllerConfig();
 
-  auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = PLAYER_FIELD_MARKER;
-  commonLayoutCfg.enemyFieldMarker = ENEMY_FIELD_MARKER;
+  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
+  commonLayoutCfg.enemyFieldMarker = RoboCommonDefines::ENEMY_MARKER;
 
   return cfg;
 }
 
 } //end anonymous namespace
 
-std::vector<DependencyDescription>
-RoboCollectorGuiConfigGenerator::generateDependencies(
+std::vector<DependencyDescription> RoboCollectorGuiConfigGenerator::generateDependencies(
     int32_t argc, char **args) {
-  std::vector<DependencyDescription> dependecies =
-      getDefaultEngineDependencies(argc, args);
+  std::vector<DependencyDescription> dependecies = getDefaultEngineDependencies(
+      argc, args);
 
-  const LoadDependencyCb ros2Loader = [argc, args](){
+  const LoadDependencyCb ros2Loader = [argc, args]() {
     rclcpp::init(argc, args);
     return SUCCESS;
   };
-  const UnloadDependencyCb ros2Unloader = [](){
+  const UnloadDependencyCb ros2Unloader = []() {
     //shutdown the global context only if it hasn't
     //for example: ROS2 signal handlers do that automatically
     if (rclcpp::ok()) {
@@ -239,7 +234,7 @@ RoboCollectorGuiConfigGenerator::generateDependencies(
     }
   };
 
-  dependecies.push_back({"ROS2", ros2Loader, ros2Unloader});
+  dependecies.push_back( { "ROS2", ros2Loader, ros2Unloader });
 
   return dependecies;
 }

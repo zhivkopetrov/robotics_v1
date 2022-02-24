@@ -40,8 +40,9 @@ int32_t RoboCleanerLayoutInitHelper::init(
     return FAILURE;
   }
 
-  if (SUCCESS != layout._field.init(cfg.fieldCfg)) {
-    LOGERR("Error, _field.init() failed");
+  if (SUCCESS != layout._entityHandler.init(cfg.entityHandlerCfg,
+      commonInterface.getFieldDescriptionCb)) {
+    LOGERR("Error, _entityHandler.init() failed");
     return FAILURE;
   }
 

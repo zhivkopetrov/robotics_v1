@@ -30,9 +30,6 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto TILE_WIDTH_HEIGHT = 160;
-constexpr auto PLAYER_FIELD_MARKER = 'B'; //B for Blinky
-constexpr auto FIELD_EMPTY_MARKER = '.';
-constexpr auto FIELD_HARD_OBSTACLE_MARKER = '#';
 
 //TODO compute from the field config
 constexpr auto TOTAL_FIELD_TILES = 42;
@@ -108,8 +105,8 @@ FieldConfig generateFieldConfig() {
   cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
-  cfg.description.emptyDataMarker = FIELD_EMPTY_MARKER;
-  cfg.description.hardObstacleMarker = FIELD_HARD_OBSTACLE_MARKER;
+  cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
+  cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
 
   return cfg;
 }
@@ -145,7 +142,7 @@ RoboMinerGuiConfig generateGameConfig() {
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = PLAYER_FIELD_MARKER;
+  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
   return cfg;
 }

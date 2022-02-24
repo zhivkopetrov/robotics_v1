@@ -5,9 +5,9 @@
 
 //C++ system headers
 #include <cstdint>
-#include <vector>
 
 //Other libraries headers
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "robo_common/layout/field/FieldPos.h"
 #include "manager_utils/drawing/Image.h"
 
@@ -24,7 +24,8 @@ struct RubbishConfig {
 
 class Rubbish {
 public:
-  int32_t init(const RubbishConfig& cfg);
+  int32_t init(const RubbishConfig& cfg,
+               const GetFieldDescriptionCb& getFieldDescriptionCb);
   void draw() const;
 
 private:

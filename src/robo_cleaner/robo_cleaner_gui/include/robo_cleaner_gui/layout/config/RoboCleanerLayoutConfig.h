@@ -11,7 +11,7 @@
 #include "robo_common/layout/config/RoboCommonLayoutConfig.h"
 
 //Own components headers
-#include "robo_cleaner_gui/layout/field/config/RoboCleanerFieldConfig.h"
+#include "robo_cleaner_gui/layout/entities/config/EntityHandlerConfig.h"
 #include "robo_cleaner_gui/layout/panels/config/PanelHandlerConfig.h"
 
 //Forward declarations
@@ -19,7 +19,7 @@
 struct RoboCleanerLayoutConfig {
   RoboCommonLayoutConfig commonLayoutCfg;
 
-  RoboCleanerFieldConfig fieldCfg;
+  EntityHandlerConfig entityHandlerCfg;
   PanelHandlerConfig panelHandlerCfg;
 };
 

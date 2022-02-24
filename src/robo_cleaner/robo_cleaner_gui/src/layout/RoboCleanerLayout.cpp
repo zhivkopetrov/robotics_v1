@@ -33,7 +33,7 @@ void RoboCleanerLayout::deinit() {
 
 void RoboCleanerLayout::draw() const {
   _commonLayout.draw();
-  _field.draw();
+  _entityHandler.draw();
   _panelHandler.draw();
 }
 

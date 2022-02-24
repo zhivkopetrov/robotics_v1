@@ -38,8 +38,8 @@ add_executable(
         ${_INC_DIR}/helpers/RoboCleanerGuiInitHelper.h
         ${_INC_DIR}/external_api/CleanerControllerExternalBridge.h
         ${_INC_DIR}/layout/entities/Rubbish.h
-        ${_INC_DIR}/layout/field/RoboCleanerField.h
-        ${_INC_DIR}/layout/field/config/RoboCleanerFieldConfig.h
+        ${_INC_DIR}/layout/entities/EntityHandler.h
+        ${_INC_DIR}/layout/entities/config/EntityHandlerConfig.h
         ${_INC_DIR}/layout/panels/PanelHandler.h
         ${_INC_DIR}/layout/panels/config/PanelHandlerConfig.h
         ${_INC_DIR}/layout/helpers/RoboCleanerLayoutInterfaces.h
@@ -54,7 +54,7 @@ add_executable(
         ${_SRC_DIR}/helpers/RoboCleanerGuiInitHelper.cpp
         ${_SRC_DIR}/layout/RoboCleanerLayout.cpp
         ${_SRC_DIR}/layout/entities/Rubbish.cpp
-        ${_SRC_DIR}/layout/field/RoboCleanerField.cpp
+        ${_SRC_DIR}/layout/entities/EntityHandler.cpp
         ${_SRC_DIR}/layout/panels/PanelHandler.cpp
         ${_SRC_DIR}/layout/helpers/RoboCleanerLayoutInitHelper.cpp
 )

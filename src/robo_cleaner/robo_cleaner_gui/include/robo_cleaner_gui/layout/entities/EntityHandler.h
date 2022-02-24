@@ -1,32 +1,29 @@
-#ifndef ROBO_CLEANER_GUI_ROBOCLEANERFIELD_H_
-#define ROBO_CLEANER_GUI_ROBOCLEANERFIELD_H_
+#ifndef ROBO_CLEANER_GUI_ENTITYHANDLER_H_
+#define ROBO_CLEANER_GUI_ENTITYHANDLER_H_
 
 //C system headers
 
 //C++ system headers
 #include <cstdint>
+#include <vector>
 
 //Other libraries headers
-#include "robo_common/defines/RoboCommonDefines.h"
 #include "manager_utils/drawing/Text.h"
 
 //Own components headers
 #include "robo_cleaner_gui/layout/entities/Rubbish.h"
 
 //Forward declarations
-struct RoboCleanerFieldConfig;
+struct EntityHandlerConfig;
 
-class RoboCleanerField {
+class EntityHandler {
 public:
-  int32_t init(const RoboCleanerFieldConfig &cfg);
+  int32_t init(const EntityHandlerConfig& cfg,
+               const GetFieldDescriptionCb& getFieldDescriptionCb);
+  void deinit();
   void draw() const;
 
-  const FieldData& getFieldData() const;
-  char getEmptyMarker() const;
-
 private:
-  int32_t initEntities(const RoboCleanerFieldConfig &cfg);
-
   void createCounterText(const FieldPos &fieldPos, uint64_t fontId,
                          int32_t counterValue);
 
@@ -36,8 +33,7 @@ private:
   std::vector<Text> _tileCounters;
   std::vector<Image> _obstacles;
 
-  FieldData _fieldData;
-  char _emptyDataMarker = '.';
+  GetFieldDescriptionCb _getFieldDescriptionCb;
 };
 
-#endif /* ROBO_CLEANER_GUI_ROBOCLEANERFIELD_H_ */
+#endif /* ROBO_CLEANER_GUI_ENTITYHANDLER_H_ */

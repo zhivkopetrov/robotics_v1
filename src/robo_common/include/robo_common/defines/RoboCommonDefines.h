@@ -30,10 +30,16 @@ enum RobotDefines {
   PLAYER_ROBOT_IDX = 0
 };
 
+enum Markers {
+  PLAYER_MARKER = 'B', //for Blinky
+  ENEMY_MARKER = 'E',
+  HARD_OBSTACLE_MARKER = 'X',
+  EMPTY_TILE_MARKER = '.'
+};
+
 enum FieldDefines {
   FIRST_TILE_X_POS = 47,
   FIRST_TILE_Y_POS = 47,
-  HARD_OBSTACLE_MARKER = 'X'
 };
 } //namespace RoboCommonDefines
 

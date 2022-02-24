@@ -29,8 +29,7 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
-constexpr auto PLAYER_FIELD_MARKER = 'B'; //B for Blinky
-constexpr auto ENEMY_FIELD_MARKER = '.';
+constexpr auto TILE_WIDTH_HEIGHT = 160;
 
 //TODO compute from the field config
 constexpr auto TOTAL_FIELD_TILES = 42;
@@ -99,21 +98,33 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
-  constexpr auto GAME_FIELD_WIDTH =
-      RoboCommonDefines::FIELD_COLS * RoboCommonDefines::TILE_WIDTH;
-  constexpr auto GAME_FIELD_HEIGHT =
-      RoboCommonDefines::FIELD_ROWS * RoboCommonDefines::TILE_HEIGHT;
 
-  cfg.rows = RoboCommonDefines::FIELD_ROWS;
-  cfg.cols = RoboCommonDefines::FIELD_COLS;
-  cfg.fieldDimensions = {
-      RoboCommonDefines::FIRST_TILE_X_POS, RoboCommonDefines::FIRST_TILE_Y_POS,
-      GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT
+  cfg.description.data = {
+    { 'x', 'x', '.', '.', '.', '.', '.'},
+    { 'x', 'x', 'r', 'r', '.', 'R', 'x'},
+    { '.', '.', 'r', 'r', '.', '.', 'x'},
+    { '.', '.', '.', '.', '.', 'R', '.'},
+    { '.', 'R', 'R', '.', '.', '.', '.'},
+    { 'x', 'x', '.', '.', '.', '.', '.'}
   };
-  cfg.tileWidth = RoboCommonDefines::TILE_WIDTH;
-  cfg.tileHeight = RoboCommonDefines::TILE_HEIGHT;
+
+  cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
+  cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
+  cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
+  cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
+  cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
+
+  return cfg;
+}
+
+EntityHandlerConfig generateEntityHandlerConfig() {
+  EntityHandlerConfig cfg;
+  cfg.rubbishRsrcId = RoboCleanerGuiResources::RUBBISH;
+  cfg.rubbishFontId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.obstacleRsrcId = RoboCleanerGuiResources::MAP_OBSTACLE;
 
   return cfg;
 }
@@ -143,21 +154,14 @@ RoboCleanerGuiConfig generateGameConfig() {
   RoboCleanerGuiConfig cfg;
   auto& layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
+  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
 
-  auto& fieldCfg = layoutCfg.fieldCfg;
-  fieldCfg.rubbishRsrcId = RoboCleanerGuiResources::RUBBISH;
-  fieldCfg.rubbishFontId = RoboCleanerGuiResources::VINQUE_RG_30;
-  fieldCfg.obstacleRsrcId = RoboCleanerGuiResources::MAP_OBSTACLE;
-
-  fieldCfg.emptyTileMarker = PLAYER_FIELD_MARKER;
-  fieldCfg.rows = RoboCommonDefines::FIELD_ROWS;
-  fieldCfg.cols = RoboCommonDefines::FIELD_COLS;
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = ENEMY_FIELD_MARKER;
+  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
   return cfg;
 }

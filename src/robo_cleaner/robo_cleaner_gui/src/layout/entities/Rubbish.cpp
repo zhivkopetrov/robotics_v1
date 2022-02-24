@@ -12,9 +12,15 @@
 
 //Own components headers
 
-int32_t Rubbish::init(const RubbishConfig& cfg) {
+int32_t Rubbish::init(const RubbishConfig& cfg,
+                      const GetFieldDescriptionCb& getFieldDescriptionCb) {
+  if (nullptr == getFieldDescriptionCb) {
+    LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
+    return FAILURE;
+  }
+
   _img.create(cfg.rsrcId);
-  auto pos = FieldUtils::getAbsPos(cfg.fieldPos);
+  auto pos = FieldUtils::getAbsPos(cfg.fieldPos, getFieldDescriptionCb());
   pos += cfg.tileOffset;
   _img.setPosition(pos);
   _img.setFrame(cfg.frameId);

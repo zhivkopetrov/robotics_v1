@@ -5,15 +5,13 @@
 
 //C++ system headers
 #include <cstdint>
-#include <vector>
-#include <unordered_map>
 
 //Other libraries headers
 #include "robo_common/layout/RoboCommonLayout.h"
 
 //Own components headers
 #include "robo_cleaner_gui/layout/panels/PanelHandler.h"
-#include "robo_cleaner_gui/layout/field/RoboCleanerField.h"
+#include "robo_cleaner_gui/layout/entities/EntityHandler.h"
 
 //Forward declarations
 class RoboCleanerLayoutInitHelper;
@@ -36,12 +34,8 @@ public:
 
 private:
   RoboCommonLayout _commonLayout;
-  RoboCleanerField _field;
+  EntityHandler _entityHandler;
   PanelHandler _panelHandler;
-
-  //key = (currRow * maxCols) + currCol
-  //value = relative crystal id
-  std::unordered_map<int32_t, int32_t> _fieldPosToCrystalIdMapping;
 };
 
 #endif /* ROBO_CLEANER_GUI_ROBOCLEANERLAYOUT_H_ */
