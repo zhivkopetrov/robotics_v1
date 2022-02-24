@@ -9,7 +9,6 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotMoveType.msg"
-  "srv/GetCurrentCoins.srv"
 )
 
 set_target_properties(

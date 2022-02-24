@@ -58,10 +58,6 @@ int32_t CollectorControllerExternalBridge::init(
       ROBOT_MOVE_TYPE_TOPIC, queueSize,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
 
-  _getCoinsService = create_service<GetCurrentCoins>("getCurrentCoins",
-      std::bind(&CollectorControllerExternalBridge::handleService, this, _1,
-          _2));
-
   _playerEnableInputPublisher = create_publisher<Empty>(
       ENABLE_ROBOT_INPUT_TOPIC, queueSize);
 
@@ -94,13 +90,4 @@ void CollectorControllerExternalBridge::onMoveMsg(
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
-void CollectorControllerExternalBridge::handleService(
-    [[maybe_unused]]const std::shared_ptr<GetCurrentCoins::Request> request,
-    std::shared_ptr<GetCurrentCoins::Response> response) {
-  const auto f = [this, &response]() {
-    response->coins = _coins++;
-  };
-
-  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
-}
 
