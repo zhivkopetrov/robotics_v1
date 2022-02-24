@@ -9,9 +9,11 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   
+  <build_depend>robo_collector_interfaces</build_depend>
   <build_depend>robo_common</build_depend>
 
   <exec_depend>robo_common</exec_depend>
+  <exec_depend>robo_collector_interfaces</exec_depend>
   <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">ament_cmake</exec_depend>
 

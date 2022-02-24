@@ -7,29 +7,11 @@
 
 //Other libraries headers
 #include "robo_collector_common/defines/RoboCollectorTopics.h"
+#include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-
-namespace {
-//TODO create separate message helper utility file
-MoveType getMoveType(const int8_t moveType) {
-  using robo_collector_interfaces::msg::RobotMoveType;
-  switch (moveType) {
-  case RobotMoveType::FORWARD:
-    return MoveType::FORWARD;
-  case RobotMoveType::ROTATE_LEFT:
-    return MoveType::ROTATE_LEFT;
-  case RobotMoveType::ROTATE_RIGHT:
-    return MoveType::ROTATE_RIGHT;
-  default:
-    LOGERR("Error, received unsupported RobotMoveType: %hhu", moveType);
-    return MoveType::FORWARD;
-  }
-}
-
-}
 
 CollectorControllerExternalBridge::CollectorControllerExternalBridge()
     : Node("CollectorControllerExternalBridge") {

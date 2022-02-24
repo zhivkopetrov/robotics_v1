@@ -81,6 +81,8 @@ target_include_directories(
         >
 )
 
+set(_USE_KEYWORD_STYLE False)
+#note: ROS2 uses plain style, thus access modifiers can't be used
 target_link_libraries(
     ${PROJECT_NAME}
         robo_collector_common::robo_collector_common
@@ -96,6 +98,7 @@ ament_target_dependencies(
 
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
+set_target_visibility(${PROJECT_NAME} ${_USE_KEYWORD_STYLE})
 # enable_target_sanitizer(${PROJECT_NAME} "memory")
 
 if(NOT DISABLE_ROS_TOOLING)

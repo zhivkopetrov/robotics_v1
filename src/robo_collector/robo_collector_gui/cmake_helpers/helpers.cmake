@@ -61,7 +61,7 @@ function(enable_target_position_independent_code target)
     )
 endfunction()
 
-function(set_target_visibility target)
+function(set_target_visibility target use_keyword_style)
     if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         set(DEFAULT_BUILD_TYPE "Debug")
             message(STATUS 
@@ -91,9 +91,13 @@ function(set_target_visibility target)
         endif()
     endif()
     
+    if(${use_keyword_style})
+        set(_ACCESS_MODIFIER PRIVATE)
+    endif()
+    
     target_link_libraries(
         ${target} 
-            PRIVATE
+            ${_ACCESS_MODIFIER}
             ${R_DYNAMIC_FLAG} # export of static symbols
     )   
 endfunction()

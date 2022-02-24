@@ -80,6 +80,8 @@ target_include_directories(
         $<INSTALL_INTERFACE:${_INC_FOLDER_NAME}>
 )
 
+set(_USE_KEYWORD_STYLE True)
+
 target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC
@@ -88,7 +90,7 @@ target_link_libraries(
 
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
-set_target_visibility(${PROJECT_NAME})
+set_target_visibility(${PROJECT_NAME} ${_USE_KEYWORD_STYLE})
 install_and_export_target(${PROJECT_NAME} ${_INC_FOLDER_NAME})
 
 if(NOT DISABLE_ROS_TOOLING)

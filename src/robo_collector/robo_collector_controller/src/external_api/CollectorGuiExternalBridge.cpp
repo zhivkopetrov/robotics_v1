@@ -7,31 +7,12 @@
 
 //Other libraries headers
 #include "robo_collector_common/defines/RoboCollectorTopics.h"
+#include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-
-namespace {
-//TODO create separate message helper utility file
-int8_t getMoveTypeField(MoveType moveType) {
-  using robo_collector_interfaces::msg::RobotMoveType;
-
-  switch (moveType) {
-  case MoveType::FORWARD:
-    return RobotMoveType::FORWARD;
-  case MoveType::ROTATE_LEFT:
-    return RobotMoveType::ROTATE_LEFT;
-  case MoveType::ROTATE_RIGHT:
-    return RobotMoveType::ROTATE_RIGHT;
-  default:
-    LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
-    return RobotMoveType::FORWARD;
-  }
-}
-
-}
 
 CollectorGuiExternalBridge::CollectorGuiExternalBridge()
     : Node("CollectorGuiExternalBridge") {
