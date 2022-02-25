@@ -18,9 +18,9 @@
 
 int32_t Field::init(const FieldConfig &cfg) {
   if (0 >= cfg.description.rows || 0 >= cfg.description.cols) {
-    LOGERR("Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
-           "needs to be positive number", cfg.description.rows,
-           cfg.description.cols);
+    LOGERR(
+        "Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' " "needs to be positive number",
+        cfg.description.rows, cfg.description.cols);
     return FAILURE;
   }
 
@@ -70,10 +70,6 @@ void Field::resetFieldDataMarker(const FieldPos &fieldPos) {
   setFieldDataMarker(fieldPos, _description.emptyDataMarker);
 }
 
-const FieldData& Field::getFieldData() const {
-  return _description.data;
-}
-
 const FieldDescription& Field::getDescription() const {
   return _description;
 }
@@ -105,8 +101,8 @@ int32_t Field::initTiles(const FieldConfig &cfg) {
   int32_t currTileId = 0;
 
   for (int32_t row = 0; row < cfg.description.rows; ++row) {
-    tileCfg.screenCoordinates.y = RoboCommonDefines::FIRST_TILE_Y_POS +
-        (row * cfg.description.tileHeight);
+    tileCfg.screenCoordinates.y = RoboCommonDefines::FIRST_TILE_Y_POS
+        + (row * cfg.description.tileHeight);
 
     tileCfg.row = row;
     for (int32_t col = 0; col < cfg.description.cols; ++col) {
@@ -116,12 +112,12 @@ int32_t Field::initTiles(const FieldConfig &cfg) {
       }
 
       tileCfg.col = col;
-      tileCfg.screenCoordinates.x = RoboCommonDefines::FIRST_TILE_X_POS +
-          (col * cfg.description.tileWidth);
+      tileCfg.screenCoordinates.x = RoboCommonDefines::FIRST_TILE_X_POS
+          + (col * cfg.description.tileWidth);
 
       if (SUCCESS != _tiles[currTileId].init(tileCfg)) {
-        LOGERR("_tiles[%d].init() failed for row, col: [%d,%d]",
-            currTileId, row, col);
+        LOGERR("_tiles[%d].init() failed for row, col: [%d,%d]", currTileId,
+            row, col);
         return FAILURE;
       }
       ++currTileId;

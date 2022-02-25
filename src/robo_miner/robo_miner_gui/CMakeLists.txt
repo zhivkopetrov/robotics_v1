@@ -37,6 +37,7 @@ add_executable(
         ${_INC_DIR}/helpers/algorithms/FloodFill.h
         ${_INC_DIR}/helpers/RoboMinerBuilder.h
         ${_INC_DIR}/helpers/RoboMinerGuiInitHelper.h
+        ${_INC_DIR}/helpers/MovementWatcher.h
         ${_INC_DIR}/external_api/MinerControllerExternalBridge.h
         ${_INC_DIR}/layout/entities/Crystal.h
         ${_INC_DIR}/layout/entities/CrystalHandler.h
@@ -52,6 +53,7 @@ add_executable(
         ${_SRC_DIR}/external_api/MinerControllerExternalBridge.cpp
         ${_SRC_DIR}/helpers/RoboMinerBuilder.cpp
         ${_SRC_DIR}/helpers/RoboMinerGuiInitHelper.cpp
+        ${_SRC_DIR}/helpers/MovementWatcher.cpp
         ${_SRC_DIR}/helpers/algorithms/FloodFill.cpp
         ${_SRC_DIR}/layout/RoboMinerLayout.cpp
         ${_SRC_DIR}/layout/entities/Crystal.cpp

@@ -11,7 +11,7 @@
 
 //Own components headers
 
-int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
+int32_t TurnHelper::init(const TurnHelperConfig &cfg) {
   RobotAIConfig robotAiCfg;
   robotAiCfg.getFieldDescriptionCb = cfg.getFieldDescriptionCb;
   robotAiCfg.fieldEnemyMarker = cfg.fieldEnemyMarker;
@@ -32,7 +32,8 @@ int32_t TurnHelper::init(const TurnHelperConfig& cfg) {
   return SUCCESS;
 }
 
-void TurnHelper::onRobotFinishAct(int32_t robotId) {
+void TurnHelper::onRobotFinishAct(int32_t robotId,
+                                  [[maybe_unused]]MoveOutcome moveOutcome) {
   const auto lastRobotIdx = _maxRobots - 1;
   if (lastRobotIdx == robotId) {
     _activeRobotId = RoboCommonDefines::PLAYER_ROBOT_IDX;

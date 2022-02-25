@@ -44,7 +44,8 @@ void RoboCleanerGui::process() {
   _collisionWatcher.process();
 }
 
-void RoboCleanerGui::onRobotTurnFinish([[maybe_unused]]int32_t robotId) {
+void RoboCleanerGui::onRobotTurnFinish(
+    [[maybe_unused]]int32_t robotId, [[maybe_unused]]MoveOutcome moveOutcome) {
 
 }
 

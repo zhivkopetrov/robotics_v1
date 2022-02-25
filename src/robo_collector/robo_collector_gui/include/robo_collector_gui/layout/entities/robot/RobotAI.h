@@ -26,7 +26,7 @@ public:
   void makeMove(const RobotActInterface &actInterface);
 
 private:
-  bool isForwardDirValid(const FieldPos &currFieldPos, Direction currDir) const;
+  bool isForwardDirValid(const RobotState& state) const;
 
   GetFieldDescriptionCb _getFieldDescriptionCb;
   char _fieldEnemyMarker = '!';

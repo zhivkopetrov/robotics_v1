@@ -14,6 +14,7 @@
 //Own components headers
 #include "robo_miner_gui/layout/RoboMinerLayout.h"
 #include "robo_miner_gui/external_api/MinerControllerExternalBridge.h"
+#include "robo_miner_gui/helpers/MovementWatcher.h"
 
 //Forward declarations
 class InputEvent;
@@ -33,11 +34,12 @@ public:
   void process() override;
 
   //TODO move to some object
-  void onRobotTurnFinish(int32_t robotId);
+  void onRobotTurnFinish(int32_t robotId, MoveOutcome moveOutcome);
 
 private:
   RoboMinerLayout _layout;
   CollisionWatcher _collisionWatcher;
+  MovementWatcher _movementWatcher;
 
   std::shared_ptr<MinerControllerExternalBridge> _controllerExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;

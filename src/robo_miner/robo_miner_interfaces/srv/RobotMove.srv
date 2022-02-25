@@ -1,4 +1,6 @@
 RobotMoveType robot_move_type
 ---
 bool success
-char[<=3] revealed_tiles
+bool move_success
+#surrounding_tiles are reported in order: left, forward, right
+uint8[3] surrounding_tiles

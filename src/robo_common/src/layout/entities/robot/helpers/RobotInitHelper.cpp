@@ -12,11 +12,11 @@
 //Own components headers
 #include "robo_common/layout/entities/robot/Robot.h"
 
-int32_t RobotInitHelper::init(const RobotConfig &cfg,
+int32_t RobotInitHelper::init(const RobotState &initialState,
                               const RobotAnimatorConfigBase &robotAnimCfgBase,
                               const RobotOutInterface &interface,
                               Robot &robot) {
-  robot._state = cfg;
+  robot._state = initialState;
 
   if (SUCCESS != initOutInterface(interface, robot)) {
     LOGERR("Error, initOutInterface() failed");
@@ -81,14 +81,16 @@ int32_t RobotInitHelper::initAnimator(
   cfg.baseCfg = robotAnimCfgBase;
   cfg.startDir = robot._state.dir;
   cfg.startPos = robot._state.fieldPos;
-  cfg.onMoveAnimEndCb = std::bind(&Robot::onMoveAnimEnd, &robot, _1, _2);
-  cfg.collisionImpactAnimEndCb =
-      std::bind(&Robot::onCollisionImpactAnimEnd, &robot, _1);
-  cfg.collisionImpactCb = std::bind(&Robot::onCollisionImpact, &robot);
-  cfg.getRobotFieldPosCb = std::bind(&Robot::getFieldPos, &robot);
-  cfg.getFieldDescriptionCb = robot._outInterface.getFieldDescriptionCb;
 
-  if (SUCCESS != robot._animator.init(cfg)) {
+  RobotAnimatorOutInterface interface;
+  interface.onMoveAnimEndCb = std::bind(&Robot::onMoveAnimEnd, &robot, _1, _2);
+  interface.collisionImpactAnimEndCb =
+      std::bind(&Robot::onCollisionImpactAnimEnd, &robot, _1);
+  interface.collisionImpactCb = std::bind(&Robot::onCollisionImpact, &robot);
+  interface.getRobotStateCb = std::bind(&Robot::getState, &robot);
+  interface.getFieldDescriptionCb = robot._outInterface.getFieldDescriptionCb;
+
+  if (SUCCESS != robot._animator.init(cfg, interface)) {
     LOGERR("Error, RobotAnimator.init() failed");
     return FAILURE;
   }

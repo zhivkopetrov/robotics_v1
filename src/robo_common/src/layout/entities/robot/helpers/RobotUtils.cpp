@@ -4,8 +4,10 @@
 //C system headers
 
 //C++ system headers
+#include <array>
 
 //Other libraries headers
+#include "robo_common/layout/field/FieldUtils.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
@@ -45,3 +47,25 @@ double RobotUtils::getRotationDegFromDir(Direction dir) {
     return 0;
   }
 }
+
+SurroundingTiles RobotUtils::getSurroundingTiles(const FieldDescription &descr,
+                                                 const RobotState &state) {
+  SurroundingTiles result;
+
+  const auto leftDir = getDirAfterRotation(state.dir, RotationDir::LEFT);
+  const auto rightDir = getDirAfterRotation(state.dir, RotationDir::RIGHT);
+  constexpr auto posesCtn = 3;
+  const std::array<FieldPos, posesCtn> futurePoses { FieldUtils::getAdjacentPos(
+      leftDir, state.fieldPos), FieldUtils::getAdjacentPos(state.dir,
+      state.fieldPos), FieldUtils::getAdjacentPos(rightDir, state.fieldPos), };
+
+  for (auto i = 0; i < posesCtn; ++i) {
+    const auto &pos = futurePoses[i];
+    result[i] =
+        FieldUtils::isInsideField(pos, descr) ?
+            descr.data[pos.row][pos.col] : descr.hardObstacleMarker;
+  }
+
+  return result;
+}
+

@@ -13,6 +13,9 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_miner_gui/helpers/MovementWatcher.h"
+
+using namespace std::literals;
 
 MinerControllerExternalBridge::MinerControllerExternalBridge()
     : Node("MinerControllerExternalBridge") {
@@ -29,6 +32,16 @@ int32_t MinerControllerExternalBridge::init(
 
   if (nullptr == _outInterface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
+    return FAILURE;
+  }
+
+  if (nullptr == _outInterface.systemShutdownCb) {
+    LOGERR("Error, nullptr provided for SystemShutdownCb");
+    return FAILURE;
+  }
+
+  if (nullptr == _outInterface.movementWatcher) {
+    LOGERR("Error, nullptr provided for MovementWatcher");
     return FAILURE;
   }
 
@@ -64,13 +77,21 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   }
 
   response->success = true;
-  const auto f = [this, moveType, &response]() {
+  const auto f = [this, moveType]() {
     _outInterface.robotActCb(moveType);
-
-    constexpr auto test = 't';
-    response->revealed_tiles.push_back(test);
   };
-
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+
+  MoveOutcome outcome;
+  SurroundingTiles surroundingTiles;
+  const auto success = _outInterface.movementWatcher->waitForChange(5000ms,
+      outcome, surroundingTiles);
+  if (!success || (MoveOutcome::COLLISION == outcome)) {
+    response->move_success = false;
+    return;
+  }
+
+  response->move_success = true;
+  response->surrounding_tiles = surroundingTiles;
 }
 

@@ -16,16 +16,13 @@
 struct RobotActInterface {
   RobotActInterface() = default;
 
-  RobotActInterface(const RobotActCb inputActCb,
-                    GetRobotFieldPosCb inputGetFieldPosCb,
-                    GetRobotDirCb inputGetDirCb)
-      : actCb(inputActCb), getFieldPosCb(inputGetFieldPosCb),
-        getDirCb(inputGetDirCb) {
+  RobotActInterface(const RobotActCb &inputActCb,
+                    const GetRobotStateCb &inputGetRobotStateCb)
+      : actCb(inputActCb), getRobotStateCb(inputGetRobotStateCb) {
   }
 
   RobotActCb actCb;
-  GetRobotFieldPosCb getFieldPosCb;
-  GetRobotDirCb getDirCb;
+  GetRobotStateCb getRobotStateCb;
 };
 
 #endif /* ROBO_COMMON_ROBOTACTINTERFACE_H_ */

@@ -41,6 +41,12 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
     return FAILURE;
   }
 
+  if (SUCCESS != gui._movementWatcher.init(
+      layoutInterface.commonLayoutInterface.getPlayerSurroundingTilesCb)) {
+    LOGERR("_movementWatcher.init() failed");
+    return FAILURE;
+  }
+
   if (SUCCESS != initControllerExternalBridge(layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
     return FAILURE;
@@ -57,7 +63,7 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
   RoboMinerLayoutOutInterface outInterface;
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb =
-      std::bind(&RoboMinerGui::onRobotTurnFinish, &gui, _1);
+      std::bind(&RoboMinerGui::onRobotTurnFinish, &gui, _1, _2);
   outInterface.shutdownGameCb = std::bind(
       &MinerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
@@ -77,6 +83,7 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.robotActCb =
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
+  outInterface.movementWatcher = &gui._movementWatcher;
 
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

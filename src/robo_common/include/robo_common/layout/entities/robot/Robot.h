@@ -26,28 +26,21 @@ struct RobotOutInterface {
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
-struct RobotConfig {
-  FieldPos fieldPos;
-  int32_t robotId = 0;
-  Direction dir = Direction::UP;
-  char fieldMarker = '!';
-  char enemyFieldMarker = '?';
-};
-
 class Robot final : public CollisionObject {
 public:
   friend class RobotInitHelper;
 
-  int32_t init(const RobotConfig &cfg,
+  int32_t init(const RobotState &initialState,
                const RobotAnimatorConfigBase &robotAnimCfgBase,
-               const RobotOutInterface &interface);
+               const RobotOutInterface &interface,
+               char fieldMarker);
 
   void deinit();
-
   void draw() const;
 
-  FieldPos getFieldPos() const;
-  Direction getDirection() const;
+  RobotState getState() const;
+  SurroundingTiles getSurroundingTiles() const;
+
   void act(MoveType moveType);
 
   void onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos);
@@ -63,10 +56,11 @@ private:
 
   void move();
 
-  RobotConfig _state;
+  RobotState _state;
   RobotOutInterface _outInterface;
   RobotAnimator _animator;
   CollisionWatchStatus _currCollisionWatchStatus = CollisionWatchStatus::OFF;
+  char _fieldMarker = '?';
 };
 
 #endif /* ROBO_COMMON_ROBOT_H_ */

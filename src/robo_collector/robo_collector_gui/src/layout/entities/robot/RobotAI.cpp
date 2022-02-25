@@ -37,14 +37,11 @@ void RobotAI::makeMove(const RobotActInterface& actInterface) {
       MoveType::FORWARD, MoveType::FORWARD, MoveType::ROTATE_LEFT,
       MoveType::ROTATE_RIGHT };
 
-  const auto currFieldPos = actInterface.getFieldPosCb();
-  const auto currDir = actInterface.getDirCb();
-
   while (true) {
     const auto moveIdx = rng.getRandomNumber(0, lastMoveIdx);
     const auto selectedMoveType = moves[moveIdx];
     if (MoveType::FORWARD == selectedMoveType) {
-      if (isForwardDirValid(currFieldPos, currDir)) {
+      if (isForwardDirValid(actInterface.getRobotStateCb())) {
         actInterface.actCb(selectedMoveType);
         break;
       }
@@ -56,10 +53,9 @@ void RobotAI::makeMove(const RobotActInterface& actInterface) {
   }
 }
 
-bool RobotAI::isForwardDirValid(const FieldPos &currFieldPos,
-                                Direction currDir) const {
+bool RobotAI::isForwardDirValid(const RobotState& state) const {
   const auto &fieldDescr = _getFieldDescriptionCb();
-  const auto futurePos = FieldUtils::getAdjacentPos(currDir, currFieldPos);
+  const auto futurePos = FieldUtils::getAdjacentPos(state.dir, state.fieldPos);
   if (!FieldUtils::isInsideField(futurePos, fieldDescr)) {
     return false;
   }

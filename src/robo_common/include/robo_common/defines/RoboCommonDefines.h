@@ -5,25 +5,15 @@
 
 //C++ system headers
 #include <cstdint>
+#include <array>
 #include <vector>
 
 //Other libraries headers
 
 //Own components headers
+#include "robo_common/layout/field/FieldPos.h"
 
 //Forward declarations
-
-using FieldData = std::vector<std::vector<char>>;
-
-struct FieldDescription {
-  FieldData data;
-  int32_t tileWidth = 0;
-  int32_t tileHeight = 0;
-  int32_t rows = 0;
-  int32_t cols = 0;
-  char emptyDataMarker = '.';
-  char hardObstacleMarker = '#';
-};
 
 namespace RoboCommonDefines {
 enum RobotDefines {
@@ -38,24 +28,22 @@ enum Markers {
 };
 
 enum FieldDefines {
-  FIRST_TILE_X_POS = 47,
-  FIRST_TILE_Y_POS = 47,
+  FIRST_TILE_X_POS = 47, FIRST_TILE_Y_POS = 47, SURROUNDING_TILES_CTN = 3
 };
 } //namespace RoboCommonDefines
 
 enum class MoveType {
-  FORWARD,
-  ROTATE_LEFT,
-  ROTATE_RIGHT,
+  FORWARD, ROTATE_LEFT, ROTATE_RIGHT,
 
   UNKNOWN = 0xFF
 };
 
+enum class MoveOutcome {
+  SUCCESS, COLLISION
+};
+
 enum class Direction {
-  UP,
-  RIGHT,
-  DOWN,
-  LEFT
+  UP, RIGHT, DOWN, LEFT
 };
 
 enum class RotationDir {
@@ -63,9 +51,26 @@ enum class RotationDir {
 };
 
 enum class Achievement {
-  SINGLE_STAR,
-  DOUBLE_STAR,
-  TRIPLE_STAR
+  SINGLE_STAR, DOUBLE_STAR, TRIPLE_STAR
+};
+
+struct RobotState {
+  FieldPos fieldPos;
+  int32_t robotId = 0;
+  Direction dir = Direction::UP;
+};
+
+using SurroundingTiles = std::array<uint8_t, RoboCommonDefines::SURROUNDING_TILES_CTN>;
+using FieldData = std::vector<std::vector<char>>;
+
+struct FieldDescription {
+  FieldData data;
+  int32_t tileWidth = 0;
+  int32_t tileHeight = 0;
+  int32_t rows = 0;
+  int32_t cols = 0;
+  char emptyDataMarker = '.';
+  char hardObstacleMarker = '#';
 };
 
 #endif /* ROBO_COMMON_ROBOCOMMONDEFINES_H_ */

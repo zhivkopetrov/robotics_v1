@@ -15,11 +15,13 @@
 //Own components headers
 
 //Forward declarations
+class MovementWatcher;
 
 struct MinerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
   SystemShutdownCb systemShutdownCb;
+  MovementWatcher* movementWatcher = nullptr;
 };
 
 class MinerControllerExternalBridge: public rclcpp::Node {

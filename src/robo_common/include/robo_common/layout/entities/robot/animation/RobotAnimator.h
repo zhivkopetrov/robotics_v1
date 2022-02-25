@@ -43,16 +43,20 @@ struct RobotAnimatorConfig {
   RobotAnimatorConfigBase baseCfg;
   FieldPos startPos;
   Direction startDir;
+};
+
+struct RobotAnimatorOutInterface {
   std::function<void(Direction, const FieldPos&)> onMoveAnimEndCb;
   std::function<void(RobotEndTurn)> collisionImpactAnimEndCb;
   std::function<void()> collisionImpactCb;
-  GetRobotFieldPosCb getRobotFieldPosCb;
+  GetRobotStateCb getRobotStateCb;
   GetFieldDescriptionCb getFieldDescriptionCb;
 };
 
 class RobotAnimator: public TimerClient {
 public:
-  int32_t init(const RobotAnimatorConfig &cfg);
+  int32_t init(const RobotAnimatorConfig &cfg,
+               const RobotAnimatorOutInterface& outInterface);
   void draw() const;
 
   void startMoveAnim(const FieldPos &currPos, Direction currDir,
@@ -68,7 +72,7 @@ public:
   Rectangle getBoundary() const;
 
 private:
-  int32_t initOutInterface(const RobotAnimatorConfig &cfg);
+  int32_t initOutInterface(const RobotAnimatorOutInterface& outInterface);
 
   void onTimeout(const int32_t timerId) override;
 
@@ -102,10 +106,7 @@ private:
   int32_t _currCollisionAnimFrame = 0;
   std::array<Point, COLLISION_ANIM_FRAMES> _collisionOffsets;
 
-  std::function<void(RobotEndTurn)> _collisionImpactAnimEndCb;
-  std::function<void()> _collisionImpactCb;
-  GetRobotFieldPosCb _getRobotFieldPosCb;
-  GetFieldDescriptionCb _getFieldDescriptionCb;
+  RobotAnimatorOutInterface _outInterface;
 };
 
 #endif /* ROBO_COMMON_ROBOTANIMATOR_H_ */

@@ -5,6 +5,7 @@
 
 //C++ system headers
 #include <cstdint>
+#include <array>
 
 //Other libraries headers
 
@@ -20,6 +21,9 @@ public:
   static Direction getDirAfterRotation(Direction currDir, RotationDir rotDir);
 
   static double getRotationDegFromDir(Direction dir);
+
+  static SurroundingTiles getSurroundingTiles(const FieldDescription &descr,
+                                              const RobotState &state);
 };
 
 #endif /* ROBO_COMMON_ROBOTUTILS_H_ */

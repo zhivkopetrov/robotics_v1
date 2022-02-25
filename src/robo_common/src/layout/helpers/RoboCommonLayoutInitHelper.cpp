@@ -47,26 +47,24 @@ int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
   robotOutInterface.collisionWatcher = outInterface.collisionWatcher;
   robotOutInterface.playerDamageCb = outInterface.playerDamageCb;
   robotOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
-  robotOutInterface.setFieldDataMarkerCb =
-      std::bind(&Field::setFieldDataMarker, &layout._field, _1, _2);
-  robotOutInterface.resetFieldDataMarkerCb =
-      std::bind(&Field::resetFieldDataMarker, &layout._field, _1);
-  robotOutInterface.getFieldDescriptionCb =
-      std::bind(&Field::getDescription, &layout._field);
+  robotOutInterface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
+      &layout._field, _1, _2);
+  robotOutInterface.resetFieldDataMarkerCb = std::bind(
+      &Field::resetFieldDataMarker, &layout._field, _1);
+  robotOutInterface.getFieldDescriptionCb = std::bind(&Field::getDescription,
+      &layout._field);
 
   const auto &baseCfg = layoutCfg.robotBaseCfg;
-  RobotConfig cfg;
+  RobotState initialState;
   RobotAnimatorConfigBase animatorCfgBase;
   animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
   animatorCfgBase.robotRsrcId = baseCfg.playerRsrcId;
   animatorCfgBase.frameId = 0;
-  cfg.fieldMarker = layoutCfg.playerFieldMarker;
-  cfg.enemyFieldMarker = layoutCfg.enemyFieldMarker;
-  cfg.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
+  initialState.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
   animatorCfgBase.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
-  cfg.fieldPos = FieldPos(layoutCfg.fieldCfg.description.rows - 1,
-                          layoutCfg.fieldCfg.description.cols - 1);
-  cfg.dir = Direction::UP;
+  initialState.fieldPos = FieldPos(layoutCfg.fieldCfg.description.rows - 1,
+      layoutCfg.fieldCfg.description.cols - 1);
+  initialState.dir = Direction::UP;
   animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId;
   animatorCfgBase.wallCollisionAnimTimerId =
       baseCfg.wallCollisionAnimStartTimerId;
@@ -74,8 +72,8 @@ int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
       baseCfg.robotCollisionAnimStartTimerId;
   animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId;
 
-  if (SUCCESS !=
-      layout._playerRobot.init(cfg, animatorCfgBase, robotOutInterface)) {
+  if (SUCCESS != layout._playerRobot.init(initialState, animatorCfgBase,
+          robotOutInterface, layoutCfg.playerFieldMarker)) {
     LOGERR("Error in _playerRobot.init()");
     return FAILURE;
   }

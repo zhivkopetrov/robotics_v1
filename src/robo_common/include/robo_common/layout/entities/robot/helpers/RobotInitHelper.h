@@ -12,7 +12,7 @@
 
 //Forward declarations
 class Robot;
-struct RobotConfig;
+struct RobotState;
 struct RobotAnimatorConfigBase;
 struct RobotOutInterface;
 
@@ -20,7 +20,7 @@ class RobotInitHelper {
 public:
   RobotInitHelper() = delete;
 
-  static int32_t init(const RobotConfig &cfg,
+  static int32_t init(const RobotState &initialState,
                       const RobotAnimatorConfigBase &robotAnimCfgBase,
                       const RobotOutInterface &interface, Robot &robot);
 

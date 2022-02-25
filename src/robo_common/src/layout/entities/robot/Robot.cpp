@@ -12,14 +12,17 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_common/layout/entities/robot/helpers/RobotUtils.h"
 #include "robo_common/layout/entities/robot/helpers/RobotInitHelper.h"
 #include "robo_common/helpers/CollisionWatcher.h"
 
-int32_t Robot::init(const RobotConfig &cfg,
+int32_t Robot::init(const RobotState &initialState,
                     const RobotAnimatorConfigBase &robotAnimCfgBase,
-                    const RobotOutInterface &interface) {
-  if (SUCCESS !=
-      RobotInitHelper::init(cfg, robotAnimCfgBase, interface, *this)) {
+                    const RobotOutInterface &interface, char fieldMarker) {
+  _fieldMarker = fieldMarker;
+
+  if (SUCCESS != RobotInitHelper::init(initialState, robotAnimCfgBase,
+          interface, *this)) {
     LOGERR("Error, RobotInitHelper::init() failed");
     return FAILURE;
   }
@@ -38,12 +41,13 @@ void Robot::draw() const {
   _animator.draw();
 }
 
-FieldPos Robot::getFieldPos() const {
-  return _state.fieldPos;
+RobotState Robot::getState() const {
+  return _state;
 }
 
-Direction Robot::getDirection() const {
-  return _state.dir;
+SurroundingTiles Robot::getSurroundingTiles() const {
+  const auto& fieldDescr = _outInterface.getFieldDescriptionCb();
+  return RobotUtils::getSurroundingTiles(fieldDescr, _state);
 }
 
 void Robot::act(MoveType moveType) {
@@ -67,7 +71,7 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
   _outInterface.resetFieldDataMarkerCb(_state.fieldPos);
   _state.dir = futureDir;
   _state.fieldPos = futurePos;
-  _outInterface.setFieldDataMarkerCb(futurePos, _state.fieldMarker);
+  _outInterface.setFieldDataMarkerCb(futurePos, _fieldMarker);
 
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
     _currCollisionWatchStatus = CollisionWatchStatus::OFF;
@@ -75,14 +79,14 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
         _currCollisionWatchStatus);
   }
 
-  _outInterface.finishRobotActCb(_state.robotId);
+  _outInterface.finishRobotActCb(_state.robotId, MoveOutcome::SUCCESS);
 }
 
 void Robot::onInitEnd() {
   _collisionObjHandle = _outInterface.collisionWatcher->registerObject(this,
       CollisionDamageImpact::YES);
 
-  _outInterface.setFieldDataMarkerCb(_state.fieldPos, _state.fieldMarker);
+  _outInterface.setFieldDataMarkerCb(_state.fieldPos, _fieldMarker);
 }
 
 void Robot::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
@@ -116,8 +120,8 @@ Rectangle Robot::getBoundary() const {
 void Robot::move() {
   const auto futurePos = FieldUtils::getAdjacentPos(_state.dir,
       _state.fieldPos);
-  if (FieldUtils::isInsideField(
-      futurePos, _outInterface.getFieldDescriptionCb())) {
+  if (FieldUtils::isInsideField(futurePos,
+      _outInterface.getFieldDescriptionCb())) {
     _currCollisionWatchStatus = CollisionWatchStatus::ON;
     _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
         _currCollisionWatchStatus);
@@ -130,7 +134,7 @@ void Robot::move() {
 
 void Robot::onCollisionImpactAnimEnd(RobotEndTurn status) {
   if (RobotEndTurn::YES == status) {
-    _outInterface.finishRobotActCb(_state.robotId);
+    _outInterface.finishRobotActCb(_state.robotId, MoveOutcome::COLLISION);
   }
 }
 

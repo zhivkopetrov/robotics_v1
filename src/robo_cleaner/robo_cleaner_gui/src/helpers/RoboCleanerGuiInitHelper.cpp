@@ -57,7 +57,7 @@ int32_t RoboCleanerGuiInitHelper::initLayout(const RoboCleanerLayoutConfig &cfg,
   RoboCleanerLayoutOutInterface outInterface;
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb =
-      std::bind(&RoboCleanerGui::onRobotTurnFinish, &gui, _1);
+      std::bind(&RoboCleanerGui::onRobotTurnFinish, &gui, _1, _2);
   outInterface.shutdownGameCb = std::bind(
       &CleanerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());

@@ -19,6 +19,7 @@ struct RoboCommonLayoutInterface {
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDescriptionCb getFieldDescriptionCb;
+  GetPlayerSurroundingTilesCb getPlayerSurroundingTilesCb;
   RobotActInterface playerRobotActInterface;
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;

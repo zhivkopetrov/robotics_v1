@@ -20,14 +20,15 @@ constexpr auto TARGET_DAMAGE_MARKER_ANIM_X = 1270;
 constexpr auto TARGET_DAMAGE_MARKER_ANIM_Y = 397;
 }
 
-int32_t RobotAnimator::init(const RobotAnimatorConfig &cfg) {
-  if (SUCCESS != initOutInterface(cfg)) {
+int32_t RobotAnimator::init(const RobotAnimatorConfig &cfg,
+                            const RobotAnimatorOutInterface &outInterface) {
+  if (SUCCESS != initOutInterface(outInterface)) {
     LOGERR("Error, initOutInterface() failed");
     return FAILURE;
   }
 
-  const auto onPlayerAnimEndCb =
-      std::bind(&RobotAnimator::onPlayerDamageAnimEnd, this);
+  const auto onPlayerAnimEndCb = std::bind(
+      &RobotAnimator::onPlayerDamageAnimEnd, this);
   if (SUCCESS != _playerDamageAnimEndCb.init(onPlayerAnimEndCb)) {
     LOGERR("Error, playerDamageAnimEndCb.init() failed");
     return FAILURE;
@@ -41,8 +42,9 @@ int32_t RobotAnimator::init(const RobotAnimatorConfig &cfg) {
   _damageMarkerRsrcId = cfg.baseCfg.damageMarkerRsrcId;
 
   _robotImg.create(cfg.baseCfg.robotRsrcId);
-  _robotImg.setPosition(
-      FieldUtils::getAbsPos(cfg.startPos, _getFieldDescriptionCb()));
+  const auto robotAbsPos =
+      FieldUtils::getAbsPos(cfg.startPos, _outInterface.getFieldDescriptionCb());
+  _robotImg.setPosition(robotAbsPos);
   _robotImg.setFrame(cfg.baseCfg.frameId);
   _robotImg.setPredefinedRotationCenter(RotationCenterType::ORIG_CENTER);
   _robotImg.setRotation(RobotUtils::getRotationDegFromDir(cfg.startDir));
@@ -73,8 +75,8 @@ void RobotAnimator::startMoveAnim(const FieldPos &currPos, Direction currDir,
                                   const FieldPos &futurePos) {
   const auto cfg = generateAnimBaseConfig(currPos);
   constexpr auto numberOfSteps = 20;
-  const auto futureAbsPos =
-      FieldUtils::getAbsPos(futurePos, _getFieldDescriptionCb());
+  const auto futureAbsPos = FieldUtils::getAbsPos(futurePos,
+      _outInterface.getFieldDescriptionCb());
   _animEndCb.setAnimEndData(currDir, futurePos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
@@ -135,35 +137,33 @@ Rectangle RobotAnimator::getBoundary() const {
   return _robotImg.getImageRect();
 }
 
-int32_t RobotAnimator::initOutInterface(const RobotAnimatorConfig &cfg) {
-  if (SUCCESS != _animEndCb.init(cfg.onMoveAnimEndCb)) {
+int32_t RobotAnimator::initOutInterface(
+    const RobotAnimatorOutInterface &outInterface) {
+  _outInterface = outInterface;
+  if (SUCCESS != _animEndCb.init(_outInterface.onMoveAnimEndCb)) {
     LOGERR("Error, _animEndCb.init() failed");
     return FAILURE;
   }
 
-  if (nullptr == cfg.collisionImpactAnimEndCb) {
+  if (nullptr == _outInterface.collisionImpactAnimEndCb) {
     LOGERR("Error, nullptr provided for collisionImpactAnimEndCb");
     return FAILURE;
   }
-  _collisionImpactAnimEndCb = cfg.collisionImpactAnimEndCb;
 
-  if (nullptr == cfg.collisionImpactCb) {
+  if (nullptr == _outInterface.collisionImpactCb) {
     LOGERR("Error, nullptr provided for collisionImpactCb");
     return FAILURE;
   }
-  _collisionImpactCb = cfg.collisionImpactCb;
 
-  if (nullptr == cfg.getRobotFieldPosCb) {
-    LOGERR("Error, nullptr provided for GetRobotFieldPosCb");
+  if (nullptr == _outInterface.getRobotStateCb) {
+    LOGERR("Error, nullptr provided for GetRobotStateCb");
     return FAILURE;
   }
-  _getRobotFieldPosCb = cfg.getRobotFieldPosCb;
 
-  if (nullptr == cfg.getFieldDescriptionCb) {
+  if (nullptr == _outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
     return FAILURE;
   }
-  _getFieldDescriptionCb = cfg.getFieldDescriptionCb;
 
   return SUCCESS;
 }
@@ -209,13 +209,14 @@ void RobotAnimator::onPlayerDamageAnimEnd() {
   _playerDamageAnim.hideAnimation();
   //invoke the direct collision cb to draw the health decrease while playing
   //the robot collision anim
-  _collisionImpactCb();
+  _outInterface.collisionImpactCb();
 }
 
 AnimBaseConfig RobotAnimator::generateAnimBaseConfig(const FieldPos &currPos) {
   AnimBaseConfig cfg;
   cfg.rsrcId = _robotImg.getRsrcId();
-  cfg.startPos = FieldUtils::getAbsPos(currPos, _getFieldDescriptionCb());
+  cfg.startPos =
+      FieldUtils::getAbsPos(currPos, _outInterface.getFieldDescriptionCb());
   cfg.animDirection = AnimDir::FORWARD;
   cfg.timerId = _moveAnimTimerId;
   cfg.timerInterval = 20;
@@ -229,9 +230,11 @@ AnimBaseConfig RobotAnimator::generateAnimBaseConfig(const FieldPos &currPos) {
 void RobotAnimator::processCollisionAnim() {
   if (TOTAL_COLLISION_ANIM_STEPS == _collisionAnimStep) {
     stopTimer(_robotCollisionAnimTimerId);
-    _robotImg.setPosition(FieldUtils::getAbsPos(
-        _getRobotFieldPosCb(), _getFieldDescriptionCb()));
-    _collisionImpactAnimEndCb(_collisionAnimOutcome);
+    const auto robotFieldPos = _outInterface.getRobotStateCb().fieldPos;
+    const auto robotAbsPos = FieldUtils::getAbsPos(robotFieldPos,
+        _outInterface.getFieldDescriptionCb());
+    _robotImg.setPosition(robotAbsPos);
+    _outInterface.collisionImpactAnimEndCb(_collisionAnimOutcome);
     return;
   }
 

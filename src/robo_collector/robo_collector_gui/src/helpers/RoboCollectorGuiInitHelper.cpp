@@ -68,7 +68,7 @@ int32_t RoboCollectorGuiInitHelper::initLayout(
   outInterface.isPlayerTurnActiveCb = std::bind(&TurnHelper::isPlayerTurnActive,
       &gui._turnHelper);
   outInterface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
-      &gui._turnHelper, _1);
+      &gui._turnHelper, _1, _2);
   outInterface.shutdownGameCb = std::bind(
       &CollectorControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());

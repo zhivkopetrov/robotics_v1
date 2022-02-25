@@ -26,8 +26,8 @@ struct TurnHelperConfig {
 
 class TurnHelper {
 public:
-  int32_t init(const TurnHelperConfig& cfg);
-  void onRobotFinishAct(int32_t robotId);
+  int32_t init(const TurnHelperConfig &cfg);
+  void onRobotFinishAct(int32_t robotId, MoveOutcome moveOutcome);
   bool isPlayerTurnActive() const;
 
 private:

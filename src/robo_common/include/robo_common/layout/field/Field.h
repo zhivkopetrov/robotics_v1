@@ -29,7 +29,6 @@ public:
   void setFieldDataMarker(const FieldPos &fieldPos, char fieldMarker);
   void resetFieldDataMarker(const FieldPos &fieldPos);
 
-  const FieldData& getFieldData() const;
   const FieldDescription& getDescription() const;
 
   void toggleDebugTexts();
