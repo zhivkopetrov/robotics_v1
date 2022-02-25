@@ -7,10 +7,10 @@
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
+#include <std_msgs/msg/empty.hpp>
+#include "robo_miner_interfaces/srv/robot_move.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
-#include "robo_miner_interfaces/msg/robot_move_type.hpp"
-#include "robo_miner_interfaces/srv/robot_move.hpp"
 
 //Own components headers
 
@@ -31,23 +31,16 @@ public:
   void publishShutdownController();
 
 private:
-  void onMoveMsg(
-      const robo_miner_interfaces::msg::RobotMoveType::SharedPtr msg);
+  typedef std_msgs::msg::Empty Empty;
+  typedef robo_miner_interfaces::srv::RobotMove RobotMove;
 
-  //TODO remove after test
-  void handleService(
-      const std::shared_ptr<
-        robo_miner_interfaces::srv::RobotMove::Request> request,
-      std::shared_ptr<
-        robo_miner_interfaces::srv::RobotMove::Response> response);
+  void handleRobotMoveService(const std::shared_ptr<RobotMove::Request> request,
+                              std::shared_ptr<RobotMove::Response> response);
 
   MinerControllerExternalBridgeOutInterface _outInterface;
 
-  rclcpp::Subscription<robo_miner_interfaces::msg::RobotMoveType>::SharedPtr
-    _playerDirSubscriber;
-
-  rclcpp::Service<robo_miner_interfaces::srv::RobotMove>::SharedPtr
-    _robotMoveService;
+  rclcpp::Service<RobotMove>::SharedPtr _robotMoveService;
+  rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
 };
 
 #endif /* ROBO_MINER_GUI_MINERCONTROLLEREXTERNALBRIDGE_H_ */

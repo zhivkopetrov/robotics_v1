@@ -8,6 +8,7 @@
 //Other libraries headers
 #include "robo_collector_common/defines/RoboCollectorTopics.h"
 #include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -65,6 +66,11 @@ void CollectorControllerExternalBridge::publishShutdownController() {
 void CollectorControllerExternalBridge::onMoveMsg(
     const RobotMoveType::SharedPtr msg) {
   const auto moveType = getMoveType(msg->move_type);
+  if (MoveType::UNKNOWN == moveType) {
+    LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
+    return;
+  }
+
   const auto f = [this, moveType]() {
     _outInterface.moveButtonClickCb(moveType);
   };

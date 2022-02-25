@@ -6,38 +6,13 @@
 //C++ system headers
 
 //Other libraries headers
-#include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_miner_common/defines/RoboMinerTopics.h"
+#include "robo_miner_common/message_helpers/RoboMinerMessageHelpers.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
-
-using robo_miner_interfaces::msg::RobotMoveType;
-using robo_miner_interfaces::srv::RobotMove;
-
-namespace {
-//TODO create separate message helper utility file
-int32_t getMoveType(int8_t moveType, MoveType& outMoveType) {
-  switch (moveType) {
-  case RobotMoveType::FORWARD:
-    outMoveType = MoveType::FORWARD;
-    break;
-  case RobotMoveType::ROTATE_LEFT:
-    outMoveType = MoveType::ROTATE_LEFT;
-    break;
-  case RobotMoveType::ROTATE_RIGHT:
-    outMoveType = MoveType::ROTATE_RIGHT;
-    break;
-  default:
-    LOGERR("Error, received unsupported RobotMoveType: %hhu", moveType);
-    return FAILURE;
-  }
-  return SUCCESS;
-}
-
-//TODO create a separate topic contants header file
-constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
-}
 
 MinerControllerExternalBridge::MinerControllerExternalBridge()
     : Node("MinerControllerExternalBridge") {
@@ -58,19 +33,19 @@ int32_t MinerControllerExternalBridge::init(
   }
 
   using namespace std::placeholders;
-  constexpr auto QoS = 10;
-  _playerDirSubscriber = create_subscription<RobotMoveType>(
-      ROBOT_MOVE_TYPE_TOPIC, QoS,
-      std::bind(&MinerControllerExternalBridge::onMoveMsg, this, _1));
+  constexpr auto queueSize = 10;
+  _shutdownControllerPublisher = create_publisher<Empty>(
+      SHUTDOWN_CONTROLLER_TOPIC, queueSize);
 
-  _robotMoveService = create_service<RobotMove>("robotMove",
-      std::bind(&MinerControllerExternalBridge::handleService, this, _1, _2));
+  _robotMoveService = create_service<RobotMove>(ROBOT_MOVE_SERVICE,
+      std::bind(&MinerControllerExternalBridge::handleRobotMoveService, this,
+          _1, _2));
 
   return SUCCESS;
 }
 
 void MinerControllerExternalBridge::publishShutdownController() {
-  //TODO publish on a topic
+  _shutdownControllerPublisher->publish(Empty());
 
   const auto f = [this]() {
     _outInterface.systemShutdownCb();
@@ -78,37 +53,22 @@ void MinerControllerExternalBridge::publishShutdownController() {
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
-void MinerControllerExternalBridge::onMoveMsg(
-    const RobotMoveType::SharedPtr msg) {
-  MoveType moveType;
-  const auto err = getMoveType(msg->move_type, moveType);
-  if (FAILURE == err) {
-    return;
-  }
-
-  const auto f = [moveType]() {
-//    _outInterface.moveButtonClickCb(moveType);
-    //TODO remove me after test
-    if (MoveType::FORWARD == moveType) {
-    }
-  };
-
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-}
-
-void MinerControllerExternalBridge::handleService(
-    const std::shared_ptr<robo_miner_interfaces::srv::RobotMove::Request> request,
-    std::shared_ptr<robo_miner_interfaces::srv::RobotMove::Response> response) {
-  MoveType moveType;
-  const auto err = getMoveType(request->robot_move_type.move_type, moveType);
-  if (FAILURE == err) {
+void MinerControllerExternalBridge::handleRobotMoveService(
+    const std::shared_ptr<RobotMove::Request> request,
+    std::shared_ptr<RobotMove::Response> response) {
+  const auto moveType = getMoveType(request->robot_move_type.move_type);
+  if (MoveType::UNKNOWN == moveType) {
+    LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
     response->success = false;
     return;
   }
 
+  response->success = true;
   const auto f = [this, moveType, &response]() {
     _outInterface.robotActCb(moveType);
-    response->success = true;
+
+    constexpr auto test = 't';
+    response->revealed_tiles.push_back(test);
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);

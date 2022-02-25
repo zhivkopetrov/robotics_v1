@@ -11,8 +11,8 @@
 
 //Forward declarations
 
-constexpr auto ROBOT_MOVE_TYPE_TOPIC = "moveType";
-constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enableInput";
-constexpr auto SHUTDOWN_CONTROLLER_TOPIC = "shutdownController";
+constexpr auto ROBOT_MOVE_TYPE_TOPIC = "move_type";
+constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enable_input";
+constexpr auto SHUTDOWN_CONTROLLER_TOPIC = "shutdown_controller";
 
 #endif /* ROBO_COLLECTOR_COMMON_ROBOCOLLECTORTOPICS_H_ */

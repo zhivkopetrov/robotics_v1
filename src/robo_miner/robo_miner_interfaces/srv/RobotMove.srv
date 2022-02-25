@@ -1,3 +1,4 @@
 RobotMoveType robot_move_type
 ---
 bool success
+char[<=3] revealed_tiles

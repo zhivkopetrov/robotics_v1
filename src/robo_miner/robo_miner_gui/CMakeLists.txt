@@ -19,7 +19,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(robo_miner_interfaces REQUIRED)
-find_package(robo_common REQUIRED)
+find_package(robo_miner_common REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -77,7 +77,7 @@ set(_USE_KEYWORD_STYLE False)
 #note: ROS2 uses plain style, thus access modifiers can't be used
 target_link_libraries(
     ${PROJECT_NAME}
-        robo_common::robo_common
+        robo_miner_common::robo_miner_common
         ros2_game_engine::ros2_game_engine
 )
 

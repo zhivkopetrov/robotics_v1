@@ -44,10 +44,11 @@ enum FieldDefines {
 } //namespace RoboCommonDefines
 
 enum class MoveType {
-  UNKNOWN,
   FORWARD,
   ROTATE_LEFT,
-  ROTATE_RIGHT
+  ROTATE_RIGHT,
+
+  UNKNOWN = 0xFF
 };
 
 enum class Direction {

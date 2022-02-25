@@ -58,6 +58,11 @@ void CollectorGuiExternalBridge::publishToggleHelp() {
 }
 
 void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) {
+  if (MoveType::UNKNOWN == moveType) {
+    LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
+    return;
+  }
+
   RobotMoveType msg;
   msg.move_type = getMoveTypeField(moveType);
   _robotActPublisher->publish(msg);

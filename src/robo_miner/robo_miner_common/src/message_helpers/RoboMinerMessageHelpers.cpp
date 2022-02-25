@@ -1,18 +1,19 @@
 //Corresponding header
-#include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
+#include "robo_miner_common/message_helpers/RoboMinerMessageHelpers.h"
 
 //C system headers
 
 //C++ system headers
 
 //Other libraries headers
-#include "robo_collector_interfaces/msg/robot_move_type.hpp"
+#include "robo_miner_interfaces/srv/robot_move.hpp"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-using robo_collector_interfaces::msg::RobotMoveType;
+using robo_miner_interfaces::srv::RobotMove;
+using robo_miner_interfaces::msg::RobotMoveType;
 
 int8_t getMoveTypeField(MoveType moveType) {
   switch (moveType) {
