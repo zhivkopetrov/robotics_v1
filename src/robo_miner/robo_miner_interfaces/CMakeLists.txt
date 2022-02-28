@@ -8,8 +8,11 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/UInt8MultiArray.msg"
   "msg/RobotMoveType.msg"
+  
   "srv/RobotMove.srv"
+  "srv/FieldMapCheck.srv"
 )
 
 set_target_properties(

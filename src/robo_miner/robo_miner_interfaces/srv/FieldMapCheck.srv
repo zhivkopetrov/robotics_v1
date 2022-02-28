@@ -1,0 +1,4 @@
+UInt8MultiArray field_map
+---
+bool success
+string error_reason

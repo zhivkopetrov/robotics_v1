@@ -15,6 +15,7 @@
 #include "robo_miner_gui/layout/RoboMinerLayout.h"
 #include "robo_miner_gui/external_api/MinerControllerExternalBridge.h"
 #include "robo_miner_gui/helpers/MovementWatcher.h"
+#include "robo_miner_gui/helpers/SolutionValidator.h"
 
 //Forward declarations
 class InputEvent;
@@ -40,6 +41,7 @@ private:
   RoboMinerLayout _layout;
   CollisionWatcher _collisionWatcher;
   MovementWatcher _movementWatcher;
+  SolutionValidator _solutionValidator;
 
   std::shared_ptr<MinerControllerExternalBridge> _controllerExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;

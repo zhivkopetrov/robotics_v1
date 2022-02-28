@@ -47,6 +47,12 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
     return FAILURE;
   }
 
+  if (SUCCESS != gui._solutionValidator.init(
+      layoutInterface.commonLayoutInterface.getFieldDescriptionCb)) {
+    LOGERR("_solutionValidator.init() failed");
+    return FAILURE;
+  }
+
   if (SUCCESS != initControllerExternalBridge(layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
     return FAILURE;
@@ -84,6 +90,7 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.movementWatcher = &gui._movementWatcher;
+  outInterface.solutionValidator = &gui._solutionValidator;
 
   if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
