@@ -9,6 +9,7 @@
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_common/helpers/ConfigFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -30,10 +31,6 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto TILE_WIDTH_HEIGHT = 160;
-
-//TODO compute from the field config
-constexpr auto TOTAL_FIELD_TILES = 42;
-constexpr auto LONGEST_CRYSTALS_SEQ_CTN = 17;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -60,7 +57,8 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig() {
+PanelHandlerConfig generatePanelHandlerConfig(
+    const FieldDescription& fieldDescr) {
   PanelHandlerConfig cfg;
 
   auto &healthPanelCfg = cfg.healthPanelCfg;
@@ -71,14 +69,20 @@ PanelHandlerConfig generatePanelHandlerConfig() {
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
-  tilePanelCfg.targetNumber = TOTAL_FIELD_TILES;
+  tilePanelCfg.targetNumber = fieldDescr.rows * fieldDescr.cols;
   tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
   tilePanelCfg.decrTimerId = TILE_PANEL_DECR_TIMER_ID;
 
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  const auto levelId = 1;
+  const auto longestSequence =
+      ConfigFileLoader::readMinerLongestSolution(projectInstallPrefix, levelId);
+
   auto &crystalPanelCfg = cfg.crystalPanelCfg;
-  crystalPanelCfg.targetNumber = LONGEST_CRYSTALS_SEQ_CTN;
+  crystalPanelCfg.targetNumber = longestSequence.size();
   crystalPanelCfg.rsrcId = RoboMinerGuiResources::CRYSTAL_PANEL;
   crystalPanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   crystalPanelCfg.incrTimerId = CRYSTAL_PANEL_INCR_TIMER_ID;
@@ -90,17 +94,16 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
 
-  cfg.description.data = {
-      {'r', 'r', '.', '.', '.', 'b', 'r'},
-      {'g', 'r', '.', 'c', 'c', 'r', 'r'},
-      {'g', 'r', 'r', 'r', 'r', 'r', 'g'},
-      {'g', 'r', 'c', 'c', 'c', 'g', 'g'},
-      {'.', 'r', 'c', 'b', 'b', '.', 'g'},
-      {'.', '.', '.', 'p', 'p', '.', '.'},
-  };
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  const auto levelId = 1;
+  cfg.description.data =
+      ConfigFileLoader::readFieldData(projectInstallPrefix, levelId);
 
   cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
-  cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
+  if (!cfg.description.data.empty()) {
+    cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
+  }
   cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
   cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
@@ -135,14 +138,16 @@ EngineConfig generateEngineConfig() {
 RoboMinerGuiConfig generateGameConfig() {
   RoboMinerGuiConfig cfg;
   auto& layoutCfg = cfg.layoutCfg;
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
-  layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
+
+  layoutCfg.panelHandlerCfg =
+      generatePanelHandlerConfig( commonLayoutCfg.fieldCfg.description);
+  layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
 
   return cfg;
 }

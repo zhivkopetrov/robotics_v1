@@ -51,6 +51,7 @@ add_library(
         ${_INC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
+        ${_INC_DIR}/helpers/ConfigFileLoader.h
         
         ${_SRC_DIR}/layout/RoboCommonLayout.cpp
         ${_SRC_DIR}/layout/field/Field.cpp
@@ -69,6 +70,7 @@ add_library(
         ${_SRC_DIR}/layout/animators/GameEndAnimator.cpp
         ${_SRC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
+        ${_SRC_DIR}/helpers/ConfigFileLoader.cpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

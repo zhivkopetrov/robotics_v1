@@ -9,6 +9,7 @@
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_common/helpers/ConfigFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -29,8 +30,6 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //field
-constexpr auto FIELD_ROWS = 6;
-constexpr auto FIELD_COLS = 7;
 constexpr auto TILE_WIDTH_HEIGHT = 160;
 
 //misc
@@ -159,17 +158,23 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
-  cfg.description.data.resize(FIELD_ROWS,
-      std::vector<char>(FIELD_COLS, RoboCommonDefines::EMPTY_TILE_MARKER));
 
-  cfg.description.rows = FIELD_ROWS;
-  cfg.description.cols = FIELD_COLS;
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  const auto levelId = 1;
+  cfg.description.data =
+      ConfigFileLoader::readFieldData(projectInstallPrefix, levelId);
+
+  cfg.description.rows = cfg.description.data.size();
+  if (!cfg.description.data.empty()) {
+    cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
+  }
   cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
   cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
-  cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
-  cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
   cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
   cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
+  cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
+  cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   return cfg;
 }

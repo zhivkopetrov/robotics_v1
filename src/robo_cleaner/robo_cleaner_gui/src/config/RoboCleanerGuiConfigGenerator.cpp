@@ -9,6 +9,7 @@
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include "robo_common/defines/RoboCommonDefines.h"
+#include "robo_common/helpers/ConfigFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -99,17 +100,16 @@ PanelHandlerConfig generatePanelHandlerConfig() {
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
 
-  cfg.description.data = {
-    { 'x', 'x', '.', '.', '.', '.', '.'},
-    { 'x', 'x', 'r', 'r', '.', 'R', 'x'},
-    { '.', '.', 'r', 'r', '.', '.', 'x'},
-    { '.', '.', '.', '.', '.', 'R', '.'},
-    { '.', 'R', 'R', '.', '.', '.', '.'},
-    { 'x', 'x', '.', '.', '.', '.', '.'}
-  };
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  const auto levelId = 1;
+  cfg.description.data =
+      ConfigFileLoader::readFieldData(projectInstallPrefix, levelId);
 
   cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
-  cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
+  if (!cfg.description.data.empty()) {
+    cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
+  }
   cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
   cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
