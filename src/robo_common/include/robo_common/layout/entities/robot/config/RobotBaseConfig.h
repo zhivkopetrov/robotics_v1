@@ -9,6 +9,7 @@
 //Other libraries headers
 
 //Own components headers
+#include "robo_common/defines/RoboCommonDefines.h"
 
 //Forward declarations
 
@@ -20,6 +21,7 @@ struct RobotBaseConfig {
   int32_t wallCollisionAnimStartTimerId = 0;
   int32_t robotCollisionAnimStartTimerId = 0;
   int32_t robotDamageAnimStartTimerId = 0;
+  RobotFieldMarkers robotFieldMarkers = RobotFieldMarkers::DISABLED;
 };
 
 #endif /* ROBO_COMMON_ROBOTBASECONFIG_H_ */

@@ -31,6 +31,7 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto TILE_WIDTH_HEIGHT = 160;
+constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
 
 //TODO compute from the field config
 constexpr auto TOTAL_FIELD_TILES = 42;
@@ -59,6 +60,7 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.wallCollisionAnimStartTimerId = ROBOT_WALL_COLLISION_ANIM_TIMER_ID;
   cfg.robotCollisionAnimStartTimerId = ROBOT_COLLISION_ANIM_TIMER_ID;
   cfg.robotDamageAnimStartTimerId = ROBOT_DAMAGE_ANIM_TIMER_ID;
+  cfg.robotFieldMarkers = ROBOT_FIELD_MARKERS;
 
   return cfg;
 }

@@ -15,5 +15,5 @@ ros2 run robo_miner_gui robo_miner_gui
 # add curcly braces around the nested messages
 ros2 service call /move_robot robo_miner_interfaces/srv/RobotMove "{ robot_move_type: { move_type: 1} }"
 
-ros2 service call /field_map_check robo_miner_interfaces/srv/FieldMapValidate "{ field_map: {rows: 6, cols: 7, data: [114, 114, 46, 46, 46, 98, 114, 103, 114, 46, 99, 99, 114, 114, 103, 114, 114, 114, 114, 114, 103, 103, 114, 99, 99, 99, 103, 103, 46, 114, 99, 98, 98, 46, 103, 46, 46, 46, 112, 112, 46, 66]} }"
+ros2 service call /field_map_validate robo_miner_interfaces/srv/FieldMapValidate "{ field_map: {rows: 6, cols: 7, data: [114, 114, 46, 46, 46, 98, 114, 103, 114, 46, 99, 99, 114, 114, 103, 114, 114, 114, 114, 114, 103, 103, 114, 99, 99, 99, 103, 103, 46, 114, 99, 98, 98, 46, 103, 46, 46, 46, 112, 112, 46, 46]} }"
 

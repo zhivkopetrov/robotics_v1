@@ -31,6 +31,7 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //field
 constexpr auto TILE_WIDTH_HEIGHT = 160;
+constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::ENABLED;
 
 //misc
 constexpr auto TOTAL_GAME_SECONDS = 180;
@@ -91,6 +92,7 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.robotCollisionAnimStartTimerId =
       ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START;
   cfg.robotDamageAnimStartTimerId = ROBOTS_ROBOT_DAMAGE_ANIM_TIMER_ID_START;
+  cfg.robotFieldMarkers = ROBOT_FIELD_MARKERS;
 
   return cfg;
 }

@@ -60,6 +60,10 @@ struct RobotState {
   Direction dir = Direction::UP;
 };
 
+enum class RobotFieldMarkers {
+  ENABLED, DISABLED
+};
+
 using SurroundingTiles = std::array<uint8_t, RoboCommonDefines::SURROUNDING_TILES_CTN>;
 using FieldData = std::vector<std::vector<char>>;
 

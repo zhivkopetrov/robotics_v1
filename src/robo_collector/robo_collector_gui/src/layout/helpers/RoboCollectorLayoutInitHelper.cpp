@@ -84,6 +84,10 @@ int32_t RoboCollectorLayoutInitHelper::initRobots(
   const std::array<Direction, Defines::ENEMIES_CTN> robotsInitialDirs {
       Direction::UP, Direction::DOWN, Direction::DOWN };
 
+  RobotConfig robotCfg;
+  robotCfg.robotFieldMarkers = baseCfg.robotFieldMarkers;
+  robotCfg.fieldMarker = layoutCfg.commonLayoutCfg.enemyFieldMarker;
+
   RobotState initialState;
   RobotAnimatorConfigBase animatorCfgBase;
   animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
@@ -104,8 +108,8 @@ int32_t RoboCollectorLayoutInitHelper::initRobots(
     animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId
         + i + playerIdOffset;
 
-    if (SUCCESS != layout._enemyRobots[i].init(initialState, animatorCfgBase,
-            robotOutInterface, layoutCfg.commonLayoutCfg.enemyFieldMarker)) {
+    if (SUCCESS != layout._enemyRobots[i].init(initialState, robotCfg,
+            animatorCfgBase, robotOutInterface)) {
       LOGERR("Error in _enemyRobots[%d].init()", i);
       return FAILURE;
     }

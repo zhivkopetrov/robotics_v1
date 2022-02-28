@@ -72,8 +72,12 @@ int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
       baseCfg.robotCollisionAnimStartTimerId;
   animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId;
 
-  if (SUCCESS != layout._playerRobot.init(initialState, animatorCfgBase,
-          robotOutInterface, layoutCfg.playerFieldMarker)) {
+  RobotConfig robotCfg;
+  robotCfg.robotFieldMarkers = baseCfg.robotFieldMarkers;
+  robotCfg.fieldMarker = layoutCfg.playerFieldMarker;
+
+  if (SUCCESS != layout._playerRobot.init(initialState, robotCfg,
+          animatorCfgBase, robotOutInterface)) {
     LOGERR("Error in _playerRobot.init()");
     return FAILURE;
   }

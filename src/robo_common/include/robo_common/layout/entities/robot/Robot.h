@@ -26,14 +26,19 @@ struct RobotOutInterface {
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
+struct RobotConfig {
+  RobotFieldMarkers robotFieldMarkers = RobotFieldMarkers::DISABLED;
+  char fieldMarker = '?';
+};
+
 class Robot final : public CollisionObject {
 public:
   friend class RobotInitHelper;
 
   int32_t init(const RobotState &initialState,
+               const RobotConfig &robotCfg,
                const RobotAnimatorConfigBase &robotAnimCfgBase,
-               const RobotOutInterface &interface,
-               char fieldMarker);
+               const RobotOutInterface &interface);
 
   void deinit();
   void draw() const;
@@ -60,6 +65,7 @@ private:
   RobotOutInterface _outInterface;
   RobotAnimator _animator;
   CollisionWatchStatus _currCollisionWatchStatus = CollisionWatchStatus::OFF;
+  RobotFieldMarkers _robotFieldMarkers = RobotFieldMarkers::DISABLED;
   char _fieldMarker = '?';
 };
 
