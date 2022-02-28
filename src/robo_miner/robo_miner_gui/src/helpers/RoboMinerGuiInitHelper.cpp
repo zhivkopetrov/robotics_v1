@@ -47,7 +47,7 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
     return FAILURE;
   }
 
-  if (SUCCESS != gui._solutionValidator.init(
+  if (SUCCESS != gui._solutionValidator.init(parsedCfg.solutionValidatorCfg,
       layoutInterface.commonLayoutInterface.getFieldDescriptionCb)) {
     LOGERR("_solutionValidator.init() failed");
     return FAILURE;

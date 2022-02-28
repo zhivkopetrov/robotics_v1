@@ -5,12 +5,16 @@
 
 //C++ system headers
 #include <cstdint>
+#include <vector>
 
 //Other libraries headers
+#include "robo_common/layout/field/FieldPos.h"
 
 //Own components headers
 
 //Forward declarations
+
+using CrystalSequence = std::vector<FieldPos>;
 
 enum class CrystalType {
   CYAN,

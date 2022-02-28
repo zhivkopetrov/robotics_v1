@@ -64,8 +64,14 @@ int32_t MinerControllerExternalBridge::init(
           _1, _2));
 
   _fieldMapValidateService = create_service<FieldMapValidate>(
-      FIELD_MAP_VALIDATE_SERVICE,
-      std::bind(&MinerControllerExternalBridge::handleFieldMapCheckService,
+      LONGEST_SEQUENCE_VALIDATE_SERVICE,
+      std::bind(&MinerControllerExternalBridge::handleFieldMapValidateService,
+          this, _1, _2));
+
+  _longestSequenceValidateService = create_service<LongestSequenceValidate>(
+      LONGEST_SEQUENCE_VALIDATE_SERVICE,
+      std::bind(
+          &MinerControllerExternalBridge::handleLongestSequenceValidateService,
           this, _1, _2));
 
   return SUCCESS;
@@ -120,16 +126,35 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   response->surrounding_tiles = surroundingTiles;
 }
 
-void MinerControllerExternalBridge::handleFieldMapCheckService(
+void MinerControllerExternalBridge::handleFieldMapValidateService(
     const std::shared_ptr<FieldMapValidate::Request> request,
     [[maybe_unused]]std::shared_ptr<FieldMapValidate::Response> response) {
   const auto& [rows, cols, data] = request->field_map;
-  response->success = _outInterface.solutionValidator->validateSolution(data,
-      rows, cols, response->error_reason);
 
+  response->success = _outInterface.solutionValidator->validateFieldMap(data,
+      rows, cols, response->error_reason);
   if (response->success) {
     const auto f = [this]() {
       _outInterface.startAchievementWonAnimCb(Achievement::SINGLE_STAR);
+    };
+    _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+  }
+}
+
+void MinerControllerExternalBridge::handleLongestSequenceValidateService(
+    const std::shared_ptr<LongestSequenceValidate::Request> request,
+    std::shared_ptr<LongestSequenceValidate::Response> response) {
+  CrystalSequence sequence;
+  sequence.reserve(request->sequence_points.size());
+  for (const auto& point : request->sequence_points) {
+    sequence.emplace_back(point.row, point.col);
+  }
+
+  response->success =
+      _outInterface.solutionValidator->validateLongestSequence(sequence);
+  if (response->success) {
+    const auto f = [this]() {
+      _outInterface.startAchievementWonAnimCb(Achievement::DOUBLE_STAR);
     };
     _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
   }

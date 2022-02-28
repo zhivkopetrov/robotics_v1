@@ -60,7 +60,7 @@ RobotBaseConfig generateRobotBaseConfig() {
 }
 
 PanelHandlerConfig generatePanelHandlerConfig(
-    const FieldDescription& fieldDescr) {
+    const FieldDescription &fieldDescr, size_t longestCrystalSeqSize) {
   PanelHandlerConfig cfg;
 
   auto &healthPanelCfg = cfg.healthPanelCfg;
@@ -77,14 +77,8 @@ PanelHandlerConfig generatePanelHandlerConfig(
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
   tilePanelCfg.decrTimerId = TILE_PANEL_DECR_TIMER_ID;
 
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  const auto levelId = 1;
-  const auto longestSequence =
-      ConfigFileLoader::readMinerLongestSolution(projectInstallPrefix, levelId);
-
   auto &crystalPanelCfg = cfg.crystalPanelCfg;
-  crystalPanelCfg.targetNumber = longestSequence.size();
+  crystalPanelCfg.targetNumber = longestCrystalSeqSize;
   crystalPanelCfg.rsrcId = RoboMinerGuiResources::CRYSTAL_PANEL;
   crystalPanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   crystalPanelCfg.incrTimerId = CRYSTAL_PANEL_INCR_TIMER_ID;
@@ -99,8 +93,8 @@ FieldConfig generateFieldConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   const auto levelId = 1;
-  cfg.description.data =
-      ConfigFileLoader::readFieldData(projectInstallPrefix, levelId);
+  cfg.description.data = ConfigFileLoader::readFieldData(projectInstallPrefix,
+      levelId);
 
   cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
   if (!cfg.description.data.empty()) {
@@ -113,6 +107,17 @@ FieldConfig generateFieldConfig() {
   cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
   cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
 
+  return cfg;
+}
+
+SolutionValidatorConfig generateSolutionValidatorConfig() {
+  SolutionValidatorConfig cfg;
+
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  const auto levelId = 1;
+  cfg.longestSequence = ConfigFileLoader::readMinerLongestSolution(
+      projectInstallPrefix, levelId);
   return cfg;
 }
 
@@ -139,16 +144,19 @@ EngineConfig generateEngineConfig() {
 
 RoboMinerGuiConfig generateGameConfig() {
   RoboMinerGuiConfig cfg;
-  auto& layoutCfg = cfg.layoutCfg;
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig();
 
-  auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  auto &layoutCfg = cfg.layoutCfg;
+
+  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  layoutCfg.panelHandlerCfg =
-      generatePanelHandlerConfig( commonLayoutCfg.fieldCfg.description);
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
+      commonLayoutCfg.fieldCfg.description,
+      cfg.solutionValidatorCfg.longestSequence.size());
   layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
 
   return cfg;
@@ -156,17 +164,16 @@ RoboMinerGuiConfig generateGameConfig() {
 
 } //end anonymous namespace
 
-std::vector<DependencyDescription>
-RoboMinerGuiConfigGenerator::generateDependencies(
+std::vector<DependencyDescription> RoboMinerGuiConfigGenerator::generateDependencies(
     int32_t argc, char **args) {
-  std::vector<DependencyDescription> dependecies =
-      getDefaultEngineDependencies(argc, args);
+  std::vector<DependencyDescription> dependecies = getDefaultEngineDependencies(
+      argc, args);
 
-  const LoadDependencyCb ros2Loader = [argc, args](){
+  const LoadDependencyCb ros2Loader = [argc, args]() {
     rclcpp::init(argc, args);
     return SUCCESS;
   };
-  const UnloadDependencyCb ros2Unloader = [](){
+  const UnloadDependencyCb ros2Unloader = []() {
     //shutdown the global context only if it hasn't
     //for example: ROS2 signal handlers do that automatically
     if (rclcpp::ok()) {
@@ -177,7 +184,7 @@ RoboMinerGuiConfigGenerator::generateDependencies(
     }
   };
 
-  dependecies.push_back({"ROS2", ros2Loader, ros2Unloader});
+  dependecies.push_back( { "ROS2", ros2Loader, ros2Unloader });
 
   return dependecies;
 }

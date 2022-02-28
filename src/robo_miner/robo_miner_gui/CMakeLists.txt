@@ -39,6 +39,7 @@ add_executable(
         ${_INC_DIR}/helpers/RoboMinerGuiInitHelper.h
         ${_INC_DIR}/helpers/MovementWatcher.h
         ${_INC_DIR}/helpers/SolutionValidator.h
+        ${_INC_DIR}/helpers/config/SolutionValidatorConfig.h
         ${_INC_DIR}/external_api/MinerControllerExternalBridge.h
         ${_INC_DIR}/layout/entities/Crystal.h
         ${_INC_DIR}/layout/entities/CrystalHandler.h

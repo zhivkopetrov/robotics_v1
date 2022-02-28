@@ -17,6 +17,7 @@ struct FieldPos {
   FieldPos(int32_t row, int32_t col);
 
   bool operator==(const FieldPos& other) const;
+  bool operator<(const FieldPos& other) const;
 
   int32_t row { 0 };
   int32_t col { 0 };

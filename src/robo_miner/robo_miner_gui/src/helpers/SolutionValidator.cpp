@@ -11,8 +11,10 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_miner_gui/helpers/config/SolutionValidatorConfig.h"
 
 int32_t SolutionValidator::init(
+    const SolutionValidatorConfig &cfg,
     const GetFieldDescriptionCb &getFieldDescriptionCb) {
   if (nullptr == getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
@@ -20,10 +22,21 @@ int32_t SolutionValidator::init(
   }
   _getFieldDescriptionCb = getFieldDescriptionCb;
 
+  _longestSequence = cfg.longestSequence;
+  const size_t uniquesCount = std::unique(_longestSequence.begin(),
+                                  _longestSequence.end())
+                              - _longestSequence.begin();
+  if (uniquesCount != cfg.longestSequence.size()) {
+    LOGERR("Error, provided longestSequence solution contains duplicates");
+    return FAILURE;
+  }
+
+  std::sort(_longestSequence.begin(), _longestSequence.end());
+
   return SUCCESS;
 }
 
-bool SolutionValidator::validateSolution(const std::vector<uint8_t> &rawData,
+bool SolutionValidator::validateFieldMap(const std::vector<uint8_t> &rawData,
                                          uint32_t rows, uint32_t cols,
                                          std::string &outError) const {
   if (0 == rows) {
@@ -52,3 +65,18 @@ bool SolutionValidator::validateSolution(const std::vector<uint8_t> &rawData,
 
   return true;
 }
+
+bool SolutionValidator::validateLongestSequence(
+    CrystalSequence &sequence) const {
+  std::sort(sequence.begin(), sequence.end());
+
+  CrystalSequence diff;
+  std::set_difference(_longestSequence.begin(), _longestSequence.end(),
+      sequence.begin(), sequence.end(), std::inserter(diff, diff.begin()));
+  if (diff.empty()) {
+    return true;
+  }
+
+  return false;
+}
+
