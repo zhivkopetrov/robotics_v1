@@ -15,5 +15,6 @@
 //Forward declarations
 
 using CrystalClickedCb = std::function<void(const FieldPos&)>;
+using FieldMapRevelealedCb = std::function<void()>;
 
 #endif /* ROBO_MINER_GUI_ROBOMINERGUIFUNCTIONALDEFINES_H_ */

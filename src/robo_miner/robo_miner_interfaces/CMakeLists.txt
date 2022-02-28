@@ -12,7 +12,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotMoveType.msg"
   
   "srv/RobotMove.srv"
-  "srv/FieldMapCheck.srv"
+  "srv/FieldMapValidate.srv"
 )
 
 set_target_properties(

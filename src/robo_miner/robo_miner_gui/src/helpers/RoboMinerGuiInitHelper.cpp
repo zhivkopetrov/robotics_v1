@@ -73,6 +73,9 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
   outInterface.shutdownGameCb = std::bind(
       &MinerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
+  outInterface.fieldMapRevelealedCb = std::bind(
+      &MinerControllerExternalBridge::publishFieldMapRevealed,
+      gui._controllerExternalBridge.get());
 
   if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
@@ -88,6 +91,8 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotActCb =
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
+  outInterface.startAchievementWonAnimCb =
+      interface.commonLayoutInterface.startAchievementWonAnimCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.movementWatcher = &gui._movementWatcher;
   outInterface.solutionValidator = &gui._solutionValidator;

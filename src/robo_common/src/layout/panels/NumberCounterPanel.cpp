@@ -15,11 +15,10 @@ int32_t NumberCounterPanel::init(
     const NumberCounterPanelConfig& cfg,
     const NumberCounterPanelUtilityConfig &utilityCfg) {
   if (nullptr == utilityCfg.targetReachedCb) {
-    LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+    LOGERR("Error, nullptr provided for NumberCounterTargetReachedCb");
     return FAILURE;
   }
   _targetReachedCb = utilityCfg.targetReachedCb;
-
 
   NumberCounterConfig numberPanelCfg;
   numberPanelCfg.backgroundRsrcId = cfg.rsrcId;

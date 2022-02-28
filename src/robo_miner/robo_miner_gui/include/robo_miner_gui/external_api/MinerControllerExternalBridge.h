@@ -9,7 +9,7 @@
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include "robo_miner_interfaces/srv/robot_move.hpp"
-#include "robo_miner_interfaces/srv/field_map_check.hpp"
+#include "robo_miner_interfaces/srv/field_map_validate.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 
@@ -22,6 +22,7 @@ class SolutionValidator;
 struct MinerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
+  StartAchievementWonAnimCb startAchievementWonAnimCb;
   SystemShutdownCb systemShutdownCb;
   MovementWatcher *movementWatcher = nullptr;
   SolutionValidator *solutionValidator = nullptr;
@@ -35,23 +36,26 @@ public:
 
   void publishShutdownController();
 
+  void publishFieldMapRevealed();
+
 private:
   typedef std_msgs::msg::Empty Empty;
   typedef robo_miner_interfaces::srv::RobotMove RobotMove;
-  typedef robo_miner_interfaces::srv::FieldMapCheck FieldMapCheck;
+  typedef robo_miner_interfaces::srv::FieldMapValidate FieldMapValidate;
 
   void handleRobotMoveService(const std::shared_ptr<RobotMove::Request> request,
                               std::shared_ptr<RobotMove::Response> response);
 
   void handleFieldMapCheckService(
-      const std::shared_ptr<FieldMapCheck::Request> request,
-      std::shared_ptr<FieldMapCheck::Response> response);
+      const std::shared_ptr<FieldMapValidate::Request> request,
+      std::shared_ptr<FieldMapValidate::Response> response);
 
   MinerControllerExternalBridgeOutInterface _outInterface;
 
   rclcpp::Service<RobotMove>::SharedPtr _robotMoveService;
-  rclcpp::Service<FieldMapCheck>::SharedPtr _fieldMapCheckService;
+  rclcpp::Service<FieldMapValidate>::SharedPtr _fieldMapValidateService;
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
+  rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
 };
 
 #endif /* ROBO_MINER_GUI_MINERCONTROLLEREXTERNALBRIDGE_H_ */

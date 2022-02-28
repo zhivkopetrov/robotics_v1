@@ -12,6 +12,7 @@
 
 //Own components headers
 #include "robo_miner_gui/layout/panels/config/PanelHandlerConfig.h"
+#include "robo_miner_gui/defines/RoboMinerGuiFunctionalDefines.h"
 
 //Forward declarations
 
@@ -19,6 +20,7 @@ struct PanelHandlerOutInterface {
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
+  FieldMapRevelealedCb fieldMapRevelealedCb;
 };
 
 class PanelHandler {

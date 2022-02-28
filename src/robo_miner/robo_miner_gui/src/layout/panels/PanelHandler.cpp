@@ -15,14 +15,10 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
                            const PanelHandlerOutInterface &interface) {
   //TODO attach gameWonCb on end of triple star animation
   //the DOUBLE_STAR will be the longest sequence algorithm completion
-
-  const auto achievementWonCb = interface.startAchievementWonAnimCb;
   auto panelPos = Point(1250, 50);
   const auto lightGoldColor = Color(0xD4AF37FF);
   NumberCounterPanelUtilityConfig numberCounterPanelUtilityCfg;
-  numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb](){
-    achievementWonCb(Achievement::SINGLE_STAR);
-  };
+  numberCounterPanelUtilityCfg.targetReachedCb = interface.fieldMapRevelealedCb;
 
   numberCounterPanelUtilityCfg.pos = panelPos;
   numberCounterPanelUtilityCfg.textColor = lightGoldColor;
@@ -32,6 +28,7 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
     return FAILURE;
   }
 
+  const auto achievementWonCb = interface.startAchievementWonAnimCb;
   panelPos.y += 165;
   numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb](){
     achievementWonCb(Achievement::TRIPLE_STAR);

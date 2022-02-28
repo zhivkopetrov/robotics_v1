@@ -43,13 +43,13 @@ void GameEndAnimator::startGameLostAnim() {
 void GameEndAnimator::startAchievementWonAnim(Achievement achievement) {
   switch (achievement) {
   case Achievement::SINGLE_STAR:
-    LOGG("You've Won Single Star");
+    LOGG("You've Won a Single Star");
     break;
   case Achievement::DOUBLE_STAR:
-    LOGG("You've Won Double Star");
+    LOGG("You've Won a Double Star");
     break;
   case Achievement::TRIPLE_STAR:
-    LOGG("You've Won Tripple Star");
+    LOGG("You've Won a Tripple Star");
     break;
   default:
     LOGERR("Error, received unsupported Achievement value: %d",

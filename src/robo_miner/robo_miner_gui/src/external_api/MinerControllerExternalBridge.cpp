@@ -56,11 +56,15 @@ int32_t MinerControllerExternalBridge::init(
   _shutdownControllerPublisher = create_publisher<Empty>(
       SHUTDOWN_CONTROLLER_TOPIC, queueSize);
 
+  _fieldMapReveleadedPublisher = create_publisher<Empty>(
+      FIELD_MAP_REVEALED_TOPIC, queueSize);
+
   _robotMoveService = create_service<RobotMove>(ROBOT_MOVE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleRobotMoveService, this,
           _1, _2));
 
-  _fieldMapCheckService = create_service<FieldMapCheck>(FIELD_MAP_CHECK_SERVICE,
+  _fieldMapValidateService = create_service<FieldMapValidate>(
+      FIELD_MAP_VALIDATE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleFieldMapCheckService,
           this, _1, _2));
 
@@ -74,6 +78,10 @@ void MinerControllerExternalBridge::publishShutdownController() {
     _outInterface.systemShutdownCb();
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void MinerControllerExternalBridge::publishFieldMapRevealed() {
+  _fieldMapReveleadedPublisher->publish(Empty());
 }
 
 void MinerControllerExternalBridge::handleRobotMoveService(
@@ -113,10 +121,17 @@ void MinerControllerExternalBridge::handleRobotMoveService(
 }
 
 void MinerControllerExternalBridge::handleFieldMapCheckService(
-    const std::shared_ptr<FieldMapCheck::Request> request,
-    [[maybe_unused]]std::shared_ptr<FieldMapCheck::Response> response) {
+    const std::shared_ptr<FieldMapValidate::Request> request,
+    [[maybe_unused]]std::shared_ptr<FieldMapValidate::Response> response) {
   const auto& [rows, cols, data] = request->field_map;
   response->success = _outInterface.solutionValidator->validateSolution(data,
       rows, cols, response->error_reason);
+
+  if (response->success) {
+    const auto f = [this]() {
+      _outInterface.startAchievementWonAnimCb(Achievement::SINGLE_STAR);
+    };
+    _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+  }
 }
 

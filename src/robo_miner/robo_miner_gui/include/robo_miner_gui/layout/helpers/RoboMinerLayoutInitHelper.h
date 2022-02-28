@@ -29,11 +29,12 @@ public:
 
 private:
   static int32_t initPanelHandler(const PanelHandlerConfig &cfg,
-                                  RoboCommonLayoutInterface &commonInterface,
+                                  const RoboMinerLayoutOutInterface &outInterface,
+                                  const RoboCommonLayoutInterface &commonInterface,
                                   RoboMinerLayout &layout);
 
   static int32_t initCrystalHandler(uint64_t crystalRsrcId,
-                                    RoboCommonLayoutInterface &commonInterface,
+                                    const RoboCommonLayoutInterface &commonInterface,
                                     RoboMinerLayout &layout);
 };
 

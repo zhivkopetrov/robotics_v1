@@ -11,6 +11,7 @@
 #include "robo_common/layout/helpers/RoboCommonLayoutInterfaces.h"
 
 //Own components headers
+#include "robo_miner_gui/defines/RoboMinerGuiFunctionalDefines.h"
 
 //Forward declarations
 class CollisionWatcher;
@@ -21,6 +22,7 @@ struct RoboMinerLayoutInterface {
 
 struct RoboMinerLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
+  FieldMapRevelealedCb fieldMapRevelealedCb;
   FinishRobotActCb finishRobotActCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };

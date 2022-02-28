@@ -36,8 +36,8 @@ int32_t RoboMinerLayoutInitHelper::init(
     return FAILURE;
   }
 
-  if (SUCCESS != initPanelHandler(cfg.panelHandlerCfg, commonInterface,
-          layout)) {
+  if (SUCCESS != initPanelHandler(cfg.panelHandlerCfg, outInterface,
+          commonInterface, layout)) {
     LOGERR("initPanelHandler() failed");
     return FAILURE;
   }
@@ -52,15 +52,20 @@ int32_t RoboMinerLayoutInitHelper::init(
 }
 
 int32_t RoboMinerLayoutInitHelper::initPanelHandler(
-    const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
-    RoboMinerLayout &layout) {
-  PanelHandlerOutInterface outInterface;
-  outInterface.startGameWonAnimCb = commonInterface.startGameWonAnimCb;
-  outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
-  outInterface.startAchievementWonAnimCb =
+    const PanelHandlerConfig &cfg,
+    const RoboMinerLayoutOutInterface &outInterface,
+    const RoboCommonLayoutInterface &commonInterface, RoboMinerLayout &layout) {
+  PanelHandlerOutInterface panelHandlerOutInterface;
+  panelHandlerOutInterface.startGameWonAnimCb =
+      commonInterface.startGameWonAnimCb;
+  panelHandlerOutInterface.startGameLostAnimCb =
+      commonInterface.startGameLostAnimCb;
+  panelHandlerOutInterface.startAchievementWonAnimCb =
       commonInterface.startAchievementWonAnimCb;
+  panelHandlerOutInterface.fieldMapRevelealedCb =
+      outInterface.fieldMapRevelealedCb;
 
-  if (SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
+  if (SUCCESS != layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
     LOGERR("Error in _panel.init()");
     return FAILURE;
   }
@@ -69,7 +74,7 @@ int32_t RoboMinerLayoutInitHelper::initPanelHandler(
 }
 
 int32_t RoboMinerLayoutInitHelper::initCrystalHandler(
-    uint64_t crystalRsrcId, RoboCommonLayoutInterface &commonInterface,
+    uint64_t crystalRsrcId, const RoboCommonLayoutInterface &commonInterface,
     RoboMinerLayout &layout) {
   CrystalHandlerConfig cfg;
   cfg.crystalRsrcId = crystalRsrcId;
