@@ -83,7 +83,7 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
         _currCollisionWatchStatus);
   }
 
-  _outInterface.finishRobotActCb(_state.robotId, MoveOutcome::SUCCESS);
+  _outInterface.finishRobotActCb(_state, MoveOutcome::SUCCESS);
 }
 
 void Robot::onInitEnd() {
@@ -140,7 +140,7 @@ void Robot::move() {
 
 void Robot::onCollisionImpactAnimEnd(RobotEndTurn status) {
   if (RobotEndTurn::YES == status) {
-    _outInterface.finishRobotActCb(_state.robotId, MoveOutcome::COLLISION);
+    _outInterface.finishRobotActCb(_state, MoveOutcome::COLLISION);
   }
 }
 

@@ -32,14 +32,14 @@ int32_t TurnHelper::init(const TurnHelperConfig &cfg) {
   return SUCCESS;
 }
 
-void TurnHelper::onRobotFinishAct(int32_t robotId,
+void TurnHelper::onRobotFinishAct(const RobotState& state,
                                   [[maybe_unused]]MoveOutcome moveOutcome) {
   const auto lastRobotIdx = _maxRobots - 1;
-  if (lastRobotIdx == robotId) {
+  if (lastRobotIdx == state.robotId) {
     _activeRobotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
     _enablePlayerInputCb();
   } else {
-    _activeRobotId = robotId + 1;
+    _activeRobotId = state.robotId + 1;
     _robotAI.makeMove(_robotActInterfaces[_activeRobotId]);
   }
 }

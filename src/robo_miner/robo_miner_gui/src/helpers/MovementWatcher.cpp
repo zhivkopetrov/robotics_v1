@@ -12,7 +12,7 @@
 //Own components headers
 
 int32_t MovementWatcher::init(
-    const GetPlayerSurroundingTilesCb& getPlayerSurroundingTilesCb) {
+    const GetPlayerSurroundingTilesCb &getPlayerSurroundingTilesCb) {
   if (nullptr == getPlayerSurroundingTilesCb) {
     LOGERR("Error, nullptr provided for GetPlayerSurroundingTilesCb");
     return FAILURE;
@@ -44,9 +44,11 @@ bool MovementWatcher::waitForChange(const std::chrono::milliseconds &timeout,
   return true;
 }
 
-void MovementWatcher::changeState(MoveOutcome outcome) {
+void MovementWatcher::changeState(const RobotState &state,
+                                  MoveOutcome outcome) {
   std::lock_guard<std::mutex> lockGuard(_mutex);
   _ready = true;
+  _lastRobotState = state;
   _outcome = outcome;
   _playerSurroundingTiles = _getPlayerSurroundingTilesCb();
   _condVar.notify_one();

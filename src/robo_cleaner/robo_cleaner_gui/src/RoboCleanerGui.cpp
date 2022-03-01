@@ -45,7 +45,8 @@ void RoboCleanerGui::process() {
 }
 
 void RoboCleanerGui::onRobotTurnFinish(
-    [[maybe_unused]]int32_t robotId, [[maybe_unused]]MoveOutcome moveOutcome) {
+    [[maybe_unused]]const RobotState &state,
+    [[maybe_unused]]MoveOutcome moveOutcome) {
 
 }
 

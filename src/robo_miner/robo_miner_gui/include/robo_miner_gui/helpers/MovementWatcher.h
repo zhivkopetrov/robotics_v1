@@ -26,13 +26,14 @@ public:
                      MoveOutcome &outOutcome,
                      SurroundingTiles &outSurroundingTiles);
 
-  void changeState(MoveOutcome outcome);
+  void changeState(const RobotState& state, MoveOutcome outcome);
 
 private:
   std::mutex _mutex;
   std::condition_variable _condVar;
 
   GetPlayerSurroundingTilesCb _getPlayerSurroundingTilesCb;
+  RobotState _lastRobotState;
   SurroundingTiles _playerSurroundingTiles;
   MoveOutcome _outcome;
   bool _ready = false;

@@ -45,8 +45,8 @@ void RoboMinerGui::process() {
   _collisionWatcher.process();
 }
 
-void RoboMinerGui::onRobotTurnFinish([[maybe_unused]]int32_t robotId,
+void RoboMinerGui::onRobotTurnFinish(const RobotState& state,
                                      MoveOutcome moveOutcome) {
-  _movementWatcher.changeState(moveOutcome);
+  _movementWatcher.changeState(state, moveOutcome);
 }
 

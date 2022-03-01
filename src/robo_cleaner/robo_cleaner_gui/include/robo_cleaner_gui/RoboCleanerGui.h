@@ -33,7 +33,7 @@ public:
   void process() override;
 
   //TODO move to some object
-  void onRobotTurnFinish(int32_t robotId, MoveOutcome moveOutcome);
+  void onRobotTurnFinish(const RobotState& state, MoveOutcome moveOutcome);
 
 private:
   RoboCleanerLayout _layout;
