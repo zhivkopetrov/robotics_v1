@@ -23,14 +23,22 @@ public:
                const GetFieldDescriptionCb &getFieldDescriptionCb);
 
   bool validateFieldMap(const std::vector<uint8_t> &rawData, uint32_t rows,
-                        uint32_t cols, std::string &outError) const;
+                        uint32_t cols, std::string &outError);
 
   //sequence will be sorted
-  bool validateLongestSequence(CrystalSequence& sequence) const;
+  bool validateLongestSequence(CrystalSequence& sequence,
+                               std::string &outError);
 
 private:
+  struct ValidationOptions {
+    bool fieldMapValidated = false;
+    bool longestSequenceValidated = false;
+    std::vector<bool> longestSequencePointsValidated;
+  };
+
   CrystalSequence _longestSequence;
   GetFieldDescriptionCb _getFieldDescriptionCb;
+  ValidationOptions _validationOptions;
 };
 
 #endif /* ROBO_MINER_GUI_SOLUTIONVALIDATOR_H_ */

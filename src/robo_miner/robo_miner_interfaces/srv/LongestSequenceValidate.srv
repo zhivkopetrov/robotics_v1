@@ -1,3 +1,4 @@
 FieldPoint[] sequence_points
 ---
 bool success
+string error_reason

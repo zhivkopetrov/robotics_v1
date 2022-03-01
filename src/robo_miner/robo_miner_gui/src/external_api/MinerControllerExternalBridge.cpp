@@ -97,7 +97,7 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   if (MoveType::UNKNOWN == moveType) {
     LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
     response->success = false;
-    response->error_reason = "invalid arguments. Unsupported move_type value";
+    response->error_reason = "Invalid arguments. Unsupported 'move_type' value";
     return;
   }
 
@@ -112,13 +112,13 @@ void MinerControllerExternalBridge::handleRobotMoveService(
       outcome, surroundingTiles);
   if (!success) {
     response->success = false;
-    response->error_reason = "service timed out after 5000ms";
+    response->error_reason = "Service timed out after 5000ms";
     return;
   }
 
   if (MoveOutcome::COLLISION == outcome) {
     response->success = false;
-    response->error_reason = "move resulted in collision";
+    response->error_reason = "Move resulted in collision";
     return;
   }
 
@@ -146,12 +146,12 @@ void MinerControllerExternalBridge::handleLongestSequenceValidateService(
     std::shared_ptr<LongestSequenceValidate::Response> response) {
   CrystalSequence sequence;
   sequence.reserve(request->sequence_points.size());
-  for (const auto& point : request->sequence_points) {
+  for (const auto &point : request->sequence_points) {
     sequence.emplace_back(point.row, point.col);
   }
 
-  response->success =
-      _outInterface.solutionValidator->validateLongestSequence(sequence);
+  response->success = _outInterface.solutionValidator->validateLongestSequence(
+      sequence, response->error_reason);
   if (response->success) {
     const auto f = [this]() {
       _outInterface.startAchievementWonAnimCb(Achievement::DOUBLE_STAR);

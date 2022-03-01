@@ -32,20 +32,21 @@ int32_t SolutionValidator::init(
   }
 
   std::sort(_longestSequence.begin(), _longestSequence.end());
+  _validationOptions.longestSequencePointsValidated.resize(uniquesCount, false);
 
   return SUCCESS;
 }
 
 bool SolutionValidator::validateFieldMap(const std::vector<uint8_t> &rawData,
                                          uint32_t rows, uint32_t cols,
-                                         std::string &outError) const {
+                                         std::string &outError) {
   if (0 == rows) {
-    outError = "invalid arguments. rows args can't be 0";
+    outError = "Invalid arguments. 'rows' args can't be 0";
     return false;
   }
 
   if (0 == cols) {
-    outError = "invalid arguments. cols args can't be 0";
+    outError = "Invalid arguments. 'cols' args can't be 0";
     return false;
   }
 
@@ -59,24 +60,32 @@ bool SolutionValidator::validateFieldMap(const std::vector<uint8_t> &rawData,
 
   const auto &fieldData = _getFieldDescriptionCb().data;
   if (fieldData != data) {
-    outError = "field mismatch";
+    outError = "Incorrect FieldMap provided. Try again";
     return false;
   }
 
+  _validationOptions.fieldMapValidated = true;
   return true;
 }
 
 bool SolutionValidator::validateLongestSequence(
-    CrystalSequence &sequence) const {
+    CrystalSequence &sequence, std::string &outError) {
+  if (!_validationOptions.fieldMapValidated) {
+    outError = "Service is locked. FieldMap needs to be validated first";
+    return false;
+  }
+
   std::sort(sequence.begin(), sequence.end());
 
   CrystalSequence diff;
   std::set_difference(_longestSequence.begin(), _longestSequence.end(),
       sequence.begin(), sequence.end(), std::inserter(diff, diff.begin()));
-  if (diff.empty()) {
-    return true;
+  if (!diff.empty()) {
+    outError = "Incorrect sequence provided. Try again";
+    return false;
   }
 
-  return false;
+  _validationOptions.longestSequenceValidated = true;
+  return true;
 }
 
