@@ -23,8 +23,7 @@ int32_t MovementWatcher::init(
 }
 
 bool MovementWatcher::waitForChange(const std::chrono::milliseconds &timeout,
-                                    MoveOutcome &outOutcome,
-                                    SurroundingTiles &outSurroundingTiles) {
+                                    MovementWatchOutcome &outcome) {
   _ready = false;
 
   bool timedOut = true;
@@ -39,8 +38,7 @@ bool MovementWatcher::waitForChange(const std::chrono::milliseconds &timeout,
     return false;
   }
 
-  outOutcome = _outcome;
-  outSurroundingTiles = _playerSurroundingTiles;
+  outcome = _lastOutcome;
   return true;
 }
 
@@ -48,8 +46,8 @@ void MovementWatcher::changeState(const RobotState &state,
                                   MoveOutcome outcome) {
   std::lock_guard<std::mutex> lockGuard(_mutex);
   _ready = true;
-  _lastRobotState = state;
-  _outcome = outcome;
-  _playerSurroundingTiles = _getPlayerSurroundingTilesCb();
+  _lastOutcome.moveOutcome = outcome;
+  _lastOutcome.robotPos = state.fieldPos;
+  _lastOutcome.surroundingTiles = _getPlayerSurroundingTilesCb();
   _condVar.notify_one();
 }

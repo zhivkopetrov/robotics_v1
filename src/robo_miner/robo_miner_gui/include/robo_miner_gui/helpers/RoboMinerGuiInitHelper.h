@@ -14,6 +14,7 @@
 //Forward declarations
 class RoboMinerGui;
 struct RoboMinerLayoutConfig;
+struct SolutionValidatorConfig;
 struct RoboMinerLayoutInterface;
 
 class RoboMinerGuiInitHelper {
@@ -25,7 +26,11 @@ public:
 private:
   static int32_t initLayout(const RoboMinerLayoutConfig &cfg,
                             RoboMinerLayoutInterface &interface, //out param
-      RoboMinerGui &gui);
+                            RoboMinerGui &gui);
+
+  static int32_t initSolutionValidator(
+      const SolutionValidatorConfig &cfg,
+      const RoboMinerLayoutInterface &interface, RoboMinerGui &gui);
 
   static int32_t initControllerExternalBridge(
       const RoboMinerLayoutInterface &interface, RoboMinerGui &gui);

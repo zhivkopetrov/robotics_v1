@@ -12,6 +12,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/UInt8MultiArray.msg"
   "msg/RobotMoveType.msg"
   
+  "srv/ActivateMiningValidate.srv"
   "srv/RobotMove.srv"
   "srv/LongestSequenceValidate.srv"
   "srv/FieldMapValidate.srv"

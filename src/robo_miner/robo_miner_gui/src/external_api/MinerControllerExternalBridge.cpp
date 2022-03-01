@@ -25,7 +25,35 @@ MinerControllerExternalBridge::MinerControllerExternalBridge()
 
 int32_t MinerControllerExternalBridge::init(
     const MinerControllerExternalBridgeOutInterface &interface) {
-  _outInterface = interface;
+  if (SUCCESS != initOutInterface(interface)) {
+    LOGERR("Error, initOutInterface() failed");
+    return FAILURE;
+  }
+
+  if (SUCCESS != initCommunication()) {
+    LOGERR("Error, initCommunication() failed");
+    return FAILURE;
+  }
+
+  return SUCCESS;
+}
+
+void MinerControllerExternalBridge::publishShutdownController() {
+  _shutdownControllerPublisher->publish(Empty());
+
+  const auto f = [this]() {
+    _outInterface.systemShutdownCb();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void MinerControllerExternalBridge::publishFieldMapRevealed() {
+  _fieldMapReveleadedPublisher->publish(Empty());
+}
+
+int32_t MinerControllerExternalBridge::initOutInterface(
+    const MinerControllerExternalBridgeOutInterface &outInterface) {
+  _outInterface = outInterface;
   if (nullptr == _outInterface.invokeActionEventCb) {
     LOGERR("Error, nullptr provided for InvokeActionEventCb");
     return FAILURE;
@@ -33,6 +61,16 @@ int32_t MinerControllerExternalBridge::init(
 
   if (nullptr == _outInterface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
+    return FAILURE;
+  }
+
+  if (nullptr == _outInterface.startAchievementWonAnimCb) {
+    LOGERR("Error, nullptr provided for StartAchievementWonAnimCb");
+    return FAILURE;
+  }
+
+  if (nullptr == _outInterface.startGameLostAnimCb) {
+    LOGERR("Error, nullptr provided for StartGameLostAnimCb");
     return FAILURE;
   }
 
@@ -51,6 +89,10 @@ int32_t MinerControllerExternalBridge::init(
     return FAILURE;
   }
 
+  return SUCCESS;
+}
+
+int32_t MinerControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
   _shutdownControllerPublisher = create_publisher<Empty>(
@@ -64,7 +106,7 @@ int32_t MinerControllerExternalBridge::init(
           _1, _2));
 
   _fieldMapValidateService = create_service<FieldMapValidate>(
-      LONGEST_SEQUENCE_VALIDATE_SERVICE,
+      FIELD_MAP_VALIDATE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleFieldMapValidateService,
           this, _1, _2));
 
@@ -74,20 +116,13 @@ int32_t MinerControllerExternalBridge::init(
           &MinerControllerExternalBridge::handleLongestSequenceValidateService,
           this, _1, _2));
 
+  _activateMiningValidateService = create_service<ActivateMiningValidate>(
+      ACTIVATE_MINING_VALIDATE_SERVICE,
+      std::bind(
+          &MinerControllerExternalBridge::handleActivateMiningValidateService,
+          this, _1, _2));
+
   return SUCCESS;
-}
-
-void MinerControllerExternalBridge::publishShutdownController() {
-  _shutdownControllerPublisher->publish(Empty());
-
-  const auto f = [this]() {
-    _outInterface.systemShutdownCb();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-}
-
-void MinerControllerExternalBridge::publishFieldMapRevealed() {
-  _fieldMapReveleadedPublisher->publish(Empty());
 }
 
 void MinerControllerExternalBridge::handleRobotMoveService(
@@ -106,24 +141,27 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
 
-  MoveOutcome outcome;
-  SurroundingTiles surroundingTiles;
+  MovementWatchOutcome outcome;
   const auto success = _outInterface.movementWatcher->waitForChange(5000ms,
-      outcome, surroundingTiles);
+      outcome);
   if (!success) {
     response->success = false;
     response->error_reason = "Service timed out after 5000ms";
     return;
   }
 
-  if (MoveOutcome::COLLISION == outcome) {
+  if (MoveOutcome::COLLISION == outcome.moveOutcome) {
     response->success = false;
     response->error_reason = "Move resulted in collision";
     return;
   }
 
   response->success = true;
-  response->surrounding_tiles = surroundingTiles;
+  response->surrounding_tiles = std::move(outcome.surroundingTiles);
+
+  if (_outInterface.solutionValidator->isMiningActive()) {
+    handleMiningMove(outcome.robotPos);
+  }
 }
 
 void MinerControllerExternalBridge::handleFieldMapValidateService(
@@ -131,8 +169,15 @@ void MinerControllerExternalBridge::handleFieldMapValidateService(
     [[maybe_unused]]std::shared_ptr<FieldMapValidate::Response> response) {
   const auto& [rows, cols, data] = request->field_map;
 
-  response->success = _outInterface.solutionValidator->validateFieldMap(data,
-      rows, cols, response->error_reason);
+  const auto [success, majorError] =
+      _outInterface.solutionValidator->validateFieldMap(data, rows, cols,
+          response->error_reason);
+  response->success = success || majorError;
+  if (majorError) {
+    _outInterface.startGameLostAnimCb();
+    return;
+  }
+
   if (response->success) {
     const auto f = [this]() {
       _outInterface.startAchievementWonAnimCb(Achievement::SINGLE_STAR);
@@ -150,13 +195,45 @@ void MinerControllerExternalBridge::handleLongestSequenceValidateService(
     sequence.emplace_back(point.row, point.col);
   }
 
-  response->success = _outInterface.solutionValidator->validateLongestSequence(
-      sequence, response->error_reason);
+  const auto [success, majorError] =
+      _outInterface.solutionValidator->validateLongestSequence(sequence,
+          response->error_reason);
+  response->success = success || majorError;
+  if (majorError) {
+    _outInterface.startGameLostAnimCb();
+    return;
+  }
+
   if (response->success) {
     const auto f = [this]() {
       _outInterface.startAchievementWonAnimCb(Achievement::DOUBLE_STAR);
     };
     _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+  }
+}
+
+void MinerControllerExternalBridge::handleActivateMiningValidateService(
+    [[maybe_unused]]const std::shared_ptr<ActivateMiningValidate::Request> request,
+    std::shared_ptr<ActivateMiningValidate::Response> response) {
+  const auto [success, majorError] =
+      _outInterface.solutionValidator->validateActivateMining(
+          response->error_reason);
+  response->success = success || majorError;
+  if (majorError) {
+    _outInterface.startGameLostAnimCb();
+  }
+}
+
+void MinerControllerExternalBridge::handleMiningMove(const FieldPos& robotPos) {
+  const auto [success, majorError] =
+      _outInterface.solutionValidator->finishRobotMove(robotPos);
+  if (majorError) {
+    _outInterface.startGameLostAnimCb();
+    return;
+  }
+
+  if (success) {
+    _outInterface.startAchievementWonAnimCb(Achievement::TRIPLE_STAR);
   }
 }
 

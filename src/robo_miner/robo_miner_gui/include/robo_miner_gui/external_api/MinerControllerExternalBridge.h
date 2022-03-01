@@ -11,6 +11,7 @@
 #include "robo_miner_interfaces/srv/robot_move.hpp"
 #include "robo_miner_interfaces/srv/field_map_validate.hpp"
 #include "robo_miner_interfaces/srv/longest_sequence_validate.hpp"
+#include "robo_miner_interfaces/srv/activate_mining_validate.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 
@@ -24,6 +25,7 @@ struct MinerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
+  StartGameLostAnimCb startGameLostAnimCb;
   SystemShutdownCb systemShutdownCb;
   MovementWatcher *movementWatcher = nullptr;
   SolutionValidator *solutionValidator = nullptr;
@@ -45,6 +47,11 @@ private:
   typedef robo_miner_interfaces::srv::RobotMove RobotMove;
   typedef robo_miner_interfaces::srv::FieldMapValidate FieldMapValidate;
   typedef robo_miner_interfaces::srv::LongestSequenceValidate LongestSequenceValidate;
+  typedef robo_miner_interfaces::srv::ActivateMiningValidate ActivateMiningValidate;
+
+  int32_t initOutInterface(
+      const MinerControllerExternalBridgeOutInterface &outInterface);
+  int32_t initCommunication();
 
   void handleRobotMoveService(const std::shared_ptr<RobotMove::Request> request,
                               std::shared_ptr<RobotMove::Response> response);
@@ -57,11 +64,19 @@ private:
       const std::shared_ptr<LongestSequenceValidate::Request> request,
       std::shared_ptr<LongestSequenceValidate::Response> response);
 
+  void handleActivateMiningValidateService(
+      const std::shared_ptr<ActivateMiningValidate::Request> request,
+      std::shared_ptr<ActivateMiningValidate::Response> response);
+
+  void handleMiningMove(const FieldPos& robotPos);
+
   MinerControllerExternalBridgeOutInterface _outInterface;
 
   rclcpp::Service<RobotMove>::SharedPtr _robotMoveService;
   rclcpp::Service<FieldMapValidate>::SharedPtr _fieldMapValidateService;
   rclcpp::Service<LongestSequenceValidate>::SharedPtr _longestSequenceValidateService;
+  rclcpp::Service<ActivateMiningValidate>::SharedPtr _activateMiningValidateService;
+
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
 };

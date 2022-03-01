@@ -17,14 +17,19 @@
 
 //Forward declarations
 
+struct MovementWatchOutcome {
+  SurroundingTiles surroundingTiles;
+  FieldPos robotPos;
+  MoveOutcome moveOutcome;
+};
+
 class MovementWatcher: public NonCopyable, public NonMoveable {
 public:
   int32_t init(const GetPlayerSurroundingTilesCb &getPlayerSurroundingTilesCb);
 
   //returns success or not if timed out
   bool waitForChange(const std::chrono::milliseconds &timeout,
-                     MoveOutcome &outOutcome,
-                     SurroundingTiles &outSurroundingTiles);
+                     MovementWatchOutcome &outcome);
 
   void changeState(const RobotState& state, MoveOutcome outcome);
 
@@ -33,9 +38,7 @@ private:
   std::condition_variable _condVar;
 
   GetPlayerSurroundingTilesCb _getPlayerSurroundingTilesCb;
-  RobotState _lastRobotState;
-  SurroundingTiles _playerSurroundingTiles;
-  MoveOutcome _outcome;
+  MovementWatchOutcome _lastOutcome;
   bool _ready = false;
 };
 

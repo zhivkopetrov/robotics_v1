@@ -1,0 +1,4 @@
+#empty request
+---
+bool success
+string error_reason

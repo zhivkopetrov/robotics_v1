@@ -42,14 +42,14 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
   }
 
   if (SUCCESS != gui._movementWatcher.init(
-      layoutInterface.commonLayoutInterface.getPlayerSurroundingTilesCb)) {
+          layoutInterface.commonLayoutInterface.getPlayerSurroundingTilesCb)) {
     LOGERR("_movementWatcher.init() failed");
     return FAILURE;
   }
 
-  if (SUCCESS != gui._solutionValidator.init(parsedCfg.solutionValidatorCfg,
-      layoutInterface.commonLayoutInterface.getFieldDescriptionCb)) {
-    LOGERR("_solutionValidator.init() failed");
+  if (SUCCESS != initSolutionValidator(parsedCfg.solutionValidatorCfg,
+          layoutInterface, gui)) {
+    LOGERR("initSolutionValidator() failed");
     return FAILURE;
   }
 
@@ -68,8 +68,8 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
 
   RoboMinerLayoutOutInterface outInterface;
   outInterface.collisionWatcher = &gui._collisionWatcher;
-  outInterface.finishRobotActCb =
-      std::bind(&RoboMinerGui::onRobotTurnFinish, &gui, _1, _2);
+  outInterface.finishRobotActCb = std::bind(&RoboMinerGui::onRobotTurnFinish,
+      &gui, _1, _2);
   outInterface.shutdownGameCb = std::bind(
       &MinerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
@@ -85,6 +85,23 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
   return SUCCESS;
 }
 
+int32_t RoboMinerGuiInitHelper::initSolutionValidator(
+    const SolutionValidatorConfig &cfg,
+    const RoboMinerLayoutInterface &interface, RoboMinerGui &gui) {
+  SolutionValidatorOutInterface outInterface;
+  outInterface.getFieldDescriptionCb =
+      interface.commonLayoutInterface.getFieldDescriptionCb;
+  outInterface.getRobotStateCb =
+      interface.commonLayoutInterface.playerRobotActInterface.getRobotStateCb;
+
+  if (SUCCESS != gui._solutionValidator.init(cfg, outInterface)) {
+    LOGERR("_solutionValidator.init() failed");
+    return FAILURE;
+  }
+
+  return SUCCESS;
+}
+
 int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
     const RoboMinerLayoutInterface &interface, RoboMinerGui &gui) {
   MinerControllerExternalBridgeOutInterface outInterface;
@@ -93,6 +110,8 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
   outInterface.startAchievementWonAnimCb =
       interface.commonLayoutInterface.startAchievementWonAnimCb;
+  outInterface.startGameLostAnimCb =
+      interface.commonLayoutInterface.startGameLostAnimCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.movementWatcher = &gui._movementWatcher;
   outInterface.solutionValidator = &gui._solutionValidator;

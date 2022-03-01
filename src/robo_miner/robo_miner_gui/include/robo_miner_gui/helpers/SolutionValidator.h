@@ -17,27 +17,52 @@
 //Forward declarations
 struct SolutionValidatorConfig;
 
+struct SolutionValidatorOutInterface {
+  GetFieldDescriptionCb getFieldDescriptionCb;
+  GetRobotStateCb getRobotStateCb;
+};
+
+struct ValidationResult {
+  bool success = true;
+  bool majorError = false;
+};
+
 class SolutionValidator {
 public:
   int32_t init(const SolutionValidatorConfig &cfg,
-               const GetFieldDescriptionCb &getFieldDescriptionCb);
+               const SolutionValidatorOutInterface &outInterface);
 
-  bool validateFieldMap(const std::vector<uint8_t> &rawData, uint32_t rows,
-                        uint32_t cols, std::string &outError);
+  ValidationResult validateFieldMap(const std::vector<uint8_t> &rawData,
+                                    uint32_t rows, uint32_t cols,
+                                    std::string &outError);
 
   //sequence will be sorted
-  bool validateLongestSequence(CrystalSequence& sequence,
-                               std::string &outError);
+  ValidationResult validateLongestSequence(CrystalSequence &sequence,
+                                           std::string &outError);
+
+  ValidationResult finishRobotMove(const FieldPos &fieldPos);
+
+  ValidationResult validateActivateMining(std::string &outError);
+
+  bool isMiningActive() const;
 
 private:
+  int32_t initOutInterface(const SolutionValidatorOutInterface &outInterface);
+
+  bool validateMiningPos(const FieldPos &fieldPos);
+
   struct ValidationOptions {
     bool fieldMapValidated = false;
     bool longestSequenceValidated = false;
-    std::vector<bool> longestSequencePointsValidated;
+    bool miningActivated = false;
+    std::vector<bool> longestSequenceValidationPoints;
+
+    int32_t fieldMapValidationsTriesLeft = 3;
+    int32_t longestSequenceValidationsTriesLeft = 3;
   };
 
   CrystalSequence _longestSequence;
-  GetFieldDescriptionCb _getFieldDescriptionCb;
+  SolutionValidatorOutInterface _outInterface;
   ValidationOptions _validationOptions;
 };
 
