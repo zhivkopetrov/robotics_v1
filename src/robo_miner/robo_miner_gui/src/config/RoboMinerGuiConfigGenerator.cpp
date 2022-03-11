@@ -158,11 +158,11 @@ RoboMinerGuiConfig generateGameConfig() {
   const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
       * commonLayoutCfg.fieldCfg.description.cols;
 
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(mapTilesCount);
+
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(mapTilesCount,
       cfg.solutionValidatorCfg.longestSequence.size());
   layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
-
-  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(mapTilesCount);
 
   return cfg;
 }
