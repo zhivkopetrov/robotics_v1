@@ -25,6 +25,7 @@ int32_t RoboMinerLayout::init(const RoboMinerLayoutConfig &cfg,
     return FAILURE;
   }
 
+  produceInterface(interface);
   return SUCCESS;
 }
 
@@ -42,4 +43,10 @@ void RoboMinerLayout::handleEvent(const InputEvent &e) {
   _crystalHandler.handleEvent(e);
 }
 
+void RoboMinerLayout::produceInterface(RoboMinerLayoutInterface &interface) {
+  interface.crystalMinedCb = std::bind(&PanelHandler::onCrystalMined,
+      &_panelHandler);
+  interface.tileReleavedCb = std::bind(&PanelHandler::onTileRevealed,
+      &_panelHandler);
+}
 

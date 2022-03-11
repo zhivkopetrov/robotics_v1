@@ -29,6 +29,8 @@ public:
                const PanelHandlerOutInterface &interface);
   void draw() const;
   void decreaseHealthIndicator(int32_t damage);
+  void onTileRevealed();
+  void onCrystalMined();
 
 private:
   NumberCounterPanel _tilePanel;

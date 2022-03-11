@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <set>
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
@@ -32,6 +33,8 @@ public:
   int32_t init(const SolutionValidatorConfig &cfg,
                const SolutionValidatorOutInterface &outInterface);
 
+  void fieldMapRevealed();
+
   ValidationResult validateFieldMap(const std::vector<uint8_t> &rawData,
                                     uint32_t rows, uint32_t cols,
                                     std::string &outError);
@@ -40,7 +43,8 @@ public:
   ValidationResult validateLongestSequence(CrystalSequence &sequence,
                                            std::string &outError);
 
-  ValidationResult finishRobotMove(const FieldPos &fieldPos);
+  ValidationResult handleNormalMove(const FieldPos &fieldPos);
+  ValidationResult handleMiningMove(const FieldPos &fieldPos);
 
   ValidationResult validateActivateMining(std::string &outError);
 
@@ -52,6 +56,7 @@ private:
   bool validateMiningPos(const FieldPos &fieldPos);
 
   struct ValidationOptions {
+    bool fieldMapReveleaded = false;
     bool fieldMapValidated = false;
     bool longestSequenceValidated = false;
     bool miningActivated = false;
@@ -59,10 +64,13 @@ private:
 
     int32_t fieldMapValidationsTriesLeft = 3;
     int32_t longestSequenceValidationsTriesLeft = 3;
+
+    size_t targetMapTilesCount = 0;
   };
 
-  CrystalSequence _longestSequence;
   SolutionValidatorOutInterface _outInterface;
+  CrystalSequence _longestSequence;
+  std::set<FieldPos> _reveleadMapTiles;
   ValidationOptions _validationOptions;
 };
 

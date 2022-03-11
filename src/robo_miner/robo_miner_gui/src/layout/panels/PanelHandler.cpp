@@ -62,3 +62,11 @@ void PanelHandler::decreaseHealthIndicator(int32_t damage) {
   _healthPanel.decreaseIndicator(damage);
 }
 
+void PanelHandler::onTileRevealed() {
+  _tilePanel.increaseCounter(1);
+}
+
+void PanelHandler::onCrystalMined() {
+  _crystalPanel.increaseCounter(1);
+}
+

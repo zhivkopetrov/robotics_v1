@@ -32,6 +32,8 @@ public:
   void handleEvent(const InputEvent &e);
 
 private:
+  void produceInterface(RoboMinerLayoutInterface& interface);
+
   RoboCommonLayout _commonLayout;
   PanelHandler _panelHandler;
   CrystalHandler _crystalHandler;

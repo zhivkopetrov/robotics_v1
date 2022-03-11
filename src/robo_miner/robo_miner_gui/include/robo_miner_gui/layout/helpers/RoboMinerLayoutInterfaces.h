@@ -18,6 +18,8 @@ class CollisionWatcher;
 
 struct RoboMinerLayoutInterface {
   RoboCommonLayoutInterface commonLayoutInterface;
+  TileReleavedCb tileReleavedCb;
+  CrystalMinedCb crystalMinedCb;
 };
 
 struct RoboMinerLayoutOutInterface {

@@ -21,6 +21,7 @@ int32_t SolutionValidator::init(
     return FAILURE;
   }
 
+  _validationOptions.targetMapTilesCount = cfg.targetMapTilesCount;
   _longestSequence = cfg.longestSequence;
   const size_t uniquesCount = std::unique(_longestSequence.begin(),
                                   _longestSequence.end())
@@ -37,10 +38,20 @@ int32_t SolutionValidator::init(
   return SUCCESS;
 }
 
+void SolutionValidator::fieldMapRevealed() {
+  _validationOptions.fieldMapReveleaded = true;
+}
+
 ValidationResult SolutionValidator::validateFieldMap(
     const std::vector<uint8_t> &rawData, uint32_t rows, uint32_t cols,
     std::string &outError) {
   ValidationResult result;
+  if (!_validationOptions.fieldMapReveleaded) {
+    outError = "Whole FieldMap is still not revealed";
+    result.success = false;
+    return result;
+  }
+
   if (_validationOptions.fieldMapValidated) {
     outError = "FieldMap was already validated";
     result.success = false;
@@ -124,7 +135,26 @@ ValidationResult SolutionValidator::validateLongestSequence(
   return result;
 }
 
-ValidationResult SolutionValidator::finishRobotMove(const FieldPos &fieldPos) {
+ValidationResult SolutionValidator::handleNormalMove(const FieldPos &fieldPos) {
+  ValidationResult result;
+  if (_validationOptions.miningActivated) {
+    LOGERR("Error, normalMoves should not be executed when mining "
+           "has been started");
+    result.success = false;
+    return result;
+  }
+
+  if (_validationOptions.targetMapTilesCount == _reveleadMapTiles.size()) {
+    result.success = false;
+    return result;
+  }
+
+  const auto [_, success] = _reveleadMapTiles.insert(fieldPos);
+  result.success = success;
+  return result;
+}
+
+ValidationResult SolutionValidator::handleMiningMove(const FieldPos &fieldPos) {
   ValidationResult result;
   if (!_validationOptions.miningActivated) {
     result.success = false;
@@ -208,9 +238,8 @@ bool SolutionValidator::validateMiningPos(const FieldPos &fieldPos) {
   const auto it = std::find(_longestSequence.begin(), _longestSequence.end(),
       fieldPos);
   if (it == _longestSequence.end()) {
-    LOGR(
-        "Minining FieldPos row, col [%d,%d] outside of longest sequence " "boundaries",
-        fieldPos.row, fieldPos.col);
+    LOGR("Mining FieldPos row, col [%d,%d] outside of longest sequence "
+         "boundaries", fieldPos.row, fieldPos.col);
     return false;
   }
 

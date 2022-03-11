@@ -25,17 +25,18 @@ public:
   static int32_t init(const RoboMinerLayoutConfig &cfg,
                       const RoboMinerLayoutOutInterface &outInterface,
                       RoboCommonLayoutInterface &commonInterface, //out param
-      RoboMinerLayout &layout);
+                      RoboMinerLayout &layout);
 
 private:
-  static int32_t initPanelHandler(const PanelHandlerConfig &cfg,
-                                  const RoboMinerLayoutOutInterface &outInterface,
-                                  const RoboCommonLayoutInterface &commonInterface,
-                                  RoboMinerLayout &layout);
+  static int32_t initPanelHandler(
+      const PanelHandlerConfig &cfg,
+      const RoboMinerLayoutOutInterface &outInterface,
+      const RoboCommonLayoutInterface &commonInterface,
+      RoboMinerLayout &layout);
 
-  static int32_t initCrystalHandler(uint64_t crystalRsrcId,
-                                    const RoboCommonLayoutInterface &commonInterface,
-                                    RoboMinerLayout &layout);
+  static int32_t initCrystalHandler(
+      uint64_t crystalRsrcId, const RoboCommonLayoutInterface &commonInterface,
+      RoboMinerLayout &layout);
 };
 
 #endif /* ROBO_MINER_GUI_ROBOMINERLAYOUTINITHELPER_H_ */

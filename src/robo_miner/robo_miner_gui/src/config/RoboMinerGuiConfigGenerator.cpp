@@ -59,8 +59,8 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig(
-    const FieldDescription &fieldDescr, size_t longestCrystalSeqSize) {
+PanelHandlerConfig generatePanelHandlerConfig(int32_t mapTilesCount,
+                                              size_t longestCrystalSeqSize) {
   PanelHandlerConfig cfg;
 
   auto &healthPanelCfg = cfg.healthPanelCfg;
@@ -71,7 +71,7 @@ PanelHandlerConfig generatePanelHandlerConfig(
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
-  tilePanelCfg.targetNumber = fieldDescr.rows * fieldDescr.cols;
+  tilePanelCfg.targetNumber = mapTilesCount;
   tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
@@ -110,7 +110,7 @@ FieldConfig generateFieldConfig() {
   return cfg;
 }
 
-SolutionValidatorConfig generateSolutionValidatorConfig() {
+SolutionValidatorConfig generateSolutionValidatorConfig(int32_t mapTilesCount) {
   SolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
@@ -118,6 +118,8 @@ SolutionValidatorConfig generateSolutionValidatorConfig() {
   const auto levelId = 1;
   cfg.longestSequence = ConfigFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
+  cfg.targetMapTilesCount = mapTilesCount;
+
   return cfg;
 }
 
@@ -144,7 +146,6 @@ EngineConfig generateEngineConfig() {
 
 RoboMinerGuiConfig generateGameConfig() {
   RoboMinerGuiConfig cfg;
-  cfg.solutionValidatorCfg = generateSolutionValidatorConfig();
 
   auto &layoutCfg = cfg.layoutCfg;
 
@@ -154,10 +155,14 @@ RoboMinerGuiConfig generateGameConfig() {
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
-      commonLayoutCfg.fieldCfg.description,
+  const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
+      * commonLayoutCfg.fieldCfg.description.cols;
+
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(mapTilesCount,
       cfg.solutionValidatorCfg.longestSequence.size());
   layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
+
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(mapTilesCount);
 
   return cfg;
 }

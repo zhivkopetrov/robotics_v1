@@ -48,6 +48,7 @@ void MinerControllerExternalBridge::publishShutdownController() {
 }
 
 void MinerControllerExternalBridge::publishFieldMapRevealed() {
+  _outInterface.solutionValidator->fieldMapRevealed();
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 
@@ -71,6 +72,16 @@ int32_t MinerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.startGameLostAnimCb) {
     LOGERR("Error, nullptr provided for StartGameLostAnimCb");
+    return FAILURE;
+  }
+
+  if (nullptr == _outInterface.tileReleavedCb) {
+    LOGERR("Error, nullptr provided for TileReleavedCb");
+    return FAILURE;
+  }
+
+  if (nullptr == _outInterface.crystalMinedCb) {
+    LOGERR("Error, nullptr provided for CrystalMinedCb");
     return FAILURE;
   }
 
@@ -161,6 +172,8 @@ void MinerControllerExternalBridge::handleRobotMoveService(
 
   if (_outInterface.solutionValidator->isMiningActive()) {
     handleMiningMove(outcome.robotPos);
+  } else {
+    handleNormalMove(outcome.robotPos);
   }
 }
 
@@ -221,19 +234,35 @@ void MinerControllerExternalBridge::handleActivateMiningValidateService(
   response->success = success || majorError;
   if (majorError) {
     _outInterface.startGameLostAnimCb();
+    return;
+  }
+
+  if (success) {
+    _outInterface.crystalMinedCb();
+  }
+}
+
+void MinerControllerExternalBridge::handleNormalMove(const FieldPos& robotPos) {
+  const auto [success, _] =
+      _outInterface.solutionValidator->handleNormalMove(robotPos);
+
+  if (success) {
+    _outInterface.tileReleavedCb();
   }
 }
 
 void MinerControllerExternalBridge::handleMiningMove(const FieldPos& robotPos) {
-  const auto [success, majorError] =
-      _outInterface.solutionValidator->finishRobotMove(robotPos);
+  const auto [allCrystalsMined, majorError] =
+      _outInterface.solutionValidator->handleMiningMove(robotPos);
   if (majorError) {
     _outInterface.startGameLostAnimCb();
     return;
   }
 
-  if (success) {
+  if (allCrystalsMined) {
     _outInterface.startAchievementWonAnimCb(Achievement::TRIPLE_STAR);
+  } else {
+    _outInterface.crystalMinedCb();
   }
 }
 

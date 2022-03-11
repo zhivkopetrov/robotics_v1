@@ -112,6 +112,8 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
       interface.commonLayoutInterface.startAchievementWonAnimCb;
   outInterface.startGameLostAnimCb =
       interface.commonLayoutInterface.startGameLostAnimCb;
+  outInterface.tileReleavedCb = interface.tileReleavedCb;
+  outInterface.crystalMinedCb = interface.crystalMinedCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.movementWatcher = &gui._movementWatcher;
   outInterface.solutionValidator = &gui._solutionValidator;

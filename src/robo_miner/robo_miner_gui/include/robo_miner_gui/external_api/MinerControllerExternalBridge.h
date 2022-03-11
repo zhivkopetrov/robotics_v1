@@ -16,6 +16,7 @@
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 
 //Own components headers
+#include "robo_miner_gui/defines/RoboMinerGuiFunctionalDefines.h"
 
 //Forward declarations
 class MovementWatcher;
@@ -26,6 +27,8 @@ struct MinerControllerExternalBridgeOutInterface {
   RobotActCb robotActCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   StartGameLostAnimCb startGameLostAnimCb;
+  TileReleavedCb tileReleavedCb;
+  CrystalMinedCb crystalMinedCb;
   SystemShutdownCb systemShutdownCb;
   MovementWatcher *movementWatcher = nullptr;
   SolutionValidator *solutionValidator = nullptr;
@@ -68,6 +71,7 @@ private:
       const std::shared_ptr<ActivateMiningValidate::Request> request,
       std::shared_ptr<ActivateMiningValidate::Response> response);
 
+  void handleNormalMove(const FieldPos& robotPos);
   void handleMiningMove(const FieldPos& robotPos);
 
   MinerControllerExternalBridgeOutInterface _outInterface;
