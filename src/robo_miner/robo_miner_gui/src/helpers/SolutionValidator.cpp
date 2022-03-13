@@ -1,24 +1,21 @@
 //Corresponding header
 #include "robo_miner_gui/helpers/SolutionValidator.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <algorithm>
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "robo_miner_gui/helpers/config/SolutionValidatorConfig.h"
 
-int32_t SolutionValidator::init(
+ErrorCode SolutionValidator::init(
     const SolutionValidatorConfig &cfg,
     const SolutionValidatorOutInterface &outInterface) {
-  if (SUCCESS != initOutInterface(outInterface)) {
+  if (ErrorCode::SUCCESS != initOutInterface(outInterface)) {
     LOGERR("Error, initOutInterface() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _validationOptions.targetMapTilesCount = cfg.targetMapTilesCount;
@@ -28,14 +25,14 @@ int32_t SolutionValidator::init(
                               - _longestSequence.begin();
   if (uniquesCount != cfg.longestSequence.size()) {
     LOGERR("Error, provided longestSequence solution contains duplicates");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   std::sort(_longestSequence.begin(), _longestSequence.end());
   _validationOptions.longestSequenceValidationPoints.resize(uniquesCount,
       false);
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void SolutionValidator::fieldMapRevealed() {
@@ -218,20 +215,20 @@ bool SolutionValidator::isMiningActive() const {
   return _validationOptions.miningActivated;
 }
 
-int32_t SolutionValidator::initOutInterface(
+ErrorCode SolutionValidator::initOutInterface(
     const SolutionValidatorOutInterface &outInterface) {
   _outInterface = outInterface;
   if (nullptr == _outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.getRobotStateCb) {
     LOGERR("Error, nullptr provided for GetRobotStateCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 bool SolutionValidator::validateMiningPos(const FieldPos &fieldPos) {

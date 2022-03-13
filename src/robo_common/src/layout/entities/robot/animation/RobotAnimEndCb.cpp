@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/entities/robot/animation/RobotAnimEndCb.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -11,23 +9,23 @@
 
 //Own components headers
 
-int32_t RobotAnimEndCb::init(
+ErrorCode RobotAnimEndCb::init(
     const std::function<void(Direction, const FieldPos&)> &onRobotsAnimEndCb) {
   if (nullptr == onRobotsAnimEndCb) {
     LOGERR("Error, nullptr provided for onRobotsAnimEndCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _onRobotsAnimEndCb = onRobotsAnimEndCb;
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RobotAnimEndCb::onAnimationEnd() {
+ErrorCode RobotAnimEndCb::onAnimationEnd() {
   if (RobotAnimEndCbReport::ENABLE ==_status) {
     _onRobotsAnimEndCb(_futureDir, _futurePos);
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RobotAnimEndCb::setAnimEndData(Direction futureDir,

@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_miner_gui/helpers/RoboMinerGuiInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -14,21 +11,21 @@
 #include "robo_miner_gui/RoboMinerGui.h"
 #include "robo_miner_gui/config/RoboMinerGuiConfig.h"
 
-int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
-  int32_t err = SUCCESS;
+ErrorCode RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
+  auto err = ErrorCode::SUCCESS;
   const auto parsedCfg = [&cfg, &err]() {
     RoboMinerGuiConfig localCfg;
     try {
       localCfg = std::any_cast<const RoboMinerGuiConfig&>(cfg);
     } catch (const std::bad_any_cast &e) {
       LOGERR("std::any_cast<RoboMinerGuiConfig&> failed, %s", e.what());
-      err = FAILURE;
+      err = ErrorCode::FAILURE;
     }
     return localCfg;
   }();
-  if (SUCCESS != err) {
+  if (ErrorCode::SUCCESS != err) {
     LOGERR("Error, parsing RoboCollectorGuiConfig failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   //allocate memory for the external bridge in order to attach it's callbacks
@@ -36,32 +33,35 @@ int32_t RoboMinerGuiInitHelper::init(const std::any &cfg, RoboMinerGui &gui) {
       std::make_shared<MinerControllerExternalBridge>();
 
   RoboMinerLayoutInterface layoutInterface;
-  if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
+  if (ErrorCode::SUCCESS !=
+      initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != gui._movementWatcher.init(
+  if (ErrorCode::SUCCESS != gui._movementWatcher.init(
           layoutInterface.commonLayoutInterface.getPlayerSurroundingTilesCb)) {
     LOGERR("_movementWatcher.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initSolutionValidator(parsedCfg.solutionValidatorCfg,
-          layoutInterface, gui)) {
+  if (ErrorCode::SUCCESS !=
+      initSolutionValidator(parsedCfg.solutionValidatorCfg, layoutInterface,
+          gui)) {
     LOGERR("initSolutionValidator() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initControllerExternalBridge(layoutInterface, gui)) {
+  if (ErrorCode::SUCCESS !=
+      initControllerExternalBridge(layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
+ErrorCode RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
                                            RoboMinerLayoutInterface &interface,
                                            RoboMinerGui &gui) {
   using namespace std::placeholders;
@@ -77,15 +77,15 @@ int32_t RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
       &MinerControllerExternalBridge::publishFieldMapRevealed,
       gui._controllerExternalBridge.get());
 
-  if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
+  if (ErrorCode::SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboMinerGuiInitHelper::initSolutionValidator(
+ErrorCode RoboMinerGuiInitHelper::initSolutionValidator(
     const SolutionValidatorConfig &cfg,
     const RoboMinerLayoutInterface &interface, RoboMinerGui &gui) {
   SolutionValidatorOutInterface outInterface;
@@ -94,15 +94,15 @@ int32_t RoboMinerGuiInitHelper::initSolutionValidator(
   outInterface.getRobotStateCb =
       interface.commonLayoutInterface.playerRobotActInterface.getRobotStateCb;
 
-  if (SUCCESS != gui._solutionValidator.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != gui._solutionValidator.init(cfg, outInterface)) {
     LOGERR("_solutionValidator.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
+ErrorCode RoboMinerGuiInitHelper::initControllerExternalBridge(
     const RoboMinerLayoutInterface &interface, RoboMinerGui &gui) {
   MinerControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
@@ -118,11 +118,11 @@ int32_t RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.movementWatcher = &gui._movementWatcher;
   outInterface.solutionValidator = &gui._solutionValidator;
 
-  if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
+  if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

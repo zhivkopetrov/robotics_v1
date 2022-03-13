@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORTOPICS_H_
 #define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORTOPICS_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 

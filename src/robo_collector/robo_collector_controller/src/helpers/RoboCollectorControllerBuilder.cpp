@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_controller/helpers/RoboCollectorControllerBuilder.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 

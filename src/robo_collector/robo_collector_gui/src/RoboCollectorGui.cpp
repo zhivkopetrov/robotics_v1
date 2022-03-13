@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_gui/RoboCollectorGui.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -18,14 +16,14 @@ RoboCollectorGui::RoboCollectorGui(
 
 }
 
-int32_t RoboCollectorGui::init(const std::any &cfg) {
-  if (SUCCESS != RoboCollectorGuiInitHelper::init(cfg, *this)) {
+ErrorCode RoboCollectorGui::init(const std::any &cfg) {
+  if (ErrorCode::SUCCESS != RoboCollectorGuiInitHelper::init(cfg, *this)) {
     LOGERR("Error, RoboCollectorGuiInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _communicatorInterface.registerNodeCb(_controllerExternalBridge);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCollectorGui::deinit() {

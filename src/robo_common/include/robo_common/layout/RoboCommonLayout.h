@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_ROBOCOMMONLAYOUT_H_
 #define ROBO_COMMON_ROBOCOMMONLAYOUT_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -22,9 +20,9 @@ class RoboCommonLayout {
   friend class RoboCommonLayoutInitHelper;
 
 public:
-  int32_t init(const RoboCommonLayoutConfig& cfg,
-               const RoboCommonLayoutOutInterface &outInterface,
-               RoboCommonLayoutInterface &interface);
+  ErrorCode init(const RoboCommonLayoutConfig& cfg,
+                 const RoboCommonLayoutOutInterface &outInterface,
+                 RoboCommonLayoutInterface &interface);
   void deinit();
   void draw() const;
 

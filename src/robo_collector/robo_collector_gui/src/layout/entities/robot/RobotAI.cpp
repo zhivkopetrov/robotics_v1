@@ -1,29 +1,26 @@
 //Corresponding header
 #include "robo_collector_gui/layout/entities/robot/RobotAI.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <array>
 
 //Other libraries headers
 #include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
 #include "robo_common/layout/field/FieldUtils.h"
 #include "utils/rng/Rng.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t RobotAI::init(const RobotAIConfig &cfg) {
+ErrorCode RobotAI::init(const RobotAIConfig &cfg) {
   if (nullptr == cfg.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for RobotAIConfig GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _getFieldDescriptionCb = cfg.getFieldDescriptionCb;
 
   _fieldEnemyMarker = cfg.fieldEnemyMarker;
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 //TODO improve AI

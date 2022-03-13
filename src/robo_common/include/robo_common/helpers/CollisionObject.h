@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_COLLISIONOBJECT_H_
 #define ROBO_COMMON_COLLISIONOBJECT_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstddef>
 
 //Other libraries headers

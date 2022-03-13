@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/helpers/RoboCleanerBuilder.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 

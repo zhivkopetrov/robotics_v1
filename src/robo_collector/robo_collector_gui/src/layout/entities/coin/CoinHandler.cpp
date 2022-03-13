@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_gui/layout/entities/coin/CoinHandler.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -11,14 +9,13 @@
 
 //Own components headers
 
-int32_t CoinHandler::init(const CoinHandlerConfig &cfg,
+ErrorCode CoinHandler::init(const CoinHandlerConfig &cfg,
                           const CoinOutInterface& interface) {
   const int32_t rsrcIdsSize = static_cast<int32_t>(cfg.animRsrcIds.size());
   if (cfg.maxCoins != rsrcIdsSize) {
-    LOGERR(
-        "Error, coinAnimRsrcIds.size() is: %d, while it should be exactly: %d",
-        rsrcIdsSize, cfg.maxCoins);
-    return FAILURE;
+    LOGERR("Error, coinAnimRsrcIds.size() is: %d, while it should be exactly: %d",
+           rsrcIdsSize, cfg.maxCoins);
+    return ErrorCode::FAILURE;
   }
   _coins.resize(cfg.maxCoins);
 
@@ -28,7 +25,7 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg,
     LOGERR(
         "Error, fieldMarkers.size() is: %d, while it should be exactly: %d",
         fieldMarkersSize, cfg.maxCoins);
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   constexpr auto goldCoinScore = 3;
@@ -44,13 +41,13 @@ int32_t CoinHandler::init(const CoinHandlerConfig &cfg,
     coinCfg.rotateAnimTimerId = cfg.rotateAnimFirstTimerId + i;
     coinCfg.collectAnimTimerId = cfg.collectAnimFirstTimerId + i;
     coinCfg.respawnAnimTimerId = cfg.respawnAnimFirstTimerId + i;
-    if (SUCCESS != _coins[i].init(coinCfg, interface)) {
+    if (ErrorCode::SUCCESS != _coins[i].init(coinCfg, interface)) {
       LOGERR("Error in _coins[%d].init()", i);
-      return FAILURE;
+      return ErrorCode::FAILURE;
     }
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void CoinHandler::deinit() {

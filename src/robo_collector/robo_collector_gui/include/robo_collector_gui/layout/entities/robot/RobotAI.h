@@ -1,12 +1,11 @@
 #ifndef ROBO_COLLECTOR_GUI_ROBOTAI_H_
 #define ROBO_COLLECTOR_GUI_ROBOTAI_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
@@ -21,7 +20,7 @@ struct RobotAIConfig {
 
 class RobotAI {
 public:
-  int32_t init(const RobotAIConfig &cfg);
+  ErrorCode init(const RobotAIConfig &cfg);
 
   void makeMove(const RobotActInterface &actInterface);
 

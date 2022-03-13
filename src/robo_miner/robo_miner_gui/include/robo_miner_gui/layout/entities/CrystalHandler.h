@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_CRYSTALHANDLER_H_
 #define ROBO_MINER_GUI_CRYSTALHANDLER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 #include <unordered_map>
@@ -21,7 +19,7 @@ struct CrystalHandlerConfig {
 
 class CrystalHandler {
 public:
-  int32_t init(const CrystalHandlerConfig& cfg);
+  ErrorCode init(const CrystalHandlerConfig& cfg);
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent &e);
@@ -29,7 +27,7 @@ public:
   void onCrystalClicked(const FieldPos& fieldPos);
 
 private:
-  int32_t initCrystals(const CrystalHandlerConfig& cfg);
+  ErrorCode initCrystals(const CrystalHandlerConfig& cfg);
 
   std::vector<Crystal> _crystals;
 

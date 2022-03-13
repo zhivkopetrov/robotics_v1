@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"

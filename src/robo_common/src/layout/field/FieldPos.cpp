@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/field/FieldPos.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 

@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_COLLISIONWATCHER_H_
 #define ROBO_COMMON_COLLISIONWATCHER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <vector>
 
 //Other libraries headers

@@ -1,14 +1,11 @@
 //Corresponding header
 #include "robo_common/layout/field/Tile.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <string>
 
 //Other libraries headers
 #include "manager_utils/drawing/Fbo.h"
-#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_common/layout/field/config/TileConfig.h"
@@ -18,7 +15,7 @@ constexpr auto DEBUG_TEXT_OFFSET_X = 10;
 constexpr auto DEBUG_TEXT_OFFSET_Y = 10;
 }
 
-int32_t Tile::init(const TileConfig &cfg) {
+ErrorCode Tile::init(const TileConfig &cfg) {
   _tileImg.create(cfg.tileRsrcId);
   _tileImg.setPosition(cfg.screenCoordinates);
 
@@ -31,7 +28,7 @@ int32_t Tile::init(const TileConfig &cfg) {
             cfg.screenCoordinates.y + DEBUG_TEXT_OFFSET_Y));
   _debugText.hide();
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Tile::draw() const {

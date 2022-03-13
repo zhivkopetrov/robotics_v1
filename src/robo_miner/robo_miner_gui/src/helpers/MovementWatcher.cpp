@@ -1,25 +1,22 @@
 //Corresponding header
 #include "robo_miner_gui/helpers/MovementWatcher.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t MovementWatcher::init(
+ErrorCode MovementWatcher::init(
     const GetPlayerSurroundingTilesCb &getPlayerSurroundingTilesCb) {
   if (nullptr == getPlayerSurroundingTilesCb) {
     LOGERR("Error, nullptr provided for GetPlayerSurroundingTilesCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _getPlayerSurroundingTilesCb = getPlayerSurroundingTilesCb;
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 bool MovementWatcher::waitForChange(const std::chrono::milliseconds &timeout,

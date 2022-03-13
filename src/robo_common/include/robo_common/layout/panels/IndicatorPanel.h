@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_INDICATORPANEL_H_
 #define ROBO_COMMON_INDICATORPANEL_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -24,8 +22,8 @@ struct IndicatorPanelUtilityConfig {
 
 class IndicatorPanel: public TimerClient {
 public:
-  int32_t init(const IndicatorPanelConfig &cfg,
-               const IndicatorPanelUtilityConfig& utilityCfg);
+  ErrorCode init(const IndicatorPanelConfig &cfg,
+                 const IndicatorPanelUtilityConfig& utilityCfg);
   void draw() const;
 
   void decreaseIndicator(int32_t delta);

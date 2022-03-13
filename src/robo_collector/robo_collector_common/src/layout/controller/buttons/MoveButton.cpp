@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_common/layout/controller/buttons/MoveButton.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "sdl_utils/input/InputEvent.h"
@@ -12,19 +10,19 @@
 
 //Own components headers
 
-int32_t MoveButton::init(const MoveButtonConfig &cfg,
-                         const MoveButtonClickCb& clickCb) {
+ErrorCode MoveButton::init(const MoveButtonConfig &cfg,
+                           const MoveButtonClickCb& clickCb) {
   if (nullptr == clickCb) {
     LOGERR("Error, nullptr provided for clickCb for MoveButton with rsrcId: "
         "%#16lX", cfg.rsrcId);
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _clickCb = clickCb;
 
   if (MoveType::UNKNOWN == cfg.moveType) {
     LOGERR("MoveType::UNKNOWN detected for MoveButton with rsrcId: %#16lX",
         cfg.rsrcId);
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _moveType = cfg.moveType;
 
@@ -35,7 +33,7 @@ int32_t MoveButton::init(const MoveButtonConfig &cfg,
   _infoText.create(cfg.infoTextFontId, cfg.infoTextContent.c_str(),
       lightBlue, cfg.infoTextPos);
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void MoveButton::handleEvent(const InputEvent &e) {

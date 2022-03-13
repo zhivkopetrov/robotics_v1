@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_ROBOMINERLAYOUTINTERFACES_H_
 #define ROBO_MINER_GUI_ROBOMINERLAYOUTINTERFACES_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 

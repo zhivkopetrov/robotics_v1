@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_collector_gui/layout/entities/coin/animation/CoinRespawnAnim.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -15,22 +12,22 @@ namespace {
 constexpr auto ANIM_STEPS = 6;
 }
 
-int32_t CoinRespawnAnim::init(const CoinRespawnAnimConfig& cfg) {
+ErrorCode CoinRespawnAnim::init(const CoinRespawnAnimConfig& cfg) {
   if (nullptr == cfg.animEndCb) {
     LOGERR("Error, nullptr provided for CoinRespawnAnim coinAnimEndCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _animEndCb = cfg.animEndCb;
 
   if (nullptr == cfg.coinImg) {
     LOGERR("Error, nullptr provided for coinImg");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _coinImg = cfg.coinImg;
   _timerId = cfg.timerId;
   animationSteps = ANIM_STEPS;
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void CoinRespawnAnim::start() {

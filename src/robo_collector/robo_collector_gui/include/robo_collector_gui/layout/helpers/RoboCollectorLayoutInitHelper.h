@@ -1,13 +1,12 @@
 #ifndef ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUTINITHELPER_H_
 #define ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUTINITHELPER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 
 //Other libraries headers
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -24,28 +23,29 @@ class RoboCollectorLayoutInitHelper {
 public:
   RoboCollectorLayoutInitHelper() = delete;
 
-  static int32_t init(const RoboCollectorLayoutConfig &cfg,
-                      const RoboCollectorLayoutOutInterface &outInterface,
-                      RoboCommonLayoutInterface &commonInterface, //out param
-                      RoboCollectorLayout &layout);
+  static ErrorCode init(const RoboCollectorLayoutConfig &cfg,
+                        const RoboCollectorLayoutOutInterface &outInterface,
+                        RoboCommonLayoutInterface &commonInterface, //out param
+                        RoboCollectorLayout &layout);
 
 private:
-  static int32_t initRobots(const RoboCollectorLayoutConfig &layoutCfg,
-                            const RoboCollectorLayoutOutInterface &outInterface,
-                            const RoboCommonLayoutInterface &commonInterface,
-                            RoboCollectorLayout &layout);
+  static ErrorCode initRobots(
+      const RoboCollectorLayoutConfig &layoutCfg,
+      const RoboCollectorLayoutOutInterface &outInterface,
+      const RoboCommonLayoutInterface &commonInterface,
+      RoboCollectorLayout &layout);
 
-  static int32_t initPanelHandler(const PanelHandlerConfig &cfg,
-                                  RoboCommonLayoutInterface &commonInterface,
-                                  RoboCollectorLayout &layout);
+  static ErrorCode initPanelHandler(const PanelHandlerConfig &cfg,
+                                    RoboCommonLayoutInterface &commonInterface,
+                                    RoboCollectorLayout &layout);
 
-  static int32_t initCoinHandler(
+  static ErrorCode initCoinHandler(
       const CoinHandlerConfig &cfg,
       const RoboCollectorLayoutOutInterface &interface,
       const RoboCommonLayoutInterface &commonInterface,
       RoboCollectorLayout &layout);
 
-  static int32_t initController(
+  static ErrorCode initController(
       const RoboCollectorUiControllerBaseConfig &baseCfg,
       const RoboCommonLayoutInterface &commonInterface,
       RoboCollectorLayout &layout);

@@ -1,15 +1,14 @@
 #ifndef ROBO_MINER_GUI_CRYSTAL_H_
 #define ROBO_MINER_GUI_CRYSTAL_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <functional>
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "manager_utils/input/ButtonBase.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_miner_gui/defines/RoboMinerGuiFunctionalDefines.h"
@@ -28,7 +27,7 @@ struct CrystalConfig {
 
 class Crystal final : public ButtonBase {
 public:
-  int32_t init(const CrystalConfig& cfg);
+  ErrorCode init(const CrystalConfig& cfg);
   void handleEvent(const InputEvent& e) override;
 
 private:

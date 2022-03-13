@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/panels/NumberCounterPanel.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -11,12 +9,12 @@
 
 //Own components headers
 
-int32_t NumberCounterPanel::init(
+ErrorCode NumberCounterPanel::init(
     const NumberCounterPanelConfig& cfg,
     const NumberCounterPanelUtilityConfig &utilityCfg) {
   if (nullptr == utilityCfg.targetReachedCb) {
     LOGERR("Error, nullptr provided for NumberCounterTargetReachedCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _targetReachedCb = utilityCfg.targetReachedCb;
 
@@ -37,9 +35,9 @@ int32_t NumberCounterPanel::init(
   triggerCfg.triggerCb = std::bind(
       &NumberCounterPanel::onTargetCounterReached, this, std::placeholders::_1);
 
-  if (SUCCESS != _numberPanel.init(numberPanelCfg)) {
+  if (ErrorCode::SUCCESS != _numberPanel.init(numberPanelCfg)) {
     LOGERR("Error, _numberPanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   std::string textContent = "/ ";
@@ -47,7 +45,7 @@ int32_t NumberCounterPanel::init(
   _totalCoinsText.create(cfg.fontId, textContent.c_str(), utilityCfg.textColor,
       Point(utilityCfg.pos.x + 290, utilityCfg.pos.y + 30));
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void NumberCounterPanel::draw() const {

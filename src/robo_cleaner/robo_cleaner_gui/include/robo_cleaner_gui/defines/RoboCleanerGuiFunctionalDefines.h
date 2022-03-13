@@ -1,9 +1,7 @@
 #ifndef ROBO_CLEANER_GUI_ROBOCLEANERGUIFUNCTIONALDEFINES_H_
 #define ROBO_CLEANER_GUI_ROBOCLEANERGUIFUNCTIONALDEFINES_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <functional>
 
 //Other libraries headers

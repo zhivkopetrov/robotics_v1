@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUT_H_
 #define ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUT_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <array>
 
@@ -26,9 +24,9 @@ class RoboCollectorLayout {
 public:
   friend class RoboCollectorLayoutInitHelper;
 
-  int32_t init(const RoboCollectorLayoutConfig &cfg,
-               const RoboCollectorLayoutOutInterface &outInterface,
-               RoboCollectorLayoutInterface& interface);
+  ErrorCode init(const RoboCollectorLayoutConfig &cfg,
+                 const RoboCollectorLayoutOutInterface &outInterface,
+                 RoboCollectorLayoutInterface& interface);
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent &e);

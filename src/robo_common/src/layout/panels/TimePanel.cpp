@@ -1,23 +1,20 @@
 //Corresponding header
 #include "robo_common/layout/panels/TimePanel.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <string>
 
 //Other libraries headers
 #include "utils/drawing/WidgetAligner.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t TimePanel::init(const TimePanelConfig &cfg,
-                        const TimePanelUtilityConfig &utilityCfg) {
+ErrorCode TimePanel::init(const TimePanelConfig &cfg,
+                          const TimePanelUtilityConfig &utilityCfg) {
   if (nullptr == utilityCfg.timeFinishedCb) {
     LOGERR("Error, nullptr provided for IndicatorDepletedCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _timeFinishedCb = utilityCfg.timeFinishedCb;
 
@@ -43,7 +40,7 @@ int32_t TimePanel::init(const TimePanelConfig &cfg,
   constexpr auto timerInterval = 1000;
   startTimer(timerInterval, _clockTimerId, TimerType::PULSE);
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void TimePanel::draw() const {

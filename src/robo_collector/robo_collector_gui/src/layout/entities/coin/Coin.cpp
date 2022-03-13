@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_gui/layout/entities/coin/Coin.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cmath>
 
 //Other libraries headers
@@ -21,28 +19,28 @@ constexpr auto TARGET_COLLECT_ANIM_X = 1285;
 constexpr auto TARGET_COLLECT_ANIM_Y = 243;
 }
 
-int32_t Coin::init(const CoinConfig &cfg, const CoinOutInterface& interface) {
+ErrorCode Coin::init(const CoinConfig &cfg, const CoinOutInterface& interface) {
   _state = cfg;
 
-  if (SUCCESS != initOutInterface(interface)) {
+  if (ErrorCode::SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _coinImg.create(_state.rsrcId);
   _fieldPos = choseRespawnLocation();
 
-  if (SUCCESS != initRotateAnim(_fieldPos)) {
+  if (ErrorCode::SUCCESS != initRotateAnim(_fieldPos)) {
     LOGERR("Error, initRotateAnim() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initRespawnAnim()) {
+  if (ErrorCode::SUCCESS != initRespawnAnim()) {
     LOGERR("Error, initRespawnAnim() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   onInitEnd();
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Coin::deinit() {
@@ -69,27 +67,27 @@ void Coin::onAnimEnd(CoinAnimType coinAnimType) {
   }
 }
 
-int32_t Coin::initRespawnAnim() {
+ErrorCode Coin::initRespawnAnim() {
   const auto animEndCb =
       std::bind(&Coin::onAnimEnd, this, std::placeholders::_1);
-  if (SUCCESS != _coinCollectAnimEndCb.init(animEndCb)) {
+  if (ErrorCode::SUCCESS != _coinCollectAnimEndCb.init(animEndCb)) {
     LOGERR("Error, coinAnimEndCb.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   CoinRespawnAnimConfig coinRespawnAnimCfg;
   coinRespawnAnimCfg.coinImg = &_coinImg;
   coinRespawnAnimCfg.timerId = _state.respawnAnimTimerId;
   coinRespawnAnimCfg.animEndCb = animEndCb;
-  if (SUCCESS != _respawnAnim.init(coinRespawnAnimCfg)) {
+  if (ErrorCode::SUCCESS != _respawnAnim.init(coinRespawnAnimCfg)) {
     LOGERR("Error, _respawnAnim.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t Coin::initRotateAnim(const FieldPos &fieldPos) {
+ErrorCode Coin::initRotateAnim(const FieldPos &fieldPos) {
   AnimBaseConfig animCfg;
   animCfg.timerId = _state.rotateAnimTimerId;
   animCfg.timerInterval = 75;
@@ -100,12 +98,12 @@ int32_t Coin::initRotateAnim(const FieldPos &fieldPos) {
   animCfg.animImageType = AnimImageType::EXTERNAL;
   animCfg.externalImage = &_coinImg;
 
-  if (SUCCESS != _rotateAnim.configure(animCfg)) {
+  if (ErrorCode::SUCCESS != _rotateAnim.configure(animCfg)) {
     LOGERR("Coin rotateAnim configure failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Coin::onInitEnd() {
@@ -117,40 +115,40 @@ void Coin::onInitEnd() {
   _rotateAnim.start();
 }
 
-int32_t Coin::initOutInterface(const CoinOutInterface &interface) {
+ErrorCode Coin::initOutInterface(const CoinOutInterface &interface) {
   _outInterface = interface;
 
   if (nullptr == _outInterface.collisionWatcher) {
     LOGERR("Error, nullptr provided for collisionWatcher");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.incrCollectedCoinsCb) {
     LOGERR("Error, nullptr provided for IncrCollectedCoinsCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.setFieldDataMarkerCb) {
     LOGERR("Error, nullptr provided for SetFieldDataMarkerCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.resetFieldDataMarkerCb) {
     LOGERR("Error, nullptr provided for ResetFieldDataMarkerCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.isPlayerTurnActiveCb) {
     LOGERR("Error, nullptr provided for IsPlayerTurnActiveCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Coin::startCollectAnim() {
@@ -170,7 +168,7 @@ void Coin::startCollectAnim() {
   constexpr auto pixelsPerStep = 20;
   const auto numberOfSteps = pixelDistance / pixelsPerStep;
 
-  if (SUCCESS != _colllectAnim.configure(cfg, endPos, numberOfSteps,
+  if (ErrorCode::SUCCESS != _colllectAnim.configure(cfg, endPos, numberOfSteps,
           &_coinCollectAnimEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error, _posAnim.configure() failed");
   }

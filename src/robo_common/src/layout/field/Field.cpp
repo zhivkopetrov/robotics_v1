@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/field/Field.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <sstream>
 #include <algorithm>
 #include <numeric>
@@ -16,17 +14,18 @@
 #include "robo_common/layout/field/config/FieldConfig.h"
 #include "robo_common/layout/field/config/TileConfig.h"
 
-int32_t Field::init(const FieldConfig &cfg) {
+ErrorCode Field::init(const FieldConfig &cfg) {
   if (0 >= cfg.description.rows || 0 >= cfg.description.cols) {
     LOGERR(
-        "Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' " "needs to be positive number",
+        "Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
+        "needs to be positive number",
         cfg.description.rows, cfg.description.cols);
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initTiles(cfg)) {
+  if (ErrorCode::SUCCESS != initTiles(cfg)) {
     LOGERR("Error, initTiles() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _description = cfg.description;
@@ -41,7 +40,7 @@ int32_t Field::init(const FieldConfig &cfg) {
   _fieldFbo.setResetColor(Colors::FULL_TRANSPARENT);
   updateFieldFbo();
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Field::draw() const {
@@ -81,7 +80,7 @@ void Field::toggleDebugTexts() {
   updateFieldFbo();
 }
 
-int32_t Field::initTiles(const FieldConfig &cfg) {
+ErrorCode Field::initTiles(const FieldConfig &cfg) {
   TileConfig tileCfg;
   tileCfg.tileRsrcId = cfg.tileRsrcId;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
@@ -115,16 +114,16 @@ int32_t Field::initTiles(const FieldConfig &cfg) {
       tileCfg.screenCoordinates.x = RoboCommonDefines::FIRST_TILE_X_POS
           + (col * cfg.description.tileWidth);
 
-      if (SUCCESS != _tiles[currTileId].init(tileCfg)) {
+      if (ErrorCode::SUCCESS != _tiles[currTileId].init(tileCfg)) {
         LOGERR("_tiles[%d].init() failed for row, col: [%d,%d]", currTileId,
             row, col);
-        return FAILURE;
+        return ErrorCode::FAILURE;
       }
       ++currTileId;
     }
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Field::printFieldData() const {

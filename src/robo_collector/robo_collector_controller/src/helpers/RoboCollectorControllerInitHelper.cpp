@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_collector_controller/helpers/RoboCollectorControllerInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -14,9 +11,9 @@
 #include "robo_collector_controller/config/RoboCollectorControllerConfig.h"
 #include "robo_collector_controller/layout/helpers/RoboCollectorControllerLayoutInterfaces.h"
 
-int32_t RoboCollectorControllerInitHelper::init(
+ErrorCode RoboCollectorControllerInitHelper::init(
     const std::any &cfg, RoboCollectorController &controller) {
-  int32_t err = SUCCESS;
+  auto err = ErrorCode::SUCCESS;
   const auto parsedCfg = [&cfg, &err]() {
     RoboCollectorControllerConfig localCfg;
     try {
@@ -24,13 +21,13 @@ int32_t RoboCollectorControllerInitHelper::init(
     } catch (const std::bad_any_cast &e) {
       LOGERR("std::any_cast<RoboCollectorControllerConfig&> failed, %s",
           e.what());
-      err = FAILURE;
+      err = ErrorCode::FAILURE;
     }
     return localCfg;
   }();
-  if (SUCCESS != err) {
+  if (ErrorCode::SUCCESS != err) {
     LOGERR("Error, parsing RoboCollectorGuiConfig failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   //allocate memory for the external bridge in order to attach it's callbacks
@@ -38,20 +35,22 @@ int32_t RoboCollectorControllerInitHelper::init(
       std::make_shared<CollectorGuiExternalBridge>();
 
   RoboCollectorControllerLayoutInterface layoutInterface;
-  if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, controller)) {
+  if (ErrorCode::SUCCESS !=
+      initLayout(parsedCfg.layoutCfg, layoutInterface, controller)) {
     LOGERR("Error, initLayout() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initControllerExternalBridge(layoutInterface, controller)) {
+  if (ErrorCode::SUCCESS !=
+      initControllerExternalBridge(layoutInterface, controller)) {
     LOGERR("initControllerExternalBridge() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorControllerInitHelper::initLayout(
+ErrorCode RoboCollectorControllerInitHelper::initLayout(
     const RoboCollectorControllerLayoutConfig &cfg,
     RoboCollectorControllerLayoutInterface &interface,
     RoboCollectorController &controller) {
@@ -70,15 +69,16 @@ int32_t RoboCollectorControllerInitHelper::initLayout(
       &CollectorGuiExternalBridge::publishToggleSettings,
       guiExternalBridgeRawPointer);
 
-  if (SUCCESS != controller._layout.init(cfg, outInterface, interface)) {
+  if (ErrorCode::SUCCESS !=
+      controller._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorControllerInitHelper::initControllerExternalBridge(
+ErrorCode RoboCollectorControllerInitHelper::initControllerExternalBridge(
     const RoboCollectorControllerLayoutInterface &interface,
     RoboCollectorController &controller) {
   CollectorGuiExternalBridgeOutInterface outInterface;
@@ -86,11 +86,12 @@ int32_t RoboCollectorControllerInitHelper::initControllerExternalBridge(
   outInterface.enablePlayerInputCb = interface.enablePlayerInputCb;
   outInterface.systemShutdownCb = controller._systemShutdownCb;
 
-  if (SUCCESS != controller._controllerExternalBridge->init(outInterface)) {
+  if (ErrorCode::SUCCESS !=
+      controller._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

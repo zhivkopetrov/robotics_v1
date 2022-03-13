@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_FIELD_H_
 #define ROBO_COMMON_FIELD_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 
@@ -20,7 +18,7 @@ struct FieldConfig;
 
 class Field {
 public:
-  int32_t init(const FieldConfig &cfg);
+  ErrorCode init(const FieldConfig &cfg);
 
   void draw() const;
 
@@ -34,7 +32,7 @@ public:
   void toggleDebugTexts();
 
 private:
-  int32_t initTiles(const FieldConfig &cfg);
+  ErrorCode initTiles(const FieldConfig &cfg);
 
   //for debug purposes
   void printFieldData() const;

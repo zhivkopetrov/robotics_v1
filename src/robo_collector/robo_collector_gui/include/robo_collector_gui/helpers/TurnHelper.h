@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_TURNHELPER_H_
 #define ROBO_COLLECTOR_GUI_TURNHELPER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 
@@ -26,7 +24,7 @@ struct TurnHelperConfig {
 
 class TurnHelper {
 public:
-  int32_t init(const TurnHelperConfig &cfg);
+  ErrorCode init(const TurnHelperConfig &cfg);
   void onRobotFinishAct(const RobotState& state, MoveOutcome moveOutcome);
   bool isPlayerTurnActive() const;
 

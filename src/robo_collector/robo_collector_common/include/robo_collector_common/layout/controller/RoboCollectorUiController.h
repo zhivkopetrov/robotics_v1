@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORUICONTROLLER_H_
 #define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORUICONTROLLER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -35,8 +33,8 @@ struct RoboCollectorUiControllerOutInterface {
 
 class RoboCollectorUiController {
 public:
-  int32_t init(const RoboCollectorUiControllerConfig& cfg,
-               const RoboCollectorUiControllerOutInterface& interface);
+  ErrorCode init(const RoboCollectorUiControllerConfig& cfg,
+                 const RoboCollectorUiControllerOutInterface& interface);
   void draw() const;
   void handleEvent(const InputEvent& e);
   void onMoveButtonClicked(MoveType moveType);

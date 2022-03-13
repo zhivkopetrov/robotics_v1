@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_CONTROLLER_ROBOCOLLECTORCONTROLLERCONFIGGENERATOR_H_
 #define ROBO_COLLECTOR_CONTROLLER_ROBOCOLLECTORCONTROLLERCONFIGGENERATOR_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers

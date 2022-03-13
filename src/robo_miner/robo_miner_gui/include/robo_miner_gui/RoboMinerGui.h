@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_ROBOMINERGUI_H_
 #define ROBO_MINER_GUI_ROBOMINERGUI_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -26,7 +24,7 @@ public:
 
   RoboMinerGui(const Ros2CommunicatorInterface &communicatorOutInterface);
 
-  int32_t init(const std::any &cfg) override;
+  ErrorCode init(const std::any &cfg) override;
   void deinit() override;
 
   void draw() const override;

@@ -1,14 +1,11 @@
 //Corresponding header
 #include "robo_miner_gui/layout/helpers/RoboMinerLayoutInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <algorithm>
 #include <numeric>
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -18,7 +15,7 @@
 
 using namespace std::placeholders;
 
-int32_t RoboMinerLayoutInitHelper::init(
+ErrorCode RoboMinerLayoutInitHelper::init(
     const RoboMinerLayoutConfig &cfg,
     const RoboMinerLayoutOutInterface &outInterface,
     RoboCommonLayoutInterface &commonInterface, //out param
@@ -30,28 +27,28 @@ int32_t RoboMinerLayoutInitHelper::init(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
   commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
 
-  if (SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
+  if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {
     LOGERR("_commonLayout.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initPanelHandler(cfg.panelHandlerCfg, outInterface,
+  if (ErrorCode::SUCCESS != initPanelHandler(cfg.panelHandlerCfg, outInterface,
           commonInterface, layout)) {
     LOGERR("initPanelHandler() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initCrystalHandler(cfg.crystalRsrcId, commonInterface,
-          layout)) {
+  if (ErrorCode::SUCCESS !=
+      initCrystalHandler(cfg.crystalRsrcId, commonInterface, layout)) {
     LOGERR("initCrystals() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboMinerLayoutInitHelper::initPanelHandler(
+ErrorCode RoboMinerLayoutInitHelper::initPanelHandler(
     const PanelHandlerConfig &cfg,
     const RoboMinerLayoutOutInterface &outInterface,
     const RoboCommonLayoutInterface &commonInterface, RoboMinerLayout &layout) {
@@ -65,26 +62,26 @@ int32_t RoboMinerLayoutInitHelper::initPanelHandler(
   panelHandlerOutInterface.fieldMapRevelealedCb =
       outInterface.fieldMapRevelealedCb;
 
-  if (SUCCESS != layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
+  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
     LOGERR("Error in _panel.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboMinerLayoutInitHelper::initCrystalHandler(
+ErrorCode RoboMinerLayoutInitHelper::initCrystalHandler(
     uint64_t crystalRsrcId, const RoboCommonLayoutInterface &commonInterface,
     RoboMinerLayout &layout) {
   CrystalHandlerConfig cfg;
   cfg.crystalRsrcId = crystalRsrcId;
   cfg.getFieldDescriptionCb = commonInterface.getFieldDescriptionCb;
 
-  if (SUCCESS != layout._crystalHandler.init(cfg)) {
+  if (ErrorCode::SUCCESS != layout._crystalHandler.init(cfg)) {
     LOGERR("Error in _crystalHandler.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

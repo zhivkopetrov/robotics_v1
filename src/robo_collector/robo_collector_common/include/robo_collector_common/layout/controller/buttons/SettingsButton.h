@@ -1,13 +1,12 @@
 #ifndef ROBO_COLLECTOR_COMMON_SETTINGSBUTTON_H_
 #define ROBO_COLLECTOR_COMMON_SETTINGSBUTTON_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
 #include "manager_utils/input/ButtonBase.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
@@ -22,8 +21,8 @@ struct SettingsButtonConfig {
 
 class SettingsButton final : public ButtonBase {
 public:
-  int32_t init(const SettingsButtonConfig& cfg,
-               const SettingActivatedCb& settingActivatedCb);
+  ErrorCode init(const SettingsButtonConfig& cfg,
+                 const SettingActivatedCb& settingActivatedCb);
   void handleEvent(const InputEvent& e) override;
 
 private:

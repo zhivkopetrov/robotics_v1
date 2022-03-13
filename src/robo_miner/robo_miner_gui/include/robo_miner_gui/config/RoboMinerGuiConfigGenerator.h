@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_ROBOMINERGUICONFIGGENERATOR_H_
 #define ROBO_MINER_GUI_ROBOMINERGUICONFIGGENERATOR_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/helpers/algorithms/FloodFill.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <stack>
 #include <array>
 

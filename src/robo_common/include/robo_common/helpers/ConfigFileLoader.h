@@ -1,13 +1,12 @@
 #ifndef ROBO_COMMON_CONFIGFILELOADER_H_
 #define ROBO_COMMON_CONFIGFILELOADER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <string>
 
 //Other libraries headers
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_common/defines/RoboCommonDefines.h"
@@ -25,8 +24,8 @@ public:
       const std::string &projectInstallPrefix, int32_t levelId);
 
 private:
-  static int32_t readLevelFolder(const std::string &projectInstallPrefix,
-                                 int32_t levelId, std::string &outFolderPath);
+  static ErrorCode readLevelFolder(const std::string &projectInstallPrefix,
+                                   int32_t levelId, std::string &outFolderPath);
 };
 
 #endif /* ROBO_COMMON_CONFIGFILELOADER_H_ */

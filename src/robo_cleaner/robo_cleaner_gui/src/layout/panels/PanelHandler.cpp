@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/layout/panels/PanelHandler.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -11,8 +9,8 @@
 
 //Own components headers
 
-int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
-                           const PanelHandlerOutInterface &interface) {
+ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
+                             const PanelHandlerOutInterface &interface) {
   //TODO attach gameWonCb on end of triple star animation
   //SINGLE_STAR will be to reveal the whole tile map
   //DOUBLE_STAR will be to clean all the rubbish
@@ -29,10 +27,10 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
 
   numberCounterPanelUtilityCfg.pos = panelPos;
   numberCounterPanelUtilityCfg.textColor = lightGoldColor;
-  if (SUCCESS !=
+  if (ErrorCode::SUCCESS !=
       _tilePanel.init(cfg.tilePanelCfg, numberCounterPanelUtilityCfg)) {
     LOGERR("Error, tilePanelCfg.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   panelPos.y += 165;
@@ -40,30 +38,32 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
     achievementWonCb(Achievement::DOUBLE_STAR);
   };
   numberCounterPanelUtilityCfg.pos = panelPos;
-  if (SUCCESS !=
+  if (ErrorCode::SUCCESS !=
       _rubbishPanel.init(cfg.rubbishPanelCfg, numberCounterPanelUtilityCfg)) {
     LOGERR("Error, _rubbishPanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   panelPos.y += 175;
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
   indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
   indicatorUtilityCfg.pos = panelPos;
-  if (SUCCESS != _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
+  if (ErrorCode::SUCCESS !=
+      _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
     LOGERR("Error, _healthPanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   panelPos.y += 95;
   indicatorUtilityCfg.indicatorDepletedCb = interface.energyDepletedCb;
   indicatorUtilityCfg.pos = panelPos;
-  if (SUCCESS != _energyPanel.init(cfg.energyPanelCfg, indicatorUtilityCfg)) {
+  if (ErrorCode::SUCCESS !=
+      _energyPanel.init(cfg.energyPanelCfg, indicatorUtilityCfg)) {
     LOGERR("Error, _energyPanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void PanelHandler::draw() const {

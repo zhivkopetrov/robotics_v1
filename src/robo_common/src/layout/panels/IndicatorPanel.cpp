@@ -1,24 +1,21 @@
 //Corresponding header
 #include "robo_common/layout/panels/IndicatorPanel.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/drawing/WidgetAligner.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t IndicatorPanel::init(const IndicatorPanelConfig &cfg,
+ErrorCode IndicatorPanel::init(const IndicatorPanelConfig &cfg,
                              const IndicatorPanelUtilityConfig& utilityCfg) {
   _indicatorReduceTimerId = cfg.indicatorReduceTimerId;
 
   if (nullptr == utilityCfg.indicatorDepletedCb) {
     LOGERR("Error, nullptr provided for IndicatorDepletedCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _indicatorDepletedCb = utilityCfg.indicatorDepletedCb;
 
@@ -32,7 +29,7 @@ int32_t IndicatorPanel::init(const IndicatorPanelConfig &cfg,
   _indicatorText.create(cfg.indicatorFontId, "100%", Colors::RED);
   setAndCenterIndicatorText();
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void IndicatorPanel::draw() const {

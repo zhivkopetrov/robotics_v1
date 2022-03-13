@@ -1,13 +1,12 @@
 #ifndef ROBO_COLLECTOR_CONTROLLER_ROBOCOLLECTORCONTROLLERINITHELPER_H_
 #define ROBO_COLLECTOR_CONTROLLER_ROBOCOLLECTORCONTROLLERINITHELPER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <any>
 
 //Other libraries headers
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -20,15 +19,15 @@ class RoboCollectorControllerInitHelper {
 public:
   RoboCollectorControllerInitHelper() = delete;
 
-  static int32_t init(const std::any &cfg, RoboCollectorController &controller);
+  static ErrorCode init(const std::any &cfg,
+                        RoboCollectorController &controller);
 
 private:
-  static int32_t initLayout(
-      const RoboCollectorControllerLayoutConfig &cfg,
-      RoboCollectorControllerLayoutInterface &interface, //out param
-      RoboCollectorController &controller);
+  static ErrorCode initLayout(const RoboCollectorControllerLayoutConfig &cfg,
+                              RoboCollectorControllerLayoutInterface &interface, //out param
+                              RoboCollectorController &controller);
 
-  static int32_t initControllerExternalBridge(
+  static ErrorCode initControllerExternalBridge(
       const RoboCollectorControllerLayoutInterface &interface,
       RoboCollectorController &controller);
 };

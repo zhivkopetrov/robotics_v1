@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/helpers/RoboMinerBuilder.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 

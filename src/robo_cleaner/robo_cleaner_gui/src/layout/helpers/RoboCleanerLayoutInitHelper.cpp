@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/layout/helpers/RoboCleanerLayoutInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -16,7 +14,7 @@
 
 using namespace std::placeholders;
 
-int32_t RoboCleanerLayoutInitHelper::init(
+ErrorCode RoboCleanerLayoutInitHelper::init(
     const RoboCleanerLayoutConfig &cfg,
     const RoboCleanerLayoutOutInterface &outInterface,
     RoboCommonLayoutInterface &commonInterface, //out param
@@ -28,28 +26,28 @@ int32_t RoboCleanerLayoutInitHelper::init(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
   commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
 
-  if (SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
+  if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {
     LOGERR("_commonLayout.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initPanelHandler(cfg.panelHandlerCfg, commonInterface,
+  if (ErrorCode::SUCCESS != initPanelHandler(cfg.panelHandlerCfg, commonInterface,
           layout)) {
     LOGERR("initPanelHandler() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != layout._entityHandler.init(cfg.entityHandlerCfg,
+  if (ErrorCode::SUCCESS != layout._entityHandler.init(cfg.entityHandlerCfg,
       commonInterface.getFieldDescriptionCb)) {
     LOGERR("Error, _entityHandler.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCleanerLayoutInitHelper::initPanelHandler(
+ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
     const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
     RoboCleanerLayout &layout) {
   PanelHandlerOutInterface outInterface;
@@ -60,11 +58,11 @@ int32_t RoboCleanerLayoutInitHelper::initPanelHandler(
   outInterface.energyDepletedCb =
       std::bind(&RoboCleanerLayout::onEnergyDepleted, &layout);
 
-  if (SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

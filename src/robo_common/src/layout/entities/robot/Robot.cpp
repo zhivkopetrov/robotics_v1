@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/entities/robot/Robot.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_common/layout/field/FieldUtils.h"
@@ -16,21 +14,21 @@
 #include "robo_common/layout/entities/robot/helpers/RobotInitHelper.h"
 #include "robo_common/helpers/CollisionWatcher.h"
 
-int32_t Robot::init(const RobotState &initialState,
-                    const RobotConfig &robotCfg,
-                    const RobotAnimatorConfigBase &robotAnimCfgBase,
-                    const RobotOutInterface &interface) {
+ErrorCode Robot::init(const RobotState &initialState,
+                      const RobotConfig &robotCfg,
+                      const RobotAnimatorConfigBase &robotAnimCfgBase,
+                      const RobotOutInterface &interface) {
   _robotFieldMarkers = robotCfg.robotFieldMarkers;
   _fieldMarker = robotCfg.fieldMarker;
 
-  if (SUCCESS != RobotInitHelper::init(initialState, robotAnimCfgBase,
-          interface, *this)) {
+  if (ErrorCode::SUCCESS !=
+      RobotInitHelper::init(initialState, robotAnimCfgBase, interface, *this)) {
     LOGERR("Error, RobotInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   onInitEnd();
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Robot::deinit() {

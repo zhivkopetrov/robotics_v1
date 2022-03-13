@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_ROBOTANIMENDCB_H_
 #define ROBO_COMMON_ROBOTANIMENDCB_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <functional>
 
@@ -22,12 +20,12 @@ enum class RobotAnimEndCbReport {
 
 class RobotAnimEndCb final : public AnimationEndCb {
 public:
-  int32_t init(
+  ErrorCode init(
       const std::function<void(Direction, const FieldPos&)>& onRobotsAnimEndCb);
 
   void setAnimEndData(Direction futureDir, const FieldPos& futurePos);
 
-  int32_t onAnimationEnd() override;
+  ErrorCode onAnimationEnd() override;
 
   void setCbStatus(RobotAnimEndCbReport status);
 

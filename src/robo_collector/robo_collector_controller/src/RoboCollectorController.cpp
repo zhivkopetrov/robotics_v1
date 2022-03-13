@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_collector_controller/RoboCollectorController.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -18,14 +15,15 @@ RoboCollectorController::RoboCollectorController(
 
 }
 
-int32_t RoboCollectorController::init(const std::any &cfg) {
-  if (SUCCESS != RoboCollectorControllerInitHelper::init(cfg, *this)) {
+ErrorCode RoboCollectorController::init(const std::any &cfg) {
+  if (ErrorCode::SUCCESS !=
+      RoboCollectorControllerInitHelper::init(cfg, *this)) {
     LOGERR("Error, RoboCollectorControllerInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _communicatorInterface.registerNodeCb(_controllerExternalBridge);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCollectorController::deinit() {

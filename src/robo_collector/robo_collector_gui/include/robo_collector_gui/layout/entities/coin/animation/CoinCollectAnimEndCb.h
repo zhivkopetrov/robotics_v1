@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_COINCOLLECTANIMENDCB_H_
 #define ROBO_COLLECTOR_GUI_COINCOLLECTANIMENDCB_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <functional>
 
@@ -17,9 +15,9 @@
 
 class CoinCollectAnimEndCb final : public AnimationEndCb {
 public:
-  int32_t init(const std::function<void(CoinAnimType)>& coinOnAnimEndCb);
+  ErrorCode init(const std::function<void(CoinAnimType)>& coinOnAnimEndCb);
 
-  int32_t onAnimationEnd() override;
+  ErrorCode onAnimationEnd() override;
 
 private:
   std::function<void(CoinAnimType)> _coinOnAnimEndCb;

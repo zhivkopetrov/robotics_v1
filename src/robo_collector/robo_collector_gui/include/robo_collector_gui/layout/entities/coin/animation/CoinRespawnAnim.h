@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_COINRESPAWNANIM_H_
 #define ROBO_COLLECTOR_COINRESPAWNANIM_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <functional>
 
@@ -24,7 +22,7 @@ struct CoinRespawnAnimConfig {
 
 class CoinRespawnAnim : public TimerClient {
 public:
-  int32_t init(const CoinRespawnAnimConfig& cfg);
+  ErrorCode init(const CoinRespawnAnimConfig& cfg);
 
   void start();
 

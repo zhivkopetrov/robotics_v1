@@ -1,9 +1,7 @@
-#ifndef ROBO_CLEANER_GUI_CONFIG_ROBOCLEANERGUICONFIG_H_
-#define ROBO_CLEANER_GUI_CONFIG_ROBOCLEANERGUICONFIG_H_
+#ifndef ROBO_CLEANER_GUI_ROBOCLEANERGUICONFIG_H_
+#define ROBO_CLEANER_GUI_ROBOCLEANERGUICONFIG_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -17,4 +15,4 @@ struct RoboCleanerGuiConfig {
   RoboCleanerLayoutConfig layoutCfg;
 };
 
-#endif /* ROBO_CLEANER_GUI_CONFIG_ROBOCLEANERGUICONFIG_H_ */
+#endif /* ROBO_CLEANER_GUI_ROBOCLEANERGUICONFIG_H_ */

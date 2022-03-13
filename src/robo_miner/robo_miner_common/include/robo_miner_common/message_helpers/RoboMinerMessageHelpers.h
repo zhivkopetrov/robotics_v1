@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_COMMON_ROBOMINERMESSAGEHELPERS_H_
 #define ROBO_MINER_COMMON_ROBOMINERMESSAGEHELPERS_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonDefines.h"

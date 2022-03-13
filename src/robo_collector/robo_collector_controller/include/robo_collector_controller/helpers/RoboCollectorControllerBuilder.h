@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_CONTROLLER_ROBOCOLLECTORCONTROLLERBUILDER_H_
 #define ROBO_COLLECTOR_CONTROLLER_ROBOCOLLECTORCONTROLLERBUILDER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <memory>
 

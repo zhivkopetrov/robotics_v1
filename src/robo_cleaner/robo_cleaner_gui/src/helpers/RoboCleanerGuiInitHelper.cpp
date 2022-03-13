@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_cleaner_gui/helpers/RoboCleanerGuiInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -14,21 +11,21 @@
 #include "robo_cleaner_gui/RoboCleanerGui.h"
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfig.h"
 
-int32_t RoboCleanerGuiInitHelper::init(const std::any &cfg, RoboCleanerGui &gui) {
-  int32_t err = SUCCESS;
+ErrorCode RoboCleanerGuiInitHelper::init(const std::any &cfg, RoboCleanerGui &gui) {
+  auto err = ErrorCode::SUCCESS;
   const auto parsedCfg = [&cfg, &err]() {
     RoboCleanerGuiConfig localCfg;
     try {
       localCfg = std::any_cast<const RoboCleanerGuiConfig&>(cfg);
     } catch (const std::bad_any_cast &e) {
       LOGERR("std::any_cast<RoboCleanerGuiConfig&> failed, %s", e.what());
-      err = FAILURE;
+      err = ErrorCode::FAILURE;
     }
     return localCfg;
   }();
-  if (SUCCESS != err) {
+  if (ErrorCode::SUCCESS != err) {
     LOGERR("Error, parsing RoboCollectorGuiConfig failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   //allocate memory for the external bridge in order to attach it's callbacks
@@ -36,22 +33,25 @@ int32_t RoboCleanerGuiInitHelper::init(const std::any &cfg, RoboCleanerGui &gui)
       std::make_shared<CleanerControllerExternalBridge>();
 
   RoboCleanerLayoutInterface layoutInterface;
-  if (SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
+  if (ErrorCode::SUCCESS !=
+      initLayout(parsedCfg.layoutCfg, layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initControllerExternalBridge(layoutInterface, gui)) {
+  if (ErrorCode::SUCCESS !=
+      initControllerExternalBridge(layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCleanerGuiInitHelper::initLayout(const RoboCleanerLayoutConfig &cfg,
-                                           RoboCleanerLayoutInterface &interface,
-                                           RoboCleanerGui &gui) {
+ErrorCode RoboCleanerGuiInitHelper::initLayout(
+    const RoboCleanerLayoutConfig &cfg,
+    RoboCleanerLayoutInterface &interface,
+    RoboCleanerGui &gui) {
   using namespace std::placeholders;
 
   RoboCleanerLayoutOutInterface outInterface;
@@ -62,26 +62,26 @@ int32_t RoboCleanerGuiInitHelper::initLayout(const RoboCleanerLayoutConfig &cfg,
       &CleanerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
 
-  if (SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
+  if (ErrorCode::SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCleanerGuiInitHelper::initControllerExternalBridge(
+ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
     const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
   CleanerControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotActCb =
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
 
-  if (SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
+  if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

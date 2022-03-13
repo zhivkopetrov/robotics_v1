@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_SOLUTIONVALIDATOR_H_
 #define ROBO_MINER_GUI_SOLUTIONVALIDATOR_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -11,6 +9,7 @@
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_miner_gui/defines/RoboMinerGuiDefines.h"
@@ -30,8 +29,8 @@ struct ValidationResult {
 
 class SolutionValidator {
 public:
-  int32_t init(const SolutionValidatorConfig &cfg,
-               const SolutionValidatorOutInterface &outInterface);
+  ErrorCode init(const SolutionValidatorConfig &cfg,
+                 const SolutionValidatorOutInterface &outInterface);
 
   void fieldMapRevealed();
 
@@ -51,7 +50,7 @@ public:
   bool isMiningActive() const;
 
 private:
-  int32_t initOutInterface(const SolutionValidatorOutInterface &outInterface);
+  ErrorCode initOutInterface(const SolutionValidatorOutInterface &outInterface);
 
   bool validateMiningPos(const FieldPos &fieldPos);
 

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/entities/robot/animation/RobotAnimator.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cmath>
 
 //Other libraries headers
@@ -20,18 +18,18 @@ constexpr auto TARGET_DAMAGE_MARKER_ANIM_X = 1270;
 constexpr auto TARGET_DAMAGE_MARKER_ANIM_Y = 397;
 }
 
-int32_t RobotAnimator::init(const RobotAnimatorConfig &cfg,
-                            const RobotAnimatorOutInterface &outInterface) {
-  if (SUCCESS != initOutInterface(outInterface)) {
+ErrorCode RobotAnimator::init(const RobotAnimatorConfig &cfg,
+                              const RobotAnimatorOutInterface &outInterface) {
+  if (ErrorCode::SUCCESS != initOutInterface(outInterface)) {
     LOGERR("Error, initOutInterface() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   const auto onPlayerAnimEndCb = std::bind(
       &RobotAnimator::onPlayerDamageAnimEnd, this);
-  if (SUCCESS != _playerDamageAnimEndCb.init(onPlayerAnimEndCb)) {
+  if (ErrorCode::SUCCESS != _playerDamageAnimEndCb.init(onPlayerAnimEndCb)) {
     LOGERR("Error, playerDamageAnimEndCb.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _robotId = cfg.baseCfg.robotId;
@@ -63,7 +61,7 @@ int32_t RobotAnimator::init(const RobotAnimatorConfig &cfg,
   configurePlayerDamageAnim();
   _playerDamageAnim.hideAnimation();
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RobotAnimator::draw() const {
@@ -80,8 +78,9 @@ void RobotAnimator::startMoveAnim(const FieldPos &currPos, Direction currDir,
   _animEndCb.setAnimEndData(currDir, futurePos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
-  if (SUCCESS != _moveAnim.configure(cfg, futureAbsPos, numberOfSteps,
-          &_animEndCb, PosAnimType::ONE_DIRECTIONAL)) {
+  if (ErrorCode::SUCCESS !=
+      _moveAnim.configure(cfg, futureAbsPos, numberOfSteps,
+      &_animEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("Error in posAnim.configure() for rsrcId: %#16lX", cfg.rsrcId);
     return;
   }
@@ -106,8 +105,9 @@ void RobotAnimator::startRotAnim(const FieldPos &currPos, Direction currDir,
   _animEndCb.setAnimEndData(futureDir, currPos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
 
-  if (SUCCESS != _rotAnim.configure(cfg, rotAngleStep, &_animEndCb, rotCenter,
-          PosAnimType::ONE_DIRECTIONAL, AnimType::FINITE, totalRotAngle)) {
+  if (ErrorCode::SUCCESS !=
+      _rotAnim.configure(cfg, rotAngleStep, &_animEndCb, rotCenter,
+      PosAnimType::ONE_DIRECTIONAL, AnimType::FINITE, totalRotAngle)) {
     LOGERR("Error in rotAnim.configure() for rsrcId: %#16lX", cfg.rsrcId);
     return;
   }
@@ -137,35 +137,35 @@ Rectangle RobotAnimator::getBoundary() const {
   return _robotImg.getImageRect();
 }
 
-int32_t RobotAnimator::initOutInterface(
+ErrorCode RobotAnimator::initOutInterface(
     const RobotAnimatorOutInterface &outInterface) {
   _outInterface = outInterface;
-  if (SUCCESS != _animEndCb.init(_outInterface.onMoveAnimEndCb)) {
+  if (ErrorCode::SUCCESS != _animEndCb.init(_outInterface.onMoveAnimEndCb)) {
     LOGERR("Error, _animEndCb.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.collisionImpactAnimEndCb) {
     LOGERR("Error, nullptr provided for collisionImpactAnimEndCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.collisionImpactCb) {
     LOGERR("Error, nullptr provided for collisionImpactCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.getRobotStateCb) {
     LOGERR("Error, nullptr provided for GetRobotStateCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RobotAnimator::onTimeout(const int32_t timerId) {
@@ -197,8 +197,9 @@ void RobotAnimator::configurePlayerDamageAnim() {
   constexpr auto pixelsPerStep = 25;
   const auto numberOfSteps = pixelDistance / pixelsPerStep;
 
-  if (SUCCESS != _playerDamageAnim.configure(cfg, endPos, numberOfSteps,
-          &_playerDamageAnimEndCb, PosAnimType::ONE_DIRECTIONAL)) {
+  if (ErrorCode::SUCCESS !=
+      _playerDamageAnim.configure(cfg, endPos, numberOfSteps,
+      &_playerDamageAnimEndCb, PosAnimType::ONE_DIRECTIONAL)) {
     LOGERR("playerDamagaAnim.configure() failed");
     return;
   }

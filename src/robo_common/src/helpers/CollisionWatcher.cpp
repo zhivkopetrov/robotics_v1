@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/helpers/CollisionWatcher.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <algorithm>
 
 //Other libraries headers

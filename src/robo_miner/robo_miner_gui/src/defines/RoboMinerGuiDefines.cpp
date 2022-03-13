@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/defines/RoboMinerGuiDefines.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <array>
 #include <algorithm>
 

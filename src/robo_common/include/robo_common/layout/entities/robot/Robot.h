@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_ROBOT_H_
 #define ROBO_COMMON_ROBOT_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -35,10 +33,10 @@ class Robot final : public CollisionObject {
 public:
   friend class RobotInitHelper;
 
-  int32_t init(const RobotState &initialState,
-               const RobotConfig &robotCfg,
-               const RobotAnimatorConfigBase &robotAnimCfgBase,
-               const RobotOutInterface &interface);
+  ErrorCode init(const RobotState &initialState,
+                 const RobotConfig &robotCfg,
+                 const RobotAnimatorConfigBase &robotAnimCfgBase,
+                 const RobotOutInterface &interface);
 
   void deinit();
   void draw() const;

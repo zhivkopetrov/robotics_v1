@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_MINERCONTROLLEREXTERNALBRIDGE_H_
 #define ROBO_MINER_GUI_MINERCONTROLLEREXTERNALBRIDGE_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
@@ -14,6 +12,7 @@
 #include "robo_miner_interfaces/srv/activate_mining_validate.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_miner_gui/defines/RoboMinerGuiFunctionalDefines.h"
@@ -38,7 +37,7 @@ class MinerControllerExternalBridge: public rclcpp::Node {
 public:
   MinerControllerExternalBridge();
 
-  int32_t init(const MinerControllerExternalBridgeOutInterface &interface);
+  ErrorCode init(const MinerControllerExternalBridgeOutInterface &interface);
 
   void publishShutdownController();
 
@@ -52,9 +51,9 @@ private:
   typedef robo_miner_interfaces::srv::LongestSequenceValidate LongestSequenceValidate;
   typedef robo_miner_interfaces::srv::ActivateMiningValidate ActivateMiningValidate;
 
-  int32_t initOutInterface(
+  ErrorCode initOutInterface(
       const MinerControllerExternalBridgeOutInterface &outInterface);
-  int32_t initCommunication();
+  ErrorCode initCommunication();
 
   void handleRobotMoveService(const std::shared_ptr<RobotMove::Request> request,
                               std::shared_ptr<RobotMove::Response> response);

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/RoboMinerGui.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -18,14 +16,14 @@ RoboMinerGui::RoboMinerGui(
 
 }
 
-int32_t RoboMinerGui::init(const std::any &cfg) {
-  if (SUCCESS != RoboMinerGuiInitHelper::init(cfg, *this)) {
+ErrorCode RoboMinerGui::init(const std::any &cfg) {
+  if (ErrorCode::SUCCESS != RoboMinerGuiInitHelper::init(cfg, *this)) {
     LOGERR("Error, RoboMinerGuiInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _communicatorInterface.registerNodeCb(_controllerExternalBridge);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboMinerGui::deinit() {

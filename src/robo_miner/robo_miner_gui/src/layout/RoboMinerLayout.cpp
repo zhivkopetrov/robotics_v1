@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/layout/RoboMinerLayout.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -16,17 +14,17 @@
 
 using namespace std::placeholders;
 
-int32_t RoboMinerLayout::init(const RoboMinerLayoutConfig &cfg,
+ErrorCode RoboMinerLayout::init(const RoboMinerLayoutConfig &cfg,
                               const RoboMinerLayoutOutInterface &outInterface,
                               RoboMinerLayoutInterface &interface) {
-  if (SUCCESS != RoboMinerLayoutInitHelper::init(cfg, outInterface,
+  if (ErrorCode::SUCCESS != RoboMinerLayoutInitHelper::init(cfg, outInterface,
           interface.commonLayoutInterface, *this)) {
     LOGERR("Error, RoboMinerLayoutInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   produceInterface(interface);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboMinerLayout::deinit() {

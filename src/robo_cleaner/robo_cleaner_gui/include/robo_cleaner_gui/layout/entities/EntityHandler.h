@@ -1,9 +1,7 @@
 #ifndef ROBO_CLEANER_GUI_ENTITYHANDLER_H_
 #define ROBO_CLEANER_GUI_ENTITYHANDLER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 
@@ -18,8 +16,8 @@ struct EntityHandlerConfig;
 
 class EntityHandler {
 public:
-  int32_t init(const EntityHandlerConfig& cfg,
-               const GetFieldDescriptionCb& getFieldDescriptionCb);
+  ErrorCode init(const EntityHandlerConfig& cfg,
+                 const GetFieldDescriptionCb& getFieldDescriptionCb);
   void deinit();
   void draw() const;
 

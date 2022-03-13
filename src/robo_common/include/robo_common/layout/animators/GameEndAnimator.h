@@ -1,21 +1,20 @@
 #ifndef ROBO_COMMON_GAMEENDANIMATOR_H_
 #define ROBO_COMMON_GAMEENDANIMATOR_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
 
 //Own components headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "utils/ErrorCode.h"
 
 //Forward declarations
 
 class GameEndAnimator {
 public:
-  int32_t init(const ShutdownGameCb& shutdownGameCb);
+  ErrorCode init(const ShutdownGameCb& shutdownGameCb);
   void draw() const;
 
   void startGameWonAnim();

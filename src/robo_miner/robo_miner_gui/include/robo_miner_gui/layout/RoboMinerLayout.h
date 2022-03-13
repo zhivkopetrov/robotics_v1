@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_ROBOMINERLAYOUT_H_
 #define ROBO_MINER_GUI_ROBOMINERLAYOUT_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -24,8 +22,8 @@ class RoboMinerLayout {
 public:
   friend class RoboMinerLayoutInitHelper;
 
-  int32_t init(const RoboMinerLayoutConfig& cfg,
-               const RoboMinerLayoutOutInterface &outInterface,
+  ErrorCode init(const RoboMinerLayoutConfig& cfg,
+                 const RoboMinerLayoutOutInterface &outInterface,
                RoboMinerLayoutInterface& interface);
   void deinit();
   void draw() const;

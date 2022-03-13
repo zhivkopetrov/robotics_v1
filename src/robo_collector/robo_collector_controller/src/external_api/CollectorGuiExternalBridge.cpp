@@ -1,15 +1,12 @@
 //Corresponding header
 #include "robo_collector_controller/external_api/CollectorGuiExternalBridge.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_collector_common/defines/RoboCollectorTopics.h"
 #include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -19,17 +16,17 @@ CollectorGuiExternalBridge::CollectorGuiExternalBridge()
 
 }
 
-int32_t CollectorGuiExternalBridge::init(
+ErrorCode CollectorGuiExternalBridge::init(
     const CollectorGuiExternalBridgeOutInterface &interface) {
   _outInterface = interface;
   if (nullptr == _outInterface.invokeActionEventCb) {
     LOGERR("Error, nullptr provided for InvokeActionEventCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.enablePlayerInputCb) {
     LOGERR("Error, nullptr provided for EnablePlayerInputCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   using namespace std::placeholders;
@@ -46,7 +43,7 @@ int32_t CollectorGuiExternalBridge::init(
       std::bind(&CollectorGuiExternalBridge::onControllerShutdownMsg, this,
           _1));
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void CollectorGuiExternalBridge::publishToggleSettings() {

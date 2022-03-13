@@ -1,14 +1,13 @@
 #ifndef ROBO_COMMON_ROBOCOMMONLAYOUTINITHELPER_H_
 #define ROBO_COMMON_ROBOCOMMONLAYOUTINITHELPER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
 
 //Own components headers
+#include "utils/ErrorCode.h"
 
 //Forward declarations
 class RoboCommonLayout;
@@ -20,12 +19,12 @@ class RoboCommonLayoutInitHelper {
 public:
   RoboCommonLayoutInitHelper() = delete;
 
-  static int32_t init(const RoboCommonLayoutConfig &cfg,
+  static ErrorCode init(const RoboCommonLayoutConfig &cfg,
                       const RoboCommonLayoutOutInterface &outInterface,
                       RoboCommonLayout &layout);
 
 private:
-  static int32_t initPlayerRobot(
+  static ErrorCode initPlayerRobot(
       const RoboCommonLayoutConfig &layoutCfg,
       const RoboCommonLayoutOutInterface &outInterface,
       RoboCommonLayout &layout);

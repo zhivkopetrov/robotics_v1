@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/entities/robot/animation/PlayerDamageAnimEndCb.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -11,19 +9,19 @@
 
 //Own components headers
 
-int32_t PlayerDamageAnimEndCb::init(
+ErrorCode PlayerDamageAnimEndCb::init(
     const std::function<void()> &onPlayerDamageAnimEndCb) {
   if (nullptr == onPlayerDamageAnimEndCb) {
     LOGERR("Error, nullptr provided for onPlayerDamageAnimEndCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _onPlayerDamageAnimEndCb = onPlayerDamageAnimEndCb;
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t PlayerDamageAnimEndCb::onAnimationEnd() {
+ErrorCode PlayerDamageAnimEndCb::onAnimationEnd() {
   _onPlayerDamageAnimEndCb();
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

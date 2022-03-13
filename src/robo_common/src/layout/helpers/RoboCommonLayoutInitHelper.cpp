@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/helpers/RoboCommonLayoutInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -13,31 +11,32 @@
 #include "robo_common/layout/RoboCommonLayout.h"
 #include "robo_common/layout/config/RoboCommonLayoutConfig.h"
 
-int32_t RoboCommonLayoutInitHelper::init(
+ErrorCode RoboCommonLayoutInitHelper::init(
     const RoboCommonLayoutConfig &cfg,
     const RoboCommonLayoutOutInterface &outInterface,
     RoboCommonLayout &layout) {
   layout._map.create(cfg.mapRsrcId);
 
-  if (SUCCESS != layout._field.init(cfg.fieldCfg)) {
+  if (ErrorCode::SUCCESS != layout._field.init(cfg.fieldCfg)) {
     LOGERR("Error in _field.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != layout._gameEndAnimator.init(outInterface.shutdownGameCb)) {
+  if (ErrorCode::SUCCESS !=
+      layout._gameEndAnimator.init(outInterface.shutdownGameCb)) {
     LOGERR("_gameEndAnimator.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initPlayerRobot(cfg, outInterface, layout)) {
+  if (ErrorCode::SUCCESS != initPlayerRobot(cfg, outInterface, layout)) {
     LOGERR("initPlayerRobot failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
+ErrorCode RoboCommonLayoutInitHelper::initPlayerRobot(
     const RoboCommonLayoutConfig &layoutCfg,
     const RoboCommonLayoutOutInterface &outInterface,
     RoboCommonLayout &layout) {
@@ -76,11 +75,11 @@ int32_t RoboCommonLayoutInitHelper::initPlayerRobot(
   robotCfg.robotFieldMarkers = baseCfg.robotFieldMarkers;
   robotCfg.fieldMarker = layoutCfg.playerFieldMarker;
 
-  if (SUCCESS != layout._playerRobot.init(initialState, robotCfg,
+  if (ErrorCode::SUCCESS != layout._playerRobot.init(initialState, robotCfg,
           animatorCfgBase, robotOutInterface)) {
     LOGERR("Error in _playerRobot.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/field/FieldUtils.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/data_type/EnumClassUtils.h"

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_gui/layout/RoboCollectorLayout.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -15,18 +13,18 @@
 
 using namespace std::placeholders;
 
-int32_t RoboCollectorLayout::init(
+ErrorCode RoboCollectorLayout::init(
     const RoboCollectorLayoutConfig &cfg,
     const RoboCollectorLayoutOutInterface &outInterface,
     RoboCollectorLayoutInterface& interface) {
-  if (SUCCESS != RoboCollectorLayoutInitHelper::init(
+  if (ErrorCode::SUCCESS != RoboCollectorLayoutInitHelper::init(
       cfg, outInterface, interface.commonLayoutInterface, *this)) {
     LOGERR("Error, RoboCollectorLayoutInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   produceInterface(interface);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCollectorLayout::produceInterface(

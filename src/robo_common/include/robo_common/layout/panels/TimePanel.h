@@ -1,15 +1,14 @@
 #ifndef ROBO_COMMON_TIMEPANEL_H_
 #define ROBO_COMMON_TIMEPANEL_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
 #include "manager_utils/drawing/Image.h"
 #include "manager_utils/drawing/Text.h"
 #include "manager_utils/time/TimerClient.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
@@ -24,8 +23,8 @@ struct TimePanelUtilityConfig {
 
 class TimePanel: public TimerClient {
 public:
-  int32_t init(const TimePanelConfig &cfg,
-               const TimePanelUtilityConfig &utilityCfg);
+  ErrorCode init(const TimePanelConfig &cfg,
+                 const TimePanelUtilityConfig &utilityCfg);
   void draw() const;
 
 private:

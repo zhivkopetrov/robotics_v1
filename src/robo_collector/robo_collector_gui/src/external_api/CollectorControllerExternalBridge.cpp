@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_gui/external_api/CollectorControllerExternalBridge.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_collector_common/defines/RoboCollectorTopics.h"
@@ -19,20 +17,20 @@ CollectorControllerExternalBridge::CollectorControllerExternalBridge()
 
 }
 
-int32_t CollectorControllerExternalBridge::init(
+ErrorCode CollectorControllerExternalBridge::init(
     const CollectorControllerExternalBridgeOutInterface &interface) {
   _outInterface = interface;
   if (nullptr == _outInterface.invokeActionEventCb) {
     LOGERR("Error, nullptr provided for InvokeActionEventCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   if (nullptr == _outInterface.moveButtonClickCb) {
     LOGERR("Error, nullptr provided for MoveButtonClickCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   if (nullptr == _outInterface.systemShutdownCb) {
     LOGERR("Error, nullptr provided for SystemShutdownCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   using namespace std::placeholders;
@@ -47,7 +45,7 @@ int32_t CollectorControllerExternalBridge::init(
   _shutdownControllerPublisher = create_publisher<Empty>(
       SHUTDOWN_CONTROLLER_TOPIC, queueSize);
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void CollectorControllerExternalBridge::publishEnablePlayerInput() {

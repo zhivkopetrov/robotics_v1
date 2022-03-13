@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_gui/config/RoboCollectorGuiConfigGenerator.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
@@ -221,14 +219,15 @@ RoboCollectorGuiConfig generateGameConfig() {
 
 } //end anonymous namespace
 
-std::vector<DependencyDescription> RoboCollectorGuiConfigGenerator::generateDependencies(
+std::vector<DependencyDescription>
+RoboCollectorGuiConfigGenerator::generateDependencies(
     int32_t argc, char **args) {
   std::vector<DependencyDescription> dependecies = getDefaultEngineDependencies(
       argc, args);
 
   const LoadDependencyCb ros2Loader = [argc, args]() {
     rclcpp::init(argc, args);
-    return SUCCESS;
+    return ErrorCode::SUCCESS;
   };
   const UnloadDependencyCb ros2Unloader = []() {
     //shutdown the global context only if it hasn't

@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_COLLECTORCONTROLLEREXTERNALBRIDGE_H_
 #define ROBO_COLLECTOR_GUI_COLLECTORCONTROLLEREXTERNALBRIDGE_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
@@ -11,6 +9,7 @@
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"
 #include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 #include "game_engine/defines/ActionEventDefines.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -26,7 +25,8 @@ class CollectorControllerExternalBridge: public rclcpp::Node {
 public:
   CollectorControllerExternalBridge();
 
-  int32_t init(const CollectorControllerExternalBridgeOutInterface &interface);
+  ErrorCode init(
+      const CollectorControllerExternalBridgeOutInterface &interface);
 
   void publishEnablePlayerInput();
 

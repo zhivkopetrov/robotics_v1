@@ -1,15 +1,12 @@
 //Corresponding header
 #include "robo_miner_gui/external_api/MinerControllerExternalBridge.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_miner_common/defines/RoboMinerTopics.h"
 #include "robo_miner_common/message_helpers/RoboMinerMessageHelpers.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -23,19 +20,19 @@ MinerControllerExternalBridge::MinerControllerExternalBridge()
 
 }
 
-int32_t MinerControllerExternalBridge::init(
+ErrorCode MinerControllerExternalBridge::init(
     const MinerControllerExternalBridgeOutInterface &interface) {
-  if (SUCCESS != initOutInterface(interface)) {
+  if (ErrorCode::SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initCommunication()) {
+  if (ErrorCode::SUCCESS != initCommunication()) {
     LOGERR("Error, initCommunication() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void MinerControllerExternalBridge::publishShutdownController() {
@@ -52,58 +49,58 @@ void MinerControllerExternalBridge::publishFieldMapRevealed() {
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 
-int32_t MinerControllerExternalBridge::initOutInterface(
+ErrorCode MinerControllerExternalBridge::initOutInterface(
     const MinerControllerExternalBridgeOutInterface &outInterface) {
   _outInterface = outInterface;
   if (nullptr == _outInterface.invokeActionEventCb) {
     LOGERR("Error, nullptr provided for InvokeActionEventCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.startAchievementWonAnimCb) {
     LOGERR("Error, nullptr provided for StartAchievementWonAnimCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.startGameLostAnimCb) {
     LOGERR("Error, nullptr provided for StartGameLostAnimCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.tileReleavedCb) {
     LOGERR("Error, nullptr provided for TileReleavedCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.crystalMinedCb) {
     LOGERR("Error, nullptr provided for CrystalMinedCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.systemShutdownCb) {
     LOGERR("Error, nullptr provided for SystemShutdownCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.movementWatcher) {
     LOGERR("Error, nullptr provided for MovementWatcher");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == _outInterface.solutionValidator) {
     LOGERR("Error, nullptr provided for SolutionValidator");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t MinerControllerExternalBridge::initCommunication() {
+ErrorCode MinerControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
   _shutdownControllerPublisher = create_publisher<Empty>(
@@ -133,7 +130,7 @@ int32_t MinerControllerExternalBridge::initCommunication() {
           &MinerControllerExternalBridge::handleActivateMiningValidateService,
           this, _1, _2));
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void MinerControllerExternalBridge::handleRobotMoveService(

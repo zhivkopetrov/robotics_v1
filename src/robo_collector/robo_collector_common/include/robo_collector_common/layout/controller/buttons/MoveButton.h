@@ -1,15 +1,14 @@
 #ifndef ROBO_COLLECTOR_COMMON_MOVEBUTTON_H_
 #define ROBO_COLLECTOR_COMMON_MOVEBUTTON_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <string>
 
 //Other libraries headers
 #include "manager_utils/input/ButtonBase.h"
 #include "manager_utils/drawing/Text.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
@@ -28,7 +27,7 @@ struct MoveButtonConfig {
 
 class MoveButton final : public ButtonBase {
 public:
-  int32_t init(const MoveButtonConfig& cfg, const MoveButtonClickCb& clickCb);
+  ErrorCode init(const MoveButtonConfig& cfg, const MoveButtonClickCb& clickCb);
   void handleEvent(const InputEvent& e) override;
   void draw() const;
 

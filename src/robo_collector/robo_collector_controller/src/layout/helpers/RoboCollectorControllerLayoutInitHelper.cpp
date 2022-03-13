@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_collector_controller/layout/helpers/RoboCollectorControllerLayoutInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -16,21 +13,22 @@
 
 using namespace std::placeholders;
 
-int32_t RoboCollectorControllerLayoutInitHelper::init(
+ErrorCode RoboCollectorControllerLayoutInitHelper::init(
     const RoboCollectorControllerLayoutConfig &cfg,
     const RoboCollectorControllerLayoutOutInterface &outInterface,
     RoboCollectorControllerLayout &layout) {
   layout._map.create(cfg.mapRsrcId);
 
-  if (SUCCESS != initController(cfg.uiControllerCfg, outInterface, layout)) {
+  if (ErrorCode::SUCCESS !=
+      initController(cfg.uiControllerCfg, outInterface, layout)) {
     LOGERR("Error, initController() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorControllerLayoutInitHelper::initController(
+ErrorCode RoboCollectorControllerLayoutInitHelper::initController(
     const RoboCollectorUiControllerBaseConfig& baseCfg,
     const RoboCollectorControllerLayoutOutInterface &outInterface,
     RoboCollectorControllerLayout &layout) {
@@ -49,7 +47,7 @@ int32_t RoboCollectorControllerLayoutInitHelper::initController(
     LOGERR("Error, moveButtonsRsrcIds.size() is: %zu, while it should be "
            "exactly: %zu", baseCfg.moveButtonsRsrcIds.size(),
            moveButtonsCount);
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   MoveButtonConfig moveButtonCfg;
@@ -79,11 +77,12 @@ int32_t RoboCollectorControllerLayoutInitHelper::initController(
   cfg.helpBtnCfg.pos = Point(480, 160);
   cfg.helpBtnCfg.rsrcId = baseCfg.helpButtonRsrcId;
 
-  if (SUCCESS != layout._controller.init(cfg, uiControllerOutInterface)) {
+  if (ErrorCode::SUCCESS !=
+      layout._controller.init(cfg, uiControllerOutInterface)) {
     LOGERR("Error in _controller.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

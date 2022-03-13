@@ -1,28 +1,25 @@
 //Corresponding header
 #include "robo_collector_gui/layout/entities/coin/animation/CoinCollectAnimEndCb.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t CoinCollectAnimEndCb::init(
+ErrorCode CoinCollectAnimEndCb::init(
     const std::function<void(CoinAnimType)> &coinOnAnimEndCb) {
   if (nullptr == coinOnAnimEndCb) {
     LOGERR("Error, nullptr provided for coinOnAnimEndCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _coinOnAnimEndCb = coinOnAnimEndCb;
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t CoinCollectAnimEndCb::onAnimationEnd() {
+ErrorCode CoinCollectAnimEndCb::onAnimationEnd() {
   _coinOnAnimEndCb(CoinAnimType::COLLECT);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }

@@ -1,15 +1,14 @@
 #ifndef ROBO_CLEANER_GUI_RUBBISH_H_
 #define ROBO_CLEANER_GUI_RUBBISH_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "robo_common/layout/field/FieldPos.h"
 #include "manager_utils/drawing/Image.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -24,8 +23,8 @@ struct RubbishConfig {
 
 class Rubbish {
 public:
-  int32_t init(const RubbishConfig& cfg,
-               const GetFieldDescriptionCb& getFieldDescriptionCb);
+  ErrorCode init(const RubbishConfig& cfg,
+                 const GetFieldDescriptionCb& getFieldDescriptionCb);
   void draw() const;
 
 private:

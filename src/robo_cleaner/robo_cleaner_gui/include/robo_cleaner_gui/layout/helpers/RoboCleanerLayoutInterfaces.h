@@ -1,9 +1,7 @@
 #ifndef ROBO_CLEANER_GUI_ROBOCLEANERLAYOUTINTERFACES_H_
 #define ROBO_CLEANER_GUI_ROBOCLEANERLAYOUTINTERFACES_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 

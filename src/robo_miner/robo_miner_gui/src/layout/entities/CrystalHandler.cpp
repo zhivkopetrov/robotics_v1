@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/layout/entities/CrystalHandler.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <algorithm>
 #include <numeric>
 
@@ -15,19 +13,19 @@
 #include "robo_miner_gui/defines/RoboMinerGuiDefines.h"
 #include "robo_miner_gui/helpers/algorithms/FloodFill.h"
 
-int32_t CrystalHandler::init(const CrystalHandlerConfig &cfg) {
+ErrorCode CrystalHandler::init(const CrystalHandlerConfig &cfg) {
   if (nullptr == cfg.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _getFieldDescriptionCb = cfg.getFieldDescriptionCb;
 
-  if (SUCCESS != initCrystals(cfg)) {
+  if (ErrorCode::SUCCESS != initCrystals(cfg)) {
     LOGERR("Error, initCrystals() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void CrystalHandler::draw() const {
@@ -69,7 +67,7 @@ void CrystalHandler::onCrystalClicked(const FieldPos &fieldPos) {
   }
 }
 
-int32_t CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
+ErrorCode CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
   const auto &fieldDescr = cfg.getFieldDescriptionCb();
   const auto crystalsCount = std::accumulate(fieldDescr.data.begin(),
       fieldDescr.data.end(), 0,
@@ -105,14 +103,14 @@ int32_t CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
 
       crystalCfg.type = getCrystalType(marker);
       crystalCfg.fieldPos.col = col;
-      if (SUCCESS != _crystals[crystalId].init(crystalCfg)) {
+      if (ErrorCode::SUCCESS != _crystals[crystalId].init(crystalCfg)) {
         LOGERR("Error, _crystal[%d].init() failed", crystalId);
-        return FAILURE;
+        return ErrorCode::FAILURE;
       }
       ++crystalId;
     }
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

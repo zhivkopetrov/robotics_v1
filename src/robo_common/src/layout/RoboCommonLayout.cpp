@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/RoboCommonLayout.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -12,16 +10,17 @@
 //Own components headers
 #include "robo_common/layout/helpers/RoboCommonLayoutInitHelper.h"
 
-int32_t RoboCommonLayout::init(const RoboCommonLayoutConfig &cfg,
+ErrorCode RoboCommonLayout::init(const RoboCommonLayoutConfig &cfg,
                                const RoboCommonLayoutOutInterface &outInterface,
                                RoboCommonLayoutInterface &interface) {
-  if (SUCCESS != RoboCommonLayoutInitHelper::init(cfg, outInterface, *this)) {
+  if (ErrorCode::SUCCESS !=
+      RoboCommonLayoutInitHelper::init(cfg, outInterface, *this)) {
     LOGERR("Error, RoboCommonLayoutInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   interface = produceInterface();
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCommonLayout::deinit() {

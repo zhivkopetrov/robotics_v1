@@ -1,25 +1,22 @@
 //Corresponding header
 #include "robo_common/layout/animators/GameEndAnimator.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t GameEndAnimator::init(const ShutdownGameCb& shutdownGameCb) {
+ErrorCode GameEndAnimator::init(const ShutdownGameCb& shutdownGameCb) {
   if (nullptr == shutdownGameCb) {
     LOGERR("Error, nullptr provided for ShutdownGameCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _shutdownGameCb = shutdownGameCb;
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void GameEndAnimator::draw() const {

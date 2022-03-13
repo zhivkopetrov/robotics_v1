@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/layout/RoboCleanerLayout.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -15,16 +13,17 @@
 
 using namespace std::placeholders;
 
-int32_t RoboCleanerLayout::init(const RoboCleanerLayoutConfig &cfg,
-                              const RoboCleanerLayoutOutInterface &outInterface,
-                              RoboCleanerLayoutInterface &interface) {
-  if (SUCCESS != RoboCleanerLayoutInitHelper::init(cfg, outInterface,
+ErrorCode RoboCleanerLayout::init(
+    const RoboCleanerLayoutConfig &cfg,
+    const RoboCleanerLayoutOutInterface &outInterface,
+    RoboCleanerLayoutInterface &interface) {
+  if (ErrorCode::SUCCESS != RoboCleanerLayoutInitHelper::init(cfg, outInterface,
           interface.commonLayoutInterface, *this)) {
     LOGERR("Error, RoboCleanerLayoutInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCleanerLayout::deinit() {

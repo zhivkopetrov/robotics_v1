@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_
 #define ROBO_COLLECTOR_GUI_PANELS_PANELHANDLER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_common/layout/panels/TimePanel.h"
@@ -23,8 +21,8 @@ struct PanelHandlerOutInterface {
 
 class PanelHandler {
 public:
-  int32_t init(const PanelHandlerConfig &cfg,
-               const PanelHandlerOutInterface &interface);
+  ErrorCode init(const PanelHandlerConfig &cfg,
+                 const PanelHandlerOutInterface &interface);
   void draw() const;
   void decreaseHealthIndicator(int32_t damage);
   void increaseCollectedCoins(int32_t coins);

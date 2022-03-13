@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_NUMBERCOUNTERPANEL_H_
 #define ROBO_COMMON_NUMBERCOUNTERPANEL_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "manager_utils/drawing/NumberCounter.h"
@@ -23,8 +21,8 @@ struct NumberCounterPanelUtilityConfig {
 
 class NumberCounterPanel {
 public:
-  int32_t init(const NumberCounterPanelConfig& cfg,
-               const NumberCounterPanelUtilityConfig &utilityCfg);
+  ErrorCode init(const NumberCounterPanelConfig& cfg,
+                 const NumberCounterPanelUtilityConfig &utilityCfg);
   void draw() const;
   void increaseCounter(int32_t delta);
 

@@ -1,13 +1,12 @@
 #ifndef ROBO_MINER_GUI_ROBOMINERLAYOUTINITHELPER_H_
 #define ROBO_MINER_GUI_ROBOMINERLAYOUTINITHELPER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 
 //Other libraries headers
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -22,19 +21,19 @@ class RoboMinerLayoutInitHelper {
 public:
   RoboMinerLayoutInitHelper() = delete;
 
-  static int32_t init(const RoboMinerLayoutConfig &cfg,
-                      const RoboMinerLayoutOutInterface &outInterface,
-                      RoboCommonLayoutInterface &commonInterface, //out param
-                      RoboMinerLayout &layout);
+  static ErrorCode init(const RoboMinerLayoutConfig &cfg,
+                        const RoboMinerLayoutOutInterface &outInterface,
+                        RoboCommonLayoutInterface &commonInterface, //out param
+                        RoboMinerLayout &layout);
 
 private:
-  static int32_t initPanelHandler(
+  static ErrorCode initPanelHandler(
       const PanelHandlerConfig &cfg,
       const RoboMinerLayoutOutInterface &outInterface,
       const RoboCommonLayoutInterface &commonInterface,
       RoboMinerLayout &layout);
 
-  static int32_t initCrystalHandler(
+  static ErrorCode initCrystalHandler(
       uint64_t crystalRsrcId, const RoboCommonLayoutInterface &commonInterface,
       RoboMinerLayout &layout);
 };

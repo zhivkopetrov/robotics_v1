@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_PLAYERDAMAGEANIMENDCB_H_
 #define ROBO_COMMON_PLAYERDAMAGEANIMENDCB_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <functional>
 
@@ -16,9 +14,9 @@
 
 class PlayerDamageAnimEndCb final : public AnimationEndCb {
 public:
-  int32_t init(const std::function<void()>& onPlayerDamageAnimEndCb);
+  ErrorCode init(const std::function<void()>& onPlayerDamageAnimEndCb);
 
-  int32_t onAnimationEnd() override;
+  ErrorCode onAnimationEnd() override;
 
 private:
   std::function<void()> _onPlayerDamageAnimEndCb;

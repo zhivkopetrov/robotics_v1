@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_COMMON_ROBOCOLLECTORMESSAGEHELPERS_H_
 #define ROBO_COLLECTOR_COMMON_ROBOCOLLECTORMESSAGEHELPERS_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonDefines.h"

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/layout/entities/EntityHandler.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_common/layout/field/FieldUtils.h"
@@ -14,12 +12,12 @@
 #include "robo_cleaner_gui/defines/RoboCleanerGuiDefines.h"
 #include "robo_cleaner_gui/layout/entities/config/EntityHandlerConfig.h"
 
-int32_t EntityHandler::init(
+ErrorCode EntityHandler::init(
     const EntityHandlerConfig &cfg,
     const GetFieldDescriptionCb &getFieldDescriptionCb) {
   if (nullptr == getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _getFieldDescriptionCb = getFieldDescriptionCb;
 
@@ -47,9 +45,10 @@ int32_t EntityHandler::init(
         }
 
         auto &elem = _rubbish.emplace_back(Rubbish());
-        if (SUCCESS != elem.init(rubbishCfg, getFieldDescriptionCb)) {
+        if (ErrorCode::SUCCESS !=
+            elem.init(rubbishCfg, getFieldDescriptionCb)) {
           LOGERR("Error, rubbish.init() failed");
-          return FAILURE;
+          return ErrorCode::FAILURE;
         }
       }
 
@@ -64,7 +63,7 @@ int32_t EntityHandler::init(
     }
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void EntityHandler::draw() const {

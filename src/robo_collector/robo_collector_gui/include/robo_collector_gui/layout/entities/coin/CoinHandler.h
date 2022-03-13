@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_COIN_COINHANDLER_H_
 #define ROBO_COLLECTOR_GUI_COIN_COINHANDLER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -17,7 +15,8 @@
 
 class CoinHandler {
 public:
-  int32_t init(const CoinHandlerConfig& cfg, const CoinOutInterface& interface);
+  ErrorCode init(
+      const CoinHandlerConfig& cfg, const CoinOutInterface& interface);
   void deinit();
   void draw() const;
 

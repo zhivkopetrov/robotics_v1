@@ -1,16 +1,15 @@
 #ifndef ROBO_CLEANER_GUI_CLEANERCONTROLLEREXTERNALBRIDGE_H_
 #define ROBO_CLEANER_GUI_CLEANERCONTROLLEREXTERNALBRIDGE_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
-#include "game_engine/defines/ActionEventDefines.h"
-#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "robo_cleaner_interfaces/msg/robot_move_type.hpp"
 #include "robo_cleaner_interfaces/srv/robot_move.hpp"
+#include "game_engine/defines/ActionEventDefines.h"
+#include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -26,7 +25,7 @@ class CleanerControllerExternalBridge: public rclcpp::Node {
 public:
   CleanerControllerExternalBridge();
 
-  int32_t init(const CleanerControllerExternalBridgeOutInterface &interface);
+  ErrorCode init(const CleanerControllerExternalBridgeOutInterface &interface);
 
   void publishShutdownController();
 

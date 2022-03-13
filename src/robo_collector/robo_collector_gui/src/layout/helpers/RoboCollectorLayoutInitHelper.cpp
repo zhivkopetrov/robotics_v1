@@ -1,12 +1,9 @@
 //Corresponding header
 #include "robo_collector_gui/layout/helpers/RoboCollectorLayoutInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -16,7 +13,7 @@
 
 using namespace std::placeholders;
 
-int32_t RoboCollectorLayoutInitHelper::init(
+ErrorCode RoboCollectorLayoutInitHelper::init(
     const RoboCollectorLayoutConfig &cfg,
     const RoboCollectorLayoutOutInterface &outInterface,
     RoboCommonLayoutInterface &commonInterface, RoboCollectorLayout &layout) {
@@ -27,38 +24,40 @@ int32_t RoboCollectorLayoutInitHelper::init(
   commonOutInterface.playerDamageCb = std::bind(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
 
-  if (SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
+  if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {
     LOGERR("_commonLayout.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initPanelHandler(cfg.panelHandlerCfg, commonInterface,
-          layout)) {
+  if (ErrorCode::SUCCESS !=
+      initPanelHandler(cfg.panelHandlerCfg, commonInterface, layout)) {
     LOGERR("initPanelHandler() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initRobots(cfg, outInterface, commonInterface, layout)) {
+  if (ErrorCode::SUCCESS !=
+      initRobots(cfg, outInterface, commonInterface, layout)) {
     LOGERR("initRobots() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initCoinHandler(cfg.coinHandlerCfg, outInterface,
+  if (ErrorCode::SUCCESS != initCoinHandler(cfg.coinHandlerCfg, outInterface,
           commonInterface, layout)) {
     LOGERR("initCoinHandler() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initController(cfg.controllerCfg, commonInterface, layout)) {
+  if (ErrorCode::SUCCESS !=
+      initController(cfg.controllerCfg, commonInterface, layout)) {
     LOGERR("initController() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorLayoutInitHelper::initRobots(
+ErrorCode RoboCollectorLayoutInitHelper::initRobots(
     const RoboCollectorLayoutConfig &layoutCfg,
     const RoboCollectorLayoutOutInterface &outInterface,
     const RoboCommonLayoutInterface &commonInterface,
@@ -108,17 +107,17 @@ int32_t RoboCollectorLayoutInitHelper::initRobots(
     animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId
         + i + playerIdOffset;
 
-    if (SUCCESS != layout._enemyRobots[i].init(initialState, robotCfg,
-            animatorCfgBase, robotOutInterface)) {
+    if (ErrorCode::SUCCESS != layout._enemyRobots[i].init(
+        initialState, robotCfg, animatorCfgBase, robotOutInterface)) {
       LOGERR("Error in _enemyRobots[%d].init()", i);
-      return FAILURE;
+      return ErrorCode::FAILURE;
     }
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorLayoutInitHelper::initPanelHandler(
+ErrorCode RoboCollectorLayoutInitHelper::initPanelHandler(
     const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
     RoboCollectorLayout &layout) {
   PanelHandlerOutInterface outInterface;
@@ -127,15 +126,15 @@ int32_t RoboCollectorLayoutInitHelper::initPanelHandler(
   outInterface.startAchievementWonAnimCb =
       commonInterface.startAchievementWonAnimCb;
 
-  if (SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorLayoutInitHelper::initCoinHandler(
+ErrorCode RoboCollectorLayoutInitHelper::initCoinHandler(
     const CoinHandlerConfig &cfg,
     const RoboCollectorLayoutOutInterface &interface,
     const RoboCommonLayoutInterface &commonInterface,
@@ -149,15 +148,15 @@ int32_t RoboCollectorLayoutInitHelper::initCoinHandler(
       &PanelHandler::increaseCollectedCoins, &layout._panelHandler, _1);
   outInterface.isPlayerTurnActiveCb = interface.isPlayerTurnActiveCb;
 
-  if (SUCCESS != layout._coinHandler.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != layout._coinHandler.init(cfg, outInterface)) {
     LOGERR("Error in _coinHandler.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RoboCollectorLayoutInitHelper::initController(
+ErrorCode RoboCollectorLayoutInitHelper::initController(
     const RoboCollectorUiControllerBaseConfig &baseCfg,
     const RoboCommonLayoutInterface &commonInterface,
     RoboCollectorLayout &layout) {
@@ -175,10 +174,9 @@ int32_t RoboCollectorLayoutInitHelper::initController(
 
   constexpr size_t moveButtonsCount = 3;
   if (moveButtonsCount != baseCfg.moveButtonsRsrcIds.size()) {
-    LOGERR(
-        "Error, moveButtonsRsrcIds.size() is: %zu, while it should be " "exactly: %zu",
-        baseCfg.moveButtonsRsrcIds.size(), moveButtonsCount);
-    return FAILURE;
+    LOGERR("Error, moveButtonsRsrcIds.size() is: %zu, while it should be "
+           "exactly: %zu", baseCfg.moveButtonsRsrcIds.size(), moveButtonsCount);
+    return ErrorCode::FAILURE;
   }
 
   MoveButtonConfig moveButtonCfg;
@@ -208,10 +206,10 @@ int32_t RoboCollectorLayoutInitHelper::initController(
   cfg.helpBtnCfg.pos = Point(1680, 660);
   cfg.helpBtnCfg.rsrcId = baseCfg.helpButtonRsrcId;
 
-  if (SUCCESS != layout._controller.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != layout._controller.init(cfg, outInterface)) {
     LOGERR("Error in _controller.init()");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }

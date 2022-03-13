@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/RoboCleanerGui.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -18,14 +16,14 @@ RoboCleanerGui::RoboCleanerGui(
 
 }
 
-int32_t RoboCleanerGui::init(const std::any &cfg) {
-  if (SUCCESS != RoboCleanerGuiInitHelper::init(cfg, *this)) {
+ErrorCode RoboCleanerGui::init(const std::any &cfg) {
+  if (ErrorCode::SUCCESS != RoboCleanerGuiInitHelper::init(cfg, *this)) {
     LOGERR("Error, RoboCleanerGuiInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   _communicatorInterface.registerNodeCb(_controllerExternalBridge);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCleanerGui::deinit() {

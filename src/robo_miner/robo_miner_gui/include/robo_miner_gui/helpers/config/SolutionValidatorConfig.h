@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_SOLUTIONVALIDATORCONFIG_H_
 #define ROBO_MINER_GUI_SOLUTIONVALIDATORCONFIG_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 

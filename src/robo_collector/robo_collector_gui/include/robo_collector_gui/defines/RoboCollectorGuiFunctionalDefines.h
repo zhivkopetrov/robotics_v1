@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIFUNCTIONALDEFINES_H_
 #define ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIFUNCTIONALDEFINES_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <functional>
 
 //Other libraries headers

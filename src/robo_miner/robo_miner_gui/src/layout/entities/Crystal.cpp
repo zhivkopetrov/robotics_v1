@@ -1,29 +1,26 @@
 //Corresponding header
 #include "robo_miner_gui/layout/entities/Crystal.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_common/layout/field/FieldUtils.h"
 #include "sdl_utils/input/InputEvent.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t Crystal::init(const CrystalConfig& cfg) {
+ErrorCode Crystal::init(const CrystalConfig& cfg) {
   if (nullptr == cfg.crystalClickCb) {
     LOGERR("Error, nullptr provided for CrystalClickedCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _crystalClickCb = cfg.crystalClickCb;
 
   if (nullptr == cfg.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
   _getFieldDescriptionCb = cfg.getFieldDescriptionCb;
 
@@ -37,7 +34,7 @@ int32_t Crystal::init(const CrystalConfig& cfg) {
   pos += cfg.tileOffset;
   setPosition(pos);
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void Crystal::handleEvent(const InputEvent& e) {

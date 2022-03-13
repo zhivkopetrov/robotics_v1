@@ -1,43 +1,40 @@
 //Corresponding header
 #include "robo_common/layout/entities/robot/helpers/RobotInitHelper.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "robo_common/layout/entities/robot/Robot.h"
 
-int32_t RobotInitHelper::init(const RobotState &initialState,
+ErrorCode RobotInitHelper::init(const RobotState &initialState,
                               const RobotAnimatorConfigBase &robotAnimCfgBase,
                               const RobotOutInterface &interface,
                               Robot &robot) {
   robot._state = initialState;
 
-  if (SUCCESS != initOutInterface(interface, robot)) {
+  if (ErrorCode::SUCCESS != initOutInterface(interface, robot)) {
     LOGERR("Error, initOutInterface() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  if (SUCCESS != initAnimator(robotAnimCfgBase, robot)) {
+  if (ErrorCode::SUCCESS != initAnimator(robotAnimCfgBase, robot)) {
     LOGERR("Error, initAnimator() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RobotInitHelper::initOutInterface(const RobotOutInterface &interface,
+ErrorCode RobotInitHelper::initOutInterface(const RobotOutInterface &interface,
                                           Robot &robot) {
   robot._outInterface = interface;
 
   if (nullptr == robot._outInterface.playerDamageCb) {
     LOGERR("Error, nullptr provided for PlayerDamageCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   // only player robot should report damage callback
@@ -47,33 +44,33 @@ int32_t RobotInitHelper::initOutInterface(const RobotOutInterface &interface,
 
   if (nullptr == robot._outInterface.setFieldDataMarkerCb) {
     LOGERR("Error, nullptr provided for setFieldDataMarkerCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == robot._outInterface.resetFieldDataMarkerCb) {
     LOGERR("Error, nullptr provided for resetFieldDataMarkerCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == robot._outInterface.finishRobotActCb) {
     LOGERR("Error, nullptr provided for finishRobotActCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == robot._outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   if (nullptr == robot._outInterface.collisionWatcher) {
     LOGERR("Error, nullptr provided for collisionWatcher");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
-int32_t RobotInitHelper::initAnimator(
+ErrorCode RobotInitHelper::initAnimator(
     const RobotAnimatorConfigBase &robotAnimCfgBase, Robot &robot) {
   using namespace std::placeholders;
 
@@ -90,11 +87,11 @@ int32_t RobotInitHelper::initAnimator(
   interface.getRobotStateCb = std::bind(&Robot::getState, &robot);
   interface.getFieldDescriptionCb = robot._outInterface.getFieldDescriptionCb;
 
-  if (SUCCESS != robot._animator.init(cfg, interface)) {
+  if (ErrorCode::SUCCESS != robot._animator.init(cfg, interface)) {
     LOGERR("Error, RobotAnimator.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 

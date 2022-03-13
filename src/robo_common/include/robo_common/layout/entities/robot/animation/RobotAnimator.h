@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_ROBOTANIMATOR_H_
 #define ROBO_COMMON_ROBOTANIMATOR_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <array>
 
@@ -55,8 +53,8 @@ struct RobotAnimatorOutInterface {
 
 class RobotAnimator: public TimerClient {
 public:
-  int32_t init(const RobotAnimatorConfig &cfg,
-               const RobotAnimatorOutInterface& outInterface);
+  ErrorCode init(const RobotAnimatorConfig &cfg,
+                 const RobotAnimatorOutInterface& outInterface);
   void draw() const;
 
   void startMoveAnim(const FieldPos &currPos, Direction currDir,
@@ -72,7 +70,7 @@ public:
   Rectangle getBoundary() const;
 
 private:
-  int32_t initOutInterface(const RobotAnimatorOutInterface& outInterface);
+  ErrorCode initOutInterface(const RobotAnimatorOutInterface& outInterface);
 
   void onTimeout(const int32_t timerId) override;
 

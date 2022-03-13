@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_collector_controller/layout/RoboCollectorControllerLayout.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -13,18 +11,18 @@
 #include "robo_collector_controller/layout/helpers/RoboCollectorControllerLayoutInterfaces.h"
 #include "robo_collector_controller/layout/helpers/RoboCollectorControllerLayoutInitHelper.h"
 
-int32_t RoboCollectorControllerLayout::init(
+ErrorCode RoboCollectorControllerLayout::init(
     const RoboCollectorControllerLayoutConfig &cfg,
     const RoboCollectorControllerLayoutOutInterface &outInterface,
     RoboCollectorControllerLayoutInterface &interface) {
-  if (SUCCESS !=
+  if (ErrorCode::SUCCESS !=
       RoboCollectorControllerLayoutInitHelper::init(cfg, outInterface, *this)) {
     LOGERR("Error, RoboCollectorControllerLayoutInitHelper::init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   produceInterface(interface);
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void RoboCollectorControllerLayout::deinit() {

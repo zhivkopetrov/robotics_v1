@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/layout/entities/robot/helpers/RobotUtils.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <array>
 
 //Other libraries headers

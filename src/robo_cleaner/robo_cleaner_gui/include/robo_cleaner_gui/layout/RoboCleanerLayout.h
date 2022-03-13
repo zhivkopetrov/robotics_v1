@@ -1,9 +1,7 @@
 #ifndef ROBO_CLEANER_GUI_ROBOCLEANERLAYOUT_H_
 #define ROBO_CLEANER_GUI_ROBOCLEANERLAYOUT_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -23,9 +21,9 @@ class RoboCleanerLayout {
 public:
   friend class RoboCleanerLayoutInitHelper;
 
-  int32_t init(const RoboCleanerLayoutConfig& cfg,
-               const RoboCleanerLayoutOutInterface &outInterface,
-               RoboCleanerLayoutInterface& interface);
+  ErrorCode init(const RoboCleanerLayoutConfig& cfg,
+                 const RoboCleanerLayoutOutInterface &outInterface,
+                 RoboCleanerLayoutInterface& interface);
   void deinit();
   void draw() const;
 

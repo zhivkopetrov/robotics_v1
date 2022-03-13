@@ -1,14 +1,13 @@
 #ifndef ROBO_COMMON_TILE_H_
 #define ROBO_COMMON_TILE_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
 #include "manager_utils/drawing/Image.h"
 #include "manager_utils/drawing/Text.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -19,7 +18,7 @@ struct TileDebugConfig;
 
 class Tile {
 public:
-  int32_t init(const TileConfig &cfg);
+  ErrorCode init(const TileConfig &cfg);
 
   void draw() const;
 

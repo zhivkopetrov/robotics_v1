@@ -1,13 +1,12 @@
 #ifndef ROBO_CLEANER_GUI_ROBOCLEANERGUIINITHELPER_H_
 #define ROBO_CLEANER_GUI_ROBOCLEANERGUIINITHELPER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <any>
 
 //Other libraries headers
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -20,14 +19,14 @@ class RoboCleanerGuiInitHelper {
 public:
   RoboCleanerGuiInitHelper() = delete;
 
-  static int32_t init(const std::any &cfg, RoboCleanerGui &gui);
+  static ErrorCode init(const std::any &cfg, RoboCleanerGui &gui);
 
 private:
-  static int32_t initLayout(const RoboCleanerLayoutConfig &cfg,
-                            RoboCleanerLayoutInterface &interface, //out param
-                            RoboCleanerGui &gui);
+  static ErrorCode initLayout(const RoboCleanerLayoutConfig &cfg,
+                              RoboCleanerLayoutInterface &interface, //out param
+                              RoboCleanerGui &gui);
 
-  static int32_t initControllerExternalBridge(
+  static ErrorCode initControllerExternalBridge(
       const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui);
 };
 

@@ -1,18 +1,15 @@
 //Corresponding header
 #include "robo_collector_gui/layout/panels/PanelHandler.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
 
-int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
-                           const PanelHandlerOutInterface &interface) {
+ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
+                             const PanelHandlerOutInterface &interface) {
   //TODO attach gameWonCb on end of triple star animation
   //SINGLE_STAR will be don't collect silver coins
   //DOUBLE_STAR will be to collect at least 3 bronze coins
@@ -23,9 +20,10 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
   TimePanelUtilityConfig timePanelUtilityCfg;
   timePanelUtilityCfg.timeFinishedCb = interface.startGameLostAnimCb;
   timePanelUtilityCfg.pos = panelPos;
-  if (SUCCESS != _timePanel.init(cfg.timePanelCfg, timePanelUtilityCfg)) {
+  if (ErrorCode::SUCCESS !=
+      _timePanel.init(cfg.timePanelCfg, timePanelUtilityCfg)) {
     LOGERR("Error, _timePanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   panelPos.y += 165;
@@ -34,22 +32,23 @@ int32_t PanelHandler::init(const PanelHandlerConfig &cfg,
   numberCounterPanelUtilityCfg.targetReachedCb = interface.startGameWonAnimCb;
   numberCounterPanelUtilityCfg.pos = panelPos;
   numberCounterPanelUtilityCfg.textColor = lightGoldColor;
-  if (SUCCESS !=
+  if (ErrorCode::SUCCESS !=
       _coinPanel.init(cfg.coinPanelCfg, numberCounterPanelUtilityCfg)) {
     LOGERR("Error, _coinPanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
   panelPos.y += 175;
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
   indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
   indicatorUtilityCfg.pos = panelPos;
-  if (SUCCESS != _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
+  if (ErrorCode::SUCCESS !=
+      _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
     LOGERR("Error, _healthPanel.init() failed");
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }
 
 void PanelHandler::draw() const {

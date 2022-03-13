@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfigGenerator.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
@@ -178,7 +176,7 @@ RoboCleanerGuiConfigGenerator::generateDependencies(
 
   const LoadDependencyCb ros2Loader = [argc, args](){
     rclcpp::init(argc, args);
-    return SUCCESS;
+    return ErrorCode::SUCCESS;
   };
   const UnloadDependencyCb ros2Unloader = [](){
     //shutdown the global context only if it hasn't

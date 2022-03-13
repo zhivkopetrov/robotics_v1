@@ -1,9 +1,7 @@
 #ifndef ROBO_MINER_GUI_MOVEMENTWATCHER_H_
 #define ROBO_MINER_GUI_MOVEMENTWATCHER_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <condition_variable>
 #include <mutex>
@@ -12,6 +10,7 @@
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 
@@ -25,7 +24,8 @@ struct MovementWatchOutcome {
 
 class MovementWatcher: public NonCopyable, public NonMoveable {
 public:
-  int32_t init(const GetPlayerSurroundingTilesCb &getPlayerSurroundingTilesCb);
+  ErrorCode init(
+      const GetPlayerSurroundingTilesCb &getPlayerSurroundingTilesCb);
 
   //returns success or not if timed out
   bool waitForChange(const std::chrono::milliseconds &timeout,

@@ -1,9 +1,7 @@
 #ifndef ROBO_COMMON_ROBOTUTILS_H_
 #define ROBO_COMMON_ROBOTUTILS_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <array>
 

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_common/helpers/ConfigFileLoader.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cerrno>
 #include <cstring>
 #include <fstream>
@@ -11,7 +9,6 @@
 //Other libraries headers
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/file_system/FileSystemUtils.h"
-#include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -24,7 +21,8 @@ constexpr auto MINER_LONGEST_SOLUTION_FILE_NAME = "solution.txt";
 FieldData ConfigFileLoader::readFieldData(
     const std::string &projectInstallPrefix, int32_t levelId) {
   std::string filePath;
-  if (SUCCESS != readLevelFolder(projectInstallPrefix, levelId, filePath)) {
+  if (ErrorCode::SUCCESS !=
+      readLevelFolder(projectInstallPrefix, levelId, filePath)) {
     LOGERR("Error, readLevelFolder() failed");
     return {};
   }
@@ -52,7 +50,8 @@ FieldData ConfigFileLoader::readFieldData(
 std::vector<FieldPos> ConfigFileLoader::readMinerLongestSolution(
     const std::string &projectInstallPrefix, int32_t levelId) {
   std::string filePath;
-  if (SUCCESS != readLevelFolder(projectInstallPrefix, levelId, filePath)) {
+  if (ErrorCode::SUCCESS !=
+      readLevelFolder(projectInstallPrefix, levelId, filePath)) {
     LOGERR("Error, readLevelFolder() failed");
     return {};
   }
@@ -75,17 +74,18 @@ std::vector<FieldPos> ConfigFileLoader::readMinerLongestSolution(
   return sequence;
 }
 
-int32_t ConfigFileLoader::readLevelFolder(
+ErrorCode ConfigFileLoader::readLevelFolder(
     const std::string &projectInstallPrefix, int32_t levelId,
     std::string &outFolderPath) {
   outFolderPath = projectInstallPrefix;
-  outFolderPath.append("/").append(ResourceFileHeader::getResourcesFolderName()).append(
+  outFolderPath.append("/").append(
+      ResourceFileHeader::getResourcesFolderName()).append(
       "/levels/level_").append(std::to_string(levelId));
 
   if (!FileSystemUtils::isDirectoryPresent(outFolderPath)) {
     LOGERR("Error, directory: not present: [%s]", outFolderPath.c_str());
-    return FAILURE;
+    return ErrorCode::FAILURE;
   }
 
-  return SUCCESS;
+  return ErrorCode::SUCCESS;
 }

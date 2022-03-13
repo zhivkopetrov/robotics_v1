@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_ENTITIES_COIN_H_
 #define ROBO_COLLECTOR_GUI_ENTITIES_COIN_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 
 //Other libraries headers
@@ -43,15 +41,15 @@ struct CoinConfig {
 
 class Coin final : public CollisionObject {
 public:
-  int32_t init(const CoinConfig &cfg, const CoinOutInterface &interface);
+  ErrorCode init(const CoinConfig &cfg, const CoinOutInterface &interface);
   void deinit();
   void draw() const;
   void onAnimEnd(CoinAnimType coinAnimType);
 
 private:
-  int32_t initOutInterface(const CoinOutInterface &interface);
-  int32_t initRespawnAnim();
-  int32_t initRotateAnim(const FieldPos &fieldPos);
+  ErrorCode initOutInterface(const CoinOutInterface &interface);
+  ErrorCode initRespawnAnim();
+  ErrorCode initRotateAnim(const FieldPos &fieldPos);
   void onInitEnd();
 
   void startCollectAnim();

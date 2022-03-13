@@ -1,9 +1,7 @@
 #ifndef ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUTINTERFACES_H_
 #define ROBO_COLLECTOR_GUI_ROBOCOLLECTORLAYOUTINTERFACES_H_
 
-//C system headers
-
-//C++ system headers
+//System headers
 #include <cstdint>
 #include <vector>
 

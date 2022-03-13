@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_miner_gui/config/RoboMinerGuiConfigGenerator.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
@@ -176,7 +174,7 @@ std::vector<DependencyDescription> RoboMinerGuiConfigGenerator::generateDependen
 
   const LoadDependencyCb ros2Loader = [argc, args]() {
     rclcpp::init(argc, args);
-    return SUCCESS;
+    return ErrorCode::SUCCESS;
   };
   const UnloadDependencyCb ros2Unloader = []() {
     //shutdown the global context only if it hasn't
