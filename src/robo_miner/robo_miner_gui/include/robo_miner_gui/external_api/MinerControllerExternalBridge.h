@@ -44,12 +44,12 @@ public:
   void publishFieldMapRevealed();
 
 private:
-  typedef std_msgs::msg::Empty Empty;
-  typedef robo_miner_interfaces::msg::FieldPoint FieldPoint;
-  typedef robo_miner_interfaces::srv::RobotMove RobotMove;
-  typedef robo_miner_interfaces::srv::FieldMapValidate FieldMapValidate;
-  typedef robo_miner_interfaces::srv::LongestSequenceValidate LongestSequenceValidate;
-  typedef robo_miner_interfaces::srv::ActivateMiningValidate ActivateMiningValidate;
+  using Empty = std_msgs::msg::Empty;
+  using FieldPoint = robo_miner_interfaces::msg::FieldPoint;
+  using RobotMove = robo_miner_interfaces::srv::RobotMove;
+  using FieldMapValidate = robo_miner_interfaces::srv::FieldMapValidate;
+  using LongestSequenceValidate = robo_miner_interfaces::srv::LongestSequenceValidate;
+  using ActivateMiningValidate = robo_miner_interfaces::srv::ActivateMiningValidate;
 
   ErrorCode initOutInterface(
       const MinerControllerExternalBridgeOutInterface &outInterface);

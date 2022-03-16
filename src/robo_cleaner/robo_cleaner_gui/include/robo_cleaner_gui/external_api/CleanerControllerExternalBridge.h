@@ -5,8 +5,9 @@
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
-#include "robo_cleaner_interfaces/msg/robot_move_type.hpp"
-#include "robo_cleaner_interfaces/srv/robot_move.hpp"
+#include <rclcpp_action/rclcpp_action.hpp>
+#include <std_msgs/msg/empty.hpp>
+#include "robo_cleaner_interfaces/action/robot_move.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "utils/ErrorCode.h"
@@ -30,23 +31,35 @@ public:
   void publishShutdownController();
 
 private:
-  void onMoveMsg(
-      const robo_cleaner_interfaces::msg::RobotMoveType::SharedPtr msg);
+  ErrorCode initOutInterface(
+      const CleanerControllerExternalBridgeOutInterface &outInterface);
+  ErrorCode initCommunication();
 
-  //TODO remove after test
-  void handleService(
-      const std::shared_ptr<
-      robo_cleaner_interfaces::srv::RobotMove::Request> request,
-      std::shared_ptr<
-      robo_cleaner_interfaces::srv::RobotMove::Response> response);
+  using Empty = std_msgs::msg::Empty;
+  using RobotMove = robo_cleaner_interfaces::action::RobotMove;
+  using GoalHandleRobotMove = rclcpp_action::ServerGoalHandle<RobotMove>;
+
+  rclcpp_action::GoalResponse handleMoveGoal(
+      const rclcpp_action::GoalUUID &uuid,
+      std::shared_ptr<const RobotMove::Goal> goal);
+
+  rclcpp_action::CancelResponse handleMoveCancel(
+      const std::shared_ptr<GoalHandleRobotMove> goalHandle);
+
+  void handleMoveAccepted(
+      const std::shared_ptr<GoalHandleRobotMove> goalHandle);
+
+  void executeMove(const std::shared_ptr<GoalHandleRobotMove> goalHandle);
 
   CleanerControllerExternalBridgeOutInterface _outInterface;
 
-  rclcpp::Subscription<robo_cleaner_interfaces::msg::RobotMoveType>::SharedPtr
-    _playerDirSubscriber;
+  rclcpp_action::Server<RobotMove>::SharedPtr _moveActionServer;
 
-  rclcpp::Service<robo_cleaner_interfaces::srv::RobotMove>::SharedPtr
-    _robotMoveService;
+  rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
+  rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
+  rclcpp::Publisher<Empty>::SharedPtr _fieldMapCleanedPublisher;
+
+//  rclcpp::Subscription<robo_cleaner_interfaces::msg::RobotMoveType>::SharedPtr _playerDirSubscriber;
 };
 
 #endif /* ROBO_CLEANER_GUI_CLEANERCONTROLLEREXTERNALBRIDGE_H_ */

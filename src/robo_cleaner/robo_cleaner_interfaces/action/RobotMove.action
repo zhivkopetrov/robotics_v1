@@ -1,0 +1,8 @@
+# Request
+RobotMoveType robot_move_type
+---
+# Result
+bool success
+---
+# Feedback
+bool approaching_obstacle

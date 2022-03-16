@@ -33,8 +33,8 @@ public:
   void publishShutdownController();
 
 private:
-  typedef std_msgs::msg::Empty Empty;
-  typedef robo_collector_interfaces::msg::RobotMoveType RobotMoveType;
+  using Empty = std_msgs::msg::Empty;
+  using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
 
   void onMoveMsg(const RobotMoveType::SharedPtr msg);
 

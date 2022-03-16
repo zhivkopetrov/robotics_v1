@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robo_cleaner_common</name>
+  <version>0.0.0</version>
+  <description>robo_cleaner_common lib</description>
+  <maintainer email="zhivko.petrov@ocado.com">Zhivko Petrov</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <build_depend>robo_cleaner_interfaces</build_depend>
+  <build_depend>robo_common</build_depend>
+
+  <exec_depend>robo_cleaner_interfaces</exec_depend>
+  <exec_depend>robo_common</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">ament_cmake</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
