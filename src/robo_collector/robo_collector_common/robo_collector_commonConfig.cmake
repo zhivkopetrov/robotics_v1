@@ -2,6 +2,7 @@ include(CMakeFindDependencyMacro)
 
 #find_dependency will correctly forward REQUIRED or QUIET args to the consumer
 #find_package is only for internal use
+find_dependency(cmake_helpers REQUIRED)
 find_dependency(robo_common REQUIRED)
 
 if(NOT TARGET robo_collector_common::robo_collector_common)

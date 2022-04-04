@@ -10,6 +10,7 @@
 
   <buildtool_depend>cmake</buildtool_depend>
   
+  <build_depend>cmake_helpers</build_depend>
   <build_depend>manager_utils</build_depend>
 
   <exec_depend>manager_utils</exec_depend>

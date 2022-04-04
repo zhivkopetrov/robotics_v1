@@ -13,6 +13,7 @@
   <build_depend>ament_index_cpp</build_depend>
   
   <build_depend>std_msgs</build_depend>
+  <build_depend>cmake_helpers</build_depend>
   <build_depend>robo_collector_interfaces</build_depend>
   <build_depend>robo_collector_common</build_depend>
   <build_depend>ros2_game_engine</build_depend>

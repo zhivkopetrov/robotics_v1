@@ -8,13 +8,7 @@ project(
     VERSION 1.0.0
 )
 
-list(
-    APPEND
-    CMAKE_MODULE_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake_helpers/find_modules
-)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_helpers/helpers.cmake)
-
+find_package(cmake_helpers REQUIRED)
 find_package(robo_common REQUIRED)
 find_package(robo_cleaner_interfaces REQUIRED)
 
@@ -38,28 +32,44 @@ target_include_directories(
         $<INSTALL_INTERFACE:${_INC_FOLDER_NAME}>
 )
 
-set(_USE_KEYWORD_STYLE False)
-#note: ROS2 uses plain style, thus access modifiers can't be used
 target_link_libraries(
     ${PROJECT_NAME}
+    PUBLIC
         robo_common::robo_common
 )
 
 ament_target_dependencies(
     ${PROJECT_NAME}
+    PUBLIC
         robo_cleaner_interfaces
 )
 
-set_target_cpp_standard(${PROJECT_NAME} 20)
-enable_target_warnings(${PROJECT_NAME})
-set_target_visibility(${PROJECT_NAME} ${_USE_KEYWORD_STYLE})
-install_and_export_target(${PROJECT_NAME} ${_INC_FOLDER_NAME})
-
 if(NOT DISABLE_ROS_TOOLING)
+    # Ament uses non-monolith build (separate build and install steps).
+    # The helpers.cmake has to be included manually.
+    # This allows access to the helpers.cmake user defined macros
+    # In the case of monolith build - the file is automatically included
+    # from the cmake_helpersConfig.cmake when the package is consumed by find_package()
+	include(${cmake_helpers_DIR}/helpers.cmake)
+	
     enable_ros_tooling_for_target(
         ${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
     )
+endif()
+
+set_target_cpp_standard(${PROJECT_NAME} 20)
+enable_target_warnings(${PROJECT_NAME})
+set_target_visibility(${PROJECT_NAME})
+install_and_export_target(${PROJECT_NAME} ${_INC_FOLDER_NAME})
+
+#invoke include-what-you-use (if it's enabled) for the current project
+if(USE_IWYU)
+    enable_target_include_what_you_use(${PROJECT_NAME})
+endif(USE_IWYU)
+
+if(BUILD_LIKE_POSITION_INDEPENDANT_CODE)
+    enable_target_position_independent_code(${PROJECT_NAME})
 endif()
 
 

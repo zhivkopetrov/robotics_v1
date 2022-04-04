@@ -19,3 +19,6 @@
 [submodule "src/lib/ros2_game_engine"]
 	path = src/lib/ros2_game_engine
 	url = https://github.com/zhivkopetrov/ros2_game_engine.git
+[submodule "src/lib/cmake_helpers"]
+	path = src/lib/cmake_helpers
+	url = https://github.com/zhivkopetrov/cmake_helpers.git
