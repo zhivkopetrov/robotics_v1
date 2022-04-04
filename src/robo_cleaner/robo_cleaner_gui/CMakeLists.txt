@@ -100,7 +100,7 @@ endif()
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
 set_target_visibility(${PROJECT_NAME})
-enable_target_sanitizer(${PROJECT_NAME} "address")
+#enable_target_sanitizer(${PROJECT_NAME} "address")
 
 # Install resources and auto-generated headers and resource bin files
 install(
