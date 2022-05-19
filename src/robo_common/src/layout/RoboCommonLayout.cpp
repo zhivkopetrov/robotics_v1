@@ -30,6 +30,7 @@ void RoboCommonLayout::deinit() {
 void RoboCommonLayout::draw() const {
   _map.draw();
   _field.draw();
+  _fogOfWar.draw();
   _playerRobot.draw();
   _gameEndAnimator.draw();
 }

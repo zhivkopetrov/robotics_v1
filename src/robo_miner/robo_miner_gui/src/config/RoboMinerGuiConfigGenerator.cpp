@@ -2,6 +2,7 @@
 #include "robo_miner_gui/config/RoboMinerGuiConfigGenerator.h"
 
 //System headers
+#include <numeric>
 
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
@@ -41,6 +42,12 @@ enum TimerId {
   TILE_PANEL_DECR_TIMER_ID,
   CRYSTAL_PANEL_INCR_TIMER_ID,
   CRYSTAL_PANEL_DECR_TIMER_ID,
+
+  FOG_OF_WAR_FADE_TIMER_IDS_START,
+
+  //reserve 200 timers. Increase the number if needed
+
+  FOG_OF_WAR_FADE_TIMER_IDS_END = FOG_OF_WAR_FADE_TIMER_IDS_START + 200
 };
 
 RobotBaseConfig generateRobotBaseConfig() {
@@ -108,6 +115,19 @@ FieldConfig generateFieldConfig() {
   return cfg;
 }
 
+FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
+  FogOfWarConfig cfg;
+  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.cloudRsrcId = RoboMinerGuiResources::FOG_OF_WAR;
+
+  constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
+  cfg.fogTilesFadeAnimTimerIds.resize(mapTilesCount);
+  std::iota(cfg.fogTilesFadeAnimTimerIds.begin(),
+      cfg.fogTilesFadeAnimTimerIds.end(), startTimerId);
+
+  return cfg;
+}
+
 SolutionValidatorConfig generateSolutionValidatorConfig(int32_t mapTilesCount) {
   SolutionValidatorConfig cfg;
 
@@ -149,12 +169,13 @@ RoboMinerGuiConfig generateGameConfig() {
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
+  const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
+      * commonLayoutCfg.fieldCfg.description.cols;
+
+  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(mapTilesCount);
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
-
-  const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
-      * commonLayoutCfg.fieldCfg.description.cols;
 
   cfg.solutionValidatorCfg = generateSolutionValidatorConfig(mapTilesCount);
 

@@ -24,6 +24,11 @@ public:
                       RoboCommonLayout &layout);
 
 private:
+  static ErrorCode initFogOfWar(
+      const RoboCommonLayoutConfig &layoutCfg,
+      const RoboCommonLayoutOutInterface &outInterface,
+      RoboCommonLayout &layout);
+
   static ErrorCode initPlayerRobot(
       const RoboCommonLayoutConfig &layoutCfg,
       const RoboCommonLayoutOutInterface &outInterface,

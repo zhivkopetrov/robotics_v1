@@ -66,6 +66,7 @@ void CollisionWatcher::toggleWatchStatus(CollisionObjHandle handle,
 void CollisionWatcher::process() {
   const auto objSize = _objects.size();
   Rectangle intersectRect;
+
   for (const auto activeHandle : _activeWatchedHandles) {
     const auto& activeData = _objects[activeHandle];
 
@@ -74,6 +75,9 @@ void CollisionWatcher::process() {
         continue; //skip self-collision
       }
       const auto& checkedData = _objects[handle];
+      if (nullptr == checkedData.object) {
+        continue; //free slot found -> skip it
+      }
 
       const bool found = GeometryUtils::findRectIntersection(
           activeData.object->getBoundary(),

@@ -7,6 +7,7 @@
 
 //Other libraries headers
 #include "robo_common/layout/field/config/FieldConfig.h"
+#include "robo_common/layout/field/config/FogOfWarConfig.h"
 #include "robo_common/layout/entities/robot/config/RobotBaseConfig.h"
 
 //Own components headers
@@ -15,6 +16,7 @@
 
 struct RoboCommonLayoutConfig {
   FieldConfig fieldCfg;
+  FogOfWarConfig fogOfWarConfig;
   RobotBaseConfig robotBaseCfg;
 
   uint64_t mapRsrcId = 0;

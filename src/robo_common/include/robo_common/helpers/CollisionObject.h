@@ -23,7 +23,7 @@ enum class CollisionWatchStatus {
 
 class CollisionObject {
 public:
-  virtual ~CollisionObject() = default;
+  virtual ~CollisionObject() noexcept = default;
 
   virtual void registerCollision(const Rectangle& intersectRect,
                                  CollisionDamageImpact impact) = 0;

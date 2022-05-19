@@ -9,6 +9,7 @@
 //Own components headers
 #include "robo_common/layout/helpers/RoboCommonLayoutInterfaces.h"
 #include "robo_common/layout/field/Field.h"
+#include "robo_common/layout/field/fog_of_war/FogOfWar.h"
 #include "robo_common/layout/entities/robot/Robot.h"
 #include "robo_common/layout/animators/GameEndAnimator.h"
 
@@ -34,6 +35,7 @@ private:
 
   Image _map;
   Field _field;
+  FogOfWar _fogOfWar;
   Robot _playerRobot;
   GameEndAnimator _gameEndAnimator;
 };

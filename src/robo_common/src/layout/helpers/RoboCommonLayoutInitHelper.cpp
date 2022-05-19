@@ -22,6 +22,11 @@ ErrorCode RoboCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
+  if (ErrorCode::SUCCESS != initFogOfWar(cfg, outInterface, layout)) {
+    LOGERR("initFogOfWar failed");
+    return ErrorCode::FAILURE;
+  }
+
   if (ErrorCode::SUCCESS !=
       layout._gameEndAnimator.init(outInterface.shutdownGameCb)) {
     LOGERR("_gameEndAnimator.init() failed");
@@ -30,6 +35,22 @@ ErrorCode RoboCommonLayoutInitHelper::init(
 
   if (ErrorCode::SUCCESS != initPlayerRobot(cfg, outInterface, layout)) {
     LOGERR("initPlayerRobot failed");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode RoboCommonLayoutInitHelper::initFogOfWar(
+      const RoboCommonLayoutConfig &layoutCfg,
+      const RoboCommonLayoutOutInterface &outInterface,
+      RoboCommonLayout &layout) {
+  FogOfWarOutInterface fogOfWarOutInterface;
+  fogOfWarOutInterface.collisionWatcher = outInterface.collisionWatcher;
+
+  if (ErrorCode::SUCCESS != layout._fogOfWar.init(
+      layoutCfg.fogOfWarConfig, fogOfWarOutInterface, layoutCfg.fieldCfg)) {
+    LOGERR("Error in _fogOfWar.init()");
     return ErrorCode::FAILURE;
   }
 

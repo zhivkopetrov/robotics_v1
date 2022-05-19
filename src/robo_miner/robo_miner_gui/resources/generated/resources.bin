@@ -4,13 +4,13 @@
 # Author: Zhivko Petrov
 
 # All static widgets count:
-15                  
+16                  
 
 # All dynamic widgets count:
 0                   
 
 # Size of all files in kBytes:
-717                 
+1058                
 
 0x50F97991CE94C9BC
 p/background/map.png
@@ -27,6 +27,14 @@ p/background/tile.png
 0 0 160 160
 1
 0 0 160 160
+
+0x1ADDDF3AB0B8D715
+p/background/fogOfWar.png
+341
+0
+0 0 1120 960
+1
+0 0 1120 960
 
 0x79318CA9C3556C10
 p/entities/player_robot.png
