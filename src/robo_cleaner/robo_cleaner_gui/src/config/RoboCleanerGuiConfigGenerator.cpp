@@ -2,6 +2,7 @@
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfigGenerator.h"
 
 //System headers
+#include <numeric>
 
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
@@ -47,6 +48,12 @@ enum TimerId {
   TILE_PANEL_DECR_TIMER_ID,
   RUBBISH_PANEL_INCR_TIMER_ID,
   RUBBISH_PANEL_DECR_TIMER_ID,
+
+  FOG_OF_WAR_FADE_TIMER_IDS_START,
+
+  //reserve 200 timers. Increase the number if needed
+
+  FOG_OF_WAR_FADE_TIMER_IDS_END = FOG_OF_WAR_FADE_TIMER_IDS_START + 200
 };
 
 RobotBaseConfig generateRobotBaseConfig() {
@@ -67,6 +74,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   PanelHandlerConfig cfg;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
+  tilePanelCfg.startValue = 1; //robot is starting from a valid tile
   tilePanelCfg.targetNumber = TOTAL_FIELD_TILES;
   tilePanelCfg.rsrcId = RoboCleanerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
@@ -120,6 +128,19 @@ FieldConfig generateFieldConfig() {
   return cfg;
 }
 
+FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
+  FogOfWarConfig cfg;
+  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
+
+  constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
+  cfg.fogTilesFadeAnimTimerIds.resize(mapTilesCount);
+  std::iota(cfg.fogTilesFadeAnimTimerIds.begin(),
+      cfg.fogTilesFadeAnimTimerIds.end(), startTimerId);
+
+  return cfg;
+}
+
 EntityHandlerConfig generateEntityHandlerConfig() {
   EntityHandlerConfig cfg;
   cfg.rubbishRsrcId = RoboCleanerGuiResources::RUBBISH;
@@ -159,6 +180,10 @@ RoboCleanerGuiConfig generateGameConfig() {
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
+  const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
+      * commonLayoutCfg.fieldCfg.description.cols;
+
+  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(mapTilesCount);
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;

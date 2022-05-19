@@ -9,6 +9,7 @@
 //Own components headers
 
 struct NumberCounterPanelConfig {
+  uint64_t startValue = 0;
   uint64_t targetNumber = 0;
   uint64_t rsrcId = 0;
   uint64_t fontId = 0;

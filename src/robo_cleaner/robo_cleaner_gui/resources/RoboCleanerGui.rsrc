@@ -21,6 +21,13 @@ description=empty
 position=0,0
 load=on_init
 
+tag=[FOG_OF_WAR]
+type=image
+path=p/background/fogOfWar.png
+description=empty
+position=0,0
+load=on_init
+
 tag=[PLAYER_ROBOT]
 type=image
 path=p/entities/player_robot.png

@@ -25,7 +25,7 @@ ErrorCode NumberCounterPanel::init(
   numberPanelCfg.fontColor = utilityCfg.textColor;
   numberPanelCfg.incrTimerId = cfg.incrTimerId;
   numberPanelCfg.decrTimerId = cfg.decrTimerId;
-  numberPanelCfg.startValue = 0;
+  numberPanelCfg.startValue = cfg.startValue;
   numberPanelCfg.boundaryRect =
       Rectangle(utilityCfg.pos.x + 50, utilityCfg.pos.y + 15, 346, 120);
 

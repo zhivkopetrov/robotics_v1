@@ -76,6 +76,7 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t mapTilesCount,
       HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
+  tilePanelCfg.startValue = 1; //robot is starting from a valid tile
   tilePanelCfg.targetNumber = mapTilesCount;
   tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
