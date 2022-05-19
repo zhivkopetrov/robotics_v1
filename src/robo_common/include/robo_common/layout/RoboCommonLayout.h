@@ -30,6 +30,9 @@ public:
   //contains FogOfWar
   void drawSecondLayer() const;
 
+  //contains FogOfWar
+  void drawThirdLayer() const;
+
   //TODO create a separate help page class
   void activateHelpPage();
 

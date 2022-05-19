@@ -31,11 +31,14 @@ void RoboCommonLayout::draw() const {
   _map.draw();
   _field.draw();
   _playerRobot.draw();
-  _gameEndAnimator.draw();
 }
 
 void RoboCommonLayout::drawSecondLayer() const {
   _fogOfWar.draw();
+}
+
+void RoboCommonLayout::drawThirdLayer() const {
+  _gameEndAnimator.draw();
 }
 
 void RoboCommonLayout::activateHelpPage() {

@@ -36,6 +36,7 @@ void RoboCleanerLayout::draw() const {
   _panelHandler.draw();
 
   _commonLayout.drawSecondLayer();
+  _commonLayout.drawThirdLayer();
 }
 
 void RoboCleanerLayout::onEnergyDepleted() {

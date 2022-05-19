@@ -37,6 +37,7 @@ void RoboMinerLayout::draw() const {
   _crystalHandler.draw();
 
   _commonLayout.drawSecondLayer();
+  _commonLayout.drawThirdLayer();
 }
 
 void RoboMinerLayout::handleEvent(const InputEvent &e) {
