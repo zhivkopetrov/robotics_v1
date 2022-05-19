@@ -21,6 +21,8 @@ enum class CollisionWatchStatus {
   ON, OFF
 };
 
+inline constexpr CollisionObjHandle INVALID_COLLISION_OBJ_HANDLE = 0xFFFFFFFF;
+
 class CollisionObject {
 public:
   virtual ~CollisionObject() noexcept = default;
@@ -30,7 +32,7 @@ public:
   virtual Rectangle getBoundary() const = 0;
 
 protected:
-  CollisionObjHandle _collisionObjHandle = 0xFFFFFFFF;
+  CollisionObjHandle _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;
 };
 
 #endif /* ROBO_COMMON_COLLISIONOBJECT_H_ */

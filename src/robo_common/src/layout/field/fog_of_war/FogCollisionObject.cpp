@@ -25,7 +25,6 @@ ErrorCode FogCollisionObject::init(
   _collisionWatcher = collisionWatcher;
   _collisionObjHandle =
       _collisionWatcher->registerObject(this, CollisionDamageImpact::NO);
-  LOGC("FogCollisionObject[%d]: handleId: %zu, timerId: %d", id, _collisionObjHandle, timerId);
 
   if (nullptr == onAnimCompleteCb) {
     LOGERR("Error, nullptr provided for OnFogObjectAimCompleteCb");
@@ -60,8 +59,8 @@ Rectangle FogCollisionObject::getBoundary() const {
 void FogCollisionObject::registerCollision(
     [[maybe_unused]]const Rectangle &intersectRect,
     [[maybe_unused]]CollisionDamageImpact impact) {
-  LOGM("Unregistering FogCollisionObject[%d]: handleId: %zu", _id, _collisionObjHandle);
   _collisionWatcher->unregisterObject(_collisionObjHandle);
+  _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;
 
   //start fade out animation
   startTimer(50, _timerId, TimerType::PULSE);

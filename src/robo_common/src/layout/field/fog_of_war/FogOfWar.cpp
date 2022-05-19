@@ -57,13 +57,17 @@ ErrorCode FogOfWar::createFogTiles(
 
   const int32_t tilesCount = fieldDescr.rows * fieldDescr.cols;
   if (tilesCount != static_cast<int32_t>(fogTilesFadeAnimTimerIds.size())) {
-    LOGERR("");
+    LOGERR("Error, tiles count mismatch provided fog timer anim timer ids");
     return ErrorCode::FAILURE;
   }
 
   const auto onFogObjectAimCompleteCb = std::bind(
       &FogOfWar::onFogObjectAnimComplete, this, std::placeholders::_1);
-  _fogTiles.reserve(tilesCount);
+
+  //remove the tile (bottom-right corner) for the starting position of the robot
+  const auto fogTilesCount = tilesCount - 1;
+  _fogTiles.reserve(fogTilesCount);
+
   int32_t currTileId = 0;
 
   for (int32_t row = 0; row < fieldDescr.rows; ++row) {
@@ -73,6 +77,10 @@ ErrorCode FogOfWar::createFogTiles(
     for (int32_t col = 0; col < fieldDescr.cols; ++col) {
       cloudFboDimensions.x = RoboCommonDefines::FIRST_TILE_X_POS
           + (col * fieldDescr.tileWidth);
+
+      if (fogTilesCount == currTileId) {
+        break; //skip the last index
+      }
 
       if (ErrorCode::SUCCESS != _fogTiles[currTileId].init(cloudFboDimensions,
               currTileId, fogTilesFadeAnimTimerIds[currTileId],
@@ -84,10 +92,6 @@ ErrorCode FogOfWar::createFogTiles(
       ++currTileId;
     }
   }
-
-  //remove the tile (bottom-right corner) for the starting position of the robot
-  --currTileId;
-  _fogTiles.erase(currTileId);
 
   return ErrorCode::SUCCESS;
 }
@@ -105,7 +109,13 @@ ErrorCode FogOfWar::populateFogTiles(uint64_t cloudRsrcId) {
   return ErrorCode::SUCCESS;
 }
 
-void FogOfWar::onFogObjectAnimComplete([[maybe_unused]]int32_t id) {
+void FogOfWar::onFogObjectAnimComplete(int32_t id) {
+  auto it = _fogTiles.find(id);
+  if (_fogTiles.end() == it) {
+    LOGERR("Error, fog tile with Id: %d could not be found", id);
+    return;
+  }
+
   _fogTiles.erase(id);
 }
 
