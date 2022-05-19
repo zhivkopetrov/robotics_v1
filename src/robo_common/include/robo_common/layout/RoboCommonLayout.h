@@ -27,6 +27,9 @@ public:
   void deinit();
   void draw() const;
 
+  //contains FogOfWar
+  void drawSecondLayer() const;
+
   //TODO create a separate help page class
   void activateHelpPage();
 

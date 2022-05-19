@@ -34,6 +34,8 @@ void RoboCleanerLayout::draw() const {
   _commonLayout.draw();
   _entityHandler.draw();
   _panelHandler.draw();
+
+  _commonLayout.drawSecondLayer();
 }
 
 void RoboCleanerLayout::onEnergyDepleted() {
