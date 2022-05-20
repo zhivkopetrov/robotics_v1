@@ -8,7 +8,7 @@
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include "robo_common/defines/RoboCommonDefines.h"
-#include "robo_common/helpers/ConfigFileLoader.h"
+#include "robo_common/helpers/LevelFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -99,7 +99,7 @@ FieldConfig generateFieldConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   const auto levelId = 1;
-  cfg.description.data = ConfigFileLoader::readFieldData(projectInstallPrefix,
+  cfg.description.data = LevelFileLoader::readFieldData(projectInstallPrefix,
       levelId);
 
   cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
@@ -135,7 +135,7 @@ SolutionValidatorConfig generateSolutionValidatorConfig(int32_t mapTilesCount) {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   const auto levelId = 1;
-  cfg.longestSequence = ConfigFileLoader::readMinerLongestSolution(
+  cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
   cfg.targetMapTilesCount = mapTilesCount;
 

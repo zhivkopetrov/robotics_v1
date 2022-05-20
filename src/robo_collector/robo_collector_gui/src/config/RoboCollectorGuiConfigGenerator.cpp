@@ -7,7 +7,7 @@
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include "robo_common/defines/RoboCommonDefines.h"
-#include "robo_common/helpers/ConfigFileLoader.h"
+#include "robo_common/helpers/LevelFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -163,7 +163,7 @@ FieldConfig generateFieldConfig() {
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   const auto levelId = 1;
   cfg.description.data =
-      ConfigFileLoader::readFieldData(projectInstallPrefix, levelId);
+      LevelFileLoader::readFieldData(projectInstallPrefix, levelId);
 
   cfg.description.rows = cfg.description.data.size();
   if (!cfg.description.data.empty()) {

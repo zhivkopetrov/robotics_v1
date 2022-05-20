@@ -1,5 +1,5 @@
-#ifndef ROBO_COMMON_CONFIGFILELOADER_H_
-#define ROBO_COMMON_CONFIGFILELOADER_H_
+#ifndef ROBO_COMMON_LEVELFILELOADER_H_
+#define ROBO_COMMON_LEVELFILELOADER_H_
 
 //System headers
 #include <cstdint>
@@ -13,9 +13,9 @@
 
 //Forward declarations
 
-class ConfigFileLoader {
+class LevelFileLoader {
 public:
-  ConfigFileLoader() = delete;
+  LevelFileLoader() = delete;
 
   static FieldData readFieldData(const std::string &projectInstallPrefix,
                                  int32_t levelId);
@@ -28,4 +28,4 @@ private:
                                    int32_t levelId, std::string &outFolderPath);
 };
 
-#endif /* ROBO_COMMON_CONFIGFILELOADER_H_ */
+#endif /* ROBO_COMMON_LEVELFILELOADER_H_ */

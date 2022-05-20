@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_common/helpers/ConfigFileLoader.h"
+#include "robo_common/helpers/LevelFileLoader.h"
 
 //System headers
 #include <cerrno>
@@ -18,7 +18,7 @@ constexpr auto FIELD_MAP_FILE_NAME = "field_map.txt";
 constexpr auto MINER_LONGEST_SOLUTION_FILE_NAME = "solution.txt";
 }
 
-FieldData ConfigFileLoader::readFieldData(
+FieldData LevelFileLoader::readFieldData(
     const std::string &projectInstallPrefix, int32_t levelId) {
   std::string filePath;
   if (ErrorCode::SUCCESS !=
@@ -47,7 +47,7 @@ FieldData ConfigFileLoader::readFieldData(
   return data;
 }
 
-std::vector<FieldPos> ConfigFileLoader::readMinerLongestSolution(
+std::vector<FieldPos> LevelFileLoader::readMinerLongestSolution(
     const std::string &projectInstallPrefix, int32_t levelId) {
   std::string filePath;
   if (ErrorCode::SUCCESS !=
@@ -74,7 +74,7 @@ std::vector<FieldPos> ConfigFileLoader::readMinerLongestSolution(
   return sequence;
 }
 
-ErrorCode ConfigFileLoader::readLevelFolder(
+ErrorCode LevelFileLoader::readLevelFolder(
     const std::string &projectInstallPrefix, int32_t levelId,
     std::string &outFolderPath) {
   outFolderPath = projectInstallPrefix;
