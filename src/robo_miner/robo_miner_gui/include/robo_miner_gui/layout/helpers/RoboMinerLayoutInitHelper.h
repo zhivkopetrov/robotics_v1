@@ -24,7 +24,7 @@ public:
   static ErrorCode init(const RoboMinerLayoutConfig &cfg,
                         const RoboMinerLayoutOutInterface &outInterface,
                         RoboCommonLayoutInterface &commonInterface, //out param
-                        RoboMinerLayout &layout);
+      RoboMinerLayout &layout);
 
 private:
   static ErrorCode initPanelHandler(
@@ -34,7 +34,8 @@ private:
       RoboMinerLayout &layout);
 
   static ErrorCode initCrystalHandler(
-      uint64_t crystalRsrcId, const RoboCommonLayoutInterface &commonInterface,
+      const RoboMinerLayoutConfig &layoutCfg,
+      const RoboCommonLayoutInterface &commonInterface,
       RoboMinerLayout &layout);
 };
 

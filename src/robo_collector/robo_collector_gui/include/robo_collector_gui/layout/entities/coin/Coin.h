@@ -39,6 +39,7 @@ struct CoinConfig {
   char fieldEmptyMarker = '?';
 };
 
+//TODO support dynamic scaling on the class
 class Coin final : public CollisionObject {
 public:
   ErrorCode init(const CoinConfig &cfg, const CoinOutInterface &interface);

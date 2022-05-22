@@ -17,6 +17,8 @@ struct TileConfig {
   uint64_t debugFontRsrcId = 0;
   int32_t row = 0;
   int32_t col = 0;
+  int32_t width = 0;
+  int32_t height = 0;
 };
 
 #endif /* ROBO_COMMON_TILECONFIG_H_ */

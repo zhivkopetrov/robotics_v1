@@ -90,6 +90,8 @@ ErrorCode RoboCollectorLayoutInitHelper::initRobots(
   RobotState initialState;
   RobotAnimatorConfigBase animatorCfgBase;
   animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
+  animatorCfgBase.width = fieldCfg.description.tileWidth;
+  animatorCfgBase.height = fieldCfg.description.tileHeight;
   constexpr auto playerIdOffset = 1; //+1, because Player robot has index 0
   for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
     animatorCfgBase.robotRsrcId = baseCfg.enemiesRsrcId;

@@ -17,6 +17,9 @@ constexpr auto DEBUG_TEXT_OFFSET_Y = 10;
 
 ErrorCode Tile::init(const TileConfig &cfg) {
   _tileImg.create(cfg.tileRsrcId);
+  _tileImg.activateScaling();
+  _tileImg.setScaledWidth(cfg.width);
+  _tileImg.setScaledHeight(cfg.height);
   _tileImg.setPosition(cfg.screenCoordinates);
 
   std::string debugText;

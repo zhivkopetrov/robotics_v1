@@ -31,6 +31,8 @@ struct RobotAnimatorConfigBase {
   uint64_t damageMarkerRsrcId = 0;
   int32_t frameId = 0;
   int32_t robotId = 0;
+  int32_t width = 0;
+  int32_t height = 0;
   int32_t moveAnimTimerId = 0;
   int32_t wallCollisionAnimTimerId = 0;
   int32_t robotCollisionAnimTimerId = 0;

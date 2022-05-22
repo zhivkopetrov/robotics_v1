@@ -14,6 +14,8 @@
 
 struct CrystalHandlerConfig {
   uint64_t crystalRsrcId = 0;
+  int32_t tileWidth = 0;
+  int32_t tileHeight = 0;
   GetFieldDescriptionCb getFieldDescriptionCb;
 };
 

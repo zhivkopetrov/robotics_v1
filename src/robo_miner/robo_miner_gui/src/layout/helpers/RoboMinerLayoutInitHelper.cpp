@@ -39,8 +39,7 @@ ErrorCode RoboMinerLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS !=
-      initCrystalHandler(cfg.crystalRsrcId, commonInterface, layout)) {
+  if (ErrorCode::SUCCESS != initCrystalHandler(cfg, commonInterface, layout)) {
     LOGERR("initCrystals() failed");
     return ErrorCode::FAILURE;
   }
@@ -71,10 +70,13 @@ ErrorCode RoboMinerLayoutInitHelper::initPanelHandler(
 }
 
 ErrorCode RoboMinerLayoutInitHelper::initCrystalHandler(
-    uint64_t crystalRsrcId, const RoboCommonLayoutInterface &commonInterface,
+    const RoboMinerLayoutConfig &layoutCfg,
+    const RoboCommonLayoutInterface &commonInterface,
     RoboMinerLayout &layout) {
   CrystalHandlerConfig cfg;
-  cfg.crystalRsrcId = crystalRsrcId;
+  cfg.crystalRsrcId = layoutCfg.crystalRsrcId;
+  cfg.tileWidth = layoutCfg.commonLayoutCfg.fieldCfg.description.tileWidth;
+  cfg.tileHeight = layoutCfg.commonLayoutCfg.fieldCfg.description.tileHeight;
   cfg.getFieldDescriptionCb = commonInterface.getFieldDescriptionCb;
 
   if (ErrorCode::SUCCESS != layout._crystalHandler.init(cfg)) {

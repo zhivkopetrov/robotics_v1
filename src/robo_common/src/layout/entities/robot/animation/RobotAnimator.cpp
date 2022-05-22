@@ -44,19 +44,24 @@ ErrorCode RobotAnimator::init(const RobotAnimatorConfig &cfg,
       FieldUtils::getAbsPos(cfg.startPos, _outInterface.getFieldDescriptionCb());
   _robotImg.setPosition(robotAbsPos);
   _robotImg.setFrame(cfg.baseCfg.frameId);
-  _robotImg.setPredefinedRotationCenter(RotationCenterType::ORIG_CENTER);
+  _robotImg.activateScaling();
+  _robotImg.setScaledWidth(cfg.baseCfg.width);
+  _robotImg.setScaledHeight(cfg.baseCfg.height);
+  _robotImg.setPredefinedRotationCenter(RotationCenterType::SCALED_CENTER);
   _robotImg.setRotation(RobotUtils::getRotationDegFromDir(cfg.startDir));
 
-  constexpr auto step = 2;
-  _collisionOffsets = { Point(-step, -step), //go up left
-  Point(step, step),   //return center
-  Point(step, step),   //go down right
-  Point(-step, -step), //return center
-  Point(step, -step),  //go up right
-  Point(-step, step),  //return center
-  Point(-step, step),  //go down left
-  Point(step, -step),  //return center
-      };
+  constexpr auto divisor = 80; //chosen to visually fit
+  const auto step = cfg.baseCfg.width / divisor;
+  _collisionOffsets = {
+    Point(-step, -step), //go up left
+    Point(step, step),   //return center
+    Point(step, step),   //go down right
+    Point(-step, -step), //return center
+    Point(step, -step),  //go up right
+    Point(-step, step),  //return center
+    Point(-step, step),  //go down left
+    Point(step, -step),  //return center
+  };
 
   configurePlayerDamageAnim();
   _playerDamageAnim.hideAnimation();
@@ -100,7 +105,7 @@ void RobotAnimator::startRotAnim(const FieldPos &currPos, Direction currDir,
   const auto rotAngleStep = 4.5 * angleSign;
   const auto totalRotAngle = 90.0 * angleSign;
   const auto rotCenter = _robotImg.getPredefinedRotationCenter(
-      RotationCenterType::ORIG_CENTER);
+      RotationCenterType::SCALED_CENTER);
   const auto futureDir = RobotUtils::getDirAfterRotation(currDir, rotDir);
   _animEndCb.setAnimEndData(futureDir, currPos);
   _animEndCb.setCbStatus(RobotAnimEndCbReport::ENABLE);
@@ -134,7 +139,7 @@ void RobotAnimator::startCollisionImpactAnim(RobotEndTurn status) {
 }
 
 Rectangle RobotAnimator::getBoundary() const {
-  return _robotImg.getImageRect();
+  return _robotImg.getScaledRect();
 }
 
 ErrorCode RobotAnimator::initOutInterface(

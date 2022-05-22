@@ -84,6 +84,8 @@ ErrorCode Field::initTiles(const FieldConfig &cfg) {
   TileConfig tileCfg;
   tileCfg.tileRsrcId = cfg.tileRsrcId;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
+  tileCfg.width = cfg.description.tileWidth;
+  tileCfg.height = cfg.description.tileHeight;
 
   _tiles.resize(cfg.description.emptyTilesCount);
   int32_t currTileId = 0;
