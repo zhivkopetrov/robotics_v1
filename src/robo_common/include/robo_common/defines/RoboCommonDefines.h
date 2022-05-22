@@ -21,7 +21,8 @@ enum RobotDefines {
 enum Markers {
   PLAYER_MARKER = 'B', //for Blinky
   ENEMY_MARKER = 'E',
-  HARD_OBSTACLE_MARKER = 'X',
+  SMALL_OBSTACLE_MARKER = 'x',
+  BIG_OBSTACLE_MARKER = 'X',
   EMPTY_TILE_MARKER = '.'
 };
 
@@ -71,8 +72,11 @@ struct FieldDescription {
   int32_t tileHeight = 0;
   int32_t rows = 0;
   int32_t cols = 0;
-  char emptyDataMarker = '.';
-  char hardObstacleMarker = '#';
+  int32_t emptyTilesCount = 0;
+  int32_t obstacleTilesCount = 0;
+  char emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
+  std::vector<char> obstacleMarkers { RoboCommonDefines::BIG_OBSTACLE_MARKER,
+      RoboCommonDefines::SMALL_OBSTACLE_MARKER };
 };
 
 #endif /* ROBO_COMMON_ROBOCOMMONDEFINES_H_ */

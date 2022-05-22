@@ -50,8 +50,9 @@ void CrystalHandler::onCrystalClicked(const FieldPos &fieldPos) {
   }
 
   const auto &fieldDescr = _getFieldDescriptionCb();
-  const std::vector<char> nonCrystalMarkers = { fieldDescr.emptyDataMarker,
-      fieldDescr.hardObstacleMarker };
+  std::vector<char> nonCrystalMarkers = fieldDescr.obstacleMarkers;
+  nonCrystalMarkers.push_back(fieldDescr.emptyDataMarker);
+
   const auto localCrystalSequence = FloodFill::findLocalCrystalSequence(
       fieldDescr.data, nonCrystalMarkers, fieldPos);
   for (const auto &pos : localCrystalSequence) {

@@ -61,7 +61,8 @@ SurroundingTiles RobotUtils::getSurroundingTiles(const FieldDescription &descr,
     const auto &pos = futurePoses[i];
     result[i] =
         FieldUtils::isInsideField(pos, descr) ?
-            descr.data[pos.row][pos.col] : descr.hardObstacleMarker;
+            descr.data[pos.row][pos.col] :
+            RoboCommonDefines::BIG_OBSTACLE_MARKER;
   }
 
   return result;

@@ -34,8 +34,11 @@ bool FieldUtils::isInsideField(const FieldPos &fieldPos,
     return false;
   }
 
-  if (descr.hardObstacleMarker == descr.data[fieldPos.row][fieldPos.col]) {
-    return false;
+  const char tile = descr.data[fieldPos.row][fieldPos.col];
+  for (const char obstacleMarker : descr.obstacleMarkers) {
+    if (obstacleMarker == tile) {
+      return false;
+    }
   }
 
   return true;

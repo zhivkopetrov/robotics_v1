@@ -18,11 +18,13 @@ constexpr auto FIELD_MAP_FILE_NAME = "field_map.txt";
 constexpr auto MINER_LONGEST_SOLUTION_FILE_NAME = "solution.txt";
 }
 
-FieldData LevelFileLoader::readFieldData(
+FieldDescription LevelFileLoader::readFieldDescription(
     const std::string &projectInstallPrefix, int32_t levelId) {
+  FieldDescription fieldDescr;
+
   std::string filePath;
-  if (ErrorCode::SUCCESS !=
-      readLevelFolder(projectInstallPrefix, levelId, filePath)) {
+  if (ErrorCode::SUCCESS != readLevelFolder(projectInstallPrefix, levelId,
+          filePath)) {
     LOGERR("Error, readLevelFolder() failed");
     return {};
   }
@@ -35,23 +37,31 @@ FieldData LevelFileLoader::readFieldData(
     return {};
   }
 
-  size_t rows = 0;
-  size_t cols = 0;
-  ifstream >> rows >> cols;
-  FieldData data(rows, std::vector<char>(cols));
-  for (auto &row : data) {
+  ifstream >> fieldDescr.rows >> fieldDescr.cols
+           >> fieldDescr.tileWidth >> fieldDescr.tileHeight;
+  fieldDescr.data.resize(fieldDescr.rows);
+  for (auto &row : fieldDescr.data) {
+    row.resize(fieldDescr.cols);
     for (auto &elem : row) {
       ifstream >> elem;
+
+      if ((RoboCommonDefines::SMALL_OBSTACLE_MARKER == elem) ||
+          (RoboCommonDefines::BIG_OBSTACLE_MARKER == elem)) {
+        ++fieldDescr.obstacleTilesCount;
+      } else {
+        ++fieldDescr.emptyTilesCount;
+      }
     }
   }
-  return data;
+
+  return fieldDescr;
 }
 
 std::vector<FieldPos> LevelFileLoader::readMinerLongestSolution(
     const std::string &projectInstallPrefix, int32_t levelId) {
   std::string filePath;
-  if (ErrorCode::SUCCESS !=
-      readLevelFolder(projectInstallPrefix, levelId, filePath)) {
+  if (ErrorCode::SUCCESS != readLevelFolder(projectInstallPrefix, levelId,
+          filePath)) {
     LOGERR("Error, readLevelFolder() failed");
     return {};
   }
@@ -78,8 +88,7 @@ ErrorCode LevelFileLoader::readLevelFolder(
     const std::string &projectInstallPrefix, int32_t levelId,
     std::string &outFolderPath) {
   outFolderPath = projectInstallPrefix;
-  outFolderPath.append("/").append(
-      ResourceFileHeader::getResourcesFolderName()).append(
+  outFolderPath.append("/").append(ResourceFileHeader::getResourcesFolderName()).append(
       "/levels/level_").append(std::to_string(levelId));
 
   if (!FileSystemUtils::isDirectoryPresent(outFolderPath)) {

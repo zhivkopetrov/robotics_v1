@@ -29,11 +29,9 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
-constexpr auto TILE_WIDTH_HEIGHT = 160;
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
 
 //TODO compute from the field config
-constexpr auto TOTAL_FIELD_TILES = 42;
 constexpr auto RUBBISH_CLEANS_CTN = 63;
 
 enum TimerId {
@@ -70,12 +68,12 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig() {
+PanelHandlerConfig generatePanelHandlerConfig(int32_t mapTilesCount) {
   PanelHandlerConfig cfg;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile
-  tilePanelCfg.targetNumber = TOTAL_FIELD_TILES;
+  tilePanelCfg.targetNumber = mapTilesCount;
   tilePanelCfg.rsrcId = RoboCleanerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
@@ -111,19 +109,11 @@ FieldConfig generateFieldConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   const auto levelId = 1;
-  cfg.description.data =
-      LevelFileLoader::readFieldData(projectInstallPrefix, levelId);
 
-  cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
-  if (!cfg.description.data.empty()) {
-    cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
-  }
-  cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
-  cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
+  cfg.description =
+      LevelFileLoader::readFieldDescription(projectInstallPrefix, levelId);
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
-  cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
-  cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
 
   return cfg;
 }
@@ -174,9 +164,6 @@ EngineConfig generateEngineConfig() {
 RoboCleanerGuiConfig generateGameConfig() {
   RoboCleanerGuiConfig cfg;
   auto& layoutCfg = cfg.layoutCfg;
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
-  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
-
 
   auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
@@ -187,6 +174,9 @@ RoboCleanerGuiConfig generateGameConfig() {
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
+
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(mapTilesCount);
+  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
 
   return cfg;
 }

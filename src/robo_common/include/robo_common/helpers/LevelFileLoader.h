@@ -17,8 +17,8 @@ class LevelFileLoader {
 public:
   LevelFileLoader() = delete;
 
-  static FieldData readFieldData(const std::string &projectInstallPrefix,
-                                 int32_t levelId);
+  static FieldDescription readFieldDescription(
+      const std::string &projectInstallPrefix, int32_t levelId);
 
   static std::vector<FieldPos> readMinerLongestSolution(
       const std::string &projectInstallPrefix, int32_t levelId);

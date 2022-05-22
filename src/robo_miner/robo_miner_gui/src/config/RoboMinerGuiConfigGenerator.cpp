@@ -29,7 +29,6 @@ constexpr auto WINDOW_WIDTH = 1848;
 constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
-constexpr auto TILE_WIDTH_HEIGHT = 160;
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
 
 enum TimerId {
@@ -99,19 +98,11 @@ FieldConfig generateFieldConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   const auto levelId = 1;
-  cfg.description.data = LevelFileLoader::readFieldData(projectInstallPrefix,
+  cfg.description = LevelFileLoader::readFieldDescription(projectInstallPrefix,
       levelId);
 
-  cfg.description.rows = static_cast<int32_t>(cfg.description.data.size());
-  if (!cfg.description.data.empty()) {
-    cfg.description.cols = static_cast<int32_t>(cfg.description.data[0].size());
-  }
-  cfg.description.tileWidth = TILE_WIDTH_HEIGHT;
-  cfg.description.tileHeight = TILE_WIDTH_HEIGHT;
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
-  cfg.description.emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
-  cfg.description.hardObstacleMarker = RoboCommonDefines::HARD_OBSTACLE_MARKER;
 
   return cfg;
 }

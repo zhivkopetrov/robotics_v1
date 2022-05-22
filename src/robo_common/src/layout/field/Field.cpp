@@ -85,18 +85,7 @@ ErrorCode Field::initTiles(const FieldConfig &cfg) {
   tileCfg.tileRsrcId = cfg.tileRsrcId;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
 
-  const auto hardObstacleMarker = cfg.description.hardObstacleMarker;
-  const auto tilesCount = std::accumulate(cfg.description.data.begin(),
-      cfg.description.data.end(), 0,
-      [hardObstacleMarker](auto count, const auto &row) {
-        return count
-            + std::count_if(std::begin(row), std::end(row),
-                [hardObstacleMarker](auto marker) {
-                  return marker != hardObstacleMarker;
-                });
-      });
-
-  _tiles.resize(tilesCount);
+  _tiles.resize(cfg.description.emptyTilesCount);
   int32_t currTileId = 0;
 
   for (int32_t row = 0; row < cfg.description.rows; ++row) {
@@ -106,7 +95,8 @@ ErrorCode Field::initTiles(const FieldConfig &cfg) {
     tileCfg.row = row;
     for (int32_t col = 0; col < cfg.description.cols; ++col) {
       const auto currMarker = cfg.description.data[row][col];
-      if (cfg.description.hardObstacleMarker == currMarker) {
+      if ((RoboCommonDefines::BIG_OBSTACLE_MARKER == currMarker) ||
+          (RoboCommonDefines::SMALL_OBSTACLE_MARKER == currMarker)) {
         continue;
       }
 

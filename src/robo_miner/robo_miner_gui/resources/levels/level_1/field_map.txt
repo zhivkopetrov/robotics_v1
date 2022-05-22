@@ -1,7 +1,8 @@
 6 7
-rr...br
-gr.ccrr
+160 160
+rrXXXbr
+grXccrr
 grrrrrg
 grcccgg
-.rcbb.g
-...pp..
+XrcbbXg
+XXXppXg
