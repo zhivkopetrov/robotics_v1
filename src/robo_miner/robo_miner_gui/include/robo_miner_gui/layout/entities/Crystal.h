@@ -20,6 +20,8 @@ struct CrystalConfig {
   uint64_t rsrcId;
   FieldPos fieldPos;
   Point tileOffset;
+  int32_t width = 0;
+  int32_t height = 0;
   CrystalType type;
   CrystalClickedCb crystalClickCb;
   GetFieldDescriptionCb getFieldDescriptionCb;

@@ -81,10 +81,13 @@ ErrorCode CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
 
   _crystals.resize(crystalsCount);
 
-  constexpr auto offsetFromTileX = 20;
-  constexpr auto offsetFromTileY = 17;
+  constexpr auto crystalToTileRatio = 0.625;
+  const auto offsetFromTileX = static_cast<int32_t>(0.19 * cfg.tileWidth);
+  const auto offsetFromTileY = static_cast<int32_t>(0.19 * cfg.tileHeight);
   CrystalConfig crystalCfg;
   crystalCfg.rsrcId = cfg.crystalRsrcId;
+  crystalCfg.width = crystalToTileRatio * cfg.tileWidth;
+  crystalCfg.height = crystalToTileRatio * cfg.tileHeight;
   crystalCfg.tileOffset = Point(offsetFromTileX, offsetFromTileY);
   crystalCfg.getFieldDescriptionCb = cfg.getFieldDescriptionCb;
   crystalCfg.crystalClickCb = std::bind(&CrystalHandler::onCrystalClicked, this,

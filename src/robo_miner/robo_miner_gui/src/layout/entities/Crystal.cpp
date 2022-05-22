@@ -30,9 +30,16 @@ ErrorCode Crystal::init(const CrystalConfig& cfg) {
   setFrame(getEnumValue(cfg.type));
   activateAlphaModulation();
 
+  auto& buttonTexture = getButtonTextureMutable();
+  buttonTexture.activateScaling();
+
   auto pos = FieldUtils::getAbsPos(cfg.fieldPos, _getFieldDescriptionCb());
   pos += cfg.tileOffset;
   setPosition(pos);
+  buttonTexture.setScaledWidth(cfg.width);
+  buttonTexture.setScaledHeight(cfg.height);
+
+  setEventCaptureRect(buttonTexture.getScaledRect());
 
   return ErrorCode::SUCCESS;
 }
