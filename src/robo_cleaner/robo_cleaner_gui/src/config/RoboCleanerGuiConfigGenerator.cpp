@@ -68,12 +68,12 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig(int32_t mapTilesCount) {
+PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount) {
   PanelHandlerConfig cfg;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile
-  tilePanelCfg.targetNumber = mapTilesCount;
+  tilePanelCfg.targetNumber = emptyTilesCount;
   tilePanelCfg.rsrcId = RoboCleanerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
@@ -169,13 +169,15 @@ RoboCleanerGuiConfig generateGameConfig() {
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
       * commonLayoutCfg.fieldCfg.description.cols;
+  const auto emptyTilesCount =
+      commonLayoutCfg.fieldCfg.description.emptyTilesCount;
 
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(mapTilesCount);
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(mapTilesCount);
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(emptyTilesCount);
   layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
 
   return cfg;

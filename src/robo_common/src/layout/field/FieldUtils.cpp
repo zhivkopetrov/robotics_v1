@@ -34,14 +34,19 @@ bool FieldUtils::isInsideField(const FieldPos &fieldPos,
     return false;
   }
 
+  return true;
+}
+
+bool FieldUtils::collidesWithObstacle(const FieldPos &fieldPos,
+                                      const FieldDescription &descr) {
   const char tile = descr.data[fieldPos.row][fieldPos.col];
   for (const char obstacleMarker : descr.obstacleMarkers) {
     if (obstacleMarker == tile) {
-      return false;
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
 
 FieldPos FieldUtils::getAdjacentPos(Direction dir, const FieldPos &fieldPos) {

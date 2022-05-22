@@ -63,7 +63,7 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig(int32_t mapTilesCount,
+PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
                                               size_t longestCrystalSeqSize) {
   PanelHandlerConfig cfg;
 
@@ -76,7 +76,7 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t mapTilesCount,
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile
-  tilePanelCfg.targetNumber = mapTilesCount;
+  tilePanelCfg.targetNumber = emptyTilesCount;
   tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
@@ -120,7 +120,8 @@ FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
   return cfg;
 }
 
-SolutionValidatorConfig generateSolutionValidatorConfig(int32_t mapTilesCount) {
+SolutionValidatorConfig generateSolutionValidatorConfig(
+    int32_t emptyTilesCount) {
   SolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
@@ -128,7 +129,7 @@ SolutionValidatorConfig generateSolutionValidatorConfig(int32_t mapTilesCount) {
   const auto levelId = 1;
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
-  cfg.targetMapTilesCount = mapTilesCount;
+  cfg.targetMapTilesCount = emptyTilesCount;
 
   return cfg;
 }
@@ -163,15 +164,17 @@ RoboMinerGuiConfig generateGameConfig() {
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
       * commonLayoutCfg.fieldCfg.description.cols;
+  const auto emptyTilesCount =
+      commonLayoutCfg.fieldCfg.description.emptyTilesCount;
 
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(mapTilesCount);
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(mapTilesCount);
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(emptyTilesCount);
 
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(mapTilesCount,
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(emptyTilesCount,
       cfg.solutionValidatorCfg.longestSequence.size());
   layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
 

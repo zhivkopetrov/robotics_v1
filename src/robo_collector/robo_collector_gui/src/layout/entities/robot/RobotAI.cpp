@@ -53,7 +53,8 @@ void RobotAI::makeMove(const RobotActInterface& actInterface) {
 bool RobotAI::isForwardDirValid(const RobotState& state) const {
   const auto &fieldDescr = _getFieldDescriptionCb();
   const auto futurePos = FieldUtils::getAdjacentPos(state.dir, state.fieldPos);
-  if (!FieldUtils::isInsideField(futurePos, fieldDescr)) {
+  if (!FieldUtils::isInsideField(futurePos, fieldDescr) ||
+      FieldUtils::collidesWithObstacle(futurePos, fieldDescr)) {
     return false;
   }
 

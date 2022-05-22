@@ -27,6 +27,9 @@ public:
   static bool isInsideField(const FieldPos &fieldPos,
                             const FieldDescription &descr);
 
+  static bool collidesWithObstacle(const FieldPos &fieldPos,
+                                   const FieldDescription &descr);
+
   static FieldPos getAdjacentPos(Direction dir, const FieldPos &fieldPos);
 };
 

@@ -23,7 +23,8 @@ enum Markers {
   ENEMY_MARKER = 'E',
   SMALL_OBSTACLE_MARKER = 'x',
   BIG_OBSTACLE_MARKER = 'X',
-  EMPTY_TILE_MARKER = '.'
+  EMPTY_TILE_MARKER = '.',
+  FIELD_OUT_OF_BOULD_MARKER = '#'
 };
 
 enum FieldDefines {
