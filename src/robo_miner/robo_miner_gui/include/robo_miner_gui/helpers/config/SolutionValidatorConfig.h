@@ -13,6 +13,7 @@
 struct SolutionValidatorConfig {
   CrystalSequence longestSequence;
   int32_t targetMapTilesCount = 0;
+  FieldPos playerStartLocation;
 };
 
 #endif /* ROBO_MINER_GUI_SOLUTIONVALIDATORCONFIG_H_ */

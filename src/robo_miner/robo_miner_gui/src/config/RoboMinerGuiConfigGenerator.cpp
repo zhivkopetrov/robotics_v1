@@ -121,7 +121,7 @@ FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
 }
 
 SolutionValidatorConfig generateSolutionValidatorConfig(
-    int32_t emptyTilesCount) {
+    const FieldDescription& fieldDescr) {
   SolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
@@ -129,7 +129,9 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
   const auto levelId = 1;
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
-  cfg.targetMapTilesCount = emptyTilesCount;
+  cfg.targetMapTilesCount = fieldDescr.emptyTilesCount;
+  cfg.playerStartLocation.row = fieldDescr.rows - 1;
+  cfg.playerStartLocation.col = fieldDescr.cols - 1;
 
   return cfg;
 }
@@ -172,7 +174,8 @@ RoboMinerGuiConfig generateGameConfig() {
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(emptyTilesCount);
+  cfg.solutionValidatorCfg =
+      generateSolutionValidatorConfig(commonLayoutCfg.fieldCfg.description);
 
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(emptyTilesCount,
       cfg.solutionValidatorCfg.longestSequence.size());

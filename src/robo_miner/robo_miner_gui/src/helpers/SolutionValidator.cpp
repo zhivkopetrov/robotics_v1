@@ -32,6 +32,8 @@ ErrorCode SolutionValidator::init(
   _validationOptions.longestSequenceValidationPoints.resize(uniquesCount,
       false);
 
+  _reveleadMapTiles.insert(cfg.playerStartLocation);
+
   return ErrorCode::SUCCESS;
 }
 
@@ -78,7 +80,6 @@ ValidationResult SolutionValidator::validateFieldMap(
   const auto &fieldData = _outInterface.getFieldDescriptionCb().data;
   if (fieldData != data) {
     auto &tries = _validationOptions.fieldMapValidationsTriesLeft;
-    ;
     --tries;
     outError = "Incorrect FieldMap provided. Tries left: ";
     outError.append(std::to_string(tries));
@@ -116,7 +117,6 @@ ValidationResult SolutionValidator::validateLongestSequence(
       sequence.begin(), sequence.end(), std::inserter(diff, diff.begin()));
   if (!diff.empty()) {
     auto &tries = _validationOptions.longestSequenceValidationsTriesLeft;
-    ;
     --tries;
     outError = "Incorrect longest sequence provided. Tries left: ";
     outError.append(std::to_string(tries));
