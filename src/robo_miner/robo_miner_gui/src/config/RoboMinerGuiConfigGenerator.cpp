@@ -30,6 +30,7 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
+constexpr auto LEVEL_ID = 3;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -105,9 +106,8 @@ FieldConfig generateFieldConfig() {
 
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  const auto levelId = 1;
   cfg.description = LevelFileLoader::readFieldDescription(projectInstallPrefix,
-      levelId);
+      LEVEL_ID);
 
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
 
@@ -136,9 +136,8 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
 
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  const auto levelId = 1;
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
-      projectInstallPrefix, levelId);
+      projectInstallPrefix, LEVEL_ID);
   cfg.targetMapTilesCount = fieldDescr.emptyTilesCount;
   cfg.playerStartLocation.row = fieldDescr.rows - 1;
   cfg.playerStartLocation.col = fieldDescr.cols - 1;
