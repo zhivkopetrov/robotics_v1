@@ -43,9 +43,9 @@ void FogOfWar::draw() const {
     return;
   }
 
-  for (const auto &[_, fogTile] : _fogTiles) {
-    fogTile.draw();
-  }
+//  for (const auto &[_, fogTile] : _fogTiles) {
+//    fogTile.draw();
+//  }
 }
 
 ErrorCode FogOfWar::createFogTiles(

@@ -49,6 +49,14 @@ enum TimerId {
   FOG_OF_WAR_FADE_TIMER_IDS_END = FOG_OF_WAR_FADE_TIMER_IDS_START + 200
 };
 
+ObstacleHandlerConfig generateObstacleHandlerConfig() {
+  ObstacleHandlerConfig cfg;
+
+  cfg.obstacleRsrcId = RoboMinerGuiResources::MAP_OBSTACLE;
+
+  return cfg;
+}
+
 RobotBaseConfig generateRobotBaseConfig() {
   RobotBaseConfig cfg;
 
@@ -100,6 +108,8 @@ FieldConfig generateFieldConfig() {
   const auto levelId = 1;
   cfg.description = LevelFileLoader::readFieldDescription(projectInstallPrefix,
       levelId);
+
+  cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
 
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;

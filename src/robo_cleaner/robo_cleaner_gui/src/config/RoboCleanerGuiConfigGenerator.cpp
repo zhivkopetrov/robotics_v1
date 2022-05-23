@@ -103,6 +103,14 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount) {
   return cfg;
 }
 
+ObstacleHandlerConfig generateObstacleHandlerConfig() {
+  ObstacleHandlerConfig cfg;
+
+  cfg.obstacleRsrcId = RoboCleanerGuiResources::MAP_OBSTACLE;
+
+  return cfg;
+}
+
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
 
@@ -112,6 +120,8 @@ FieldConfig generateFieldConfig() {
 
   cfg.description =
       LevelFileLoader::readFieldDescription(projectInstallPrefix, levelId);
+  cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
+
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
 

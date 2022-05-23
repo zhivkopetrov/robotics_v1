@@ -12,23 +12,22 @@
 
 //Own components headers
 #include "robo_common/layout/field/config/FieldConfig.h"
+#include "robo_common/layout/field/FieldUtils.h"
 #include "robo_common/layout/field/config/TileConfig.h"
 
 ErrorCode Field::init(const FieldConfig &cfg) {
   if (0 >= cfg.description.rows || 0 >= cfg.description.cols) {
-    LOGERR(
-        "Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
-        "needs to be positive number",
-        cfg.description.rows, cfg.description.cols);
+    LOGERR("Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
+           "needs to be positive number",
+           cfg.description.rows, cfg.description.cols);
     return ErrorCode::FAILURE;
   }
+  _description = cfg.description;
 
   if (ErrorCode::SUCCESS != initTiles(cfg)) {
     LOGERR("Error, initTiles() failed");
     return ErrorCode::FAILURE;
   }
-
-  _description = cfg.description;
 
   const auto fieldWidth = cfg.description.cols * cfg.description.tileWidth;
   const auto fieldHeight = cfg.description.rows * cfg.description.tileHeight;
@@ -54,6 +53,7 @@ void Field::updateFieldFbo() {
   for (const auto &tile : _tiles) {
     tile.drawOnFbo(_fieldFbo);
   }
+  _obstacleHandler.drawOnFbo(_fieldFbo);
 
   _fieldFbo.update();
   _fieldFbo.lock();
@@ -89,16 +89,20 @@ ErrorCode Field::initTiles(const FieldConfig &cfg) {
 
   _tiles.resize(cfg.description.emptyTilesCount);
   int32_t currTileId = 0;
+  FieldPos currFieldPos;
+  std::vector<FieldPos> obstaclePositions;
+  obstaclePositions.reserve(cfg.description.obstacleTilesCount);
 
   for (int32_t row = 0; row < cfg.description.rows; ++row) {
     tileCfg.screenCoordinates.y = RoboCommonDefines::FIRST_TILE_Y_POS
         + (row * cfg.description.tileHeight);
 
+    currFieldPos.row = row;
     tileCfg.row = row;
     for (int32_t col = 0; col < cfg.description.cols; ++col) {
-      const auto currMarker = cfg.description.data[row][col];
-      if ((RoboCommonDefines::BIG_OBSTACLE_MARKER == currMarker) ||
-          (RoboCommonDefines::SMALL_OBSTACLE_MARKER == currMarker)) {
+      currFieldPos.col = col;
+      if (FieldUtils::collidesWithObstacle(currFieldPos, cfg.description)) {
+        obstaclePositions.push_back(currFieldPos);
         continue;
       }
 
@@ -113,6 +117,19 @@ ErrorCode Field::initTiles(const FieldConfig &cfg) {
       }
       ++currTileId;
     }
+  }
+
+  const int32_t obstaclesCount = static_cast<int32_t>(obstaclePositions.size());
+  if (cfg.description.obstacleTilesCount != obstaclesCount) {
+    LOGERR("Error, expected vs current obstacles mismatch [%d vs %d]",
+        cfg.description.obstacleTilesCount, obstaclesCount);
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != _obstacleHandler.init(cfg.obstacleHandlerConfig,
+          _description, obstaclePositions)) {
+    LOGERR("Error, _obstacleHandler.init() failed");
+    return ErrorCode::FAILURE;
   }
 
   return ErrorCode::SUCCESS;

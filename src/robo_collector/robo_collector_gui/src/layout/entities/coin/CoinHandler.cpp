@@ -17,7 +17,7 @@ ErrorCode CoinHandler::init(const CoinHandlerConfig &cfg,
            rsrcIdsSize, cfg.maxCoins);
     return ErrorCode::FAILURE;
   }
-  _coins.resize(0);
+  _coins.resize(cfg.maxCoins);
 
   const int32_t fieldMarkersSize =
       static_cast<int32_t>(cfg.fieldMarkers.size());
@@ -33,7 +33,7 @@ ErrorCode CoinHandler::init(const CoinHandlerConfig &cfg,
   CoinConfig coinCfg;
   coinCfg.tileOffset = Point(coinOffsetFromTile, coinOffsetFromTile);
 
-  for (int32_t i = 0; i < 0; ++i) {
+  for (int32_t i = 0; i < cfg.maxCoins; ++i) {
     coinCfg.fieldEmptyMarker = cfg.fieldEmptyMarker;
     coinCfg.coinScore = goldCoinScore - i;
     coinCfg.rsrcId = cfg.animRsrcIds[i];

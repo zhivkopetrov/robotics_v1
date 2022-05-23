@@ -30,11 +30,6 @@ ErrorCode EntityHandler::init(
     rubbishCfg.fieldPos.row = row;
     for (int32_t col = 0; col < fieldDescr.cols; ++col) {
       const auto marker = fieldDescr.data[row][col];
-      if (RoboCleanerDefines::OBSTACLE_MARKER == marker) {
-        createObstacle(FieldPos(row, col), cfg.obstacleRsrcId);
-        continue;
-      }
-
       rubbishCfg.fieldPos.col = col;
       const bool isRubbishTile = isRubbishMarker(marker);
       if (isRubbishTile) {
@@ -73,9 +68,6 @@ void EntityHandler::draw() const {
   for (const auto &counter : _tileCounters) {
     counter.draw();
   }
-  for (const auto &obstacle : _obstacles) {
-    obstacle.draw();
-  }
 }
 
 void EntityHandler::createCounterText(const FieldPos &fieldPos, uint64_t fontId,
@@ -88,18 +80,6 @@ void EntityHandler::createCounterText(const FieldPos &fieldPos, uint64_t fontId,
   pos += offset;
   auto &text = _tileCounters.emplace_back(Text());
   text.create(fontId, std::to_string(counterValue).c_str(), Colors::RED, pos);
-}
-
-void EntityHandler::createObstacle(const FieldPos &fieldPos, uint64_t rsrcId) {
-  constexpr auto tileOffset = 20;
-  Point offset = Point(tileOffset, tileOffset);
-
-  auto pos = FieldUtils::getAbsPos(fieldPos, _getFieldDescriptionCb());
-  pos += offset;
-
-  auto &obstacle = _obstacles.emplace_back(Image());
-  obstacle.create(rsrcId);
-  obstacle.setPosition(pos);
 }
 
 

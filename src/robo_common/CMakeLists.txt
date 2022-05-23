@@ -29,6 +29,9 @@ add_library(
         ${_INC_DIR}/layout/field/config/FieldConfig.h
         ${_INC_DIR}/layout/field/config/TileConfig.h
         ${_INC_DIR}/layout/field/config/FogOfWarConfig.h
+        ${_INC_DIR}/layout/field/config/ObstacleHandlerConfig.h
+        ${_INC_DIR}/layout/field/obstacles/ObstacleHandler.h
+        ${_INC_DIR}/layout/field/obstacles/Obstacle.h
         ${_INC_DIR}/layout/panels/TimePanel.h
         ${_INC_DIR}/layout/panels/IndicatorPanel.h
         ${_INC_DIR}/layout/panels/config/IndicatorPanelConfig.h
@@ -56,6 +59,8 @@ add_library(
         ${_SRC_DIR}/layout/field/Tile.cpp
         ${_SRC_DIR}/layout/field/fog_of_war/FogOfWar.cpp
         ${_SRC_DIR}/layout/field/fog_of_war/FogCollisionObject.cpp
+        ${_SRC_DIR}/layout/field/obstacles/Obstacle.cpp
+        ${_SRC_DIR}/layout/field/obstacles/ObstacleHandler.cpp
         ${_SRC_DIR}/layout/panels/TimePanel.cpp
         ${_SRC_DIR}/layout/panels/NumberCounterPanel.cpp
         ${_SRC_DIR}/layout/panels/IndicatorPanel.cpp
