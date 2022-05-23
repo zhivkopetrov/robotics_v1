@@ -15,7 +15,8 @@
 #include "robo_common/layout/field/FieldUtils.h"
 #include "robo_common/layout/field/config/TileConfig.h"
 
-ErrorCode Field::init(const FieldConfig &cfg) {
+ErrorCode Field::init(const FieldConfig &cfg,
+                      CollisionWatcher *collisionWatcher) {
   if (0 >= cfg.description.rows || 0 >= cfg.description.cols) {
     LOGERR("Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
            "needs to be positive number",
@@ -24,7 +25,7 @@ ErrorCode Field::init(const FieldConfig &cfg) {
   }
   _description = cfg.description;
 
-  if (ErrorCode::SUCCESS != initTiles(cfg)) {
+  if (ErrorCode::SUCCESS != initTiles(cfg, collisionWatcher)) {
     LOGERR("Error, initTiles() failed");
     return ErrorCode::FAILURE;
   }
@@ -80,7 +81,8 @@ void Field::toggleDebugTexts() {
   updateFieldFbo();
 }
 
-ErrorCode Field::initTiles(const FieldConfig &cfg) {
+ErrorCode Field::initTiles(const FieldConfig &cfg,
+                           CollisionWatcher *collisionWatcher) {
   TileConfig tileCfg;
   tileCfg.tileRsrcId = cfg.tileRsrcId;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
@@ -127,7 +129,7 @@ ErrorCode Field::initTiles(const FieldConfig &cfg) {
   }
 
   if (ErrorCode::SUCCESS != _obstacleHandler.init(cfg.obstacleHandlerConfig,
-          _description, obstaclePositions)) {
+          _description, obstaclePositions, collisionWatcher)) {
     LOGERR("Error, _obstacleHandler.init() failed");
     return ErrorCode::FAILURE;
   }

@@ -15,11 +15,12 @@
 #include "robo_common/layout/field/obstacles/ObstacleHandler.h"
 
 //Forward declarations
+class CollisionWatcher;
 struct FieldConfig;
 
 class Field {
 public:
-  ErrorCode init(const FieldConfig &cfg);
+  ErrorCode init(const FieldConfig &cfg, CollisionWatcher *collisionWatcher);
 
   void draw() const;
 
@@ -33,7 +34,8 @@ public:
   void toggleDebugTexts();
 
 private:
-  ErrorCode initTiles(const FieldConfig &cfg);
+  ErrorCode initTiles(const FieldConfig &cfg,
+                      CollisionWatcher *collisionWatcher);
 
   //for debug purposes
   void printFieldData() const;

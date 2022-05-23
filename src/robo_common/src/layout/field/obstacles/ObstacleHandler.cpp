@@ -11,9 +11,15 @@
 #include "robo_common/layout/field/FieldUtils.h"
 #include "robo_common/layout/field/config/ObstacleHandlerConfig.h"
 
-ErrorCode ObstacleHandler::init(
-    const ObstacleHandlerConfig &cfg, const FieldDescription &fieldDescr,
-    const std::vector<FieldPos> &obstaclePositions) {
+ErrorCode ObstacleHandler::init(const ObstacleHandlerConfig &cfg,
+                                const FieldDescription &fieldDescr,
+                                const std::vector<FieldPos> &obstaclePositions,
+                                CollisionWatcher *collisionWatcher) {
+  if (nullptr == collisionWatcher) {
+    LOGERR("Error, nullptr provided for CollisionWatcher");
+    return ErrorCode::FAILURE;
+  }
+
   const size_t obstaclesCount = obstaclePositions.size();
   _obstacles.resize(obstaclesCount);
 
@@ -43,11 +49,12 @@ ErrorCode ObstacleHandler::init(
     } else {
       obstacleCfg.width = smallObstacleToTileRatio * fieldDescr.tileWidth;
       obstacleCfg.height = smallObstacleToTileRatio * fieldDescr.tileHeight;
-      obstacleCfg.tileOffset =
-          Point(smallOffsetFromTileX, smallOffsetFromTileY);
+      obstacleCfg.tileOffset = Point(smallOffsetFromTileX,
+          smallOffsetFromTileY);
     }
 
-    if (ErrorCode::SUCCESS != _obstacles[i].init(obstacleCfg, fieldDescr)) {
+    if (ErrorCode::SUCCESS !=
+        _obstacles[i].init(obstacleCfg, fieldDescr, collisionWatcher)) {
       LOGERR("Error, _obstacles[%zu].init() failed", i);
       return ErrorCode::FAILURE;
     }

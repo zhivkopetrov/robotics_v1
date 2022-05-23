@@ -26,6 +26,8 @@ public:
 
   void start();
 
+  bool isAnimationActive() const;
+
 private:
   void onTimeout(const int32_t timerId) override;
 

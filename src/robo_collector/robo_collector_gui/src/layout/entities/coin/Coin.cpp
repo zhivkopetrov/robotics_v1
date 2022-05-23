@@ -179,7 +179,9 @@ void Coin::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
                              [[maybe_unused]]CollisionDamageImpact impact) {
   const bool isCollisionFromPlayer = _outInterface.isPlayerTurnActiveCb();
   if (isCollisionFromPlayer) {
-    startCollectAnim();
+    if (!_colllectAnim.isAnimationActive()) {
+      startCollectAnim();
+    }
   } else {
     startRespawnAnim();
   }

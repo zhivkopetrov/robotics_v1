@@ -12,13 +12,15 @@
 #include "robo_common/layout/field/obstacles/Obstacle.h"
 
 //Forward declarations
+class CollisionWatcher;
 struct ObstacleHandlerConfig;
 
 class ObstacleHandler {
 public:
   ErrorCode init(const ObstacleHandlerConfig &cfg,
                  const FieldDescription &fieldDescr,
-                 const std::vector<FieldPos> &obstaclePositions);
+                 const std::vector<FieldPos> &obstaclePositions,
+                 CollisionWatcher *collisionWatcher);
 
   void drawOnFbo(Fbo &fbo) const;
 

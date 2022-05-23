@@ -98,14 +98,14 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
   //collision watch status will not be started in the case where
   //this is the currently moving object
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
-    _currCollisionWatchStatus = CollisionWatchStatus::OFF;
-    _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
-        _currCollisionWatchStatus);
-
-    //this is a soft object (such as coin). Don't stop the movement
+    //this is a soft object (such as a coin). Don't stop the movement
     if (CollisionDamageImpact::NO == impact) {
       return; //nothing more to do
     }
+
+    _currCollisionWatchStatus = CollisionWatchStatus::OFF;
+    _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
+        _currCollisionWatchStatus);
 
     _animator.stopMoveAnim();
     _animator.startCollisionImpactAnim(RobotEndTurn::YES);

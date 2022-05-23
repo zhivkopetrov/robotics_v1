@@ -17,7 +17,8 @@ ErrorCode RoboCommonLayoutInitHelper::init(
     RoboCommonLayout &layout) {
   layout._map.create(cfg.mapRsrcId);
 
-  if (ErrorCode::SUCCESS != layout._field.init(cfg.fieldCfg)) {
+  if (ErrorCode::SUCCESS !=
+      layout._field.init(cfg.fieldCfg, outInterface.collisionWatcher)) {
     LOGERR("Error in _field.init()");
     return ErrorCode::FAILURE;
   }

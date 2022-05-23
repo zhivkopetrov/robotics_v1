@@ -35,6 +35,10 @@ void CoinRespawnAnim::start() {
   startTimer(timerInterval, _timerId, TimerType::PULSE);
 }
 
+bool CoinRespawnAnim::isAnimationActive() const {
+  return isActiveTimerId(_timerId);
+}
+
 void CoinRespawnAnim::onTimeout(const int32_t timerId) {
   if (timerId == _timerId) {
     processAnim();

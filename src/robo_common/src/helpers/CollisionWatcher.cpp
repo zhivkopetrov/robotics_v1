@@ -68,20 +68,19 @@ void CollisionWatcher::process() {
   Rectangle intersectRect;
 
   for (const auto activeHandle : _activeWatchedHandles) {
-    const auto& activeData = _objects[activeHandle];
+    const auto &activeData = _objects[activeHandle];
 
     for (CollisionObjHandle handle = 0; handle < objSize; ++handle) {
       if (handle == activeHandle) {
         continue; //skip self-collision
       }
-      const auto& checkedData = _objects[handle];
+      const auto &checkedData = _objects[handle];
       if (nullptr == checkedData.object) {
         continue; //free slot found -> skip it
       }
 
       const bool found = GeometryUtils::findRectIntersection(
-          activeData.object->getBoundary(),
-          checkedData.object->getBoundary(),
+          activeData.object->getBoundary(), checkedData.object->getBoundary(),
           intersectRect);
       if (found) {
         checkedData.object->registerCollision(intersectRect, activeData.impact);
