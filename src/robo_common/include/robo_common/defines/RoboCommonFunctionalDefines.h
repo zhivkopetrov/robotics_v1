@@ -26,5 +26,6 @@ using ShutdownGameCb = NumberCounterTargetReachedCb;
 using StartGameLostAnimCb = IndicatorDepletedCb;
 using StartGameWonAnimCb = std::function<void()>;
 using StartAchievementWonAnimCb = std::function<void(Achievement)>;
+using RevealFogOfWarTilesCb = std::function<void()>;
 
 #endif /* ROBO_COMMON_ROBOCOMMONFUNCTIONALDEFINES_H_ */

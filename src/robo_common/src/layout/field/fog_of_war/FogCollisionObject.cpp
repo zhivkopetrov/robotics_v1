@@ -56,14 +56,18 @@ Rectangle FogCollisionObject::getBoundary() const {
   return Fbo::getImageRect();
 }
 
-void FogCollisionObject::registerCollision(
-    [[maybe_unused]]const Rectangle &intersectRect,
-    [[maybe_unused]]CollisionDamageImpact impact) {
+void FogCollisionObject::startAnimation() {
+  //unregister the handle not to receive subsequent collisions
   _collisionWatcher->unregisterObject(_collisionObjHandle);
   _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;
 
-  //start fade out animation
   startTimer(50, _timerId, TimerType::PULSE);
+}
+
+void FogCollisionObject::registerCollision(
+    [[maybe_unused]]const Rectangle &intersectRect,
+    [[maybe_unused]]CollisionDamageImpact impact) {
+  startAnimation();
 }
 
 void FogCollisionObject::onTimeout(const int32_t timerId) {

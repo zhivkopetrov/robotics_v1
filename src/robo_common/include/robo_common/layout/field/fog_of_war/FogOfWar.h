@@ -29,6 +29,8 @@ public:
 
   void draw() const;
 
+  void revealAllFogTiles();
+
 private:
   ErrorCode createFogTiles(const FieldConfig &fieldCfg,
                            const std::vector<int> &fogTilesFadeAnimTimerIds);

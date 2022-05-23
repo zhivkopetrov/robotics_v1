@@ -30,7 +30,7 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
-constexpr auto LEVEL_ID = 3;
+constexpr auto LEVEL_ID = 1;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -85,7 +85,7 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile
-  tilePanelCfg.targetNumber = emptyTilesCount;
+  tilePanelCfg.targetNumber = emptyTilesCount - 30;
   tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;

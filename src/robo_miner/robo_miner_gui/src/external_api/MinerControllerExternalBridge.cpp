@@ -77,6 +77,11 @@ ErrorCode MinerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.revealFogOfWarTilesCb) {
+    LOGERR("Error, nullptr provided for RevealFogOfWarTilesCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.crystalMinedCb) {
     LOGERR("Error, nullptr provided for CrystalMinedCb");
     return ErrorCode::FAILURE;
@@ -190,6 +195,7 @@ void MinerControllerExternalBridge::handleFieldMapValidateService(
 
   if (response->success) {
     const auto f = [this]() {
+      _outInterface.revealFogOfWarTilesCb();
       _outInterface.startAchievementWonAnimCb(Achievement::SINGLE_STAR);
     };
     _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);

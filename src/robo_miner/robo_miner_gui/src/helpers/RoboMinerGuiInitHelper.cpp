@@ -113,6 +113,8 @@ ErrorCode RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.startGameLostAnimCb =
       interface.commonLayoutInterface.startGameLostAnimCb;
   outInterface.tileReleavedCb = interface.tileReleavedCb;
+  outInterface.revealFogOfWarTilesCb =
+      interface.commonLayoutInterface.revealFogOfWarTilesCb;
   outInterface.crystalMinedCb = interface.crystalMinedCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.movementWatcher = &gui._movementWatcher;

@@ -48,6 +48,12 @@ void FogOfWar::draw() const {
   }
 }
 
+void FogOfWar::revealAllFogTiles() {
+  for (auto &[_, fogTile] : _fogTiles) {
+    fogTile.startAnimation();
+  }
+}
+
 ErrorCode FogOfWar::createFogTiles(
     const FieldConfig &fieldCfg,
     const std::vector<int> &fogTilesFadeAnimTimerIds) {

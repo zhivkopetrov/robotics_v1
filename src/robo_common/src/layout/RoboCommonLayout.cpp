@@ -64,6 +64,8 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
       &_gameEndAnimator);
   interface.startAchievementWonAnimCb = std::bind(
       &GameEndAnimator::startAchievementWonAnim, &_gameEndAnimator, _1);
+  interface.revealFogOfWarTilesCb = std::bind(
+      &FogOfWar::revealAllFogTiles, &_fogOfWar);
 
   return interface;
 }

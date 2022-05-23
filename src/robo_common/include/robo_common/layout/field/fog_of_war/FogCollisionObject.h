@@ -30,6 +30,8 @@ public:
 
   Rectangle getBoundary() const override;
 
+  void startAnimation();
+
 private:
   void registerCollision(const Rectangle &intersectRect,
                          CollisionDamageImpact impact) override;

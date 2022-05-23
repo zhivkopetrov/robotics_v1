@@ -22,6 +22,7 @@ struct RoboCommonLayoutInterface {
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
+  RevealFogOfWarTilesCb revealFogOfWarTilesCb;
 };
 
 struct RoboCommonLayoutOutInterface {

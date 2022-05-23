@@ -27,6 +27,7 @@ struct MinerControllerExternalBridgeOutInterface {
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   StartGameLostAnimCb startGameLostAnimCb;
   TileReleavedCb tileReleavedCb;
+  RevealFogOfWarTilesCb revealFogOfWarTilesCb;
   CrystalMinedCb crystalMinedCb;
   SystemShutdownCb systemShutdownCb;
   MovementWatcher *movementWatcher = nullptr;
