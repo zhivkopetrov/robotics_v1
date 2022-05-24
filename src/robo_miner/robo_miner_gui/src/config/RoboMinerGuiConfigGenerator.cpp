@@ -85,7 +85,7 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile
-  tilePanelCfg.targetNumber = emptyTilesCount - 30;
+  tilePanelCfg.targetNumber = emptyTilesCount;
   tilePanelCfg.rsrcId = RoboMinerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboMinerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;

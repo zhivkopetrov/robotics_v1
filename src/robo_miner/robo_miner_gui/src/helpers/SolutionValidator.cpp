@@ -10,6 +10,11 @@
 //Own components headers
 #include "robo_miner_gui/helpers/config/SolutionValidatorConfig.h"
 
+namespace {
+constexpr bool UNMINED_CRYSTAL = false;
+constexpr bool MINED_CRYSTAL = true;
+}
+
 ErrorCode SolutionValidator::init(
     const SolutionValidatorConfig &cfg,
     const SolutionValidatorOutInterface &outInterface) {
@@ -30,7 +35,7 @@ ErrorCode SolutionValidator::init(
 
   std::sort(_longestSequence.begin(), _longestSequence.end());
   _validationOptions.longestSequenceValidationPoints.resize(uniquesCount,
-      false);
+      UNMINED_CRYSTAL);
 
   _reveleadMapTiles.insert(cfg.playerStartLocation);
 
@@ -151,29 +156,35 @@ ValidationResult SolutionValidator::handleNormalMove(const FieldPos &fieldPos) {
   return result;
 }
 
-ValidationResult SolutionValidator::handleMiningMove(const FieldPos &fieldPos) {
+ValidationResult SolutionValidator::handleMiningMove(const FieldPos &fieldPos,
+                                                     bool &allCrystalsMined) {
   ValidationResult result;
+  allCrystalsMined = false;
   if (!_validationOptions.miningActivated) {
     result.success = false;
     return result;
   }
 
-  const auto success = validateMiningPos(fieldPos);
+  size_t longestSequenceIdx{};
+  const auto success = validateMiningPos(fieldPos, longestSequenceIdx);
   if (!success) {
     result.success = false;
     result.majorError = true;
     return result;
   }
 
-  const auto &validationPoints =
-      _validationOptions.longestSequenceValidationPoints;
-  const auto it = std::find(validationPoints.begin(), validationPoints.end(),
-      false);
-
-  if (it != validationPoints.end()) {
-    //found a point, which is still not marked as 'mined'
+  auto &validationPoints = _validationOptions.longestSequenceValidationPoints;
+  if (MINED_CRYSTAL == validationPoints[longestSequenceIdx]) {
+    //found a point, which is still already marked as 'mined'
     result.success = false;
     return result;
+  }
+  validationPoints[longestSequenceIdx] = MINED_CRYSTAL;
+
+  auto it = std::find(validationPoints.begin(), validationPoints.end(),
+      UNMINED_CRYSTAL);
+  if (it == validationPoints.end()) {
+    allCrystalsMined = true;
   }
 
   return result;
@@ -196,7 +207,8 @@ ValidationResult SolutionValidator::validateActivateMining(
   }
 
   const auto robotFieldPos = _outInterface.getRobotStateCb().fieldPos;
-  const bool success = validateMiningPos(robotFieldPos);
+  size_t longestSequenceIdx{};
+  const bool success = validateMiningPos(robotFieldPos, longestSequenceIdx);
   if (!success) {
     outError = "Initial mining position row, col [";
     outError.append(std::to_string(robotFieldPos.row)).append(",").append(
@@ -207,6 +219,8 @@ ValidationResult SolutionValidator::validateActivateMining(
     return result;
   }
 
+  _validationOptions.longestSequenceValidationPoints[longestSequenceIdx] =
+      MINED_CRYSTAL;
   _validationOptions.miningActivated = true;
   return result;
 }
@@ -231,7 +245,8 @@ ErrorCode SolutionValidator::initOutInterface(
   return ErrorCode::SUCCESS;
 }
 
-bool SolutionValidator::validateMiningPos(const FieldPos &fieldPos) {
+bool SolutionValidator::validateMiningPos(
+    const FieldPos &fieldPos, size_t &foundLongestSequenceIdx) const {
   const auto it = std::find(_longestSequence.begin(), _longestSequence.end(),
       fieldPos);
   if (it == _longestSequence.end()) {
@@ -240,12 +255,7 @@ bool SolutionValidator::validateMiningPos(const FieldPos &fieldPos) {
     return false;
   }
 
-  //mark the tile from the sequence as visited
-  //each index in the longestSequenceValidationPoints
-  //correspond to the _longestSequence
-  const auto fieldIdx = it - _longestSequence.begin();
-  _validationOptions.longestSequenceValidationPoints[fieldIdx] = true;
-
+  foundLongestSequenceIdx = it - _longestSequence.begin();
   return true;
 }
 

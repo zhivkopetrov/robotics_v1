@@ -255,8 +255,10 @@ void MinerControllerExternalBridge::handleNormalMove(const FieldPos& robotPos) {
 }
 
 void MinerControllerExternalBridge::handleMiningMove(const FieldPos& robotPos) {
-  const auto [allCrystalsMined, majorError] =
-      _outInterface.solutionValidator->handleMiningMove(robotPos);
+  bool allCrystalsMined = false;
+  const auto [success, majorError] =
+      _outInterface.solutionValidator->handleMiningMove(robotPos,
+          allCrystalsMined);
   if (majorError) {
     _outInterface.startGameLostAnimCb();
     return;
@@ -264,7 +266,7 @@ void MinerControllerExternalBridge::handleMiningMove(const FieldPos& robotPos) {
 
   if (allCrystalsMined) {
     _outInterface.startAchievementWonAnimCb(Achievement::TRIPLE_STAR);
-  } else {
+  } else if (success) {
     _outInterface.crystalMinedCb();
   }
 }

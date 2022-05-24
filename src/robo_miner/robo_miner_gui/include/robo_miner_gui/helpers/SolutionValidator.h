@@ -43,7 +43,9 @@ public:
                                            std::string &outError);
 
   ValidationResult handleNormalMove(const FieldPos &fieldPos);
-  ValidationResult handleMiningMove(const FieldPos &fieldPos);
+
+  ValidationResult handleMiningMove(const FieldPos &fieldPos,
+                                    bool &allCrystalsMined);
 
   ValidationResult validateActivateMining(std::string &outError);
 
@@ -52,7 +54,8 @@ public:
 private:
   ErrorCode initOutInterface(const SolutionValidatorOutInterface &outInterface);
 
-  bool validateMiningPos(const FieldPos &fieldPos);
+  bool validateMiningPos(const FieldPos &fieldPos,
+                         size_t &foundLongestSequenceIdx) const;
 
   struct ValidationOptions {
     bool fieldMapReveleaded = false;
