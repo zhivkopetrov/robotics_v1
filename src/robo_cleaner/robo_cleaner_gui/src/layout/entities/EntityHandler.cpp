@@ -12,49 +12,43 @@
 #include "robo_cleaner_gui/defines/RoboCleanerGuiDefines.h"
 #include "robo_cleaner_gui/layout/entities/config/EntityHandlerConfig.h"
 
-ErrorCode EntityHandler::init(
-    const EntityHandlerConfig &cfg,
-    const GetFieldDescriptionCb &getFieldDescriptionCb) {
-  if (nullptr == getFieldDescriptionCb) {
-    LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
-    return ErrorCode::FAILURE;
-  }
-  _getFieldDescriptionCb = getFieldDescriptionCb;
+namespace {
+constexpr int32_t SMALL_RUBBISH_ID = 2;
+constexpr int32_t BIG_RUBBISH_ID = 3;
+constexpr int32_t RUBBISH_TO_FRAME_ID_SUBTRACT_VALUE = 2;
+}
 
-  const auto& fieldDescr = getFieldDescriptionCb();
+ErrorCode EntityHandler::init(const EntityHandlerConfig &cfg,
+                              const FieldDescription &fieldDescr) {
   constexpr auto tileOffset = 30;
   RubbishConfig rubbishCfg;
   rubbishCfg.rsrcId = cfg.rubbishRsrcId;
   rubbishCfg.tileOffset = Point(tileOffset, tileOffset);
+
   for (int32_t row = 0; row < fieldDescr.rows; ++row) {
     rubbishCfg.fieldPos.row = row;
     for (int32_t col = 0; col < fieldDescr.cols; ++col) {
-      const auto marker = fieldDescr.data[row][col];
       rubbishCfg.fieldPos.col = col;
-      const bool isRubbishTile = isRubbishMarker(marker);
-      if (isRubbishTile) {
-        if (RoboCleanerDefines::SMALL_RUBISH_MARKER == marker) {
-          rubbishCfg.frameId = 0;
-        } else if (RoboCleanerDefines::BIG_RUBBISH_MARKER == marker) {
-          rubbishCfg.frameId = 1;
-        }
 
-        auto &elem = _rubbish.emplace_back(Rubbish());
-        if (ErrorCode::SUCCESS !=
-            elem.init(rubbishCfg, getFieldDescriptionCb)) {
-          LOGERR("Error, rubbish.init() failed");
+      const auto marker = fieldDescr.data[row][col];
+      if (!isRubbishMarker(marker)) {
+        continue;
+      }
+
+      const int32_t rubbishCounter = getRubbishCounter(marker);
+      if ((SMALL_RUBBISH_ID == rubbishCounter) ||
+          (BIG_RUBBISH_ID == rubbishCounter)) {
+        rubbishCfg.frameId = rubbishCounter
+            - RUBBISH_TO_FRAME_ID_SUBTRACT_VALUE;
+
+        if (ErrorCode::SUCCESS != createRubbishTile(rubbishCfg, fieldDescr)) {
+          LOGERR("createRubbishTile() failed");
           return ErrorCode::FAILURE;
         }
       }
 
-      //empty tiles should still be cleaned
-      if (isRubbishTile || RoboCommonDefines::EMPTY_TILE_MARKER == marker) {
-        const auto rubbishCounter = getRubbishCounter(marker);
-        if (rubbishCounter) {
-          createCounterText(FieldPos(row, col), cfg.rubbishFontId,
-              rubbishCounter);
-        }
-      }
+      createCounterText(rubbishCfg.fieldPos, cfg.rubbishFontId, rubbishCounter,
+          fieldDescr);
     }
   }
 
@@ -70,16 +64,27 @@ void EntityHandler::draw() const {
   }
 }
 
+ErrorCode EntityHandler::createRubbishTile(const RubbishConfig &rubbishCfg,
+                                           const FieldDescription &fieldDescr) {
+  auto &elem = _rubbish.emplace_back(Rubbish());
+  if (ErrorCode::SUCCESS != elem.init(rubbishCfg, fieldDescr)) {
+    LOGERR("Error, rubbish.init() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 void EntityHandler::createCounterText(const FieldPos &fieldPos, uint64_t fontId,
-                                      int32_t counterValue) {
+                                      int32_t counterValue,
+                                      const FieldDescription &fieldDescr) {
   constexpr auto tileOffsetX = 130;
   constexpr auto tileOffsetY = 5;
   Point offset = Point(tileOffsetX, tileOffsetY);
 
-  auto pos = FieldUtils::getAbsPos(fieldPos, _getFieldDescriptionCb());
+  auto pos = FieldUtils::getAbsPos(fieldPos, fieldDescr);
   pos += offset;
   auto &text = _tileCounters.emplace_back(Text());
   text.create(fontId, std::to_string(counterValue).c_str(), Colors::RED, pos);
 }
-
 

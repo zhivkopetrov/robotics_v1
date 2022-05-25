@@ -32,14 +32,14 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initPanelHandler(cfg.panelHandlerCfg, commonInterface,
-          layout)) {
+  if (ErrorCode::SUCCESS != initPanelHandler(cfg.panelHandlerCfg,
+          commonInterface, layout)) {
     LOGERR("initPanelHandler() failed");
     return ErrorCode::FAILURE;
   }
 
   if (ErrorCode::SUCCESS != layout._entityHandler.init(cfg.entityHandlerCfg,
-      commonInterface.getFieldDescriptionCb)) {
+          cfg.commonLayoutCfg.fieldCfg.description)) {
     LOGERR("Error, _entityHandler.init() failed");
     return ErrorCode::FAILURE;
   }
@@ -55,8 +55,8 @@ ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
   outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
   outInterface.startAchievementWonAnimCb =
       commonInterface.startAchievementWonAnimCb;
-  outInterface.energyDepletedCb =
-      std::bind(&RoboCleanerLayout::onEnergyDepleted, &layout);
+  outInterface.energyDepletedCb = std::bind(
+      &RoboCleanerLayout::onEnergyDepleted, &layout);
 
   if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
     LOGERR("Error in _panel.init()");

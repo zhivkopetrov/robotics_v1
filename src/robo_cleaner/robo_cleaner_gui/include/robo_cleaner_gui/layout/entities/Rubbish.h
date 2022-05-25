@@ -5,7 +5,7 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_common/layout/field/FieldPos.h"
 #include "manager_utils/drawing/Image.h"
 #include "utils/ErrorCode.h"
@@ -23,8 +23,7 @@ struct RubbishConfig {
 
 class Rubbish {
 public:
-  ErrorCode init(const RubbishConfig& cfg,
-                 const GetFieldDescriptionCb& getFieldDescriptionCb);
+  ErrorCode init(const RubbishConfig &cfg, const FieldDescription &FieldDescr);
   void draw() const;
 
 private:

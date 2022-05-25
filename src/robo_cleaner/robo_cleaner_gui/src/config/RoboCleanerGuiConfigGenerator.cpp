@@ -130,7 +130,7 @@ FieldConfig generateFieldConfig() {
 
 FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
   FogOfWarConfig cfg;
-  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.status = FogOfWarStatus::DISABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
@@ -145,7 +145,6 @@ EntityHandlerConfig generateEntityHandlerConfig() {
   EntityHandlerConfig cfg;
   cfg.rubbishRsrcId = RoboCleanerGuiResources::RUBBISH;
   cfg.rubbishFontId = RoboCleanerGuiResources::VINQUE_RG_30;
-  cfg.obstacleRsrcId = RoboCleanerGuiResources::MAP_OBSTACLE;
 
   return cfg;
 }

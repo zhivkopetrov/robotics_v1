@@ -10,14 +10,6 @@
 
 //Forward declarations
 
-namespace RoboCleanerDefines {
-enum Markers {
-  SMALL_RUBISH_MARKER = 'r',
-  BIG_RUBBISH_MARKER = 'R',
-  OBSTACLE_MARKER = 'x'
-};
-}
-
 bool isRubbishMarker(char marker);
 int32_t getRubbishCounter(char marker);
 
