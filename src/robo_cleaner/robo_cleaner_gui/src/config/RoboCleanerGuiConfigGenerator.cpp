@@ -30,10 +30,7 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
-constexpr int32_t LEVEL_ID = 3;
-
-//TODO compute from the field config
-constexpr auto RUBBISH_CLEANS_CTN = 63;
+constexpr int32_t LEVEL_ID = 1;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -69,7 +66,8 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount) {
+PanelHandlerConfig generatePanelHandlerConfig(
+    const FieldDescription &fieldDescr, int32_t emptyTilesCount) {
   PanelHandlerConfig cfg;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
@@ -80,8 +78,17 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount) {
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
   tilePanelCfg.decrTimerId = TILE_PANEL_DECR_TIMER_ID;
 
+  int32_t rubbishTiles{};
+  for (const auto& row : fieldDescr.data) {
+    for (const char marker : row) {
+      if (isRubbishMarker(marker)) {
+        rubbishTiles += getRubbishCounter(marker);
+      }
+    }
+  }
+
   auto &rubbishPanelCfg = cfg.rubbishPanelCfg;
-  rubbishPanelCfg.targetNumber = RUBBISH_CLEANS_CTN;
+  rubbishPanelCfg.targetNumber = rubbishTiles;
   rubbishPanelCfg.rsrcId = RoboCleanerGuiResources::RUBBISH_PANEL;
   rubbishPanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
   rubbishPanelCfg.incrTimerId = RUBBISH_PANEL_INCR_TIMER_ID;
@@ -118,8 +125,8 @@ FieldConfig generateFieldConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
 
-  cfg.description =
-      LevelFileLoader::readFieldDescription(projectInstallPrefix, LEVEL_ID);
+  cfg.description = LevelFileLoader::readFieldDescription(projectInstallPrefix,
+      LEVEL_ID);
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
 
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
@@ -172,9 +179,9 @@ EngineConfig generateEngineConfig() {
 
 RoboCleanerGuiConfig generateGameConfig() {
   RoboCleanerGuiConfig cfg;
-  auto& layoutCfg = cfg.layoutCfg;
+  auto &layoutCfg = cfg.layoutCfg;
 
-  auto& commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
   const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
       * commonLayoutCfg.fieldCfg.description.cols;
@@ -186,7 +193,8 @@ RoboCleanerGuiConfig generateGameConfig() {
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(emptyTilesCount);
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
+      commonLayoutCfg.fieldCfg.description, emptyTilesCount);
   layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
 
   return cfg;
@@ -194,17 +202,16 @@ RoboCleanerGuiConfig generateGameConfig() {
 
 } //end anonymous namespace
 
-std::vector<DependencyDescription>
-RoboCleanerGuiConfigGenerator::generateDependencies(
+std::vector<DependencyDescription> RoboCleanerGuiConfigGenerator::generateDependencies(
     int32_t argc, char **args) {
-  std::vector<DependencyDescription> dependecies =
-      getDefaultEngineDependencies(argc, args);
+  std::vector<DependencyDescription> dependecies = getDefaultEngineDependencies(
+      argc, args);
 
-  const LoadDependencyCb ros2Loader = [argc, args](){
+  const LoadDependencyCb ros2Loader = [argc, args]() {
     rclcpp::init(argc, args);
     return ErrorCode::SUCCESS;
   };
-  const UnloadDependencyCb ros2Unloader = [](){
+  const UnloadDependencyCb ros2Unloader = []() {
     //shutdown the global context only if it hasn't
     //for example: ROS2 signal handlers do that automatically
     if (rclcpp::ok()) {
@@ -215,7 +222,7 @@ RoboCleanerGuiConfigGenerator::generateDependencies(
     }
   };
 
-  dependecies.push_back({"ROS2", ros2Loader, ros2Unloader});
+  dependecies.push_back( { "ROS2", ros2Loader, ros2Unloader });
 
   return dependecies;
 }
