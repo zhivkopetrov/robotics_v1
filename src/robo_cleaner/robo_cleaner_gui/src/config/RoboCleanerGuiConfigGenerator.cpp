@@ -30,6 +30,7 @@ constexpr auto WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
+constexpr int32_t LEVEL_ID = 3;
 
 //TODO compute from the field config
 constexpr auto RUBBISH_CLEANS_CTN = 63;
@@ -116,10 +117,9 @@ FieldConfig generateFieldConfig() {
 
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  const auto levelId = 1;
 
   cfg.description =
-      LevelFileLoader::readFieldDescription(projectInstallPrefix, levelId);
+      LevelFileLoader::readFieldDescription(projectInstallPrefix, LEVEL_ID);
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
 
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
@@ -130,7 +130,7 @@ FieldConfig generateFieldConfig() {
 
 FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
   FogOfWarConfig cfg;
-  cfg.status = FogOfWarStatus::DISABLED;
+  cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
