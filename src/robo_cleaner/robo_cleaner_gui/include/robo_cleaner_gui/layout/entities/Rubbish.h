@@ -19,6 +19,8 @@ struct RubbishConfig {
   FieldPos fieldPos;
   Point tileOffset;
   int32_t frameId = 0;
+  int32_t width = 0;
+  int32_t height = 0;
 };
 
 class Rubbish {

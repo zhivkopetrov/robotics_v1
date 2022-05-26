@@ -20,10 +20,17 @@ constexpr int32_t RUBBISH_TO_FRAME_ID_SUBTRACT_VALUE = 2;
 
 ErrorCode EntityHandler::init(const EntityHandlerConfig &cfg,
                               const FieldDescription &fieldDescr) {
-  constexpr auto tileOffset = 30;
+  constexpr double rubbishToTileRatio = 0.6;
+  const int32_t offsetFromTileX = static_cast<int32_t>(0.2
+      * fieldDescr.tileWidth);
+  const int32_t offsetFromTileY = static_cast<int32_t>(0.2
+      * fieldDescr.tileHeight);
+
   RubbishConfig rubbishCfg;
   rubbishCfg.rsrcId = cfg.rubbishRsrcId;
-  rubbishCfg.tileOffset = Point(tileOffset, tileOffset);
+  rubbishCfg.tileOffset = Point(offsetFromTileX, offsetFromTileY);
+  rubbishCfg.width = rubbishToTileRatio * fieldDescr.tileWidth;
+  rubbishCfg.height = rubbishToTileRatio * fieldDescr.tileHeight;
 
   for (int32_t row = 0; row < fieldDescr.rows; ++row) {
     rubbishCfg.fieldPos.row = row;
@@ -78,13 +85,21 @@ ErrorCode EntityHandler::createRubbishTile(const RubbishConfig &rubbishCfg,
 void EntityHandler::createCounterText(const FieldPos &fieldPos, uint64_t fontId,
                                       int32_t counterValue,
                                       const FieldDescription &fieldDescr) {
-  constexpr auto tileOffsetX = 130;
-  constexpr auto tileOffsetY = 5;
-  Point offset = Point(tileOffsetX, tileOffsetY);
+  constexpr double textToTileRatio = 0.2;
+  const int32_t offsetFromTileX =
+      static_cast<int32_t>(0.75 * fieldDescr.tileWidth);
+  const int32_t offsetFromTileY =
+      static_cast<int32_t>(0.1 * fieldDescr.tileHeight);
 
-  auto pos = FieldUtils::getAbsPos(fieldPos, fieldDescr);
-  pos += offset;
+  const int32_t maxScaledWidth = textToTileRatio * fieldDescr.tileWidth;
+  const int32_t maxScaledHeight = textToTileRatio * fieldDescr.tileHeight;
+  const Point offset = Point(offsetFromTileX, offsetFromTileY);
+
+  const auto pos = FieldUtils::getAbsPos(fieldPos, fieldDescr) + offset;
   auto &text = _tileCounters.emplace_back(Text());
   text.create(fontId, std::to_string(counterValue).c_str(), Colors::RED, pos);
+  text.activateScaling();
+  text.setMaxScalingWidth(maxScaledWidth);
+  text.setMaxScalingHeight(maxScaledHeight);
 }
 

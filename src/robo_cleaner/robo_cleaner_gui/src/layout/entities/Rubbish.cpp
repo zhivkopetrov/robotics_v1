@@ -12,10 +12,14 @@
 ErrorCode Rubbish::init(const RubbishConfig& cfg,
                         const FieldDescription &FieldDescr) {
   _img.create(cfg.rsrcId);
-  auto pos = FieldUtils::getAbsPos(cfg.fieldPos, FieldDescr);
-  pos += cfg.tileOffset;
+  const auto pos =
+      FieldUtils::getAbsPos(cfg.fieldPos, FieldDescr) + cfg.tileOffset;
   _img.setPosition(pos);
   _img.setFrame(cfg.frameId);
+
+  _img.activateScaling();
+  _img.setScaledWidth(cfg.width);
+  _img.setScaledHeight(cfg.height);
 
   return ErrorCode::SUCCESS;
 }
