@@ -9,6 +9,7 @@
 #include "robo_common/layout/helpers/RoboCommonLayoutInterfaces.h"
 
 //Own components headers
+#include "robo_cleaner_gui/defines/RoboCleanerGuiFunctionalDefines.h"
 
 //Forward declarations
 class CollisionWatcher;
@@ -20,6 +21,8 @@ struct RoboCleanerLayoutInterface {
 struct RoboCleanerLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
   FinishRobotActCb finishRobotActCb;
+  FieldMapRevelealedCb fieldMapRevelealedCb;
+  FieldMapCleanedCb fieldMapCleanedCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 

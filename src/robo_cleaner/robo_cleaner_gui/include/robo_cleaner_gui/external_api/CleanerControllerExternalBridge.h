@@ -8,6 +8,7 @@
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include "robo_cleaner_interfaces/action/robot_move.hpp"
+#include "robo_cleaner_interfaces/srv/field_map_validate.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "utils/ErrorCode.h"
@@ -30,6 +31,10 @@ public:
 
   void publishShutdownController();
 
+  void publishFieldMapRevealed();
+
+  void publishFieldMapCleaned();
+
 private:
   ErrorCode initOutInterface(
       const CleanerControllerExternalBridgeOutInterface &outInterface);
@@ -38,6 +43,7 @@ private:
   using Empty = std_msgs::msg::Empty;
   using RobotMove = robo_cleaner_interfaces::action::RobotMove;
   using GoalHandleRobotMove = rclcpp_action::ServerGoalHandle<RobotMove>;
+  using FieldMapValidate = robo_cleaner_interfaces::srv::FieldMapValidate;
 
   rclcpp_action::GoalResponse handleMoveGoal(
       const rclcpp_action::GoalUUID &uuid,
@@ -56,6 +62,8 @@ private:
   rclcpp_action::Server<RobotMove>::SharedPtr _moveActionServer;
 
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
+  rclcpp::Service<FieldMapValidate>::SharedPtr _fieldMapValidateService;
+
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapCleanedPublisher;
 

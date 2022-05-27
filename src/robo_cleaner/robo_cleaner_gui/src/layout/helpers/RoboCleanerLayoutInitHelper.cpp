@@ -33,7 +33,7 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
   }
 
   if (ErrorCode::SUCCESS != initPanelHandler(cfg.panelHandlerCfg,
-          commonInterface, layout)) {
+          commonInterface, outInterface, layout)) {
     LOGERR("initPanelHandler() failed");
     return ErrorCode::FAILURE;
   }
@@ -49,16 +49,23 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
 
 ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
     const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
+    const RoboCleanerLayoutOutInterface &outInterface,
     RoboCleanerLayout &layout) {
-  PanelHandlerOutInterface outInterface;
-  outInterface.startGameWonAnimCb = commonInterface.startGameWonAnimCb;
-  outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
-  outInterface.startAchievementWonAnimCb =
+  PanelHandlerOutInterface panelHandlerOutInterface;
+  panelHandlerOutInterface.startGameWonAnimCb =
+      commonInterface.startGameWonAnimCb;
+  panelHandlerOutInterface.startGameLostAnimCb =
+      commonInterface.startGameLostAnimCb;
+  panelHandlerOutInterface.startAchievementWonAnimCb =
       commonInterface.startAchievementWonAnimCb;
-  outInterface.energyDepletedCb = std::bind(
+  panelHandlerOutInterface.fieldMapRevelealedCb =
+      outInterface.fieldMapRevelealedCb;
+  panelHandlerOutInterface.fieldMapCleanedCb = outInterface.fieldMapCleanedCb;
+  panelHandlerOutInterface.energyDepletedCb = std::bind(
       &RoboCleanerLayout::onEnergyDepleted, &layout);
 
-  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS !=
+      layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
     LOGERR("Error in _panel.init()");
     return ErrorCode::FAILURE;
   }

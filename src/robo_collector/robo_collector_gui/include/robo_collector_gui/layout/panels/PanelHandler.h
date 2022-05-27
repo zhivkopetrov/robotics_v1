@@ -28,6 +28,8 @@ public:
   void increaseCollectedCoins(int32_t coins);
 
 private:
+  ErrorCode validateInterface(const PanelHandlerOutInterface &interface) const;
+
   TimePanel _timePanel;
   NumberCounterPanel _coinPanel;
   IndicatorPanel _healthPanel;

@@ -19,6 +19,8 @@ struct PanelHandlerOutInterface {
   StartGameWonAnimCb startGameWonAnimCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   EnergyDepletedCb energyDepletedCb;
+  FieldMapRevelealedCb fieldMapRevelealedCb;
+  FieldMapCleanedCb fieldMapCleanedCb;
 };
 
 class PanelHandler {
@@ -30,6 +32,8 @@ public:
   void decreaseEnergyIndicator(int32_t delta);
 
 private:
+  ErrorCode validateInterface(const PanelHandlerOutInterface &interface) const;
+
   NumberCounterPanel _tilePanel;
   NumberCounterPanel _rubbishPanel;
   IndicatorPanel _healthPanel;

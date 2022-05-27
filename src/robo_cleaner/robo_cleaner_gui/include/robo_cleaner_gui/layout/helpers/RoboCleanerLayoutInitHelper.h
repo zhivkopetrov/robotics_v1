@@ -24,12 +24,13 @@ public:
   static ErrorCode init(const RoboCleanerLayoutConfig &cfg,
                         const RoboCleanerLayoutOutInterface &outInterface,
                         RoboCommonLayoutInterface &commonInterface, //out param
-                        RoboCleanerLayout &layout);
+      RoboCleanerLayout &layout);
 
 private:
-  static ErrorCode initPanelHandler(const PanelHandlerConfig &cfg,
-                                    RoboCommonLayoutInterface &commonInterface,
-                                    RoboCleanerLayout &layout);
+  static ErrorCode initPanelHandler(
+      const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
+      const RoboCleanerLayoutOutInterface &outInterface,
+      RoboCleanerLayout &layout);
 };
 
 #endif /* ROBO_CLEANER_GUI_ROBOCLEANERLAYOUTINITHELPER_H_ */

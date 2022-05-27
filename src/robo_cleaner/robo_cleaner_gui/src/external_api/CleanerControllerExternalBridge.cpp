@@ -37,12 +37,22 @@ ErrorCode CleanerControllerExternalBridge::init(
 }
 
 void CleanerControllerExternalBridge::publishShutdownController() {
-  //TODO publish on a topic
+  _shutdownControllerPublisher->publish(Empty());
 
   const auto f = [this]() {
     _outInterface.systemShutdownCb();
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void CleanerControllerExternalBridge::publishFieldMapRevealed() {
+//  _outInterface.solutionValidator->fieldMapRevealed();
+  _fieldMapReveleadedPublisher->publish(Empty());
+}
+
+void CleanerControllerExternalBridge::publishFieldMapCleaned() {
+//  _outInterface.solutionValidator->fieldMapRevealed();
+  _fieldMapCleanedPublisher->publish(Empty());
 }
 
 ErrorCode CleanerControllerExternalBridge::initOutInterface(
@@ -85,16 +95,23 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
 rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
     const rclcpp_action::GoalUUID &uuid,
     std::shared_ptr<const RobotMove::Goal> goal) {
-  LOG("Received goal request with moveType: %d",
-      getEnumValue(getMoveType(goal->robot_move_type.move_type)));
-  (void)uuid;
+  LOG("Received goal request with moveType: %hhd and uuid: %s",
+      goal->robot_move_type.move_type,
+      rclcpp_action::to_string(uuid).c_str());
+
+  const auto moveType = getMoveType(goal->robot_move_type.move_type);
+  if (MoveType::UNKNOWN == moveType) {
+    LOGERR("Error, Rejecting goal because of unsupported MoveType");
+    return rclcpp_action::GoalResponse::REJECT;
+  }
+
   return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
 }
 
 rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
-    const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
-  LOG("Received request to cancel goal");
-  (void)goalHandle;
+    [[maybe_unused]]const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
+  LOG("Received request to cancel goal with uuid: %s",
+      rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
   return rclcpp_action::CancelResponse::ACCEPT;
 }
 

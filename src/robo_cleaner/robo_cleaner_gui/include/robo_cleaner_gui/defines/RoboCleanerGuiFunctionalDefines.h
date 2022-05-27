@@ -12,5 +12,7 @@
 
 //Forward declarations
 using EnergyDepletedCb = IndicatorDepletedCb;
+using FieldMapRevelealedCb = std::function<void()>;
+using FieldMapCleanedCb = std::function<void()>;
 
 #endif /* ROBO_CLEANER_GUI_ROBOCLEANERGUIFUNCTIONALDEFINES_H_ */

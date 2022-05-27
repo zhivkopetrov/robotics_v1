@@ -58,6 +58,12 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb =
       std::bind(&RoboCleanerGui::onRobotTurnFinish, &gui, _1, _2);
+  outInterface.fieldMapRevelealedCb = std::bind(
+      &CleanerControllerExternalBridge::publishFieldMapRevealed,
+      gui._controllerExternalBridge.get());
+  outInterface.fieldMapCleanedCb = std::bind(
+      &CleanerControllerExternalBridge::publishFieldMapCleaned,
+      gui._controllerExternalBridge.get());
   outInterface.shutdownGameCb = std::bind(
       &CleanerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());

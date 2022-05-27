@@ -16,12 +16,17 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
   //TRIPLE_STAR will be to finish the game
   //            with at least 30 seconds left on the timer
 
+  if (ErrorCode::SUCCESS != validateInterface(interface)) {
+    LOGERR("Error, validateInterface() failed");
+    return ErrorCode::FAILURE;
+  }
+
   auto panelPos = Point(1250, 50);
   TimePanelUtilityConfig timePanelUtilityCfg;
   timePanelUtilityCfg.timeFinishedCb = interface.startGameLostAnimCb;
   timePanelUtilityCfg.pos = panelPos;
-  if (ErrorCode::SUCCESS !=
-      _timePanel.init(cfg.timePanelCfg, timePanelUtilityCfg)) {
+  if (ErrorCode::SUCCESS != _timePanel.init(cfg.timePanelCfg,
+          timePanelUtilityCfg)) {
     LOGERR("Error, _timePanel.init() failed");
     return ErrorCode::FAILURE;
   }
@@ -32,8 +37,8 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
   numberCounterPanelUtilityCfg.targetReachedCb = interface.startGameWonAnimCb;
   numberCounterPanelUtilityCfg.pos = panelPos;
   numberCounterPanelUtilityCfg.textColor = lightGoldColor;
-  if (ErrorCode::SUCCESS !=
-      _coinPanel.init(cfg.coinPanelCfg, numberCounterPanelUtilityCfg)) {
+  if (ErrorCode::SUCCESS != _coinPanel.init(cfg.coinPanelCfg,
+          numberCounterPanelUtilityCfg)) {
     LOGERR("Error, _coinPanel.init() failed");
     return ErrorCode::FAILURE;
   }
@@ -42,8 +47,8 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
   indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
   indicatorUtilityCfg.pos = panelPos;
-  if (ErrorCode::SUCCESS !=
-      _healthPanel.init(cfg.healthPanelCfg, indicatorUtilityCfg)) {
+  if (ErrorCode::SUCCESS != _healthPanel.init(cfg.healthPanelCfg,
+          indicatorUtilityCfg)) {
     LOGERR("Error, _healthPanel.init() failed");
     return ErrorCode::FAILURE;
   }
@@ -63,5 +68,20 @@ void PanelHandler::decreaseHealthIndicator(int32_t damage) {
 
 void PanelHandler::increaseCollectedCoins(int32_t coins) {
   _coinPanel.increaseCounter(coins);
+}
+
+ErrorCode PanelHandler::validateInterface(
+    const PanelHandlerOutInterface &interface) const {
+  if (nullptr == interface.startGameLostAnimCb) {
+    LOGERR("Error, nullptr provided for StartGameLostAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == interface.startGameWonAnimCb) {
+    LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
 }
 

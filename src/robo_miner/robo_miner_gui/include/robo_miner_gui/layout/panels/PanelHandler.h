@@ -31,6 +31,8 @@ public:
   void onCrystalMined();
 
 private:
+  ErrorCode validateInterface(const PanelHandlerOutInterface &interface) const;
+
   NumberCounterPanel _tilePanel;
   NumberCounterPanel _crystalPanel;
   IndicatorPanel _healthPanel;

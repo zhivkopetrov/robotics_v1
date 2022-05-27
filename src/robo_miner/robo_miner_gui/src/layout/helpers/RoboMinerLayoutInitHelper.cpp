@@ -61,7 +61,8 @@ ErrorCode RoboMinerLayoutInitHelper::initPanelHandler(
   panelHandlerOutInterface.fieldMapRevelealedCb =
       outInterface.fieldMapRevelealedCb;
 
-  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
+  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg,
+          panelHandlerOutInterface)) {
     LOGERR("Error in _panel.init()");
     return ErrorCode::FAILURE;
   }
@@ -71,8 +72,7 @@ ErrorCode RoboMinerLayoutInitHelper::initPanelHandler(
 
 ErrorCode RoboMinerLayoutInitHelper::initCrystalHandler(
     const RoboMinerLayoutConfig &layoutCfg,
-    const RoboCommonLayoutInterface &commonInterface,
-    RoboMinerLayout &layout) {
+    const RoboCommonLayoutInterface &commonInterface, RoboMinerLayout &layout) {
   CrystalHandlerConfig cfg;
   cfg.crystalRsrcId = layoutCfg.crystalRsrcId;
   cfg.tileWidth = layoutCfg.commonLayoutCfg.fieldCfg.description.tileWidth;

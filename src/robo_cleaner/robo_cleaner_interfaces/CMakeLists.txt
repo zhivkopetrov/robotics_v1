@@ -9,8 +9,13 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotMoveType.msg"
+  "msg/UInt8MultiArray.msg"
+  
   "srv/RobotMove.srv"
+  "srv/FieldMapValidate.srv"
+   
   "action/RobotMove.action"
+  
 )
 
 set_target_properties(
