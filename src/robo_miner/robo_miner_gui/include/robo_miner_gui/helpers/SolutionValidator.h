@@ -44,8 +44,7 @@ public:
 
   ValidationResult handleNormalMove(const FieldPos &fieldPos);
 
-  ValidationResult handleMiningMove(const FieldPos &fieldPos,
-                                    bool &allCrystalsMined);
+  ValidationResult handleMiningMove(const FieldPos &fieldPos);
 
   ValidationResult validateActivateMining(std::string &outError);
 

@@ -156,10 +156,8 @@ ValidationResult SolutionValidator::handleNormalMove(const FieldPos &fieldPos) {
   return result;
 }
 
-ValidationResult SolutionValidator::handleMiningMove(const FieldPos &fieldPos,
-                                                     bool &allCrystalsMined) {
+ValidationResult SolutionValidator::handleMiningMove(const FieldPos &fieldPos) {
   ValidationResult result;
-  allCrystalsMined = false;
   if (!_validationOptions.miningActivated) {
     result.success = false;
     return result;
@@ -175,17 +173,11 @@ ValidationResult SolutionValidator::handleMiningMove(const FieldPos &fieldPos,
 
   auto &validationPoints = _validationOptions.longestSequenceValidationPoints;
   if (MINED_CRYSTAL == validationPoints[longestSequenceIdx]) {
-    //found a point, which is still already marked as 'mined'
+    //found a point, which is already marked as 'mined'
     result.success = false;
     return result;
   }
   validationPoints[longestSequenceIdx] = MINED_CRYSTAL;
-
-  auto it = std::find(validationPoints.begin(), validationPoints.end(),
-      UNMINED_CRYSTAL);
-  if (it == validationPoints.end()) {
-    allCrystalsMined = true;
-  }
 
   return result;
 }
