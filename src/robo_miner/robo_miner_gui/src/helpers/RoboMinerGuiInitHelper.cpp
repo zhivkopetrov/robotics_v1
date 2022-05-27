@@ -68,8 +68,8 @@ ErrorCode RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
 
   RoboMinerLayoutOutInterface outInterface;
   outInterface.collisionWatcher = &gui._collisionWatcher;
-  outInterface.finishRobotActCb = std::bind(&RoboMinerGui::onRobotTurnFinish,
-      &gui, _1, _2);
+  outInterface.finishRobotActCb = std::bind(&MovementWatcher::changeState,
+      &gui._movementWatcher, _1, _2);
   outInterface.shutdownGameCb = std::bind(
       &MinerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());

@@ -32,9 +32,6 @@ public:
 
   void process() override;
 
-  //TODO move to some object
-  void onRobotTurnFinish(const RobotState& state, MoveOutcome moveOutcome);
-
 private:
   RoboMinerLayout _layout;
   CollisionWatcher _collisionWatcher;

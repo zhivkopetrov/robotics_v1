@@ -21,10 +21,9 @@ ErrorCode MovementWatcher::init(
 
 bool MovementWatcher::waitForChange(const std::chrono::milliseconds &timeout,
                                     MovementWatchOutcome &outcome) {
-  _ready = false;
-
   bool timedOut = true;
   std::unique_lock<std::mutex> uniqueLock(_mutex);
+  _ready = false;
   timedOut = !_condVar.wait_for(uniqueLock, timeout, [this]() {
     return _ready;
   });

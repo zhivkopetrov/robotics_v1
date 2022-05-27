@@ -43,8 +43,3 @@ void RoboMinerGui::process() {
   _collisionWatcher.process();
 }
 
-void RoboMinerGui::onRobotTurnFinish(const RobotState& state,
-                                     MoveOutcome moveOutcome) {
-  _movementWatcher.changeState(state, moveOutcome);
-}
-
