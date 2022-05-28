@@ -3,6 +3,8 @@ RobotMoveType robot_move_type
 ---
 # Result
 bool success
+string error_reason
 ---
 # Feedback
 bool approaching_obstacle
+int32 progress_percent

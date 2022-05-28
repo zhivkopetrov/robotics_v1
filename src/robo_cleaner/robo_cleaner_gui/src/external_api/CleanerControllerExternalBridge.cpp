@@ -109,7 +109,7 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
 }
 
 rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
-    [[maybe_unused]]const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
+    const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
   LOG("Received request to cancel goal with uuid: %s",
       rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
   return rclcpp_action::CancelResponse::ACCEPT;
@@ -128,6 +128,12 @@ void CleanerControllerExternalBridge::executeMove(
   const auto goal = goalHandle->get_goal();
   auto feedback = std::make_shared<RobotMove::Feedback>();
   auto result = std::make_shared<RobotMove::Result>();
+
+  const auto moveType = getMoveType(goal->robot_move_type.move_type);
+  const auto f = [this, moveType]() {
+    _outInterface.robotActCb(moveType);
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 
   constexpr auto maxMoves = 10;
   constexpr auto lowIdx = 2;

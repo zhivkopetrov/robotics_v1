@@ -172,34 +172,38 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   response->success = true;
   response->surrounding_tiles = std::move(outcome.surroundingTiles);
 
-  if (_outInterface.solutionValidator->isMiningActive()) {
-    handleMiningMove(outcome.robotPos);
-  } else {
-    handleNormalMove(outcome.robotPos);
-  }
+  const auto f2 = [this, outcome]() {
+    if (_outInterface.solutionValidator->isMiningActive()) {
+      handleMiningMove(outcome.robotPos);
+    } else {
+      handleNormalMove(outcome.robotPos);
+    }
+  };
+  _outInterface.invokeActionEventCb(f2, ActionEventType::NON_BLOCKING);
 }
 
 void MinerControllerExternalBridge::handleFieldMapValidateService(
     const std::shared_ptr<FieldMapValidate::Request> request,
-    [[maybe_unused]]std::shared_ptr<FieldMapValidate::Response> response) {
-  const auto& [rows, cols, data] = request->field_map;
+    std::shared_ptr<FieldMapValidate::Response> response) {
+  const auto f = [&, this]() {
+    const auto& [rows, cols, data] = request->field_map;
 
-  const auto [success, majorError] =
-      _outInterface.solutionValidator->validateFieldMap(data, rows, cols,
-          response->error_reason);
-  response->success = success || majorError;
-  if (majorError) {
-    _outInterface.startGameLostAnimCb();
-    return;
-  }
+    const auto [success, majorError] =
+        _outInterface.solutionValidator->validateFieldMap(data, rows, cols,
+            response->error_reason);
+    response->success = success || majorError;
+    if (majorError) {
+      _outInterface.startGameLostAnimCb();
+      return;
+    }
 
-  if (response->success) {
-    const auto f = [this]() {
+    if (response->success) {
       _outInterface.revealFogOfWarTilesCb();
       _outInterface.startAchievementWonAnimCb(Achievement::SINGLE_STAR);
-    };
-    _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-  }
+    }
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
 }
 
 void MinerControllerExternalBridge::handleLongestSequenceValidateService(
@@ -211,50 +215,55 @@ void MinerControllerExternalBridge::handleLongestSequenceValidateService(
     sequence.emplace_back(point.row, point.col);
   }
 
-  const auto [success, majorError] =
-      _outInterface.solutionValidator->validateLongestSequence(sequence,
-          response->error_reason);
-  response->success = success || majorError;
-  if (majorError) {
-    _outInterface.startGameLostAnimCb();
-    return;
-  }
+  const auto f = [this, &response, &sequence]() {
+    const auto [success, majorError] =
+        _outInterface.solutionValidator->validateLongestSequence(sequence,
+            response->error_reason);
+    response->success = success || majorError;
+    if (majorError) {
+      _outInterface.startGameLostAnimCb();
+      return;
+    }
 
-  if (response->success) {
-    const auto f = [this]() {
+    if (response->success) {
       _outInterface.startAchievementWonAnimCb(Achievement::DOUBLE_STAR);
-    };
-    _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-  }
+    }
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
 }
 
 void MinerControllerExternalBridge::handleActivateMiningValidateService(
     [[maybe_unused]]const std::shared_ptr<ActivateMiningValidate::Request> request,
     std::shared_ptr<ActivateMiningValidate::Response> response) {
-  const auto [success, majorError] =
-      _outInterface.solutionValidator->validateActivateMining(
-          response->error_reason);
-  response->success = success || majorError;
-  if (majorError) {
-    _outInterface.startGameLostAnimCb();
-    return;
-  }
+  const auto f = [this, &response]() {
+    const auto [success, majorError] =
+        _outInterface.solutionValidator->validateActivateMining(
+            response->error_reason);
+    response->success = success || majorError;
+    if (majorError) {
+      _outInterface.startGameLostAnimCb();
+      return;
+    }
 
-  if (success) {
-    _outInterface.crystalMinedCb();
-  }
+    if (success) {
+      _outInterface.crystalMinedCb();
+    }
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
 }
 
-void MinerControllerExternalBridge::handleNormalMove(const FieldPos& robotPos) {
-  const auto [success, _] =
-      _outInterface.solutionValidator->handleNormalMove(robotPos);
+void MinerControllerExternalBridge::handleNormalMove(const FieldPos &robotPos) {
+  const auto [success, _] = _outInterface.solutionValidator->handleNormalMove(
+      robotPos);
 
   if (success) {
     _outInterface.tileReleavedCb();
   }
 }
 
-void MinerControllerExternalBridge::handleMiningMove(const FieldPos& robotPos) {
+void MinerControllerExternalBridge::handleMiningMove(const FieldPos &robotPos) {
   const auto [success, majorError] =
       _outInterface.solutionValidator->handleMiningMove(robotPos);
   if (majorError) {

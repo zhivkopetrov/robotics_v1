@@ -11,7 +11,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotMoveType.msg"
   "msg/UInt8MultiArray.msg"
   
-  "srv/RobotMove.srv"
   "srv/FieldMapValidate.srv"
    
   "action/RobotMove.action"
