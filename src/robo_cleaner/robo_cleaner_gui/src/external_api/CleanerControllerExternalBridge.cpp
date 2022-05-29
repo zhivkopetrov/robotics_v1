@@ -7,7 +7,6 @@
 #include "robo_cleaner_common/defines/RoboCleanerTopics.h"
 #include "robo_cleaner_common/message_helpers/RoboCleanerMessageHelpers.h"
 #include "robo_common/defines/RoboCommonDefines.h"
-#include "utils/rng/Rng.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -55,6 +54,13 @@ void CleanerControllerExternalBridge::publishFieldMapCleaned() {
   _fieldMapCleanedPublisher->publish(Empty());
 }
 
+void CleanerControllerExternalBridge::resetControllerStatus() {
+  const auto f = [this]() {
+    _controllerStatus = ControllerStatus::IDLE;
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
 ErrorCode CleanerControllerExternalBridge::initOutInterface(
     const CleanerControllerExternalBridgeOutInterface &outInterface) {
   _outInterface = outInterface;
@@ -65,6 +71,16 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.robotActCb) {
     LOGERR("Error, nullptr provided for RobotActCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.systemShutdownCb) {
+    LOGERR("Error, nullptr provided for SystemShutdownCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.acceptGoalCb) {
+    LOGERR("Error, nullptr provided for AcceptGoalCb");
     return ErrorCode::FAILURE;
   }
 
@@ -96,69 +112,58 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
     const rclcpp_action::GoalUUID &uuid,
     std::shared_ptr<const RobotMove::Goal> goal) {
   LOG("Received goal request with moveType: %hhd and uuid: %s",
-      goal->robot_move_type.move_type,
-      rclcpp_action::to_string(uuid).c_str());
+      goal->robot_move_type.move_type, rclcpp_action::to_string(uuid).c_str());
 
   const auto moveType = getMoveType(goal->robot_move_type.move_type);
   if (MoveType::UNKNOWN == moveType) {
-    LOGERR("Error, Rejecting goal because of unsupported MoveType");
+    LOGERR("Error, Rejecting goal with uuid: %s because of unsupported "
+        "MoveType", rclcpp_action::to_string(uuid).c_str());
     return rclcpp_action::GoalResponse::REJECT;
   }
 
-  return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+  auto response = rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+  const auto f =
+      [this, &uuid, &response]() {
+        if (ControllerStatus::ACTIVE == _controllerStatus) {
+          LOGERR("Error, Rejecting goal with uuid: %s because another one is "
+              "already active",
+              rclcpp_action::to_string(uuid).c_str());
+          response = rclcpp_action::GoalResponse::REJECT;
+          return;
+        }
+
+        _controllerStatus = ControllerStatus::ACTIVE;
+      };
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+
+  return response;
 }
 
 rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
     const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
   LOG("Received request to cancel goal with uuid: %s",
       rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
+
+  const auto f = [this]() {
+    _controllerStatus = ControllerStatus::IDLE;
+
+    //TODO add robot rollback to start position
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+
   return rclcpp_action::CancelResponse::ACCEPT;
 }
 
 void CleanerControllerExternalBridge::handleMoveAccepted(
     const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
-  // this needs to return quickly to avoid blocking the executor, so spin up a new thread
-  std::thread { std::bind(&CleanerControllerExternalBridge::executeMove, this,
-      _1), goalHandle }.detach();
-}
-
-void CleanerControllerExternalBridge::executeMove(
-    const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
-  LOG("Executing goal");
   const auto goal = goalHandle->get_goal();
-  auto feedback = std::make_shared<RobotMove::Feedback>();
-  auto result = std::make_shared<RobotMove::Result>();
-
   const auto moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
     _outInterface.robotActCb(moveType);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 
-  constexpr auto maxMoves = 10;
-  constexpr auto lowIdx = 2;
-  constexpr auto highIdx = maxMoves - 2;
-  const auto triggerIdx = Rng::getInstance().getRandomNumber(lowIdx, highIdx);
-
-  for (auto i = 0; i < maxMoves; ++i) {
-    if (goalHandle->is_canceling()) {
-      result->success = false;
-      goalHandle->canceled(result);
-      LOG("Goal canceled");
-      return;
-    }
-
-    feedback->approaching_obstacle = (i <= triggerIdx) ? false : true;
-    goalHandle->publish_feedback(feedback);
-    LOG("Published feedback idx: %d and approaching_obstacle: %d", i,
-        static_cast<int32_t>(feedback->approaching_obstacle));
-
-    using namespace std::literals;
-    std::this_thread::sleep_for(100ms);
-  }
-
-  result->success = true;
-  goalHandle->succeed(result);
-  LOG("Goal succeeded");
+  // return quickly to avoid blocking the executor
+  _outInterface.acceptGoalCb(goalHandle);
 }
 

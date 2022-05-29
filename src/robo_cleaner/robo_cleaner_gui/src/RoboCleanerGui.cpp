@@ -27,6 +27,7 @@ ErrorCode RoboCleanerGui::init(const std::any &cfg) {
 }
 
 void RoboCleanerGui::deinit() {
+  _movementReporter.deinit();
   _communicatorInterface.unregisterNodeCb(_controllerExternalBridge);
   _layout.deinit();
 }
@@ -40,11 +41,6 @@ void RoboCleanerGui::handleEvent([[maybe_unused]]const InputEvent &e) {
 
 void RoboCleanerGui::process() {
   _collisionWatcher.process();
-}
-
-void RoboCleanerGui::onRobotTurnFinish(
-    [[maybe_unused]]const RobotState &state,
-    [[maybe_unused]]MoveOutcome moveOutcome) {
-
+  _movementWatcher.process();
 }
 

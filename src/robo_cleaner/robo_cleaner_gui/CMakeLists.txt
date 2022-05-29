@@ -31,7 +31,9 @@ add_executable(
         ${_INC_DIR}/defines/RoboCleanerGuiFunctionalDefines.h
         ${_INC_DIR}/helpers/RoboCleanerBuilder.h
         ${_INC_DIR}/helpers/RoboCleanerGuiInitHelper.h
+        ${_INC_DIR}/helpers/MovementWatcher.h
         ${_INC_DIR}/external_api/CleanerControllerExternalBridge.h
+        ${_INC_DIR}/external_api/MovementReporter.h
         ${_INC_DIR}/layout/entities/Rubbish.h
         ${_INC_DIR}/layout/entities/EntityHandler.h
         ${_INC_DIR}/layout/entities/config/EntityHandlerConfig.h
@@ -45,13 +47,15 @@ add_executable(
         ${_SRC_DIR}/config/RoboCleanerGuiConfigGenerator.cpp
         ${_SRC_DIR}/defines/RoboCleanerGuiDefines.cpp
         ${_SRC_DIR}/external_api/CleanerControllerExternalBridge.cpp
+        ${_SRC_DIR}/external_api/MovementReporter.cpp
         ${_SRC_DIR}/helpers/RoboCleanerBuilder.cpp
         ${_SRC_DIR}/helpers/RoboCleanerGuiInitHelper.cpp
+        ${_SRC_DIR}/helpers/MovementWatcher.cpp
         ${_SRC_DIR}/layout/RoboCleanerLayout.cpp
         ${_SRC_DIR}/layout/entities/Rubbish.cpp
         ${_SRC_DIR}/layout/entities/EntityHandler.cpp
         ${_SRC_DIR}/layout/panels/PanelHandler.cpp
-        ${_SRC_DIR}/layout/helpers/RoboCleanerLayoutInitHelper.cpp
+        ${_SRC_DIR}/layout/helpers/RoboCleanerLayoutInitHelper.cpp   
 )
 
 target_include_directories(

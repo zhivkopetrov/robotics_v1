@@ -5,7 +5,6 @@
 #include <cctype>
 
 //Other libraries headers
-#include "robo_common/defines/RoboCommonDefines.h"
 #include "utils/Log.h"
 
 //Own components headers

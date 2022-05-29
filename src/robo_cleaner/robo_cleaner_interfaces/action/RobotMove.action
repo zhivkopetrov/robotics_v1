@@ -4,7 +4,8 @@ RobotMoveType robot_move_type
 # Result
 bool success
 string error_reason
+uint8 processed_field_marker
 ---
 # Feedback
-bool approaching_obstacle
+uint8 approaching_field_marker
 int32 progress_percent

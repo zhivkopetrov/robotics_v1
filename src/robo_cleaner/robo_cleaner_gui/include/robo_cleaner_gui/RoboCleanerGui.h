@@ -12,6 +12,8 @@
 //Own components headers
 #include "robo_cleaner_gui/layout/RoboCleanerLayout.h"
 #include "robo_cleaner_gui/external_api/CleanerControllerExternalBridge.h"
+#include "robo_cleaner_gui/helpers/MovementWatcher.h"
+#include "robo_cleaner_gui/external_api/MovementReporter.h"
 
 //Forward declarations
 class InputEvent;
@@ -30,12 +32,11 @@ public:
 
   void process() override;
 
-  //TODO move to some object
-  void onRobotTurnFinish(const RobotState& state, MoveOutcome moveOutcome);
-
 private:
   RoboCleanerLayout _layout;
   CollisionWatcher _collisionWatcher;
+  MovementWatcher _movementWatcher;
+  MovementReporter _movementReporter;
 
   std::shared_ptr<CleanerControllerExternalBridge> _controllerExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;

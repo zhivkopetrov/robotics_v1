@@ -2,18 +2,17 @@
 #define ROBO_CLEANER_GUI_CLEANERCONTROLLEREXTERNALBRIDGE_H_
 
 //System headers
+#include <thread>
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
-#include <rclcpp_action/rclcpp_action.hpp>
 #include <std_msgs/msg/empty.hpp>
-#include "robo_cleaner_interfaces/action/robot_move.hpp"
 #include "robo_cleaner_interfaces/srv/field_map_validate.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
-#include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "utils/ErrorCode.h"
 
 //Own components headers
+#include "robo_cleaner_gui/defines/RoboCleanerGuiFunctionalDefines.h"
 
 //Forward declarations
 
@@ -21,6 +20,7 @@ struct CleanerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
   SystemShutdownCb systemShutdownCb;
+  AcceptGoalCb acceptGoalCb;
 };
 
 class CleanerControllerExternalBridge: public rclcpp::Node {
@@ -35,15 +35,19 @@ public:
 
   void publishFieldMapCleaned();
 
+  void resetControllerStatus();
+
 private:
   ErrorCode initOutInterface(
       const CleanerControllerExternalBridgeOutInterface &outInterface);
   ErrorCode initCommunication();
 
   using Empty = std_msgs::msg::Empty;
-  using RobotMove = robo_cleaner_interfaces::action::RobotMove;
-  using GoalHandleRobotMove = rclcpp_action::ServerGoalHandle<RobotMove>;
   using FieldMapValidate = robo_cleaner_interfaces::srv::FieldMapValidate;
+
+  enum class ControllerStatus {
+    IDLE, ACTIVE
+  };
 
   rclcpp_action::GoalResponse handleMoveGoal(
       const rclcpp_action::GoalUUID &uuid,
@@ -55,8 +59,6 @@ private:
   void handleMoveAccepted(
       const std::shared_ptr<GoalHandleRobotMove> goalHandle);
 
-  void executeMove(const std::shared_ptr<GoalHandleRobotMove> goalHandle);
-
   CleanerControllerExternalBridgeOutInterface _outInterface;
 
   rclcpp_action::Server<RobotMove>::SharedPtr _moveActionServer;
@@ -67,7 +69,7 @@ private:
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapCleanedPublisher;
 
-//  rclcpp::Subscription<robo_cleaner_interfaces::msg::RobotMoveType>::SharedPtr _playerDirSubscriber;
+  ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };
 
 #endif /* ROBO_CLEANER_GUI_CLEANERCONTROLLEREXTERNALBRIDGE_H_ */
