@@ -32,8 +32,8 @@ public:
   void publishRobotAct(MoveType moveType);
 
 private:
-  typedef robo_collector_interfaces::msg::RobotMoveType RobotMoveType;
-  typedef std_msgs::msg::Empty Empty;
+  using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
+  using Empty = std_msgs::msg::Empty;
 
   void onEnableRobotTurnMsg(const Empty::SharedPtr msg);
   void onControllerShutdownMsg(const Empty::SharedPtr msg);

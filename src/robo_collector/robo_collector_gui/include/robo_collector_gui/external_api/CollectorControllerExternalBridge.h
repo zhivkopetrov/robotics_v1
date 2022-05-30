@@ -36,6 +36,10 @@ private:
   using Empty = std_msgs::msg::Empty;
   using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
 
+  enum class ControllerStatus {
+    IDLE, ACTIVE
+  };
+
   void onMoveMsg(const RobotMoveType::SharedPtr msg);
 
   CollectorControllerExternalBridgeOutInterface _outInterface;
@@ -43,6 +47,8 @@ private:
   rclcpp::Subscription<RobotMoveType>::SharedPtr _playerActSubscriber;
   rclcpp::Publisher<Empty>::SharedPtr _playerEnableInputPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
+
+  ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };
 
 #endif /* ROBO_COLLECTOR_GUI_COLLECTORCONTROLLEREXTERNALBRIDGE_H_ */

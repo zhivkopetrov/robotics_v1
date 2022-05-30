@@ -52,6 +52,10 @@ private:
   using LongestSequenceValidate = robo_miner_interfaces::srv::LongestSequenceValidate;
   using ActivateMiningValidate = robo_miner_interfaces::srv::ActivateMiningValidate;
 
+  enum class ControllerStatus {
+    IDLE, ACTIVE
+  };
+
   ErrorCode initOutInterface(
       const MinerControllerExternalBridgeOutInterface &outInterface);
   ErrorCode initCommunication();
@@ -83,6 +87,8 @@ private:
 
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
+
+  ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };
 
 #endif /* ROBO_MINER_GUI_MINERCONTROLLEREXTERNALBRIDGE_H_ */

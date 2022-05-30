@@ -141,6 +141,8 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
 void MinerControllerExternalBridge::handleRobotMoveService(
     const std::shared_ptr<RobotMove::Request> request,
     std::shared_ptr<RobotMove::Response> response) {
+  response->success = true;
+
   const auto moveType = getMoveType(request->robot_move_type.move_type);
   if (MoveType::UNKNOWN == moveType) {
     LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
@@ -149,14 +151,36 @@ void MinerControllerExternalBridge::handleRobotMoveService(
     return;
   }
 
-  const auto f = [this, moveType]() {
-    _outInterface.robotActCb(moveType);
+  const auto f = [this, &response]() {
+    if (ControllerStatus::ACTIVE == _controllerStatus) {
+      response->success = false;
+      response->error_reason =
+          "Rejecting Move Service because another one is already active";
+      LOGERR("%s", response->error_reason.c_str());
+      return;
+    }
+
+    _controllerStatus = ControllerStatus::ACTIVE;
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+  if (!response->success) {
+    return;
+  }
+
+  const auto f2 = [this, moveType]() {
+    _outInterface.robotActCb(moveType);
+  };
+  _outInterface.invokeActionEventCb(f2, ActionEventType::BLOCKING);
 
   MovementWatchOutcome outcome;
   const auto success = _outInterface.movementWatcher->waitForChange(5000ms,
       outcome);
+
+  const auto f3 = [this]() {
+    _controllerStatus = ControllerStatus::IDLE;
+  };
+  _outInterface.invokeActionEventCb(f3, ActionEventType::NON_BLOCKING);
+
   if (!success) {
     response->success = false;
     response->error_reason = "Service timed out after 5000ms";
@@ -170,16 +194,16 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   }
 
   response->success = true;
-  response->surrounding_tiles = std::move(outcome.surroundingTiles);
+  response->surrounding_tiles = outcome.surroundingTiles;
 
-  const auto f2 = [this, outcome]() {
+  const auto f4 = [this, outcome]() {
     if (_outInterface.solutionValidator->isMiningActive()) {
       handleMiningMove(outcome.robotPos);
     } else {
       handleNormalMove(outcome.robotPos);
     }
   };
-  _outInterface.invokeActionEventCb(f2, ActionEventType::NON_BLOCKING);
+  _outInterface.invokeActionEventCb(f4, ActionEventType::NON_BLOCKING);
 }
 
 void MinerControllerExternalBridge::handleFieldMapValidateService(

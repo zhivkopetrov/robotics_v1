@@ -49,6 +49,11 @@ ErrorCode CollectorControllerExternalBridge::init(
 }
 
 void CollectorControllerExternalBridge::publishEnablePlayerInput() {
+  const auto f = [this]() {
+    _controllerStatus = ControllerStatus::IDLE;
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+
   _playerEnableInputPublisher->publish(Empty());
 }
 
@@ -69,11 +74,26 @@ void CollectorControllerExternalBridge::onMoveMsg(
     return;
   }
 
-  const auto f = [this, moveType]() {
+  bool success = true;
+  const auto f = [this, &success]() {
+    if (ControllerStatus::ACTIVE == _controllerStatus) {
+      success = false;
+      LOGERR("Rejecting Move Request because another one is already active");
+      return;
+    }
+
+    _controllerStatus = ControllerStatus::ACTIVE;
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+  if (!success) {
+    return;
+  }
+
+  const auto f2 = [this, moveType]() {
     _outInterface.moveButtonClickCb(moveType);
   };
 
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+  _outInterface.invokeActionEventCb(f2, ActionEventType::NON_BLOCKING);
 }
 
 

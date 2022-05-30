@@ -9,6 +9,7 @@ colcon build --packages-up-to resource_builder --event-handlers console_direct+ 
 . install/setup.bash
 ros2 run robo_collector_gui robo_collector_gui
 
+ros2 topic pub --once /move_type robo_collector_interfaces/msg/RobotMoveType move_type:\ 0\
 
 # hide the top bar
 https://ubuntuhandbook.org/index.php/2020/08/top-panel-auto-hide-ubuntu-20-04/
