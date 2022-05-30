@@ -45,6 +45,14 @@ RobotState Robot::getState() const {
   return _state;
 }
 
+Point Robot::getAbsolutePos() const {
+  return _animator.getAbsolutePos();
+}
+
+double Robot::getRotationAngle() const {
+  return _animator.getRotationAngle();
+}
+
 SurroundingTiles Robot::getSurroundingTiles() const {
   const auto& fieldDescr = _outInterface.getFieldDescriptionCb();
   return RobotUtils::getSurroundingTiles(fieldDescr, _state);
@@ -107,12 +115,18 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
     _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
         _currCollisionWatchStatus);
 
+    //invoke instant collision callback if set.
+    //this is to inform about the collision before the collision animation
+    if (_outInterface.playerRobotDamageCollisionCb) {
+      _outInterface.playerRobotDamageCollisionCb();
+    }
+
     _animator.stopMoveAnim();
     _animator.startCollisionImpactAnim(RobotEndTurn::YES);
     return;
   }
 
-  //collision watch status will not be started in the case where
+  //collision watch status will not be changed in the case where
   //another moving object collides into this one, which is not moving
   _animator.startCollisionImpactAnim(RobotEndTurn::NO);
 }

@@ -37,9 +37,10 @@ ErrorCode RobotInitHelper::initOutInterface(const RobotOutInterface &interface,
     return ErrorCode::FAILURE;
   }
 
-  // only player robot should report damage callback
+  // only player robot should report damage callbacks
   if (RoboCommonDefines::PLAYER_ROBOT_IDX != robot._state.robotId) {
     robot._outInterface.playerDamageCb = nullptr;
+    robot._outInterface.playerRobotDamageCollisionCb = nullptr;
   }
 
   if (nullptr == robot._outInterface.setFieldDataMarkerCb) {

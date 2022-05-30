@@ -69,8 +69,8 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
-  if (nullptr == _outInterface.robotActCb) {
-    LOGERR("Error, nullptr provided for RobotActCb");
+  if (!_outInterface.robotActInterface.isValid()) {
+    LOGERR("Error, RobotActInterface is not populated");
     return ErrorCode::FAILURE;
   }
 
@@ -81,6 +81,11 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.acceptGoalCb) {
     LOGERR("Error, nullptr provided for AcceptGoalCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.reportRobotStartingActCb) {
+    LOGERR("Error, nullptr provided for ReportRobotStartingActCb");
     return ErrorCode::FAILURE;
   }
 
@@ -148,6 +153,7 @@ rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
     _controllerStatus = ControllerStatus::IDLE;
 
     //TODO add robot rollback to start position
+    //TODO cancel feedback reporting
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 
@@ -159,7 +165,11 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto goal = goalHandle->get_goal();
   const auto moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
-    _outInterface.robotActCb(moveType);
+    _outInterface.robotActInterface.actCb(moveType);
+    _outInterface.reportRobotStartingActCb(moveType);
+    //TODO notify movementWatcher that movement has started with chosen dir
+    //movement watcher will internally compute the future dir using FieldUtils
+    //and report progress
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 

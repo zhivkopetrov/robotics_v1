@@ -21,7 +21,7 @@ constexpr int32_t RUBBISH_TO_FRAME_ID_SUBTRACT_VALUE = 2;
 ErrorCode EntityHandler::init(const EntityHandlerConfig &cfg,
                               const FieldDescription &fieldDescr) {
   _tileCounters.reserve(fieldDescr.emptyTilesCount);
-  _rubbish.reserve(0.5 * fieldDescr.emptyTilesCount);
+  _rubbish.reserve(0.5 * fieldDescr.emptyTilesCount); //micro-optimization
 
   constexpr double rubbishToTileRatio = 0.6;
   const int32_t offsetFromTileX = static_cast<int32_t>(0.2

@@ -21,6 +21,7 @@ using EnergyDepletedCb = IndicatorDepletedCb;
 using FieldMapRevelealedCb = std::function<void()>;
 using FieldMapCleanedCb = std::function<void()>;
 using ReportMoveProgressCb = std::function<void(const MoveProgress&)>;
+using ReportRobotStartingActCb = std::function<void(MoveType)>;
 using AcceptGoalCb = std::function<void(const std::shared_ptr<GoalHandleRobotMove> &)>;
 
 #endif /* ROBO_CLEANER_GUI_ROBOCLEANERGUIFUNCTIONALDEFINES_H_ */

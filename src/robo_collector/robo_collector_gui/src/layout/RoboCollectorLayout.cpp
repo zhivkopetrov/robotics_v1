@@ -36,7 +36,9 @@ void RoboCollectorLayout::produceInterface(
   for (auto i = 0; i < Defines::ENEMIES_CTN; ++i) {
     interface.enemyRobotActInterfaces.emplace_back(
         std::bind(&Robot::act, &_enemyRobots[i], _1),
-        std::bind(&Robot::getState, &_enemyRobots[i]));
+        std::bind(&Robot::getState, &_enemyRobots[i]),
+        std::bind(&Robot::getAbsolutePos, &_enemyRobots[i]),
+        std::bind(&Robot::getRotationAngle, &_enemyRobots[i]));
   }
 }
 

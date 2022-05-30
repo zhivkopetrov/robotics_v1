@@ -8,6 +8,7 @@
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include "robo_cleaner_interfaces/srv/field_map_validate.hpp"
+#include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "utils/ErrorCode.h"
 
@@ -18,9 +19,10 @@
 
 struct CleanerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
-  RobotActCb robotActCb;
+  RobotActInterface robotActInterface;
   SystemShutdownCb systemShutdownCb;
   AcceptGoalCb acceptGoalCb;
+  ReportRobotStartingActCb reportRobotStartingActCb;
 };
 
 class CleanerControllerExternalBridge: public rclcpp::Node {

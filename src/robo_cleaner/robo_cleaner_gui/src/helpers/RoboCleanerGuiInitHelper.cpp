@@ -11,7 +11,7 @@
 #include "robo_cleaner_gui/RoboCleanerGui.h"
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfig.h"
 
-  using namespace std::placeholders;
+using namespace std::placeholders;
 
 ErrorCode RoboCleanerGuiInitHelper::init(const std::any &cfg,
                                          RoboCleanerGui &gui) {
@@ -51,10 +51,9 @@ ErrorCode RoboCleanerGuiInitHelper::init(const std::any &cfg,
     return ErrorCode::FAILURE;
   }
 
-  const ReportMoveProgressCb reportMoveProgressCb = std::bind(
-      &MovementReporter::reportProgress, &gui._movementReporter, _1);
-  if (ErrorCode::SUCCESS != gui._movementWatcher.init(reportMoveProgressCb)) {
-    LOGERR("Error in _movementWatcher.init()");
+  if (ErrorCode::SUCCESS != initMovementWatcher(parsedCfg.layoutCfg,
+          layoutInterface, gui)) {
+    LOGERR("initMovementWatcher() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -74,6 +73,8 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb = std::bind(&MovementWatcher::changeState,
       &gui._movementWatcher, _1, _2);
+  outInterface.playerRobotDamageCollisionCb = std::bind(
+      &MovementWatcher::cancelFeedbackReporting, &gui._movementWatcher);
   outInterface.fieldMapRevelealedCb = std::bind(
       &CleanerControllerExternalBridge::publishFieldMapRevealed,
       gui._controllerExternalBridge.get());
@@ -92,15 +93,46 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
   return ErrorCode::SUCCESS;
 }
 
+ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
+    const RoboCleanerLayoutConfig &cfg,
+    const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
+  MovementWatcherOutInterface outInterface;
+  const auto &commonLayoutInterface = interface.commonLayoutInterface;
+  outInterface.getRobotAbsolutePosCb =
+      commonLayoutInterface.playerRobotActInterface.getRobotAbsolutePosCb;
+  outInterface.getRobotRotationAngleCb =
+      commonLayoutInterface.playerRobotActInterface.getRobotRotationAngleCb;
+  outInterface.getRobotStateCb =
+      commonLayoutInterface.playerRobotActInterface.getRobotStateCb;
+  outInterface.reportMoveProgressCb = std::bind(
+      &MovementReporter::reportProgress, &gui._movementReporter, _1);
+  outInterface.getFieldDescriptionCb =
+      commonLayoutInterface.getFieldDescriptionCb;
+
+  const auto &fieldDescr = cfg.commonLayoutCfg.fieldCfg.description;
+  MovementWatcherConfig movementWatcherConfigCfg;
+  movementWatcherConfigCfg.tileWidth = fieldDescr.tileWidth;
+  movementWatcherConfigCfg.tileHeight = fieldDescr.tileHeight;
+  if (ErrorCode::SUCCESS != gui._movementWatcher.init(movementWatcherConfigCfg,
+          outInterface)) {
+    LOGERR("Error in _movementWatcher.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
     const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
   CleanerControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
-  outInterface.robotActCb =
-      interface.commonLayoutInterface.playerRobotActInterface.actCb;
+  outInterface.robotActInterface =
+      interface.commonLayoutInterface.playerRobotActInterface;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.acceptGoalCb = std::bind(&MovementReporter::acceptGoal,
       &gui._movementReporter, _1);
+  outInterface.reportRobotStartingActCb = std::bind(
+      &MovementWatcher::onRobotStartingAct, &gui._movementWatcher, _1);
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

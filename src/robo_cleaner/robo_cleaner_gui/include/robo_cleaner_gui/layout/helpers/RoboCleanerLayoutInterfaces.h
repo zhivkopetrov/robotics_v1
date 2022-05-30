@@ -21,6 +21,7 @@ struct RoboCleanerLayoutInterface {
 struct RoboCleanerLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
   FinishRobotActCb finishRobotActCb;
+  PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
   FieldMapRevelealedCb fieldMapRevelealedCb;
   FieldMapCleanedCb fieldMapCleanedCb;
   CollisionWatcher *collisionWatcher = nullptr;

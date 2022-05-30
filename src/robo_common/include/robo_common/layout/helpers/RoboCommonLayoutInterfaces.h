@@ -28,6 +28,7 @@ struct RoboCommonLayoutInterface {
 struct RoboCommonLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
   FinishRobotActCb finishRobotActCb;
+  PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
   PlayerDamageCb playerDamageCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };

@@ -26,6 +26,10 @@ private:
                               RoboCleanerLayoutInterface &interface, //out param
                               RoboCleanerGui &gui);
 
+  static ErrorCode initMovementWatcher(
+      const RoboCleanerLayoutConfig &cfg,
+      const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui);
+
   static ErrorCode initControllerExternalBridge(
       const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui);
 };

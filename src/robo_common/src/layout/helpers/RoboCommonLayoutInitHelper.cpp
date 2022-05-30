@@ -68,6 +68,8 @@ ErrorCode RoboCommonLayoutInitHelper::initPlayerRobot(
   robotOutInterface.collisionWatcher = outInterface.collisionWatcher;
   robotOutInterface.playerDamageCb = outInterface.playerDamageCb;
   robotOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
+  robotOutInterface.playerRobotDamageCollisionCb =
+      outInterface.playerRobotDamageCollisionCb;
   robotOutInterface.setFieldDataMarkerCb = std::bind(&Field::setFieldDataMarker,
       &layout._field, _1, _2);
   robotOutInterface.resetFieldDataMarkerCb = std::bind(

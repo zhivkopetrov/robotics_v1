@@ -142,6 +142,14 @@ Rectangle RobotAnimator::getBoundary() const {
   return _robotImg.getScaledRect();
 }
 
+Point RobotAnimator::getAbsolutePos() const {
+  return _robotImg.getPosition();
+}
+
+double RobotAnimator::getRotationAngle() const {
+  return _robotImg.getRotation();
+}
+
 ErrorCode RobotAnimator::initOutInterface(
     const RobotAnimatorOutInterface &outInterface) {
   _outInterface = outInterface;

@@ -10,11 +10,12 @@
 //Own components headers
 #include "robo_common/layout/helpers/RoboCommonLayoutInitHelper.h"
 
-ErrorCode RoboCommonLayout::init(const RoboCommonLayoutConfig &cfg,
-                               const RoboCommonLayoutOutInterface &outInterface,
-                               RoboCommonLayoutInterface &interface) {
-  if (ErrorCode::SUCCESS !=
-      RoboCommonLayoutInitHelper::init(cfg, outInterface, *this)) {
+ErrorCode RoboCommonLayout::init(
+    const RoboCommonLayoutConfig &cfg,
+    const RoboCommonLayoutOutInterface &outInterface,
+    RoboCommonLayoutInterface &interface) {
+  if (ErrorCode::SUCCESS != RoboCommonLayoutInitHelper::init(cfg, outInterface,
+          *this)) {
     LOGERR("Error, RoboCommonLayoutInitHelper::init() failed");
     return ErrorCode::FAILURE;
   }
@@ -57,15 +58,17 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
   interface.getPlayerSurroundingTilesCb = std::bind(&Robot::getSurroundingTiles,
       &_playerRobot);
   interface.playerRobotActInterface = { std::bind(&Robot::act, &_playerRobot,
-      _1), std::bind(&Robot::getState, &_playerRobot) };
+      _1), std::bind(&Robot::getState, &_playerRobot), std::bind(
+      &Robot::getAbsolutePos, &_playerRobot), std::bind(
+      &Robot::getRotationAngle, &_playerRobot) };
   interface.startGameWonAnimCb = std::bind(&GameEndAnimator::startGameWonAnim,
       &_gameEndAnimator);
   interface.startGameLostAnimCb = std::bind(&GameEndAnimator::startGameLostAnim,
       &_gameEndAnimator);
   interface.startAchievementWonAnimCb = std::bind(
       &GameEndAnimator::startAchievementWonAnim, &_gameEndAnimator, _1);
-  interface.revealFogOfWarTilesCb = std::bind(
-      &FogOfWar::revealAllFogTiles, &_fogOfWar);
+  interface.revealFogOfWarTilesCb = std::bind(&FogOfWar::revealAllFogTiles,
+      &_fogOfWar);
 
   return interface;
 }

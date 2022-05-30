@@ -21,12 +21,14 @@ struct RobotOutInterface {
   ResetFieldDataMarkerCb resetFieldDataMarkerCb;
   GetFieldDescriptionCb getFieldDescriptionCb;
   FinishRobotActCb finishRobotActCb;
+  PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
+  PlayerDamageAnimEndCb playerDamageAnimEndCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
 struct RobotConfig {
   RobotFieldMarkers robotFieldMarkers = RobotFieldMarkers::DISABLED;
-  char fieldMarker = '?';
+  char fieldMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
 };
 
 class Robot final : public CollisionObject {
@@ -42,6 +44,8 @@ public:
   void draw() const;
 
   RobotState getState() const;
+  Point getAbsolutePos() const;
+  double getRotationAngle() const;
   SurroundingTiles getSurroundingTiles() const;
 
   void act(MoveType moveType);

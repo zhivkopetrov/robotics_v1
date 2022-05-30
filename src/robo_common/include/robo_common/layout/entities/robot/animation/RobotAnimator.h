@@ -71,6 +71,10 @@ public:
 
   Rectangle getBoundary() const;
 
+  Point getAbsolutePos() const;
+
+  double getRotationAngle() const;
+
 private:
   ErrorCode initOutInterface(const RobotAnimatorOutInterface& outInterface);
 
