@@ -145,9 +145,6 @@ void MovementWatcher::processForwardMovement() {
 void MovementWatcher::processRotationMovement() {
   int32_t progressToReport { };
 
-  //270 target
-  //355 current
-
   constexpr double totalRotation = 90.0;
   const double currAbsoluteRotation = [this]() {
     double absoluteRotation = _outInterface.getRobotRotationAngleCb();
