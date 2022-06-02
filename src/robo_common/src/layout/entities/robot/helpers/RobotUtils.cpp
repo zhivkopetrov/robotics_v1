@@ -62,7 +62,7 @@ SurroundingTiles RobotUtils::getSurroundingTiles(const FieldDescription &descr,
     result[i] =
         FieldUtils::isInsideField(pos, descr) ?
             descr.data[pos.row][pos.col] :
-            RoboCommonDefines::FIELD_OUT_OF_BOULD_MARKER;
+            RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
   }
 
   return result;

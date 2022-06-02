@@ -107,9 +107,14 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
   //this is the currently moving object
   if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
     //this is a soft object (such as a coin). Don't stop the movement
+
+    LOGC("CollisionWatchStatus::ON");
     if (CollisionDamageImpact::NO == impact) {
+      LOGC("Robot collision nothing to do");
       return; //nothing more to do
     }
+
+    LOGC("Robot turning CollisionWatchStatus::OFF");
 
     _currCollisionWatchStatus = CollisionWatchStatus::OFF;
     _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
@@ -121,14 +126,20 @@ void Robot::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
       _outInterface.playerRobotDamageCollisionCb();
     }
 
+    LOGC("Robot startCollisionImpactAnim");
+
     _animator.stopMoveAnim();
     _animator.startCollisionImpactAnim(RobotEndTurn::YES);
     return;
   }
 
+//#warning after a collision with a hard obstacle either the robot or the objOverlay should unregister their handles
+//#warning otherwise the collision anim is started again in this case
+  LOGC("CollisionWatchStatus::OFF");
+
   //collision watch status will not be changed in the case where
   //another moving object collides into this one, which is not moving
-  _animator.startCollisionImpactAnim(RobotEndTurn::NO);
+//  _animator.startCollisionImpactAnim(RobotEndTurn::NO);
 }
 
 Rectangle Robot::getBoundary() const {

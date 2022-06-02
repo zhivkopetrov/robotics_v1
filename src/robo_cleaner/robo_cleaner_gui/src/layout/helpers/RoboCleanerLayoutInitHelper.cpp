@@ -27,6 +27,8 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
   commonOutInterface.playerDamageCb = std::bind(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
   commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
+  commonOutInterface.objechApproachOverlayTriggeredCb =
+      outInterface.objechApproachOverlayTriggeredCb;
 
   if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {
@@ -66,8 +68,8 @@ ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
   panelHandlerOutInterface.energyDepletedCb = std::bind(
       &RoboCleanerLayout::onEnergyDepleted, &layout);
 
-  if (ErrorCode::SUCCESS !=
-      layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
+  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg,
+          panelHandlerOutInterface)) {
     LOGERR("Error in _panel.init()");
     return ErrorCode::FAILURE;
   }

@@ -15,12 +15,17 @@
 class CollisionWatcher;
 struct ObstacleHandlerConfig;
 
+struct ObstacleHandlerOutInterface {
+  ObjechApproachOverlayTriggeredCb objechApproachOverlayTriggeredCb;
+  CollisionWatcher *collisionWatcher = nullptr;
+};
+
 class ObstacleHandler {
 public:
   ErrorCode init(const ObstacleHandlerConfig &cfg,
                  const FieldDescription &fieldDescr,
                  const std::vector<FieldPos> &obstaclePositions,
-                 CollisionWatcher *collisionWatcher);
+                 const ObstacleHandlerOutInterface& interface);
 
   void drawOnFbo(Fbo &fbo) const;
 

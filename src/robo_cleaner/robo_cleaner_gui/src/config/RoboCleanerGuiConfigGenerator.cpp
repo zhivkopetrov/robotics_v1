@@ -1,4 +1,3 @@
-//Corresponding header
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfigGenerator.h"
 
 //System headers
@@ -115,6 +114,7 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   ObstacleHandlerConfig cfg;
 
   cfg.obstacleRsrcId = RoboCleanerGuiResources::MAP_OBSTACLE;
+  cfg.status = ObstacleHandlerApproachOverlayStatus::ENABLED;
 
   return cfg;
 }
@@ -137,7 +137,7 @@ FieldConfig generateFieldConfig() {
 
 FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
   FogOfWarConfig cfg;
-  cfg.status = FogOfWarStatus::ENABLED;
+//  cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;

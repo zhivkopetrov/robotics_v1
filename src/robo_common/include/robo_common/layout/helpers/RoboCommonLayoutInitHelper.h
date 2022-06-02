@@ -14,16 +14,21 @@ class RoboCommonLayout;
 struct RoboCommonLayoutInterface;
 struct RoboCommonLayoutOutInterface;
 struct RoboCommonLayoutConfig;
+struct FieldConfig;
 
 class RoboCommonLayoutInitHelper {
 public:
   RoboCommonLayoutInitHelper() = delete;
 
   static ErrorCode init(const RoboCommonLayoutConfig &cfg,
-                      const RoboCommonLayoutOutInterface &outInterface,
-                      RoboCommonLayout &layout);
+                        const RoboCommonLayoutOutInterface &outInterface,
+                        RoboCommonLayout &layout);
 
 private:
+  static ErrorCode initField(const FieldConfig &cfg,
+                             const RoboCommonLayoutOutInterface &outInterface,
+                             RoboCommonLayout &layout);
+
   static ErrorCode initFogOfWar(
       const RoboCommonLayoutConfig &layoutCfg,
       const RoboCommonLayoutOutInterface &outInterface,

@@ -30,6 +30,7 @@ struct RoboCommonLayoutOutInterface {
   FinishRobotActCb finishRobotActCb;
   PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
   PlayerDamageCb playerDamageCb;
+  ObjechApproachOverlayTriggeredCb objechApproachOverlayTriggeredCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 

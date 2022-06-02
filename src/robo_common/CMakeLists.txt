@@ -25,6 +25,7 @@ add_library(
         ${_INC_DIR}/layout/field/FieldPos.h
         ${_INC_DIR}/layout/field/FieldUtils.h
         ${_INC_DIR}/layout/field/Tile.h
+        ${_INC_DIR}/layout/field/ObjectApproachOverlay.h
         ${_INC_DIR}/layout/field/fog_of_war/FogOfWar.h
         ${_INC_DIR}/layout/field/config/FieldConfig.h
         ${_INC_DIR}/layout/field/config/TileConfig.h
@@ -57,6 +58,7 @@ add_library(
         ${_SRC_DIR}/layout/field/FieldPos.cpp
         ${_SRC_DIR}/layout/field/FieldUtils.cpp
         ${_SRC_DIR}/layout/field/Tile.cpp
+        ${_SRC_DIR}/layout/field/ObjectApproachOverlay.cpp
         ${_SRC_DIR}/layout/field/fog_of_war/FogOfWar.cpp
         ${_SRC_DIR}/layout/field/fog_of_war/FogCollisionObject.cpp
         ${_SRC_DIR}/layout/field/obstacles/Obstacle.cpp

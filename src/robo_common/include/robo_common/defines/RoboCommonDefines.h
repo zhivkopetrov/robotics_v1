@@ -24,7 +24,7 @@ enum Markers {
   SMALL_OBSTACLE_MARKER = 'x',
   BIG_OBSTACLE_MARKER = 'X',
   EMPTY_TILE_MARKER = '.',
-  FIELD_OUT_OF_BOULD_MARKER = '#',
+  FIELD_OUT_OF_BOUND_MARKER = '#',
 
   UNKNOWN_FIELD_MARKER = 0
 };
@@ -63,6 +63,10 @@ struct RobotState {
 };
 
 enum class RobotFieldMarkers {
+  ENABLED, DISABLED
+};
+
+enum class ObstacleHandlerApproachOverlayStatus {
   ENABLED, DISABLED
 };
 

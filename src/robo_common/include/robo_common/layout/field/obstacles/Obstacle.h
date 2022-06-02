@@ -11,6 +11,7 @@
 //Own components headers
 #include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_common/layout/field/FieldPos.h"
+#include "robo_common/layout/field/ObjectApproachOverlay.h"
 #include "robo_common/helpers/CollisionObject.h"
 
 //Forward declarations
@@ -21,24 +22,33 @@ struct ObstacleConfig {
   uint64_t rsrcId { };
   FieldPos fieldPos;
   Point tileOffset;
+  double objApproachOverlayScaleFactor { };
   int32_t width { };
   int32_t height { };
+  int32_t tileWidth { };
+  int32_t tileHeight { };
+  ObstacleHandlerApproachOverlayStatus status =
+      ObstacleHandlerApproachOverlayStatus::DISABLED;
 };
 
 class Obstacle final : public CollisionObject {
 public:
-  ErrorCode init(const ObstacleConfig &cfg, const FieldDescription &fieldDescr,
-                 CollisionWatcher *collisionWatcher);
+  ErrorCode init(
+      const ObstacleConfig &cfg, const FieldDescription &fieldDescr,
+      CollisionWatcher *collisionWatcher,
+      const ObjechApproachOverlayTriggeredCb &objechApproachOverlayTriggeredCb);
 
   void drawOnFbo(Fbo &fbo) const;
 
+private:
   Rectangle getBoundary() const override;
 
-private:
   void registerCollision(const Rectangle &intersectRect,
                          CollisionDamageImpact impact) override;
 
   Image _img;
+
+  ObjectApproachOverlay _objApproachOverlay;
 };
 
 #endif /* ROBO_COMMON_OBSTACLE_H_ */

@@ -73,8 +73,10 @@ void MovementReporter::reportProgressLoop(
 
     if (goalHandle->is_canceling()) {
       result->success = false;
-      result->error_reason = "Goal with uuid: %s was cancelled",
-          rclcpp_action::to_string(goalHandle->get_goal_id()).c_str();
+      result->error_reason = "Goal with uuid: ";
+      result->error_reason.append(
+          rclcpp_action::to_string(
+              goalHandle->get_goal_id())).append("was cancelled");
       goalHandle->canceled(result);
       LOGR("%s", result->error_reason.c_str());
 

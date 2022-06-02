@@ -18,9 +18,14 @@
 class CollisionWatcher;
 struct FieldConfig;
 
+struct FieldOutInterface {
+  ObjechApproachOverlayTriggeredCb objechApproachOverlayTriggeredCb;
+  CollisionWatcher *collisionWatcher = nullptr;
+};
+
 class Field {
 public:
-  ErrorCode init(const FieldConfig &cfg, CollisionWatcher *collisionWatcher);
+  ErrorCode init(const FieldConfig &cfg, const FieldOutInterface& interface);
 
   void draw() const;
 
@@ -35,7 +40,7 @@ public:
 
 private:
   ErrorCode initTiles(const FieldConfig &cfg,
-                      CollisionWatcher *collisionWatcher);
+                      const FieldOutInterface& interface);
 
   //for debug purposes
   void printFieldData() const;

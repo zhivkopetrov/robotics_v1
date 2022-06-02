@@ -16,16 +16,16 @@
 #include "robo_common/layout/field/config/TileConfig.h"
 
 ErrorCode Field::init(const FieldConfig &cfg,
-                      CollisionWatcher *collisionWatcher) {
+                      const FieldOutInterface &interface) {
   if (0 >= cfg.description.rows || 0 >= cfg.description.cols) {
-    LOGERR("Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
-           "needs to be positive number",
-           cfg.description.rows, cfg.description.cols);
+    LOGERR(
+        "Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' " "needs to be positive number",
+        cfg.description.rows, cfg.description.cols);
     return ErrorCode::FAILURE;
   }
   _description = cfg.description;
 
-  if (ErrorCode::SUCCESS != initTiles(cfg, collisionWatcher)) {
+  if (ErrorCode::SUCCESS != initTiles(cfg, interface)) {
     LOGERR("Error, initTiles() failed");
     return ErrorCode::FAILURE;
   }
@@ -82,7 +82,7 @@ void Field::toggleDebugTexts() {
 }
 
 ErrorCode Field::initTiles(const FieldConfig &cfg,
-                           CollisionWatcher *collisionWatcher) {
+                           const FieldOutInterface &interface) {
   TileConfig tileCfg;
   tileCfg.tileRsrcId = cfg.tileRsrcId;
   tileCfg.debugFontRsrcId = cfg.debugFontRsrcId;
@@ -128,8 +128,13 @@ ErrorCode Field::initTiles(const FieldConfig &cfg,
     return ErrorCode::FAILURE;
   }
 
+  const ObstacleHandlerOutInterface obsHandlerOutInterface = {
+      .objechApproachOverlayTriggeredCb =
+          interface.objechApproachOverlayTriggeredCb, .collisionWatcher =
+          interface.collisionWatcher };
+
   if (ErrorCode::SUCCESS != _obstacleHandler.init(cfg.obstacleHandlerConfig,
-          _description, obstaclePositions, collisionWatcher)) {
+          _description, obstaclePositions, obsHandlerOutInterface)) {
     LOGERR("Error, _obstacleHandler.init() failed");
     return ErrorCode::FAILURE;
   }

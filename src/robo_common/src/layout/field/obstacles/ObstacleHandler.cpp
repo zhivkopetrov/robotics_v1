@@ -14,8 +14,8 @@
 ErrorCode ObstacleHandler::init(const ObstacleHandlerConfig &cfg,
                                 const FieldDescription &fieldDescr,
                                 const std::vector<FieldPos> &obstaclePositions,
-                                CollisionWatcher *collisionWatcher) {
-  if (nullptr == collisionWatcher) {
+                                const ObstacleHandlerOutInterface &interface) {
+  if (nullptr == interface.collisionWatcher) {
     LOGERR("Error, nullptr provided for CollisionWatcher");
     return ErrorCode::FAILURE;
   }
@@ -23,12 +23,14 @@ ErrorCode ObstacleHandler::init(const ObstacleHandlerConfig &cfg,
   const size_t obstaclesCount = obstaclePositions.size();
   _obstacles.resize(obstaclesCount);
 
-  constexpr double bigObstacleToTileRatio = 0.6;
-  const int32_t bigOffsetFromTileX = static_cast<int32_t>(0.2
+  constexpr double bigObjApproachOverlayScaleFactor = 1.5;
+  constexpr double bigObstacleToTileRatio = 0.5;
+  const int32_t bigOffsetFromTileX = static_cast<int32_t>(0.25
       * fieldDescr.tileWidth);
-  const int32_t bigOffsetFromTileY = static_cast<int32_t>(0.2
+  const int32_t bigOffsetFromTileY = static_cast<int32_t>(0.25
       * fieldDescr.tileHeight);
 
+  constexpr double smallObjApproachOverlayScaleFactor = 1.75;
   constexpr double smallObstacleToTileRatio = 0.35;
   const int32_t smallOffsetFromTileX = static_cast<int32_t>(0.33
       * fieldDescr.tileWidth);
@@ -36,7 +38,10 @@ ErrorCode ObstacleHandler::init(const ObstacleHandlerConfig &cfg,
       * fieldDescr.tileHeight);
 
   ObstacleConfig obstacleCfg;
+  obstacleCfg.status = cfg.status;
   obstacleCfg.rsrcId = cfg.obstacleRsrcId;
+  obstacleCfg.tileWidth = fieldDescr.tileWidth;
+  obstacleCfg.tileHeight = fieldDescr.tileHeight;
 
   for (size_t i = 0; i < obstaclesCount; ++i) {
     obstacleCfg.fieldPos = obstaclePositions[i];
@@ -46,15 +51,20 @@ ErrorCode ObstacleHandler::init(const ObstacleHandlerConfig &cfg,
       obstacleCfg.width = bigObstacleToTileRatio * fieldDescr.tileWidth;
       obstacleCfg.height = bigObstacleToTileRatio * fieldDescr.tileHeight;
       obstacleCfg.tileOffset = Point(bigOffsetFromTileX, bigOffsetFromTileY);
+      obstacleCfg.objApproachOverlayScaleFactor =
+          bigObjApproachOverlayScaleFactor;
     } else {
       obstacleCfg.width = smallObstacleToTileRatio * fieldDescr.tileWidth;
       obstacleCfg.height = smallObstacleToTileRatio * fieldDescr.tileHeight;
       obstacleCfg.tileOffset = Point(smallOffsetFromTileX,
           smallOffsetFromTileY);
+      obstacleCfg.objApproachOverlayScaleFactor =
+          smallObjApproachOverlayScaleFactor;
     }
 
-    if (ErrorCode::SUCCESS !=
-        _obstacles[i].init(obstacleCfg, fieldDescr, collisionWatcher)) {
+    if (ErrorCode::SUCCESS != _obstacles[i].init(obstacleCfg, fieldDescr,
+            interface.collisionWatcher,
+            interface.objechApproachOverlayTriggeredCb)) {
       LOGERR("Error, _obstacles[%zu].init() failed", i);
       return ErrorCode::FAILURE;
     }

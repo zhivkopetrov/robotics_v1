@@ -17,9 +17,8 @@ ErrorCode RoboCommonLayoutInitHelper::init(
     RoboCommonLayout &layout) {
   layout._map.create(cfg.mapRsrcId);
 
-  if (ErrorCode::SUCCESS !=
-      layout._field.init(cfg.fieldCfg, outInterface.collisionWatcher)) {
-    LOGERR("Error in _field.init()");
+  if (ErrorCode::SUCCESS != initField(cfg.fieldCfg, outInterface, layout)) {
+    LOGERR("initField failed");
     return ErrorCode::FAILURE;
   }
 
@@ -28,8 +27,8 @@ ErrorCode RoboCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS !=
-      layout._gameEndAnimator.init(outInterface.shutdownGameCb)) {
+  if (ErrorCode::SUCCESS != layout._gameEndAnimator.init(
+          outInterface.shutdownGameCb)) {
     LOGERR("_gameEndAnimator.init() failed");
     return ErrorCode::FAILURE;
   }
@@ -42,15 +41,31 @@ ErrorCode RoboCommonLayoutInitHelper::init(
   return ErrorCode::SUCCESS;
 }
 
+ErrorCode RoboCommonLayoutInitHelper::initField(
+    const FieldConfig &cfg, const RoboCommonLayoutOutInterface &outInterface,
+    RoboCommonLayout &layout) {
+  const FieldOutInterface fieldOutIterface = {
+      .objechApproachOverlayTriggeredCb =
+          outInterface.objechApproachOverlayTriggeredCb, .collisionWatcher =
+          outInterface.collisionWatcher };
+
+  if (ErrorCode::SUCCESS != layout._field.init(cfg, fieldOutIterface)) {
+    LOGERR("Error in _field.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode RoboCommonLayoutInitHelper::initFogOfWar(
-      const RoboCommonLayoutConfig &layoutCfg,
-      const RoboCommonLayoutOutInterface &outInterface,
-      RoboCommonLayout &layout) {
+    const RoboCommonLayoutConfig &layoutCfg,
+    const RoboCommonLayoutOutInterface &outInterface,
+    RoboCommonLayout &layout) {
   FogOfWarOutInterface fogOfWarOutInterface;
   fogOfWarOutInterface.collisionWatcher = outInterface.collisionWatcher;
 
-  if (ErrorCode::SUCCESS != layout._fogOfWar.init(
-      layoutCfg.fogOfWarConfig, fogOfWarOutInterface, layoutCfg.fieldCfg)) {
+  if (ErrorCode::SUCCESS != layout._fogOfWar.init(layoutCfg.fogOfWarConfig,
+          fogOfWarOutInterface, layoutCfg.fieldCfg)) {
     LOGERR("Error in _fogOfWar.init()");
     return ErrorCode::FAILURE;
   }
