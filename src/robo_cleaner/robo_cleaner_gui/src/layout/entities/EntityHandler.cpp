@@ -23,10 +23,10 @@ ErrorCode EntityHandler::init(const EntityHandlerConfig &cfg,
   _tileCounters.reserve(fieldDescr.emptyTilesCount);
   _rubbish.reserve(0.5 * fieldDescr.emptyTilesCount); //micro-optimization
 
-  constexpr double rubbishToTileRatio = 0.6;
-  const int32_t offsetFromTileX = static_cast<int32_t>(0.2
+  constexpr double rubbishToTileRatio = 0.5;
+  const int32_t offsetFromTileX = static_cast<int32_t>(0.25
       * fieldDescr.tileWidth);
-  const int32_t offsetFromTileY = static_cast<int32_t>(0.2
+  const int32_t offsetFromTileY = static_cast<int32_t>(0.25
       * fieldDescr.tileHeight);
 
   RubbishConfig rubbishCfg;

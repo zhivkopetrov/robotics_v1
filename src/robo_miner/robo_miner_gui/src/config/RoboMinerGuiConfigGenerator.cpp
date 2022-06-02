@@ -34,7 +34,6 @@ constexpr auto LEVEL_ID = 1;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
-  ROBOT_WALL_COLLISION_ANIM_TIMER_ID,
   ROBOT_COLLISION_ANIM_TIMER_ID,
   ROBOT_DAMAGE_ANIM_TIMER_ID,
   HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID,
@@ -54,6 +53,7 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   ObstacleHandlerConfig cfg;
 
   cfg.obstacleRsrcId = RoboMinerGuiResources::MAP_OBSTACLE;
+  cfg.status = ObstacleHandlerApproachOverlayStatus::DISABLED;
 
   return cfg;
 }
@@ -64,7 +64,6 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.playerRsrcId = RoboMinerGuiResources::PLAYER_ROBOT;
   cfg.damageMarkerRsrcId = RoboMinerGuiResources::DAMAGE_MARKER;
   cfg.moveAnimStartTimerId = ROBOT_MOVE_ANIM_TIMER_ID;
-  cfg.wallCollisionAnimStartTimerId = ROBOT_WALL_COLLISION_ANIM_TIMER_ID;
   cfg.robotCollisionAnimStartTimerId = ROBOT_COLLISION_ANIM_TIMER_ID;
   cfg.robotDamageAnimStartTimerId = ROBOT_DAMAGE_ANIM_TIMER_ID;
   cfg.robotFieldMarkers = ROBOT_FIELD_MARKERS;

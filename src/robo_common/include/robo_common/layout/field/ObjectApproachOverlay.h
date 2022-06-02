@@ -26,7 +26,6 @@ struct ObjectApproachOverlayConfig {
   Rectangle upperBoundary;
   double scaleFactor { };
   FieldPos fieldPos;
-  bool isInsideField = true; //map surrounding obstacles are outside of field
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
@@ -35,8 +34,6 @@ public:
   ErrorCode init(
       const ObjectApproachOverlayConfig &cfg,
       const ObjechApproachOverlayTriggeredCb &objechApproachOverlayTriggeredCb);
-
-  void deactivate();
 
   void changeBoundary(const Rectangle &preScaledBoundary);
 
@@ -49,6 +46,8 @@ private:
                          CollisionDamageImpact impact) override;
 
   Rectangle getBoundary() const override;
+
+  void deactivate();
 
   void alignWidget();
 

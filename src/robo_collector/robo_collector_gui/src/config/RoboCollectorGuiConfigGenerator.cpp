@@ -41,11 +41,6 @@ enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_END = ROBOTS_MOVE_ANIM_TIMER_ID_START
       + Defines::ENEMIES_CTN,
 
-  ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START,
-  //reserved
-  ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_END = ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START
-      + Defines::ENEMIES_CTN,
-
   ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START,
   //reserved
   ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_END = ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START
@@ -85,7 +80,6 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.enemiesRsrcId = RoboCollectorGuiResources::ENEMY_ROBOTS;
   cfg.damageMarkerRsrcId = RoboCollectorGuiResources::DAMAGE_MARKER;
   cfg.moveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
-  cfg.wallCollisionAnimStartTimerId = ROBOTS_WALL_COLLISION_ANIM_TIMER_ID_START;
   cfg.robotCollisionAnimStartTimerId =
       ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START;
   cfg.robotDamageAnimStartTimerId = ROBOTS_ROBOT_DAMAGE_ANIM_TIMER_ID_START;
@@ -155,6 +149,15 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   return cfg;
 }
 
+ObstacleHandlerConfig generateObstacleHandlerConfig() {
+  ObstacleHandlerConfig cfg;
+
+  cfg.obstacleRsrcId = RoboCollectorGuiResources::MAP_OBSTACLE;
+  cfg.status = ObstacleHandlerApproachOverlayStatus::DISABLED;
+
+  return cfg;
+}
+
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
 
@@ -164,6 +167,7 @@ FieldConfig generateFieldConfig() {
 
   cfg.description =
       LevelFileLoader::readFieldDescription(projectInstallPrefix, levelId);
+  cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 

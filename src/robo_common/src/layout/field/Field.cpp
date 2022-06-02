@@ -18,8 +18,8 @@
 ErrorCode Field::init(const FieldConfig &cfg,
                       const FieldOutInterface &interface) {
   if (0 >= cfg.description.rows || 0 >= cfg.description.cols) {
-    LOGERR(
-        "Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' " "needs to be positive number",
+    LOGERR("Invalid configuration, rows: %d, cols: %d. Both 'rows' and 'cols' "
+           "needs to be positive number",
         cfg.description.rows, cfg.description.cols);
     return ErrorCode::FAILURE;
   }
@@ -35,7 +35,16 @@ ErrorCode Field::init(const FieldConfig &cfg,
   const auto fieldDimensios = Rectangle(RoboCommonDefines::FIRST_TILE_X_POS,
       RoboCommonDefines::FIRST_TILE_Y_POS, fieldWidth, fieldHeight);
 
+#if DEBUG_VISUAL_OVERLAY
+  Rectangle visualOverlayDimensions = fieldDimensios;
+  visualOverlayDimensions.x -= cfg.description.tileWidth;
+  visualOverlayDimensions.w += (2 * cfg.description.tileWidth);
+  visualOverlayDimensions.y -= cfg.description.tileHeight;
+  visualOverlayDimensions.h += (2 * cfg.description.tileHeight);
+  _fieldFbo.create(visualOverlayDimensions);
+#else
   _fieldFbo.create(fieldDimensios);
+#endif //DEBUG_VISUAL_OVERLAY
   _fieldFbo.activateAlphaModulation();
   _fieldFbo.setResetColor(Colors::FULL_TRANSPARENT);
   updateFieldFbo();

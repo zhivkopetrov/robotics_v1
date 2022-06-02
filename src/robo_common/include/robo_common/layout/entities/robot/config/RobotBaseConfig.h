@@ -16,7 +16,6 @@ struct RobotBaseConfig {
   uint64_t enemiesRsrcId = 0;
   uint64_t damageMarkerRsrcId = 0;
   int32_t moveAnimStartTimerId = 0;
-  int32_t wallCollisionAnimStartTimerId = 0;
   int32_t robotCollisionAnimStartTimerId = 0;
   int32_t robotDamageAnimStartTimerId = 0;
   RobotFieldMarkers robotFieldMarkers = RobotFieldMarkers::DISABLED;

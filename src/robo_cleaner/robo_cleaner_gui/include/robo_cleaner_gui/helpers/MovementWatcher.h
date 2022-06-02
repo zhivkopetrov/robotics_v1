@@ -38,7 +38,7 @@ public:
 
   void onRobotStartingAct(MoveType moveType);
 
-  void onObstacleApproachTrigger(const FieldPos& fieldPos, bool isInsideField);
+  void onObstacleApproachTrigger(const FieldPos& fieldPos);
 
   void cancelFeedbackReporting();
 

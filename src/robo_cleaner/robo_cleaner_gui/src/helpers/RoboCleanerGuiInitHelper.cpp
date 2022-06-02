@@ -85,8 +85,7 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
       &CleanerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
   outInterface.objechApproachOverlayTriggeredCb = std::bind(
-      &MovementWatcher::onObstacleApproachTrigger, &gui._movementWatcher, _1,
-      _2);
+      &MovementWatcher::onObstacleApproachTrigger, &gui._movementWatcher, _1);
 
   if (ErrorCode::SUCCESS != gui._layout.init(cfg, outInterface, interface)) {
     LOGERR("Error in _layout.init()");

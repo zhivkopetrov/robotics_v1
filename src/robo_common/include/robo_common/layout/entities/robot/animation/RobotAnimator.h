@@ -34,7 +34,6 @@ struct RobotAnimatorConfigBase {
   int32_t width = 0;
   int32_t height = 0;
   int32_t moveAnimTimerId = 0;
-  int32_t wallCollisionAnimTimerId = 0;
   int32_t robotCollisionAnimTimerId = 0;
   int32_t robotDamageAnimTimerId = 0;
 };
@@ -65,7 +64,6 @@ public:
 
   void startRotAnim(const FieldPos &currPos, Direction currDir,
                     RotationDir rotDir);
-  void startWallCollisionTimer();
 
   void startCollisionImpactAnim(RobotEndTurn status);
 
@@ -101,7 +99,6 @@ private:
 
   int32_t _robotId = 0;
   int32_t _moveAnimTimerId = 0;
-  int32_t _wallCollisionAnimTimerId = 0;
   int32_t _robotCollisionAnimTimerId = 0;
   int32_t _robotDamageAnimTimerId = 0;
 

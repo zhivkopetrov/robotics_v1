@@ -41,11 +41,6 @@ ErrorCode ObjectApproachOverlay::init(
   return ErrorCode::SUCCESS;
 }
 
-void ObjectApproachOverlay::deactivate() {
-  _cfg.collisionWatcher->unregisterObject(_collisionObjHandle);
-  _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;
-}
-
 void ObjectApproachOverlay::changeBoundary(const Rectangle &preScaledBoundary) {
   _cfg.preScaledOverlayBoundary = preScaledBoundary;
   alignWidget();
@@ -60,13 +55,17 @@ void ObjectApproachOverlay::drawOnFbo([[maybe_unused]]Fbo &fbo) const {
 void ObjectApproachOverlay::registerCollision(
     [[maybe_unused]]const Rectangle &intersectRect,
     [[maybe_unused]]CollisionDamageImpact impact) {
-  LOGR("ObjectApproachOverlay collision detected");
   deactivate();
-  _objechApproachOverlayTriggeredCb(_cfg.fieldPos, _cfg.isInsideField);
+  _objechApproachOverlayTriggeredCb(_cfg.fieldPos);
 }
 
 Rectangle ObjectApproachOverlay::getBoundary() const {
   return _boundary;
+}
+
+void ObjectApproachOverlay::deactivate() {
+  _cfg.collisionWatcher->unregisterObject(_collisionObjHandle);
+  _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;
 }
 
 void ObjectApproachOverlay::alignWidget() {
@@ -87,7 +86,4 @@ void ObjectApproachOverlay::alignWidget() {
            " height: %d]", _boundary.w, _boundary.h, _cfg.upperBoundary.w,
            _cfg.upperBoundary.h);
   }
-
-  LOGM("ObjectApproachOverlay::alignWidget() boundary: [x, y, w, h] "
-      "[%d, %d, %d, %d]", _boundary.x, _boundary.y, _boundary.w, _boundary.h);
 }

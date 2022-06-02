@@ -28,15 +28,13 @@ ErrorCode Obstacle::init(
   _collisionObjHandle = collisionWatcher->registerObject(this,
       CollisionDamageImpact::YES);
 
-  if (ObstacleHandlerApproachOverlayStatus::ENABLED == cfg.status) {
-    LOGM("ObstacleHandlerApproachOverlayStatus::ENABLED");
-
+  _overlayStatus = cfg.status;
+  if (ObstacleHandlerApproachOverlayStatus::ENABLED == _overlayStatus) {
     const ObjectApproachOverlayConfig objOverlayCfg = {
       .preScaledOverlayBoundary = _img.getScaledRect(),
       .upperBoundary = Rectangle(absFieldPos, cfg.tileWidth, cfg.tileHeight),
       .scaleFactor = cfg.objApproachOverlayScaleFactor,
       .fieldPos = cfg.fieldPos,
-      .isInsideField = true,
       .collisionWatcher = collisionWatcher
     };
 
@@ -47,14 +45,20 @@ ErrorCode Obstacle::init(
     }
   }
 
+  _obstacleVisibility = cfg.obstacleVisibility;
+
   return ErrorCode::SUCCESS;
 }
 
 void Obstacle::drawOnFbo(Fbo &fbo) const {
-  fbo.addWidget(_img);
+  if (ObstacleVisibility::DEFAULT == _obstacleVisibility) {
+    fbo.addWidget(_img);
+  }
 
 #if DEBUG_VISUAL_OVERLAY
-  _objApproachOverlay.drawOnFbo(fbo);
+  if (ObstacleHandlerApproachOverlayStatus::ENABLED == _overlayStatus) {
+    _objApproachOverlay.drawOnFbo(fbo);
+  }
 #endif //DEBUG_VISUAL_OVERLAY
 }
 

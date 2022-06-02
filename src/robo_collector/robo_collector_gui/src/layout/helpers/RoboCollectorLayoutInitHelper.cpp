@@ -102,8 +102,6 @@ ErrorCode RoboCollectorLayoutInitHelper::initRobots(
     initialState.dir = robotsInitialDirs[i];
     animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId + i
                                       + playerIdOffset;
-    animatorCfgBase.wallCollisionAnimTimerId =
-        baseCfg.wallCollisionAnimStartTimerId + i + playerIdOffset;
     animatorCfgBase.robotCollisionAnimTimerId =
         baseCfg.robotCollisionAnimStartTimerId + i + playerIdOffset;
     animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId

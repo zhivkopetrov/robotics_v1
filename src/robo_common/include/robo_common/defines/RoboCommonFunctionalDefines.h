@@ -33,6 +33,6 @@ using StartGameLostAnimCb = IndicatorDepletedCb;
 using StartGameWonAnimCb = std::function<void()>;
 using StartAchievementWonAnimCb = std::function<void(Achievement)>;
 using RevealFogOfWarTilesCb = std::function<void()>;
-using ObjechApproachOverlayTriggeredCb = std::function<void(const FieldPos&, bool)>;
+using ObjechApproachOverlayTriggeredCb = std::function<void(const FieldPos&)>;
 
 #endif /* ROBO_COMMON_ROBOCOMMONFUNCTIONALDEFINES_H_ */

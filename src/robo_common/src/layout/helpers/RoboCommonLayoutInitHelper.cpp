@@ -106,8 +106,6 @@ ErrorCode RoboCommonLayoutInitHelper::initPlayerRobot(
       layoutCfg.fieldCfg.description.cols - 1);
   initialState.dir = Direction::UP;
   animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId;
-  animatorCfgBase.wallCollisionAnimTimerId =
-      baseCfg.wallCollisionAnimStartTimerId;
   animatorCfgBase.robotCollisionAnimTimerId =
       baseCfg.robotCollisionAnimStartTimerId;
   animatorCfgBase.robotDamageAnimTimerId = baseCfg.robotDamageAnimStartTimerId;

@@ -18,6 +18,10 @@
 class CollisionWatcher;
 class Fbo;
 
+enum class ObstacleVisibility {
+  DEFAULT, HIDDEN
+};
+
 struct ObstacleConfig {
   uint64_t rsrcId { };
   FieldPos fieldPos;
@@ -29,6 +33,7 @@ struct ObstacleConfig {
   int32_t tileHeight { };
   ObstacleHandlerApproachOverlayStatus status =
       ObstacleHandlerApproachOverlayStatus::DISABLED;
+  ObstacleVisibility obstacleVisibility = ObstacleVisibility::DEFAULT;
 };
 
 class Obstacle final : public CollisionObject {
@@ -47,8 +52,10 @@ private:
                          CollisionDamageImpact impact) override;
 
   Image _img;
-
   ObjectApproachOverlay _objApproachOverlay;
+  ObstacleVisibility _obstacleVisibility = ObstacleVisibility::DEFAULT;
+  ObstacleHandlerApproachOverlayStatus _overlayStatus =
+      ObstacleHandlerApproachOverlayStatus::DISABLED;
 };
 
 #endif /* ROBO_COMMON_OBSTACLE_H_ */

@@ -34,14 +34,13 @@ ErrorCode RobotAnimator::init(const RobotAnimatorConfig &cfg,
 
   _robotId = cfg.baseCfg.robotId;
   _moveAnimTimerId = cfg.baseCfg.moveAnimTimerId;
-  _wallCollisionAnimTimerId = cfg.baseCfg.wallCollisionAnimTimerId;
   _robotCollisionAnimTimerId = cfg.baseCfg.robotCollisionAnimTimerId;
   _robotDamageAnimTimerId = cfg.baseCfg.robotDamageAnimTimerId;
   _damageMarkerRsrcId = cfg.baseCfg.damageMarkerRsrcId;
 
   _robotImg.create(cfg.baseCfg.robotRsrcId);
-  const auto robotAbsPos =
-      FieldUtils::getAbsPos(cfg.startPos, _outInterface.getFieldDescriptionCb());
+  const auto robotAbsPos = FieldUtils::getAbsPos(cfg.startPos,
+      _outInterface.getFieldDescriptionCb());
   _robotImg.setPosition(robotAbsPos);
   _robotImg.setFrame(cfg.baseCfg.frameId);
   _robotImg.activateScaling();
@@ -120,11 +119,6 @@ void RobotAnimator::startRotAnim(const FieldPos &currPos, Direction currDir,
   _rotAnim.start();
 }
 
-void RobotAnimator::startWallCollisionTimer() {
-  constexpr auto timerInterval = 50;
-  startTimer(timerInterval, _wallCollisionAnimTimerId, TimerType::ONESHOT);
-}
-
 void RobotAnimator::startCollisionImpactAnim(RobotEndTurn status) {
   _collisionAnimOutcome = status;
   _collisionAnimStep = 0;
@@ -182,10 +176,7 @@ ErrorCode RobotAnimator::initOutInterface(
 }
 
 void RobotAnimator::onTimeout(const int32_t timerId) {
-  if (timerId == _wallCollisionAnimTimerId) {
-    stopMoveAnim();
-    startCollisionImpactAnim(RobotEndTurn::YES);
-  } else if (timerId == _robotCollisionAnimTimerId) {
+  if (timerId == _robotCollisionAnimTimerId) {
     processCollisionAnim();
   } else {
     LOGERR("Error, receive unsupported timerId: %d", timerId);
