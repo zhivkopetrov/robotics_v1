@@ -95,7 +95,7 @@ ErrorCode ObstacleHandler::initInnerObstacles(
     if (ErrorCode::SUCCESS != _innerObstacles[i].init(obstacleCfg, fieldDescr,
             interface.collisionWatcher,
             interface.objechApproachOverlayTriggeredCb)) {
-      LOGERR("Error, _obstacles[%zu].init() failed", i);
+      LOGERR("Error, _innerObstacles[%zu].init() failed", i);
       return ErrorCode::FAILURE;
     }
   }
@@ -139,7 +139,7 @@ ErrorCode ObstacleHandler::initOuterObstacles(
       if (ErrorCode::SUCCESS != _outerObstacles[outerObstacleId].init(
               obstacleCfg, fieldDescr, interface.collisionWatcher,
               interface.objechApproachOverlayTriggeredCb)) {
-        LOGERR("Error, _obstacles[%d].init() failed", outerObstacleId);
+        LOGERR("Error, _outerObstacles[%d].init() failed", outerObstacleId);
         return ErrorCode::FAILURE;
       }
 
@@ -157,7 +157,7 @@ ErrorCode ObstacleHandler::initOuterObstacles(
       if (ErrorCode::SUCCESS != _outerObstacles[outerObstacleId].init(
               obstacleCfg, fieldDescr, interface.collisionWatcher,
               interface.objechApproachOverlayTriggeredCb)) {
-        LOGERR("Error, _obstacles[%d].init() failed", outerObstacleId);
+        LOGERR("Error, _outerObstacles[%d].init() failed", outerObstacleId);
         return ErrorCode::FAILURE;
       }
 

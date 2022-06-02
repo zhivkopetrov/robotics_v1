@@ -72,24 +72,16 @@ void MovementWatcher::onRobotStartingAct(MoveType moveType) {
 }
 
 void MovementWatcher::onObstacleApproachTrigger(const FieldPos& fieldPos) {
-//  LOGC("MovementWatcher::onObstacleApproachTrigger\nFieldPos.row: %d, col: %d, "
-//      "isInsideField: %d", fieldPos.row, fieldPos.col, int(isInsideField));
-//  if (!isInsideField) {
-//    _currProgress.approachingFieldMarker =
-//        RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
-//    return;
-//  }
-
-  //map surrounding obstacles are outside of field
   const auto& fieldDescr = _outInterface.getFieldDescriptionCb();
-  if (!FieldUtils::isInsideField(fieldPos, fieldDescr)) { //sanity check
-    LOGERR("Error, provided fieldPos [%d, %d] is outside field boundaries",
-        fieldPos.row, fieldPos.col);
-    return;
+  if (FieldUtils::isInsideField(fieldPos, fieldDescr)) {
+    _currProgress.approachingFieldMarker =
+        static_cast<uint8_t>(fieldDescr.data[fieldPos.row][fieldPos.col]);
+  } else {
+    //map surrounding obstacles are outside of field
+    _currProgress.approachingFieldMarker =
+        RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
   }
 
-  _currProgress.approachingFieldMarker =
-      static_cast<uint8_t>(fieldDescr.data[fieldPos.row][fieldPos.col]);
   LOGC("MovementWatcher::onObstacleApproachTrigger() changing "
       "_currProgress.approachingFieldMarker to: %d",
       int(_currProgress.approachingFieldMarker));
