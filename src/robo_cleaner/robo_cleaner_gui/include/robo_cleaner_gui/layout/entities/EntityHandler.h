@@ -4,6 +4,7 @@
 //System headers
 #include <cstdint>
 #include <vector>
+#include <unordered_map>
 
 //Other libraries headers
 #include "manager_utils/drawing/Text.h"
@@ -22,15 +23,11 @@ public:
   void draw() const;
 
 private:
-  ErrorCode createRubbishTile(const RubbishConfig &rubbishCfg,
-                              const FieldDescription &fieldDescr);
-
-  void createCounterText(const FieldPos &fieldPos, uint64_t fontId,
-                         int32_t counterValue,
-                         const FieldDescription &fieldDescr);
-
   std::vector<Rubbish> _rubbish;
-  std::vector<Text> _tileCounters;
+
+  //key = (currRow * maxCols) + currCol
+  //value = relative rubbish id
+  std::unordered_map<int32_t, int32_t> _fieldPosToRubbishIdMapping;
 };
 
 #endif /* ROBO_CLEANER_GUI_ENTITYHANDLER_H_ */
