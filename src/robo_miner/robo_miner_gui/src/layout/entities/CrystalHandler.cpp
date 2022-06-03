@@ -82,7 +82,7 @@ ErrorCode CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
   _crystals.resize(crystalsCount);
 
   constexpr auto crystalToTileRatio = 0.62;
-  constexpr auto offBegin = (1.0 - crystalToTileRatio) / 2;
+  constexpr auto offBegin = (1.0 - crystalToTileRatio) / 2.0;
   const auto offsetFromTileX = static_cast<int32_t>(offBegin * cfg.tileWidth);
   const auto offsetFromTileY = static_cast<int32_t>(offBegin * cfg.tileHeight);
   CrystalConfig crystalCfg;

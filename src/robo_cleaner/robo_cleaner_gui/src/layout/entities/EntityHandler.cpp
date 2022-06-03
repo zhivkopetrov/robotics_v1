@@ -17,9 +17,10 @@ ErrorCode EntityHandler::init(const EntityHandlerConfig &cfg,
   _rubbish.resize(fieldDescr.emptyTilesCount);
 
   constexpr double rubbishToTileRatio = 0.5;
-  const int32_t offsetFromTileX = static_cast<int32_t>(0.25
+  constexpr double offBegin = (1.0 - rubbishToTileRatio) / 2.0;
+  const int32_t offsetFromTileX = static_cast<int32_t>(offBegin
       * fieldDescr.tileWidth);
-  const int32_t offsetFromTileY = static_cast<int32_t>(0.25
+  const int32_t offsetFromTileY = static_cast<int32_t>(offBegin
       * fieldDescr.tileHeight);
 
   RubbishConfig rubbishCfg;
