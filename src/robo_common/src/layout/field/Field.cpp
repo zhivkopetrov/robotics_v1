@@ -138,9 +138,11 @@ ErrorCode Field::initTiles(const FieldConfig &cfg,
   }
 
   const ObstacleHandlerOutInterface obsHandlerOutInterface = {
-      .objechApproachOverlayTriggeredCb =
-          interface.objechApproachOverlayTriggeredCb, .collisionWatcher =
-          interface.collisionWatcher };
+    .objechApproachOverlayTriggeredCb =
+        interface.objechApproachOverlayTriggeredCb,
+    .containerRedrawCb = std::bind(&Field::updateFieldFbo, this),
+    .collisionWatcher = interface.collisionWatcher
+  };
 
   if (ErrorCode::SUCCESS != _obstacleHandler.init(cfg.obstacleHandlerConfig,
           _description, obstaclePositions, obsHandlerOutInterface)) {

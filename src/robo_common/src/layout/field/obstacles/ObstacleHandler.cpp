@@ -16,18 +16,21 @@ ErrorCode ObstacleHandler::init(
     const ObstacleHandlerConfig &cfg, const FieldDescription &fieldDescr,
     const std::vector<FieldPos> &innerObstaclePositions,
     const ObstacleHandlerOutInterface &interface) {
-  if (nullptr == interface.collisionWatcher) {
-    LOGERR("Error, nullptr provided for CollisionWatcher");
-    return ErrorCode::FAILURE;
-  }
+  const ObstacleOutInterface obstacleOutInterface = {
+    .objectApproachOverlayTriggeredCb =
+        interface.objechApproachOverlayTriggeredCb,
+    .containerRedrawCb = interface.containerRedrawCb,
+    .collisionWatcher = interface.collisionWatcher
+  };
 
   if (ErrorCode::SUCCESS != initInnerObstacles(cfg, fieldDescr,
-          innerObstaclePositions, interface)) {
+          innerObstaclePositions, obstacleOutInterface)) {
     LOGERR("Error, initInnerObstacles() failed");
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initOuterObstacles(cfg, fieldDescr, interface)) {
+  if (ErrorCode::SUCCESS != initOuterObstacles(cfg, fieldDescr,
+      obstacleOutInterface)) {
     LOGERR("Error, initOuterObstacles() failed");
     return ErrorCode::FAILURE;
   }
@@ -48,7 +51,7 @@ void ObstacleHandler::drawOnFbo(Fbo &fbo) const {
 ErrorCode ObstacleHandler::initInnerObstacles(
     const ObstacleHandlerConfig &cfg, const FieldDescription &fieldDescr,
     const std::vector<FieldPos> &obstaclePositions,
-    const ObstacleHandlerOutInterface &interface) {
+    const ObstacleOutInterface &obstacleOutInterface) {
   const size_t obstaclesCount = obstaclePositions.size();
   _innerObstacles.resize(obstaclesCount);
 
@@ -93,8 +96,7 @@ ErrorCode ObstacleHandler::initInnerObstacles(
     }
 
     if (ErrorCode::SUCCESS != _innerObstacles[i].init(obstacleCfg, fieldDescr,
-            interface.collisionWatcher,
-            interface.objechApproachOverlayTriggeredCb)) {
+        obstacleOutInterface)) {
       LOGERR("Error, _innerObstacles[%zu].init() failed", i);
       return ErrorCode::FAILURE;
     }
@@ -105,7 +107,7 @@ ErrorCode ObstacleHandler::initInnerObstacles(
 
 ErrorCode ObstacleHandler::initOuterObstacles(
     const ObstacleHandlerConfig &cfg, const FieldDescription &fieldDescr,
-    const ObstacleHandlerOutInterface &interface) {
+    const ObstacleOutInterface &obstacleOutInterface) {
   constexpr double obstacleToTileRatio = 0.5;
   const int32_t offsetFromTileX = static_cast<int32_t>(0.25
       * fieldDescr.tileWidth);
@@ -137,8 +139,7 @@ ErrorCode ObstacleHandler::initOuterObstacles(
       obstacleCfg.fieldPos.col = col;
 
       if (ErrorCode::SUCCESS != _outerObstacles[outerObstacleId].init(
-              obstacleCfg, fieldDescr, interface.collisionWatcher,
-              interface.objechApproachOverlayTriggeredCb)) {
+              obstacleCfg, fieldDescr, obstacleOutInterface)) {
         LOGERR("Error, _outerObstacles[%d].init() failed", outerObstacleId);
         return ErrorCode::FAILURE;
       }
@@ -155,8 +156,7 @@ ErrorCode ObstacleHandler::initOuterObstacles(
       obstacleCfg.fieldPos.col = colIdx;
 
       if (ErrorCode::SUCCESS != _outerObstacles[outerObstacleId].init(
-              obstacleCfg, fieldDescr, interface.collisionWatcher,
-              interface.objechApproachOverlayTriggeredCb)) {
+              obstacleCfg, fieldDescr, obstacleOutInterface)) {
         LOGERR("Error, _outerObstacles[%d].init() failed", outerObstacleId);
         return ErrorCode::FAILURE;
       }

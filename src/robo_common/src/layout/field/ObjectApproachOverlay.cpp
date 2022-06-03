@@ -5,6 +5,7 @@
 
 //Other libraries headers
 #include "utils/drawing/WidgetAligner.h"
+#include "utils/debug/StackTrace.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -12,28 +13,28 @@
 
 ErrorCode ObjectApproachOverlay::init(
     const ObjectApproachOverlayConfig &cfg,
-    const ObjechApproachOverlayTriggeredCb &objechApproachOverlayTriggeredCb) {
-  if (nullptr == objechApproachOverlayTriggeredCb) {
-    LOGERR("Error, nullptr provided for ObjechApproachOverlayTriggeredCb");
-    return ErrorCode::FAILURE;
-  }
-  _objechApproachOverlayTriggeredCb = objechApproachOverlayTriggeredCb;
-
-  if (nullptr == cfg.collisionWatcher) {
-    LOGERR("Error, nullptr provided for CollisionWatcher");
-    return ErrorCode::FAILURE;
-  }
+    const ObjectApproachOverlayOutInterface &interface) {
   _cfg = cfg;
-  _collisionObjHandle = _cfg.collisionWatcher->registerObject(this,
+
+  if (ErrorCode::SUCCESS != initOutInterface(interface)) {
+    LOGERR("Error, initOutInterface() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  _collisionObjHandle = _outInterface.collisionWatcher->registerObject(this,
       CollisionDamageImpact::NO);
 
-  alignWidget();
+  if (ErrorCode::SUCCESS != alignWidget()) {
+    LOGERR("Error, alignWidget() failed");
+    return ErrorCode::FAILURE;
+  }
+
 #if DEBUG_VISUAL_OVERLAY
   _visualFbo.create(_boundary);
   _visualFbo.activateAlphaModulation();
   _visualFbo.setOpacity(FULL_OPACITY / 2);
-  _visualFbo.unlock();
   _visualFbo.setResetColor(Colors::GREEN);
+  _visualFbo.unlock();
   _visualFbo.reset();
   _visualFbo.lock();
 #endif //DEBUG_VISUAL_OVERLAY
@@ -43,20 +44,44 @@ ErrorCode ObjectApproachOverlay::init(
 
 void ObjectApproachOverlay::changeBoundary(const Rectangle &preScaledBoundary) {
   _cfg.preScaledOverlayBoundary = preScaledBoundary;
-  alignWidget();
+  if (ErrorCode::SUCCESS != alignWidget()) {
+    LOGERR("Error, alignWidget() failed. Printing Stacktrace");
+    printStacktrace();
+  }
 }
 
 #if DEBUG_VISUAL_OVERLAY
-void ObjectApproachOverlay::drawOnFbo([[maybe_unused]]Fbo &fbo) const {
+void ObjectApproachOverlay::drawOnFbo(Fbo &fbo) const {
   fbo.addWidget(_visualFbo);
 }
 #endif //DEBUG_VISUAL_OVERLAY
+
+ErrorCode ObjectApproachOverlay::initOutInterface(
+    const ObjectApproachOverlayOutInterface &interface) {
+  _outInterface = interface;
+  if (nullptr == _outInterface.objectApproachOverlayTriggeredCb) {
+    LOGERR("Error, nullptr provided for ObjechApproachOverlayTriggeredCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.containerRedrawCb) {
+    LOGERR("Error, nullptr provided for ContainerRedrawCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.collisionWatcher) {
+    LOGERR("Error, nullptr provided for CollisionWatcher");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
 
 void ObjectApproachOverlay::registerCollision(
     [[maybe_unused]]const Rectangle &intersectRect,
     [[maybe_unused]]CollisionDamageImpact impact) {
   deactivate();
-  _objechApproachOverlayTriggeredCb(_cfg.fieldPos);
+  _outInterface.objectApproachOverlayTriggeredCb(_cfg.fieldPos);
 }
 
 Rectangle ObjectApproachOverlay::getBoundary() const {
@@ -64,11 +89,16 @@ Rectangle ObjectApproachOverlay::getBoundary() const {
 }
 
 void ObjectApproachOverlay::deactivate() {
-  _cfg.collisionWatcher->unregisterObject(_collisionObjHandle);
+  _outInterface.collisionWatcher->unregisterObject(_collisionObjHandle);
   _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;
+
+#if DEBUG_VISUAL_OVERLAY
+  _visualFbo.hide();
+  _outInterface.containerRedrawCb();
+#endif //DEBUG_VISUAL_OVERLAY
 }
 
-void ObjectApproachOverlay::alignWidget() {
+ErrorCode ObjectApproachOverlay::alignWidget() {
   _boundary.w =
       static_cast<int32_t>(_cfg.preScaledOverlayBoundary.w * _cfg.scaleFactor);
   _boundary.h =
@@ -85,5 +115,14 @@ void ObjectApproachOverlay::alignWidget() {
            "should be smaller in both dimension from Upper Boundary [width: %d,"
            " height: %d]", _boundary.w, _boundary.h, _cfg.upperBoundary.w,
            _cfg.upperBoundary.h);
+    return ErrorCode::FAILURE;
   }
+
+  if ((0 == _boundary.w) || (0 == _boundary.w)) {
+    LOGERR("Error, ObjectApproachOverlay with zero width/height detected "
+        "[width: %d, height: %d]", _boundary.w, _boundary.h);
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
 }

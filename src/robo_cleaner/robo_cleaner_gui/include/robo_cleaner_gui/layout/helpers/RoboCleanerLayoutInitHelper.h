@@ -27,8 +27,14 @@ public:
       RoboCleanerLayout &layout);
 
 private:
+  static ErrorCode initEntityHandler(
+      const RoboCleanerLayoutConfig &layoutCfg,
+      const RoboCleanerLayoutOutInterface &outInterface,
+      RoboCleanerLayout &layout);
+
   static ErrorCode initPanelHandler(
-      const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
+      const PanelHandlerConfig &cfg,
+      const RoboCommonLayoutInterface &commonInterface,
       const RoboCleanerLayoutOutInterface &outInterface,
       RoboCleanerLayout &layout);
 };

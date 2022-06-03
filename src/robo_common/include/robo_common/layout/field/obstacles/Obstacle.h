@@ -36,12 +36,17 @@ struct ObstacleConfig {
   ObstacleVisibility obstacleVisibility = ObstacleVisibility::DEFAULT;
 };
 
+struct ObstacleOutInterface {
+  ObjechApproachOverlayTriggeredCb objectApproachOverlayTriggeredCb;
+  ContainerRedrawCb containerRedrawCb;
+  CollisionWatcher *collisionWatcher = nullptr;
+};
+
 class Obstacle final : public CollisionObject {
 public:
   ErrorCode init(
       const ObstacleConfig &cfg, const FieldDescription &fieldDescr,
-      CollisionWatcher *collisionWatcher,
-      const ObjechApproachOverlayTriggeredCb &objechApproachOverlayTriggeredCb);
+      const ObstacleOutInterface& interface);
 
   void drawOnFbo(Fbo &fbo) const;
 
@@ -50,6 +55,13 @@ private:
 
   void registerCollision(const Rectangle &intersectRect,
                          CollisionDamageImpact impact) override;
+
+  void createImage(const ObstacleConfig &cfg,
+                   const FieldDescription &fieldDescr);
+
+  ErrorCode createObjOverlay(const ObstacleConfig &cfg,
+                             const ObstacleOutInterface &interface,
+                             const FieldDescription &fieldDescr);
 
   Image _img;
   ObjectApproachOverlay _objApproachOverlay;

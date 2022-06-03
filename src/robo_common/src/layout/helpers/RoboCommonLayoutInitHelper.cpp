@@ -46,7 +46,7 @@ ErrorCode RoboCommonLayoutInitHelper::initField(
     RoboCommonLayout &layout) {
   const FieldOutInterface fieldOutIterface = {
       .objechApproachOverlayTriggeredCb =
-          outInterface.objechApproachOverlayTriggeredCb, .collisionWatcher =
+          outInterface.objectApproachOverlayTriggeredCb, .collisionWatcher =
           outInterface.collisionWatcher };
 
   if (ErrorCode::SUCCESS != layout._field.init(cfg, fieldOutIterface)) {

@@ -13,39 +13,25 @@
 
 ErrorCode Obstacle::init(
     const ObstacleConfig &cfg, const FieldDescription &fieldDescr,
-    CollisionWatcher *collisionWatcher,
-    const ObjechApproachOverlayTriggeredCb &objechApproachOverlayTriggeredCb) {
-  _img.create(cfg.rsrcId);
-  _img.activateScaling();
-  _img.setScaledWidth(cfg.width);
-  _img.setScaledHeight(cfg.height);
+    const ObstacleOutInterface& interface) {
+  createImage(cfg, fieldDescr);
 
-  const auto absFieldPos = FieldUtils::getAbsPos(cfg.fieldPos, fieldDescr);
-  const auto obstaclePos =
-      Point(absFieldPos.x + cfg.tileOffset.x, absFieldPos.y + cfg.tileOffset.y);
-  _img.setPosition(obstaclePos);
-
-  _collisionObjHandle = collisionWatcher->registerObject(this,
+  if (nullptr == interface.collisionWatcher) {
+    LOGERR("Error, nullptr provided for collisionWatcher");
+    return ErrorCode::FAILURE;
+  }
+  _collisionObjHandle = interface.collisionWatcher->registerObject(this,
       CollisionDamageImpact::YES);
 
   _overlayStatus = cfg.status;
-  if (ObstacleHandlerApproachOverlayStatus::ENABLED == _overlayStatus) {
-    const ObjectApproachOverlayConfig objOverlayCfg = {
-      .preScaledOverlayBoundary = _img.getScaledRect(),
-      .upperBoundary = Rectangle(absFieldPos, cfg.tileWidth, cfg.tileHeight),
-      .scaleFactor = cfg.objApproachOverlayScaleFactor,
-      .fieldPos = cfg.fieldPos,
-      .collisionWatcher = collisionWatcher
-    };
+  _obstacleVisibility = cfg.obstacleVisibility;
 
-    if (ErrorCode::SUCCESS != _objApproachOverlay.init(objOverlayCfg,
-            objechApproachOverlayTriggeredCb)) {
+  if (ObstacleHandlerApproachOverlayStatus::ENABLED == _overlayStatus) {
+    if (ErrorCode::SUCCESS != createObjOverlay(cfg, interface, fieldDescr)) {
       LOGERR("Error, _objApproachOverlay.init() failed");
       return ErrorCode::FAILURE;
     }
   }
-
-  _obstacleVisibility = cfg.obstacleVisibility;
 
   return ErrorCode::SUCCESS;
 }
@@ -69,4 +55,44 @@ Rectangle Obstacle::getBoundary() const {
 void Obstacle::registerCollision([[maybe_unused]]const Rectangle &intersectRect,
                                  [[maybe_unused]]CollisionDamageImpact impact) {
   //Obstacle class is just serving as a ... well ... an obstacle
+}
+
+void Obstacle::createImage(const ObstacleConfig &cfg,
+                           const FieldDescription &fieldDescr) {
+  _img.create(cfg.rsrcId);
+  _img.activateScaling();
+  _img.setScaledWidth(cfg.width);
+  _img.setScaledHeight(cfg.height);
+
+  const auto absPos =
+      FieldUtils::getAbsPos(cfg.fieldPos, fieldDescr) + cfg.tileOffset;
+  _img.setPosition(absPos);
+}
+
+ErrorCode Obstacle::createObjOverlay(const ObstacleConfig &cfg,
+                                     const ObstacleOutInterface &interface,
+                                     const FieldDescription &fieldDescr) {
+  const auto absFieldPos = FieldUtils::getAbsPos(cfg.fieldPos, fieldDescr);
+
+  const ObjectApproachOverlayConfig objOverlayCfg = {
+    .preScaledOverlayBoundary = _img.getScaledRect(),
+    .upperBoundary = Rectangle(absFieldPos, cfg.tileWidth, cfg.tileHeight),
+    .scaleFactor = cfg.objApproachOverlayScaleFactor,
+    .fieldPos = cfg.fieldPos
+  };
+
+  const ObjectApproachOverlayOutInterface objOverLayOutInterface = {
+    .objectApproachOverlayTriggeredCb =
+        interface.objectApproachOverlayTriggeredCb,
+    .containerRedrawCb = interface.containerRedrawCb,
+    .collisionWatcher = interface.collisionWatcher
+  };
+
+  if (ErrorCode::SUCCESS != _objApproachOverlay.init(objOverlayCfg,
+      objOverLayOutInterface)) {
+    LOGERR("Error, _objApproachOverlay.init() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
 }

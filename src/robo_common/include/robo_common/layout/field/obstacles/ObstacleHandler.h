@@ -17,6 +17,7 @@ struct ObstacleHandlerConfig;
 
 struct ObstacleHandlerOutInterface {
   ObjechApproachOverlayTriggeredCb objechApproachOverlayTriggeredCb;
+  ContainerRedrawCb containerRedrawCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
@@ -25,19 +26,19 @@ public:
   ErrorCode init(const ObstacleHandlerConfig &cfg,
                  const FieldDescription &fieldDescr,
                  const std::vector<FieldPos> &innerObstaclePositions,
-                 const ObstacleHandlerOutInterface& interface);
+                 const ObstacleHandlerOutInterface &interface);
 
   void drawOnFbo(Fbo &fbo) const;
 
 private:
-  ErrorCode initInnerObstacles(const ObstacleHandlerConfig &cfg,
-                               const FieldDescription &fieldDescr,
-                               const std::vector<FieldPos> &obstaclePositions,
-                               const ObstacleHandlerOutInterface& interface);
+  ErrorCode initInnerObstacles(
+      const ObstacleHandlerConfig &cfg, const FieldDescription &fieldDescr,
+      const std::vector<FieldPos> &obstaclePositions,
+      const ObstacleOutInterface &obstacleOutInterface);
 
-  ErrorCode initOuterObstacles(const ObstacleHandlerConfig &cfg,
-                               const FieldDescription &fieldDescr,
-                               const ObstacleHandlerOutInterface& interface);
+  ErrorCode initOuterObstacles(
+      const ObstacleHandlerConfig &cfg, const FieldDescription &fieldDescr,
+      const ObstacleOutInterface &obstacleOutInterface);
 
   std::vector<Obstacle> _innerObstacles;
   std::vector<Obstacle> _outerObstacles;

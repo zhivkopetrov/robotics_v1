@@ -11,6 +11,12 @@
 
 //Forward declarations
 
+namespace RoboCommonDefines {
+enum FieldMarkers {
+  CHARGING_STATION = '@'
+};
+} //namespace RoboCommonDefines
+
 bool isRubbishMarker(char marker);
 int32_t getRubbishCounter(char marker);
 

@@ -24,7 +24,7 @@ struct RoboCleanerLayoutOutInterface {
   PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
   FieldMapRevelealedCb fieldMapRevelealedCb;
   FieldMapCleanedCb fieldMapCleanedCb;
-  ObjechApproachOverlayTriggeredCb objechApproachOverlayTriggeredCb;
+  ObjechApproachOverlayTriggeredCb objectApproachOverlayTriggeredCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 

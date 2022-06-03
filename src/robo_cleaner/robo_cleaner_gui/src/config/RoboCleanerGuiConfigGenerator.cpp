@@ -64,28 +64,28 @@ RobotBaseConfig generateRobotBaseConfig() {
 }
 
 PanelHandlerConfig generatePanelHandlerConfig(
-    const FieldDescription &fieldDescr, int32_t emptyTilesCount) {
+    const FieldDescription &fieldDescr) {
   PanelHandlerConfig cfg;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile
-  tilePanelCfg.targetNumber = emptyTilesCount;
+  tilePanelCfg.targetNumber = fieldDescr.emptyTilesCount;
   tilePanelCfg.rsrcId = RoboCleanerGuiResources::TILE_PANEL;
   tilePanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
   tilePanelCfg.incrTimerId = TILE_PANEL_INCR_TIMER_ID;
   tilePanelCfg.decrTimerId = TILE_PANEL_DECR_TIMER_ID;
 
-  int32_t rubbishTiles{};
-  for (const auto& row : fieldDescr.data) {
+  int32_t rubbishTilesCount { };
+  for (const auto &row : fieldDescr.data) {
     for (const char marker : row) {
       if (isRubbishMarker(marker)) {
-        rubbishTiles += getRubbishCounter(marker);
+        rubbishTilesCount += getRubbishCounter(marker);
       }
     }
   }
 
   auto &rubbishPanelCfg = cfg.rubbishPanelCfg;
-  rubbishPanelCfg.targetNumber = rubbishTiles;
+  rubbishPanelCfg.targetNumber = rubbishTilesCount;
   rubbishPanelCfg.rsrcId = RoboCleanerGuiResources::RUBBISH_PANEL;
   rubbishPanelCfg.fontId = RoboCleanerGuiResources::VINQUE_RG_75;
   rubbishPanelCfg.incrTimerId = RUBBISH_PANEL_INCR_TIMER_ID;
@@ -133,13 +133,15 @@ FieldConfig generateFieldConfig() {
   return cfg;
 }
 
-FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
+FogOfWarConfig generateFogOfWarConfig(const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
 //  cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
-  constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
+  const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
   cfg.fogTilesFadeAnimTimerIds.resize(mapTilesCount);
+
+  constexpr int32_t startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
   std::iota(cfg.fogTilesFadeAnimTimerIds.begin(),
       cfg.fogTilesFadeAnimTimerIds.end(), startTimerId);
 
@@ -181,18 +183,14 @@ RoboCleanerGuiConfig generateGameConfig() {
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig();
-  const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
-      * commonLayoutCfg.fieldCfg.description.cols;
-  const auto emptyTilesCount =
-      commonLayoutCfg.fieldCfg.description.emptyTilesCount;
+  const auto& fieldDescr = commonLayoutCfg.fieldCfg.description;
 
-  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(mapTilesCount);
+  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(fieldDescr);
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
-      commonLayoutCfg.fieldCfg.description, emptyTilesCount);
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(fieldDescr);
   layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
 
   return cfg;

@@ -26,14 +26,18 @@ struct ObjectApproachOverlayConfig {
   Rectangle upperBoundary;
   double scaleFactor { };
   FieldPos fieldPos;
+};
+
+struct ObjectApproachOverlayOutInterface {
+  ObjechApproachOverlayTriggeredCb objectApproachOverlayTriggeredCb;
+  ContainerRedrawCb containerRedrawCb;
   CollisionWatcher *collisionWatcher = nullptr;
 };
 
 class ObjectApproachOverlay final : public CollisionObject {
 public:
-  ErrorCode init(
-      const ObjectApproachOverlayConfig &cfg,
-      const ObjechApproachOverlayTriggeredCb &objechApproachOverlayTriggeredCb);
+  ErrorCode init(const ObjectApproachOverlayConfig &cfg,
+                 const ObjectApproachOverlayOutInterface &interface);
 
   void changeBoundary(const Rectangle &preScaledBoundary);
 
@@ -42,6 +46,9 @@ public:
 #endif //DEBUG_VISUAL_OVERLAY
 
 private:
+  ErrorCode initOutInterface(
+      const ObjectApproachOverlayOutInterface &interface);
+
   void registerCollision(const Rectangle &intersectRect,
                          CollisionDamageImpact impact) override;
 
@@ -49,11 +56,11 @@ private:
 
   void deactivate();
 
-  void alignWidget();
+  ErrorCode alignWidget();
 
   ObjectApproachOverlayConfig _cfg;
   Rectangle _boundary;
-  ObjechApproachOverlayTriggeredCb _objechApproachOverlayTriggeredCb;
+  ObjectApproachOverlayOutInterface _outInterface;
 
 #if DEBUG_VISUAL_OVERLAY
   Fbo _visualFbo;

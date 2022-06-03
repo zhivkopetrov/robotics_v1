@@ -27,8 +27,8 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
   commonOutInterface.playerDamageCb = std::bind(
       &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
   commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
-  commonOutInterface.objechApproachOverlayTriggeredCb =
-      outInterface.objechApproachOverlayTriggeredCb;
+  commonOutInterface.objectApproachOverlayTriggeredCb =
+      outInterface.objectApproachOverlayTriggeredCb;
 
   if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {
@@ -42,8 +42,26 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != layout._entityHandler.init(cfg.entityHandlerCfg,
-          cfg.commonLayoutCfg.fieldCfg.description)) {
+  if (ErrorCode::SUCCESS != initEntityHandler(cfg, outInterface, layout)) {
+    LOGERR("initPanelHandler() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode RoboCleanerLayoutInitHelper::initEntityHandler(
+    const RoboCleanerLayoutConfig &layoutCfg,
+    const RoboCleanerLayoutOutInterface &outInterface,
+    RoboCleanerLayout &layout) {
+  const EntityHandlerOutInterface entityHandlerOutInterface = {
+      .objectApproachOverlayTriggeredCb =
+          outInterface.objectApproachOverlayTriggeredCb, .collisionWatcher =
+          outInterface.collisionWatcher };
+
+  if (ErrorCode::SUCCESS != layout._entityHandler.init(
+          layoutCfg.entityHandlerCfg, entityHandlerOutInterface,
+          layoutCfg.commonLayoutCfg.fieldCfg.description)) {
     LOGERR("Error, _entityHandler.init() failed");
     return ErrorCode::FAILURE;
   }
@@ -52,7 +70,8 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
 }
 
 ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
-    const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
+    const PanelHandlerConfig &cfg,
+    const RoboCommonLayoutInterface &commonInterface,
     const RoboCleanerLayoutOutInterface &outInterface,
     RoboCleanerLayout &layout) {
   PanelHandlerOutInterface panelHandlerOutInterface;
