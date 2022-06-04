@@ -41,7 +41,10 @@ void MovementWatcher::process() {
   }
 }
 
-void MovementWatcher::onRobotStartingAct(MoveType moveType) {
+void MovementWatcher::onRobotStartingAct(MoveType moveType,
+                                         char approachingMarker) {
+  _currProgress.approachingFieldMarker =
+      static_cast<uint8_t>(approachingMarker);
   const RobotState robotState = _outInterface.getRobotStateCb();
 
   if (MoveType::FORWARD == moveType) {

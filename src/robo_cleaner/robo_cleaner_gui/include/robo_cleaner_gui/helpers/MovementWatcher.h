@@ -36,7 +36,7 @@ public:
 
   void changeState(const RobotState& state, MoveOutcome outcome);
 
-  void onRobotStartingAct(MoveType moveType);
+  void onRobotStartingAct(MoveType moveType, char approachingMarker);
 
   void onObstacleApproachTrigger(const FieldPos& fieldPos);
 

@@ -117,6 +117,19 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   return cfg;
 }
 
+SolutionValidatorConfig generateSolutionValidatorConfig(
+    const FieldDescription& fieldDescr) {
+  SolutionValidatorConfig cfg;
+
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+  cfg.targetMapTilesCount = fieldDescr.emptyTilesCount;
+  cfg.playerStartLocation.row = fieldDescr.rows - 1;
+  cfg.playerStartLocation.col = fieldDescr.cols - 1;
+
+  return cfg;
+}
+
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
 
@@ -135,7 +148,7 @@ FieldConfig generateFieldConfig() {
 
 FogOfWarConfig generateFogOfWarConfig(const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
-//  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
@@ -172,7 +185,7 @@ EngineConfig generateEngineConfig() {
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
-  cfg.debugConsoleRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.debugConsoleConfig.fontRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
 
   return cfg;
 }
@@ -192,6 +205,8 @@ RoboCleanerGuiConfig generateGameConfig() {
 
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(fieldDescr);
   layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
+
+  cfg.solutionValidatorConfig = generateSolutionValidatorConfig(fieldDescr);
 
   return cfg;
 }

@@ -89,6 +89,11 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.cancelFeedbackReportingCb) {
+    LOGERR("Error, nullptr provided for CancelFeedbackReportingCb");
+    return ErrorCode::FAILURE;
+  }
+
   return ErrorCode::SUCCESS;
 }
 
@@ -151,9 +156,8 @@ rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
 
   const auto f = [this]() {
     _controllerStatus = ControllerStatus::IDLE;
-
+    _outInterface.cancelFeedbackReportingCb();
     //TODO add robot rollback to start position
-    //TODO cancel feedback reporting
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 
@@ -166,10 +170,14 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
     _outInterface.robotActInterface.actCb(moveType);
-    _outInterface.reportRobotStartingActCb(moveType);
-    //TODO notify movementWatcher that movement has started with chosen dir
-    //movement watcher will internally compute the future dir using FieldUtils
-    //and report progress
+
+    //TODO create a solution validator and check if the future tile has
+    //     already been visited
+    //     - if yes -> populate the approachMarker to it's corresponding value
+    //     - if no -> the marker is still under FogOfWar - populate it
+    //                with unknown field marker
+    const char approachMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
+    _outInterface.reportRobotStartingActCb(moveType, approachMarker);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 

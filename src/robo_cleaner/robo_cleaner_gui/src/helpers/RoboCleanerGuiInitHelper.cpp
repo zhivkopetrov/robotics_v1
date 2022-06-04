@@ -134,7 +134,9 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
   outInterface.acceptGoalCb = std::bind(&MovementReporter::acceptGoal,
       &gui._movementReporter, _1);
   outInterface.reportRobotStartingActCb = std::bind(
-      &MovementWatcher::onRobotStartingAct, &gui._movementWatcher, _1);
+      &MovementWatcher::onRobotStartingAct, &gui._movementWatcher, _1, _2);
+  outInterface.cancelFeedbackReportingCb = std::bind(
+      &MovementWatcher::cancelFeedbackReporting, &gui._movementWatcher);
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

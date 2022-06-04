@@ -23,6 +23,7 @@ struct CleanerControllerExternalBridgeOutInterface {
   SystemShutdownCb systemShutdownCb;
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
+  CancelFeedbackReportingCb cancelFeedbackReportingCb;
 };
 
 class CleanerControllerExternalBridge: public rclcpp::Node {

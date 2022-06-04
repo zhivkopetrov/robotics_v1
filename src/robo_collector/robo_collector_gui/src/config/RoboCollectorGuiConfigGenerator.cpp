@@ -190,7 +190,7 @@ EngineConfig generateEngineConfig() {
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
-  cfg.debugConsoleRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.debugConsoleConfig.fontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   return cfg;
 }
