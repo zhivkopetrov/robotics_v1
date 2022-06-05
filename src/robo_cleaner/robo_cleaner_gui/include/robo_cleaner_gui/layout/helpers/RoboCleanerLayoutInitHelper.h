@@ -24,7 +24,7 @@ public:
   static ErrorCode init(const RoboCleanerLayoutConfig &cfg,
                         const RoboCleanerLayoutOutInterface &outInterface,
                         RoboCommonLayoutInterface &commonInterface, //out param
-      RoboCleanerLayout &layout);
+                        RoboCleanerLayout &layout);
 
 private:
   static ErrorCode initEntityHandler(

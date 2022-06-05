@@ -1,7 +1,6 @@
 //Corresponding header
 #include "robo_cleaner_gui/external_api/CleanerControllerExternalBridge.h"
 
-#include "../../include/robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 //System headers
 
 //Other libraries headers
@@ -13,6 +12,7 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 
 using namespace std::placeholders;
 
@@ -51,7 +51,7 @@ void CleanerControllerExternalBridge::publishFieldMapRevealed() {
 }
 
 void CleanerControllerExternalBridge::publishFieldMapCleaned() {
-  _outInterface.solutionValidator->fieldMapRevealed();
+  _outInterface.solutionValidator->fieldMapCleaned();
   _fieldMapCleanedPublisher->publish(Empty());
 }
 
@@ -92,6 +92,11 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.cancelFeedbackReportingCb) {
     LOGERR("Error, nullptr provided for CancelFeedbackReportingCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.solutionValidator) {
+    LOGERR("Error, nullptr provided for SolutionValidator");
     return ErrorCode::FAILURE;
   }
 
@@ -168,16 +173,11 @@ rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
 void CleanerControllerExternalBridge::handleMoveAccepted(
     const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
   const auto goal = goalHandle->get_goal();
-  const auto moveType = getMoveType(goal->robot_move_type.move_type);
+  const MoveType moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
     _outInterface.robotActInterface.actCb(moveType);
-
-    //TODO create a solution validator and check if the future tile has
-    //     already been visited
-    //     - if yes -> populate the approachMarker to it's corresponding value
-    //     - if no -> the marker is still under FogOfWar - populate it
-    //                with unknown field marker
-    const char approachMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
+     const char approachMarker =
+         _outInterface.solutionValidator->handleMoveRequest(moveType);
     _outInterface.reportRobotStartingActCb(moveType, approachMarker);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);

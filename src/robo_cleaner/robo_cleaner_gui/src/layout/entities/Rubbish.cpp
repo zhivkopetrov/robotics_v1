@@ -41,12 +41,22 @@ void Rubbish::drawOnFbo(Fbo& fbo) const {
 void Rubbish::modifyRubbishWidget(char fieldMarker) {
   const int32_t counterValue = getRubbishCounter(fieldMarker);
   setImageFrame(counterValue);
+
+  if (0 == counterValue) {
+    _counterText.hide();
+  } else {
+    _counterText.setText(std::to_string(counterValue).c_str());
+    _counterText.setScaledWidth(_counterText.getImageWidth());
+    _counterText.setScaledHeight(_counterText.getImageHeight());
+  }
 }
 
 ErrorCode Rubbish::createImage(const RubbishConfig &cfg,
                                const RubbishOutInterface &interface,
                                const FieldDescription &fieldDescr) {
   _img.create(cfg.rsrcId);
+  setImageFrame(cfg.textCounterValue);
+
   const Point absPos = FieldUtils::getAbsPos(cfg.fieldPos, fieldDescr)
       + cfg.tileOffset;
   _img.setPosition(absPos);
@@ -54,8 +64,6 @@ ErrorCode Rubbish::createImage(const RubbishConfig &cfg,
   _img.activateScaling();
   _img.setScaledWidth(cfg.width);
   _img.setScaledHeight(cfg.height);
-
-  setImageFrame(cfg.textCounterValue);
 
   if (ErrorCode::SUCCESS != createObjOverlay(cfg, interface, fieldDescr)) {
     LOGERR("Error, createObjOverlay() failed");

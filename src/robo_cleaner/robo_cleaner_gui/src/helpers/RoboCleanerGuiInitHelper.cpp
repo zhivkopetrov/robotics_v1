@@ -116,6 +116,10 @@ ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
       &MovementReporter::reportProgress, &gui._movementReporter, _1);
   outInterface.getFieldDescriptionCb =
       commonLayoutInterface.getFieldDescriptionCb;
+  outInterface.setFieldDataMarkerCb =
+      commonLayoutInterface.setFieldDataMarkerCb;
+  outInterface.modifyRubbishWidgetCb = interface.modifyRubbishWidgetCb;
+  outInterface.solutionValidator = &gui._solutionValidator;
 
   const auto &fieldDescr = cfg.commonLayoutCfg.fieldCfg.description;
   MovementWatcherConfig movementWatcherConfigCfg;
@@ -160,6 +164,7 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
       &MovementWatcher::onRobotStartingAct, &gui._movementWatcher, _1, _2);
   outInterface.cancelFeedbackReportingCb = std::bind(
       &MovementWatcher::cancelFeedbackReporting, &gui._movementWatcher);
+  outInterface.solutionValidator = &gui._solutionValidator;
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

@@ -13,6 +13,7 @@
 #include "robo_cleaner_gui/defines/RoboCleanerGuiFunctionalDefines.h"
 
 //Forward declarations
+class RoboCleanerSolutionValidator;
 
 struct MovementWatcherOutInterface {
   ReportMoveProgressCb reportMoveProgressCb;
@@ -20,6 +21,9 @@ struct MovementWatcherOutInterface {
   GetRobotAbsolutePosCb getRobotAbsolutePosCb;
   GetRobotRotationAngleCb getRobotRotationAngleCb;
   GetFieldDescriptionCb getFieldDescriptionCb;
+  SetFieldDataMarkerCb setFieldDataMarkerCb;
+  ModifyRubbishWidgetCb modifyRubbishWidgetCb;
+  RoboCleanerSolutionValidator* solutionValidator = nullptr;
 };
 
 struct MovementWatcherConfig {

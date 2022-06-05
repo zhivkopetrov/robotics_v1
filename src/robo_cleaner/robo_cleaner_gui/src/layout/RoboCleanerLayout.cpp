@@ -11,8 +11,6 @@
 #include "robo_cleaner_gui/layout/helpers/RoboCleanerLayoutInterfaces.h"
 #include "robo_cleaner_gui/layout/helpers/RoboCleanerLayoutInitHelper.h"
 
-using namespace std::placeholders;
-
 ErrorCode RoboCleanerLayout::init(
     const RoboCleanerLayoutConfig &cfg,
     const RoboCleanerLayoutOutInterface &outInterface,
@@ -23,6 +21,7 @@ ErrorCode RoboCleanerLayout::init(
     return ErrorCode::FAILURE;
   }
 
+  produceInterface(interface);
   return ErrorCode::SUCCESS;
 }
 
@@ -41,5 +40,13 @@ void RoboCleanerLayout::draw() const {
 
 void RoboCleanerLayout::onEnergyDepleted() {
   LOGR("Energy depleted");
+}
+
+void RoboCleanerLayout::produceInterface(
+    RoboCleanerLayoutInterface &interface) {
+  using namespace std::placeholders;
+
+  interface.modifyRubbishWidgetCb =
+      std::bind(&EntityHandler::modifyRubbishWidget, &_entityHandler, _1, _2);
 }
 

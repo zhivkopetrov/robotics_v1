@@ -31,6 +31,8 @@ public:
   void onEnergyDepleted();
 
 private:
+  void produceInterface(RoboCleanerLayoutInterface& interface);
+
   RoboCommonLayout _commonLayout;
   EntityHandler _entityHandler;
   PanelHandler _panelHandler;

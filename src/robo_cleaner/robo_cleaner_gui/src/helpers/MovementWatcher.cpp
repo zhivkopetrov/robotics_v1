@@ -12,6 +12,7 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 
 ErrorCode MovementWatcher::init(MovementWatcherConfig &cfg,
                                 const MovementWatcherOutInterface &interface) {
@@ -91,11 +92,32 @@ void MovementWatcher::onObstacleApproachTrigger(const FieldPos& fieldPos) {
   process(); //send an immediate feedback update
 }
 
-void MovementWatcher::changeState([[maybe_unused]]const RobotState &state,
+void MovementWatcher::changeState(const RobotState &state,
                                   MoveOutcome outcome) {
   _currProgress.outcome = outcome;
   _currProgress.hasMoveFinished = true;
 
+  _currProgress.processedFieldMarker = [this, &state](){
+    const FieldDescription& fieldDescr = _outInterface.getFieldDescriptionCb();
+    const char marker = fieldDescr.data[state.fieldPos.row][state.fieldPos.col];
+    char result = marker;
+    if (MoveOutcome::SUCCESS == _currProgress.outcome) {
+      if (isRubbishMarker(marker)) {
+        const int32_t rubbishCounter = getRubbishCounter(marker);
+        if (0 < rubbishCounter) {
+          //clean tile (subtract field counter value)
+          char cleanedMarker = marker - 1;
+          result = cleanedMarker;
+
+          _outInterface.setFieldDataMarkerCb(state.fieldPos, cleanedMarker);
+          _outInterface.modifyRubbishWidgetCb(state.fieldPos, cleanedMarker);
+        }
+      }
+    }
+    return result;
+  }();
+
+  _outInterface.solutionValidator->finishMove(state.fieldPos);
   _outInterface.reportMoveProgressCb(_currProgress);
   reset();
 }
@@ -123,8 +145,23 @@ ErrorCode MovementWatcher::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.setFieldDataMarkerCb) {
+    LOGERR("Error, nullptr provided for SetFieldDataMarkerCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.modifyRubbishWidgetCb) {
+    LOGERR("Error, nullptr provided for ModifyRubbishWidgetCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.solutionValidator) {
+    LOGERR("Error, nullptr provided for SolutionValidator");
     return ErrorCode::FAILURE;
   }
 

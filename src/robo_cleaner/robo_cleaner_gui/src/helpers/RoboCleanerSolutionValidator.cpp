@@ -1,9 +1,11 @@
 //Corresponding header
 #include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 
+//System headers
 #include <algorithm>
 
 //Other libraries headers
+#include "robo_common/layout/field/FieldUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -17,7 +19,6 @@ ErrorCode RoboCleanerSolutionValidator::init(
     return ErrorCode::FAILURE;
   }
 
-  _validationOptions.targetMapTilesCount = cfg.targetMapTilesCount;
   _reveleadMapTiles.insert(cfg.playerStartLocation);
 
   return ErrorCode::SUCCESS;
@@ -25,6 +26,10 @@ ErrorCode RoboCleanerSolutionValidator::init(
 
 void RoboCleanerSolutionValidator::fieldMapRevealed() {
   _validationOptions.fieldMapReveleaded = true;
+}
+
+void RoboCleanerSolutionValidator::fieldMapCleaned() {
+  _validationOptions.fieldMapCleaned = true;
 }
 
 ValidationResult RoboCleanerSolutionValidator::validateFieldMap(
@@ -81,17 +86,27 @@ ValidationResult RoboCleanerSolutionValidator::validateFieldMap(
   return result;
 }
 
-ValidationResult RoboCleanerSolutionValidator::handleNormalMove(
-    const FieldPos &fieldPos) {
-  ValidationResult result;
-  if (_validationOptions.targetMapTilesCount == _reveleadMapTiles.size()) {
-    result.success = false;
-    return result;
+char RoboCleanerSolutionValidator::handleMoveRequest(MoveType moveType) {
+  const RobotState robotState = _outInterface.getRobotStateCb();
+  const FieldDescription& fieldDescr = _outInterface.getFieldDescriptionCb();
+
+  //rotate in current pos. Tile is already revealed
+  if ((MoveType::ROTATE_LEFT == moveType) ||
+      (MoveType::ROTATE_RIGHT == moveType)) {
+    return fieldDescr.data[robotState.fieldPos.row][robotState.fieldPos.col];
   }
 
-  const auto [_, success] = _reveleadMapTiles.insert(fieldPos);
-  result.success = success;
-  return result;
+  //process forward movement
+  const FieldPos futurePos =
+      FieldUtils::getAdjacentPos(robotState.dir, robotState.fieldPos);
+
+  //don't insert the pos immediately. The move might be canceled
+  auto it = _reveleadMapTiles.find(futurePos);
+  if (it != _reveleadMapTiles.end()) {
+    return fieldDescr.data[futurePos.row][futurePos.col];
+  }
+
+  return RoboCommonDefines::UNKNOWN_FIELD_MARKER;
 }
 
 ErrorCode RoboCleanerSolutionValidator::initOutInterface(
@@ -108,6 +123,10 @@ ErrorCode RoboCleanerSolutionValidator::initOutInterface(
   }
 
   return ErrorCode::SUCCESS;
+}
+
+void RoboCleanerSolutionValidator::finishMove(const FieldPos& fieldPos) {
+  _reveleadMapTiles.insert(fieldPos);
 }
 
 

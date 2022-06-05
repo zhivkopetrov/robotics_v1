@@ -29,7 +29,8 @@ private:
 
   static ErrorCode initMovementWatcher(
       const RoboCleanerLayoutConfig &cfg,
-      const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui);
+      const RoboCleanerLayoutInterface &interface,
+      RoboCleanerGui &gui);
 
   static ErrorCode initSolutionValidator(
       const RoboCleanerSolutionValidatorConfig &cfg,

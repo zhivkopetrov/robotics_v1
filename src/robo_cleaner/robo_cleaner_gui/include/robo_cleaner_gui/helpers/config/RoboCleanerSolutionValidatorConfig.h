@@ -11,7 +11,6 @@
 //Forward declarations
 
 struct RoboCleanerSolutionValidatorConfig {
-  int32_t targetMapTilesCount = 0;
   FieldPos playerStartLocation;
 };
 

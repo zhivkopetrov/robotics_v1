@@ -34,11 +34,16 @@ public:
 
   void fieldMapRevealed();
 
+  void fieldMapCleaned();
+
   ValidationResult validateFieldMap(const std::vector<uint8_t> &rawData,
                                     uint32_t rows, uint32_t cols,
                                     std::string &outError);
 
-  ValidationResult handleNormalMove(const FieldPos &fieldPos);
+  //returns approachFieldMarker
+  char handleMoveRequest(MoveType moveType);
+
+  void finishMove(const FieldPos& fieldPos);
 
 private:
   ErrorCode initOutInterface(
@@ -47,10 +52,10 @@ private:
   struct ValidationOptions {
     bool fieldMapReveleaded = false;
     bool fieldMapValidated = false;
+    bool fieldMapCleaned = false;
     std::vector<bool> longestSequenceValidationPoints;
 
     int32_t fieldMapValidationsTriesLeft = 3;
-    size_t targetMapTilesCount = 0;
   };
 
   RoboCleanerSolutionValidatorOutInterface _outInterface;

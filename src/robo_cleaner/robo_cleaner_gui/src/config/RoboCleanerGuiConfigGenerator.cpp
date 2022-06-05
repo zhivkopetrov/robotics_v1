@@ -121,9 +121,6 @@ RoboCleanerSolutionValidatorConfig generateSolutionValidatorConfig(
     const FieldDescription& fieldDescr) {
   RoboCleanerSolutionValidatorConfig cfg;
 
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  cfg.targetMapTilesCount = fieldDescr.emptyTilesCount;
   cfg.playerStartLocation.row = fieldDescr.rows - 1;
   cfg.playerStartLocation.col = fieldDescr.cols - 1;
 
@@ -148,7 +145,7 @@ FieldConfig generateFieldConfig() {
 
 FogOfWarConfig generateFogOfWarConfig(const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
-  cfg.status = FogOfWarStatus::ENABLED;
+//  cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
