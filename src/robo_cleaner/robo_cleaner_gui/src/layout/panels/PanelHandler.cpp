@@ -92,6 +92,14 @@ void PanelHandler::decreaseEnergyIndicator(int32_t delta) {
   _energyPanel.decreaseIndicator(delta);
 }
 
+void PanelHandler::onTileRevealed() {
+  _tilePanel.increaseCounter(1);
+}
+
+void PanelHandler::onTileCleaned() {
+  _rubbishPanel.increaseCounter(1);
+}
+
 ErrorCode PanelHandler::validateInterface(
     const PanelHandlerOutInterface &interface) const {
   if (nullptr == interface.startGameLostAnimCb) {

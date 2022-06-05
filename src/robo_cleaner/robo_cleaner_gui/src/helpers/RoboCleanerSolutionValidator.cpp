@@ -86,27 +86,68 @@ ValidationResult RoboCleanerSolutionValidator::validateFieldMap(
   return result;
 }
 
-char RoboCleanerSolutionValidator::handleMoveRequest(MoveType moveType) {
+char RoboCleanerSolutionValidator::getApproachingTileMarker(
+    MoveType moveType) const {
   const RobotState robotState = _outInterface.getRobotStateCb();
-  const FieldDescription& fieldDescr = _outInterface.getFieldDescriptionCb();
+  const FieldDescription &fieldDescr = _outInterface.getFieldDescriptionCb();
 
   //rotate in current pos. Tile is already revealed
-  if ((MoveType::ROTATE_LEFT == moveType) ||
-      (MoveType::ROTATE_RIGHT == moveType)) {
+  if ( (MoveType::ROTATE_LEFT == moveType) || (MoveType::ROTATE_RIGHT
+      == moveType)) {
     return fieldDescr.data[robotState.fieldPos.row][robotState.fieldPos.col];
   }
 
   //process forward movement
-  const FieldPos futurePos =
-      FieldUtils::getAdjacentPos(robotState.dir, robotState.fieldPos);
+  const FieldPos futurePos = FieldUtils::getAdjacentPos(robotState.dir,
+      robotState.fieldPos);
 
-  //don't insert the pos immediately. The move might be canceled
+  //don't insert the pos immediately. The move might be canceled before robot
+  //has reached it's destination
   auto it = _reveleadMapTiles.find(futurePos);
-  if (it != _reveleadMapTiles.end()) {
+  const bool tileAlreadyRevealed = it != _reveleadMapTiles.end();
+  if (tileAlreadyRevealed) {
+    if (!FieldUtils::isInsideField(futurePos, fieldDescr)) {
+      return RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
+    }
+
     return fieldDescr.data[futurePos.row][futurePos.col];
   }
 
   return RoboCommonDefines::UNKNOWN_FIELD_MARKER;
+}
+
+MoveValidation RoboCleanerSolutionValidator::finishMove(
+    const RobotState &state, MoveOutcome outcome, MoveType moveType) {
+  MoveValidation result;
+  const FieldDescription& fieldDescr = _outInterface.getFieldDescriptionCb();
+  result.processedMarker =
+      fieldDescr.data[state.fieldPos.row][state.fieldPos.col];
+
+  //a previous move should have already populated the required data
+  if (MoveType::FORWARD != moveType) {
+    return result;
+  }
+
+  //mark the collision obstacle as visited
+  if (MoveOutcome::COLLISION == outcome) {
+    const FieldPos futurePos =
+        FieldUtils::getAdjacentPos(state.dir, state.fieldPos);
+    _reveleadMapTiles.insert(futurePos);
+    return result;
+  }
+
+  if (isRubbishMarker(result.processedMarker)) {
+    const int32_t rubbishCounter = getRubbishCounter(result.processedMarker);
+    if (0 < rubbishCounter) {
+      //clean tile (subtract field counter value)
+      result.processedMarker--;
+      result.tileCleaned = true;
+    }
+  }
+
+  const auto [_, success] = _reveleadMapTiles.insert(state.fieldPos);
+  result.tileRevealed = success;
+  return result;
 }
 
 ErrorCode RoboCleanerSolutionValidator::initOutInterface(
@@ -124,9 +165,4 @@ ErrorCode RoboCleanerSolutionValidator::initOutInterface(
 
   return ErrorCode::SUCCESS;
 }
-
-void RoboCleanerSolutionValidator::finishMove(const FieldPos& fieldPos) {
-  _reveleadMapTiles.insert(fieldPos);
-}
-
 

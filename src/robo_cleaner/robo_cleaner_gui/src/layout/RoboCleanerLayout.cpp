@@ -46,7 +46,11 @@ void RoboCleanerLayout::produceInterface(
     RoboCleanerLayoutInterface &interface) {
   using namespace std::placeholders;
 
-  interface.modifyRubbishWidgetCb =
-      std::bind(&EntityHandler::modifyRubbishWidget, &_entityHandler, _1, _2);
+  interface.modifyRubbishWidgetCb = std::bind(
+      &EntityHandler::modifyRubbishWidget, &_entityHandler, _1, _2);
+  interface.tileReleavedCb = std::bind(&PanelHandler::onTileRevealed,
+      &_panelHandler);
+  interface.tileCleanedCb = std::bind(&PanelHandler::onTileCleaned,
+      &_panelHandler);
 }
 

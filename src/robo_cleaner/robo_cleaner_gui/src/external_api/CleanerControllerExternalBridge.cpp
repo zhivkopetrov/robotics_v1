@@ -177,7 +177,7 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto f = [this, moveType]() {
     _outInterface.robotActInterface.actCb(moveType);
      const char approachMarker =
-         _outInterface.solutionValidator->handleMoveRequest(moveType);
+         _outInterface.solutionValidator->getApproachingTileMarker(moveType);
     _outInterface.reportRobotStartingActCb(moveType, approachMarker);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);

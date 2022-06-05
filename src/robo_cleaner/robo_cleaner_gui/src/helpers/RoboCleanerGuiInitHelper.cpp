@@ -119,6 +119,8 @@ ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
   outInterface.setFieldDataMarkerCb =
       commonLayoutInterface.setFieldDataMarkerCb;
   outInterface.modifyRubbishWidgetCb = interface.modifyRubbishWidgetCb;
+  outInterface.tileReleavedCb = interface.tileReleavedCb;
+  outInterface.tileCleanedCb = interface.tileCleanedCb;
   outInterface.solutionValidator = &gui._solutionValidator;
 
   const auto &fieldDescr = cfg.commonLayoutCfg.fieldCfg.description;

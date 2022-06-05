@@ -23,6 +23,8 @@ struct MovementWatcherOutInterface {
   GetFieldDescriptionCb getFieldDescriptionCb;
   SetFieldDataMarkerCb setFieldDataMarkerCb;
   ModifyRubbishWidgetCb modifyRubbishWidgetCb;
+  TileReleavedCb tileReleavedCb;
+  TileCleanedCb tileCleanedCb;
   RoboCleanerSolutionValidator* solutionValidator = nullptr;
 };
 

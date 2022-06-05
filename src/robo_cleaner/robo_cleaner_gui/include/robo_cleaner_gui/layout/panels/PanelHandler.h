@@ -31,6 +31,9 @@ public:
   void decreaseHealthIndicator(int32_t delta);
   void decreaseEnergyIndicator(int32_t delta);
 
+  void onTileRevealed();
+  void onTileCleaned();
+
 private:
   ErrorCode validateInterface(const PanelHandlerOutInterface &interface) const;
 

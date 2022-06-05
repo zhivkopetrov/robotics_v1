@@ -27,6 +27,12 @@ struct ValidationResult {
   bool majorError = false;
 };
 
+struct MoveValidation {
+  bool tileRevealed = false;
+  bool tileCleaned = false;
+  char processedMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
+};
+
 class RoboCleanerSolutionValidator {
 public:
   ErrorCode init(const RoboCleanerSolutionValidatorConfig &cfg,
@@ -40,10 +46,10 @@ public:
                                     uint32_t rows, uint32_t cols,
                                     std::string &outError);
 
-  //returns approachFieldMarker
-  char handleMoveRequest(MoveType moveType);
+  char getApproachingTileMarker(MoveType moveType) const;
 
-  void finishMove(const FieldPos& fieldPos);
+  MoveValidation finishMove(const RobotState &state, MoveOutcome outcome,
+                            MoveType moveType);
 
 private:
   ErrorCode initOutInterface(

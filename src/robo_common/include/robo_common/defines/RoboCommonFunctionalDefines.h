@@ -35,5 +35,6 @@ using StartAchievementWonAnimCb = std::function<void(Achievement)>;
 using RevealFogOfWarTilesCb = std::function<void()>;
 using ObjechApproachOverlayTriggeredCb = std::function<void(const FieldPos&)>;
 using ContainerRedrawCb = std::function<void()>;
+using TileReleavedCb = std::function<void()>;
 
 #endif /* ROBO_COMMON_ROBOCOMMONFUNCTIONALDEFINES_H_ */

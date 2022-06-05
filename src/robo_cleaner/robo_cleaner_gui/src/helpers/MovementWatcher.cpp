@@ -16,12 +16,11 @@
 
 ErrorCode MovementWatcher::init(MovementWatcherConfig &cfg,
                                 const MovementWatcherOutInterface &interface) {
+  _cfg = cfg;
   if (ErrorCode::SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
     return ErrorCode::FAILURE;
   }
-
-  _cfg = cfg;
 
   return ErrorCode::SUCCESS;
 }
@@ -75,8 +74,9 @@ void MovementWatcher::onRobotStartingAct(MoveType moveType,
   _isFeedbackReportActive = true;
 }
 
-void MovementWatcher::onObstacleApproachTrigger(const FieldPos& fieldPos) {
-  const auto& fieldDescr = _outInterface.getFieldDescriptionCb();
+void MovementWatcher::onObstacleApproachTrigger(const FieldPos &fieldPos) {
+  LOGC("MovementWatcher::onObstacleApproachTrigger");
+  const auto &fieldDescr = _outInterface.getFieldDescriptionCb();
   if (FieldUtils::isInsideField(fieldPos, fieldDescr)) {
     _currProgress.approachingFieldMarker =
         static_cast<uint8_t>(fieldDescr.data[fieldPos.row][fieldPos.col]);
@@ -94,31 +94,21 @@ void MovementWatcher::changeState(const RobotState &state,
   _currProgress.outcome = outcome;
   _currProgress.hasMoveFinished = true;
 
-  _currProgress.processedFieldMarker = [this, &state](){
-    const FieldDescription& fieldDescr = _outInterface.getFieldDescriptionCb();
-    const char marker = fieldDescr.data[state.fieldPos.row][state.fieldPos.col];
-    char result = marker;
+  const auto [tileRevealed, tileCleaned, processedMarker] =
+      _outInterface.solutionValidator->finishMove(
+          state, outcome, _currMoveType);
+  _currProgress.processedFieldMarker = processedMarker;
 
-    //only successful forward moves can ever modify the field
-    if ((MoveOutcome::SUCCESS == _currProgress.outcome) &&
-        (MoveType::FORWARD == _currMoveType)) {
+  if (tileRevealed) {
+    _outInterface.tileReleavedCb();
+  }
 
-      if (isRubbishMarker(marker)) {
-        const int32_t rubbishCounter = getRubbishCounter(marker);
-        if (0 < rubbishCounter) {
-          //clean tile (subtract field counter value)
-          char cleanedMarker = marker - 1;
-          result = cleanedMarker;
+  if (tileCleaned) {
+    _outInterface.setFieldDataMarkerCb(state.fieldPos, processedMarker);
+    _outInterface.modifyRubbishWidgetCb(state.fieldPos, processedMarker);
+    _outInterface.tileCleanedCb();
+  }
 
-          _outInterface.setFieldDataMarkerCb(state.fieldPos, cleanedMarker);
-          _outInterface.modifyRubbishWidgetCb(state.fieldPos, cleanedMarker);
-        }
-      }
-    }
-    return result;
-  }();
-
-  _outInterface.solutionValidator->finishMove(state.fieldPos);
   _outInterface.reportMoveProgressCb(_currProgress);
   reset();
 }
@@ -158,6 +148,16 @@ ErrorCode MovementWatcher::initOutInterface(
 
   if (nullptr == _outInterface.modifyRubbishWidgetCb) {
     LOGERR("Error, nullptr provided for ModifyRubbishWidgetCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.tileReleavedCb) {
+    LOGERR("Error, nullptr provided for TileReleavedCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.tileCleanedCb) {
+    LOGERR("Error, nullptr provided for TileCleanedCb");
     return ErrorCode::FAILURE;
   }
 
