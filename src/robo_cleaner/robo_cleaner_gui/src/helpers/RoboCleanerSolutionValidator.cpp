@@ -1,18 +1,17 @@
 //Corresponding header
-#include "robo_cleaner_gui/helpers/SolutionValidator.h"
+#include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 
-//System headers
 #include <algorithm>
 
 //Other libraries headers
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_cleaner_gui/helpers/config/SolutionValidatorConfig.h"
+#include "robo_cleaner_gui/helpers/config/RoboCleanerSolutionValidatorConfig.h"
 
-ErrorCode SolutionValidator::init(
-    const SolutionValidatorConfig &cfg,
-    const SolutionValidatorOutInterface &outInterface) {
+ErrorCode RoboCleanerSolutionValidator::init(
+    const RoboCleanerSolutionValidatorConfig &cfg,
+    const RoboCleanerSolutionValidatorOutInterface &outInterface) {
   if (ErrorCode::SUCCESS != initOutInterface(outInterface)) {
     LOGERR("Error, initOutInterface() failed");
     return ErrorCode::FAILURE;
@@ -24,11 +23,11 @@ ErrorCode SolutionValidator::init(
   return ErrorCode::SUCCESS;
 }
 
-void SolutionValidator::fieldMapRevealed() {
+void RoboCleanerSolutionValidator::fieldMapRevealed() {
   _validationOptions.fieldMapReveleaded = true;
 }
 
-ValidationResult SolutionValidator::validateFieldMap(
+ValidationResult RoboCleanerSolutionValidator::validateFieldMap(
     const std::vector<uint8_t> &rawData, uint32_t rows, uint32_t cols,
     std::string &outError) {
   ValidationResult result;
@@ -82,7 +81,8 @@ ValidationResult SolutionValidator::validateFieldMap(
   return result;
 }
 
-ValidationResult SolutionValidator::handleNormalMove(const FieldPos &fieldPos) {
+ValidationResult RoboCleanerSolutionValidator::handleNormalMove(
+    const FieldPos &fieldPos) {
   ValidationResult result;
   if (_validationOptions.targetMapTilesCount == _reveleadMapTiles.size()) {
     result.success = false;
@@ -94,8 +94,8 @@ ValidationResult SolutionValidator::handleNormalMove(const FieldPos &fieldPos) {
   return result;
 }
 
-ErrorCode SolutionValidator::initOutInterface(
-    const SolutionValidatorOutInterface &outInterface) {
+ErrorCode RoboCleanerSolutionValidator::initOutInterface(
+    const RoboCleanerSolutionValidatorOutInterface &outInterface) {
   _outInterface = outInterface;
   if (nullptr == _outInterface.getFieldDescriptionCb) {
     LOGERR("Error, nullptr provided for GetFieldDescriptionCb");

@@ -46,6 +46,10 @@ void SolutionValidator::fieldMapRevealed() {
   _validationOptions.fieldMapReveleaded = true;
 }
 
+void SolutionValidator::fieldMapCleaned() {
+
+}
+
 ValidationResult SolutionValidator::validateFieldMap(
     const std::vector<uint8_t> &rawData, uint32_t rows, uint32_t cols,
     std::string &outError) {

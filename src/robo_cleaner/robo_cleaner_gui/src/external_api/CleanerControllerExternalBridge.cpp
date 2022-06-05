@@ -1,6 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_gui/external_api/CleanerControllerExternalBridge.h"
 
+#include "../../include/robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 //System headers
 
 //Other libraries headers
@@ -45,12 +46,12 @@ void CleanerControllerExternalBridge::publishShutdownController() {
 }
 
 void CleanerControllerExternalBridge::publishFieldMapRevealed() {
-//  _outInterface.solutionValidator->fieldMapRevealed();
+  _outInterface.solutionValidator->fieldMapRevealed();
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 
 void CleanerControllerExternalBridge::publishFieldMapCleaned() {
-//  _outInterface.solutionValidator->fieldMapRevealed();
+  _outInterface.solutionValidator->fieldMapRevealed();
   _fieldMapCleanedPublisher->publish(Empty());
 }
 

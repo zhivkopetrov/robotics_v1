@@ -32,8 +32,8 @@ add_executable(
         ${_INC_DIR}/helpers/RoboCleanerBuilder.h
         ${_INC_DIR}/helpers/RoboCleanerGuiInitHelper.h
         ${_INC_DIR}/helpers/MovementWatcher.h
-        ${_INC_DIR}/helpers/SolutionValidator.h
-        ${_INC_DIR}/helpers/config/SolutionValidatorConfig.h
+        ${_INC_DIR}/helpers/RoboCleanerSolutionValidator.h
+        ${_INC_DIR}/helpers/config/RoboCleanerSolutionValidatorConfig.h
         ${_INC_DIR}/external_api/CleanerControllerExternalBridge.h
         ${_INC_DIR}/external_api/MovementReporter.h
         ${_INC_DIR}/layout/entities/Rubbish.h
@@ -53,7 +53,7 @@ add_executable(
         ${_SRC_DIR}/helpers/RoboCleanerBuilder.cpp
         ${_SRC_DIR}/helpers/RoboCleanerGuiInitHelper.cpp
         ${_SRC_DIR}/helpers/MovementWatcher.cpp
-        ${_SRC_DIR}/helpers/SolutionValidator.cpp
+        ${_SRC_DIR}/helpers/RoboCleanerSolutionValidator.cpp
         ${_SRC_DIR}/layout/RoboCleanerLayout.cpp
         ${_SRC_DIR}/layout/entities/Rubbish.cpp
         ${_SRC_DIR}/layout/entities/EntityHandler.cpp

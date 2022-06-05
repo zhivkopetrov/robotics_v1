@@ -15,9 +15,9 @@
 #include "robo_cleaner_gui/defines/RoboCleanerGuiDefines.h"
 
 //Forward declarations
-struct SolutionValidatorConfig;
+struct RoboCleanerSolutionValidatorConfig;
 
-struct SolutionValidatorOutInterface {
+struct RoboCleanerSolutionValidatorOutInterface {
   GetFieldDescriptionCb getFieldDescriptionCb;
   GetRobotStateCb getRobotStateCb;
 };
@@ -27,10 +27,10 @@ struct ValidationResult {
   bool majorError = false;
 };
 
-class SolutionValidator {
+class RoboCleanerSolutionValidator {
 public:
-  ErrorCode init(const SolutionValidatorConfig &cfg,
-                 const SolutionValidatorOutInterface &outInterface);
+  ErrorCode init(const RoboCleanerSolutionValidatorConfig &cfg,
+                 const RoboCleanerSolutionValidatorOutInterface &outInterface);
 
   void fieldMapRevealed();
 
@@ -41,7 +41,8 @@ public:
   ValidationResult handleNormalMove(const FieldPos &fieldPos);
 
 private:
-  ErrorCode initOutInterface(const SolutionValidatorOutInterface &outInterface);
+  ErrorCode initOutInterface(
+      const RoboCleanerSolutionValidatorOutInterface &outInterface);
 
   struct ValidationOptions {
     bool fieldMapReveleaded = false;
@@ -52,7 +53,7 @@ private:
     size_t targetMapTilesCount = 0;
   };
 
-  SolutionValidatorOutInterface _outInterface;
+  RoboCleanerSolutionValidatorOutInterface _outInterface;
   std::set<FieldPos> _reveleadMapTiles;
   ValidationOptions _validationOptions;
 };

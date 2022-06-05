@@ -16,6 +16,7 @@
 #include "robo_cleaner_gui/defines/RoboCleanerGuiFunctionalDefines.h"
 
 //Forward declarations
+class RoboCleanerSolutionValidator;
 
 struct CleanerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
@@ -24,6 +25,7 @@ struct CleanerControllerExternalBridgeOutInterface {
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
   CancelFeedbackReportingCb cancelFeedbackReportingCb;
+  RoboCleanerSolutionValidator *solutionValidator = nullptr;
 };
 
 class CleanerControllerExternalBridge: public rclcpp::Node {

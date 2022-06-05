@@ -117,9 +117,9 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   return cfg;
 }
 
-SolutionValidatorConfig generateSolutionValidatorConfig(
+RoboCleanerSolutionValidatorConfig generateSolutionValidatorConfig(
     const FieldDescription& fieldDescr) {
-  SolutionValidatorConfig cfg;
+  RoboCleanerSolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);

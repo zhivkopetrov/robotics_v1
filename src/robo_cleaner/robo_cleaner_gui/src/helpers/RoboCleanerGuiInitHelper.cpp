@@ -57,6 +57,12 @@ ErrorCode RoboCleanerGuiInitHelper::init(const std::any &cfg,
     return ErrorCode::FAILURE;
   }
 
+  if (ErrorCode::SUCCESS != initSolutionValidator(
+          parsedCfg.solutionValidatorConfig, layoutInterface, gui)) {
+    LOGERR("initSolutionValidator() failed");
+    return ErrorCode::FAILURE;
+  }
+
   if (ErrorCode::SUCCESS != initControllerExternalBridge(layoutInterface,
           gui)) {
     LOGERR("initControllerExternalBridge() failed");
@@ -118,6 +124,23 @@ ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
   if (ErrorCode::SUCCESS != gui._movementWatcher.init(movementWatcherConfigCfg,
           outInterface)) {
     LOGERR("Error in _movementWatcher.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode RoboCleanerGuiInitHelper::initSolutionValidator(
+    const RoboCleanerSolutionValidatorConfig &cfg,
+    const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
+  RoboCleanerSolutionValidatorOutInterface outInterface;
+  outInterface.getFieldDescriptionCb =
+      interface.commonLayoutInterface.getFieldDescriptionCb;
+  outInterface.getRobotStateCb =
+      interface.commonLayoutInterface.playerRobotActInterface.getRobotStateCb;
+
+  if (ErrorCode::SUCCESS != gui._solutionValidator.init(cfg, outInterface)) {
+    LOGERR("_solutionValidator.init() failed");
     return ErrorCode::FAILURE;
   }
 
