@@ -86,9 +86,6 @@ void MovementWatcher::onObstacleApproachTrigger(const FieldPos& fieldPos) {
         RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
   }
 
-  LOGC("MovementWatcher::onObstacleApproachTrigger() changing "
-      "_currProgress.approachingFieldMarker to: %d",
-      int(_currProgress.approachingFieldMarker));
   process(); //send an immediate feedback update
 }
 
@@ -101,7 +98,11 @@ void MovementWatcher::changeState(const RobotState &state,
     const FieldDescription& fieldDescr = _outInterface.getFieldDescriptionCb();
     const char marker = fieldDescr.data[state.fieldPos.row][state.fieldPos.col];
     char result = marker;
-    if (MoveOutcome::SUCCESS == _currProgress.outcome) {
+
+    //only successful forward moves can ever modify the field
+    if ((MoveOutcome::SUCCESS == _currProgress.outcome) &&
+        (MoveType::FORWARD == _currMoveType)) {
+
       if (isRubbishMarker(marker)) {
         const int32_t rubbishCounter = getRubbishCounter(marker);
         if (0 < rubbishCounter) {
