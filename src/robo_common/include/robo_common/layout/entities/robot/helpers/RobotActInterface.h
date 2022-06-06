@@ -16,20 +16,23 @@ struct RobotActInterface {
 
   RobotActInterface(const RobotActCb &inputActCb,
                     const GetRobotStateCb &inputGetRobotStateCb,
+                    const CancelRobotMove &inputCancelRobotMove,
                     const GetRobotAbsolutePosCb &inputGetRobotAbsolutePosCb,
                     const GetRobotRotationAngleCb &getRobotRotationAngleCb)
       : actCb(inputActCb), getRobotStateCb(inputGetRobotStateCb),
+        cancelRobotMove(inputCancelRobotMove),
         getRobotAbsolutePosCb(inputGetRobotAbsolutePosCb),
         getRobotRotationAngleCb(getRobotRotationAngleCb) {
   }
 
   bool isValid() const {
-    return actCb && getRobotStateCb && getRobotAbsolutePosCb
+    return actCb && getRobotStateCb && cancelRobotMove && getRobotAbsolutePosCb
            && getRobotRotationAngleCb;
   }
 
   RobotActCb actCb;
   GetRobotStateCb getRobotStateCb;
+  CancelRobotMove cancelRobotMove;
   GetRobotAbsolutePosCb getRobotAbsolutePosCb;
   GetRobotRotationAngleCb getRobotRotationAngleCb;
 };

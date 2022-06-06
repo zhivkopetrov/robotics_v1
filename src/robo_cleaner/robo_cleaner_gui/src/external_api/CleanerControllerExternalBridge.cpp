@@ -157,13 +157,14 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
 
 rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
     const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
-  LOG("Received request to cancel goal with uuid: %s",
+  LOG("Received request to cancel goal with uuid: %s, Rolling back robot "
+      "position/rotation to previous state",
       rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
 
   const auto f = [this]() {
     _controllerStatus = ControllerStatus::IDLE;
     _outInterface.cancelFeedbackReportingCb();
-    //TODO add robot rollback to start position
+    _outInterface.robotActInterface.cancelRobotMove();
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 

@@ -116,6 +116,12 @@ void MovementWatcher::changeState(const RobotState &state,
 void MovementWatcher::cancelFeedbackReporting() {
   LOGY("MovementWatcher::cancelFeedbackReporting");
   _isFeedbackReportActive = false;
+
+  //report move progress to wake the reported thread
+  //the reported thread should then detect that the goal has been cancelled
+  //by the action client and will cancel it for the action server as well
+  _outInterface.reportMoveProgressCb(_currProgress);
+  reset();
 }
 
 ErrorCode MovementWatcher::initOutInterface(

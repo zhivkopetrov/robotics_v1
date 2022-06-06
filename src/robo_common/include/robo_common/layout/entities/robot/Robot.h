@@ -54,6 +54,9 @@ public:
   void onCollisionImpactAnimEnd(RobotEndTurn status);
   void onCollisionImpact();
 
+  //stops any movement animation and rollbacks to previous fieldPos
+  void cancelMove();
+
 private:
   void onInitEnd();
 

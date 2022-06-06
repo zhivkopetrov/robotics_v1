@@ -57,10 +57,13 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
   interface.getFieldDescriptionCb = std::bind(&Field::getDescription, &_field);
   interface.getPlayerSurroundingTilesCb = std::bind(&Robot::getSurroundingTiles,
       &_playerRobot);
-  interface.playerRobotActInterface = { std::bind(&Robot::act, &_playerRobot,
-      _1), std::bind(&Robot::getState, &_playerRobot), std::bind(
-      &Robot::getAbsolutePos, &_playerRobot), std::bind(
-      &Robot::getRotationAngle, &_playerRobot) };
+  interface.playerRobotActInterface = {
+      std::bind(&Robot::act, &_playerRobot, _1),
+      std::bind(&Robot::getState, &_playerRobot),
+      std::bind(&Robot::cancelMove, &_playerRobot),
+      std::bind(&Robot::getAbsolutePos, &_playerRobot),
+      std::bind(&Robot::getRotationAngle, &_playerRobot)
+  };
   interface.startGameWonAnimCb = std::bind(&GameEndAnimator::startGameWonAnim,
       &_gameEndAnimator);
   interface.startGameLostAnimCb = std::bind(&GameEndAnimator::startGameLostAnim,

@@ -34,6 +34,7 @@ struct RobotAnimatorConfigBase {
   int32_t width = 0;
   int32_t height = 0;
   int32_t moveAnimTimerId = 0;
+  int32_t rotateAnimTimerId = 0;
   int32_t robotCollisionAnimTimerId = 0;
   int32_t robotDamageAnimTimerId = 0;
 };
@@ -64,8 +65,12 @@ public:
 
   void startRotAnim(const FieldPos &currPos, Direction currDir,
                     RotationDir rotDir);
+  void stopRotAnim();
 
   void startCollisionImpactAnim(RobotEndTurn status);
+
+  //stops any movement animation and rollbacks to previous fieldPos
+  void cancelMove();
 
   Rectangle getBoundary() const;
 
@@ -74,6 +79,10 @@ public:
   double getRotationAngle() const;
 
 private:
+  enum class AnimationType {
+    MOVE, ROTATE
+  };
+
   ErrorCode initOutInterface(const RobotAnimatorOutInterface& outInterface);
 
   void onTimeout(const int32_t timerId) override;
@@ -81,8 +90,12 @@ private:
   void configurePlayerDamageAnim();
   void onPlayerDamageAnimEnd();
 
-  AnimBaseConfig generateAnimBaseConfig(const FieldPos &currPos);
+  AnimBaseConfig generateAnimBaseConfig(const FieldPos &currPos,
+                                        AnimationType animationType);
   void processCollisionAnim();
+
+  //rollbacks robot visuals to its last state
+  void rollbackRobotState();
 
   enum InternalDefines {
     COLLISION_ANIM_FRAMES = 8
@@ -99,6 +112,7 @@ private:
 
   int32_t _robotId = 0;
   int32_t _moveAnimTimerId = 0;
+  int32_t _rotateAnimTimerId = 0;
   int32_t _robotCollisionAnimTimerId = 0;
   int32_t _robotDamageAnimTimerId = 0;
 

@@ -34,6 +34,7 @@ constexpr auto LEVEL_ID = 1;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
+  ROBOT_ROTATE_ANIM_TIMER_ID,
   ROBOT_COLLISION_ANIM_TIMER_ID,
   ROBOT_DAMAGE_ANIM_TIMER_ID,
   HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID,
@@ -64,6 +65,7 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.playerRsrcId = RoboMinerGuiResources::PLAYER_ROBOT;
   cfg.damageMarkerRsrcId = RoboMinerGuiResources::DAMAGE_MARKER;
   cfg.moveAnimStartTimerId = ROBOT_MOVE_ANIM_TIMER_ID;
+  cfg.rotateAnimStartTimerId = ROBOT_ROTATE_ANIM_TIMER_ID;
   cfg.robotCollisionAnimStartTimerId = ROBOT_COLLISION_ANIM_TIMER_ID;
   cfg.robotDamageAnimStartTimerId = ROBOT_DAMAGE_ANIM_TIMER_ID;
   cfg.robotFieldMarkers = ROBOT_FIELD_MARKERS;

@@ -92,6 +92,16 @@ void Robot::onMoveAnimEnd(Direction futureDir, const FieldPos &futurePos) {
   _outInterface.finishRobotActCb(_state, MoveOutcome::SUCCESS);
 }
 
+void Robot::cancelMove() {
+  if (CollisionWatchStatus::ON == _currCollisionWatchStatus) {
+    _currCollisionWatchStatus = CollisionWatchStatus::OFF;
+    _outInterface.collisionWatcher->toggleWatchStatus(_collisionObjHandle,
+        _currCollisionWatchStatus);
+  }
+
+  _animator.cancelMove();
+}
+
 void Robot::onInitEnd() {
   _collisionObjHandle = _outInterface.collisionWatcher->registerObject(this,
       CollisionDamageImpact::YES);

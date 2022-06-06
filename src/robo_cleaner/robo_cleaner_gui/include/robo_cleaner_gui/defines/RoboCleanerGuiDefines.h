@@ -38,7 +38,6 @@ struct MoveProgress {
   uint8_t processedFieldMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
   uint8_t approachingFieldMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
   bool hasMoveFinished;
-
 };
 
 #endif /* ROBO_CLEANER_GUI_ROBOCLEANERDEFINES_H_ */

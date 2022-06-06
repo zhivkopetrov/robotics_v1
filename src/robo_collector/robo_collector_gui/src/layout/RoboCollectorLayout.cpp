@@ -37,6 +37,7 @@ void RoboCollectorLayout::produceInterface(
     interface.enemyRobotActInterfaces.emplace_back(
         std::bind(&Robot::act, &_enemyRobots[i], _1),
         std::bind(&Robot::getState, &_enemyRobots[i]),
+        std::bind(&Robot::cancelMove, &_enemyRobots[i]),
         std::bind(&Robot::getAbsolutePos, &_enemyRobots[i]),
         std::bind(&Robot::getRotationAngle, &_enemyRobots[i]));
   }

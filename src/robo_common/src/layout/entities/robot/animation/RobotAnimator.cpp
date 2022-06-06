@@ -34,6 +34,7 @@ ErrorCode RobotAnimator::init(const RobotAnimatorConfig &cfg,
 
   _robotId = cfg.baseCfg.robotId;
   _moveAnimTimerId = cfg.baseCfg.moveAnimTimerId;
+  _rotateAnimTimerId = cfg.baseCfg.rotateAnimTimerId;
   _robotCollisionAnimTimerId = cfg.baseCfg.robotCollisionAnimTimerId;
   _robotDamageAnimTimerId = cfg.baseCfg.robotDamageAnimTimerId;
   _damageMarkerRsrcId = cfg.baseCfg.damageMarkerRsrcId;
@@ -75,7 +76,7 @@ void RobotAnimator::draw() const {
 
 void RobotAnimator::startMoveAnim(const FieldPos &currPos, Direction currDir,
                                   const FieldPos &futurePos) {
-  const auto cfg = generateAnimBaseConfig(currPos);
+  const auto cfg = generateAnimBaseConfig(currPos, AnimationType::MOVE);
   constexpr auto numberOfSteps = 20;
   const auto futureAbsPos = FieldUtils::getAbsPos(futurePos,
       _outInterface.getFieldDescriptionCb());
@@ -99,7 +100,7 @@ void RobotAnimator::stopMoveAnim() {
 
 void RobotAnimator::startRotAnim(const FieldPos &currPos, Direction currDir,
                                  RotationDir rotDir) {
-  const auto cfg = generateAnimBaseConfig(currPos);
+  const auto cfg = generateAnimBaseConfig(currPos, AnimationType::ROTATE);
   const auto angleSign = (RotationDir::LEFT == rotDir) ? -1.0 : 1.0;
   const auto rotAngleStep = 4.5 * angleSign;
   const auto totalRotAngle = 90.0 * angleSign;
@@ -119,6 +120,11 @@ void RobotAnimator::startRotAnim(const FieldPos &currPos, Direction currDir,
   _rotAnim.start();
 }
 
+void RobotAnimator::stopRotAnim() {
+  _animEndCb.setCbStatus(RobotAnimEndCbReport::DISABLE);
+  _rotAnim.stop();
+}
+
 void RobotAnimator::startCollisionImpactAnim(RobotEndTurn status) {
   _collisionAnimOutcome = status;
   _collisionAnimStep = 0;
@@ -129,6 +135,16 @@ void RobotAnimator::startCollisionImpactAnim(RobotEndTurn status) {
   if (RoboCommonDefines::PLAYER_ROBOT_IDX == _robotId) {
     configurePlayerDamageAnim();
     _playerDamageAnim.start();
+  }
+}
+
+void RobotAnimator::cancelMove() {
+  if (_moveAnim.isAnimationActive()) {
+    stopMoveAnim();
+    rollbackRobotState();
+  } else if (_rotAnim.isAnimationActive()) {
+    stopRotAnim();
+    rollbackRobotState();
   }
 }
 
@@ -217,13 +233,15 @@ void RobotAnimator::onPlayerDamageAnimEnd() {
   _outInterface.collisionImpactCb();
 }
 
-AnimBaseConfig RobotAnimator::generateAnimBaseConfig(const FieldPos &currPos) {
+AnimBaseConfig RobotAnimator::generateAnimBaseConfig(
+    const FieldPos &currPos, AnimationType animationType) {
   AnimBaseConfig cfg;
   cfg.rsrcId = _robotImg.getRsrcId();
   cfg.startPos =
       FieldUtils::getAbsPos(currPos, _outInterface.getFieldDescriptionCb());
   cfg.animDirection = AnimDir::FORWARD;
-  cfg.timerId = _moveAnimTimerId;
+  cfg.timerId = (AnimationType::MOVE == animationType) ?
+      _moveAnimTimerId : _rotateAnimTimerId;
   cfg.timerInterval = 20;
   cfg.isTimerPauseble = true;
   cfg.animImageType = AnimImageType::EXTERNAL;
@@ -235,10 +253,7 @@ AnimBaseConfig RobotAnimator::generateAnimBaseConfig(const FieldPos &currPos) {
 void RobotAnimator::processCollisionAnim() {
   if (TOTAL_COLLISION_ANIM_STEPS == _collisionAnimStep) {
     stopTimer(_robotCollisionAnimTimerId);
-    const auto robotFieldPos = _outInterface.getRobotStateCb().fieldPos;
-    const auto robotAbsPos = FieldUtils::getAbsPos(robotFieldPos,
-        _outInterface.getFieldDescriptionCb());
-    _robotImg.setPosition(robotAbsPos);
+    rollbackRobotState();
     _outInterface.collisionImpactAnimEndCb(_collisionAnimOutcome);
     return;
   }
@@ -253,5 +268,13 @@ void RobotAnimator::processCollisionAnim() {
   }
 
   ++_collisionAnimStep;
+}
+
+void RobotAnimator::rollbackRobotState() {
+  const RobotState robotState = _outInterface.getRobotStateCb();
+  const Point robotAbsPos = FieldUtils::getAbsPos(robotState.fieldPos,
+      _outInterface.getFieldDescriptionCb());
+  _robotImg.setPosition(robotAbsPos);
+  _robotImg.setRotation(RobotUtils::getRotationDegFromDir(robotState.dir));
 }
 

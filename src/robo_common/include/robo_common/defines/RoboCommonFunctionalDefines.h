@@ -23,6 +23,7 @@ using GetRobotAbsolutePosCb = std::function<Point()>;
 using GetRobotRotationAngleCb = std::function<double()>;
 using GetPlayerSurroundingTilesCb = std::function<SurroundingTiles()>;
 using FinishRobotActCb = std::function<void(const RobotState&, MoveOutcome)>;
+using CancelRobotMove = std::function<void()>;
 
 //invoked before the collision animation has been started
 using PlayerRobotDamageCollisionCb = std::function<void()>;

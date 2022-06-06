@@ -41,6 +41,11 @@ enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_END = ROBOTS_MOVE_ANIM_TIMER_ID_START
       + Defines::ENEMIES_CTN,
 
+  ROBOTS_ROTATE_ANIM_TIMER_ID_START,
+  //reserved
+  ROBOTS_ROTATE_ANIM_TIMER_ID_END = ROBOTS_ROTATE_ANIM_TIMER_ID_START
+      + Defines::ENEMIES_CTN,
+
   ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START,
   //reserved
   ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_END = ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START
@@ -80,6 +85,7 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.enemiesRsrcId = RoboCollectorGuiResources::ENEMY_ROBOTS;
   cfg.damageMarkerRsrcId = RoboCollectorGuiResources::DAMAGE_MARKER;
   cfg.moveAnimStartTimerId = ROBOTS_MOVE_ANIM_TIMER_ID_START;
+  cfg.rotateAnimStartTimerId = ROBOTS_ROTATE_ANIM_TIMER_ID_START;
   cfg.robotCollisionAnimStartTimerId =
       ROBOTS_ROBOT_COLLISION_ANIM_TIMER_ID_START;
   cfg.robotDamageAnimStartTimerId = ROBOTS_ROBOT_DAMAGE_ANIM_TIMER_ID_START;
