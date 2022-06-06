@@ -138,12 +138,20 @@ void RobotAnimator::startCollisionImpactAnim(RobotEndTurn status) {
   }
 }
 
+void RobotAnimator::stopCollisionImpactAnim() {
+  stopTimer(_robotCollisionAnimTimerId);
+  _outInterface.collisionImpactAnimEndCb(_collisionAnimOutcome);
+}
+
 void RobotAnimator::cancelMove() {
   if (_moveAnim.isAnimationActive()) {
     stopMoveAnim();
     rollbackRobotState();
   } else if (_rotAnim.isAnimationActive()) {
     stopRotAnim();
+    rollbackRobotState();
+  } else if (isActiveTimerId(_robotCollisionAnimTimerId)) {
+    stopCollisionImpactAnim();
     rollbackRobotState();
   }
 }
@@ -252,9 +260,8 @@ AnimBaseConfig RobotAnimator::generateAnimBaseConfig(
 
 void RobotAnimator::processCollisionAnim() {
   if (TOTAL_COLLISION_ANIM_STEPS == _collisionAnimStep) {
-    stopTimer(_robotCollisionAnimTimerId);
+    stopCollisionImpactAnim();
     rollbackRobotState();
-    _outInterface.collisionImpactAnimEndCb(_collisionAnimOutcome);
     return;
   }
 

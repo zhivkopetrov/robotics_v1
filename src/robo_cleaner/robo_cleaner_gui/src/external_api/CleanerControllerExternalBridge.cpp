@@ -162,9 +162,11 @@ rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
       rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
 
   const auto f = [this]() {
-    _controllerStatus = ControllerStatus::IDLE;
-    _outInterface.cancelFeedbackReportingCb();
+    //First cancel the robot more to initiate state rollback
     _outInterface.robotActInterface.cancelRobotMove();
+
+    //then cancel feedback reporting and process the goal handle canceling state
+    _outInterface.cancelFeedbackReportingCb();
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 

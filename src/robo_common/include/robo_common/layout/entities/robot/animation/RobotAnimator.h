@@ -68,6 +68,7 @@ public:
   void stopRotAnim();
 
   void startCollisionImpactAnim(RobotEndTurn status);
+  void stopCollisionImpactAnim();
 
   //stops any movement animation and rollbacks to previous fieldPos
   void cancelMove();

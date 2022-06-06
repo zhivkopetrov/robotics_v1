@@ -75,7 +75,6 @@ void MovementWatcher::onRobotStartingAct(MoveType moveType,
 }
 
 void MovementWatcher::onObstacleApproachTrigger(const FieldPos &fieldPos) {
-  LOGC("MovementWatcher::onObstacleApproachTrigger");
   const auto &fieldDescr = _outInterface.getFieldDescriptionCb();
   if (FieldUtils::isInsideField(fieldPos, fieldDescr)) {
     _currProgress.approachingFieldMarker =
@@ -114,7 +113,6 @@ void MovementWatcher::changeState(const RobotState &state,
 }
 
 void MovementWatcher::cancelFeedbackReporting() {
-  LOGY("MovementWatcher::cancelFeedbackReporting");
   _isFeedbackReportActive = false;
 
   //report move progress to wake the reported thread
