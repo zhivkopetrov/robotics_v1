@@ -2,6 +2,7 @@
 #include "robo_common/layout/panels/IndicatorPanel.h"
 
 //System headers
+#include <sstream>
 
 //Other libraries headers
 #include "utils/drawing/WidgetAligner.h"
@@ -9,8 +10,18 @@
 
 //Own components headers
 
+namespace {
+template <typename T>
+std::string toStringWithPrecision(const T value, const int32_t precision = 6) {
+  std::ostringstream out;
+  out.precision(precision);
+  out << std::fixed << value;
+  return out.str();
+}
+}
+
 ErrorCode IndicatorPanel::init(const IndicatorPanelConfig &cfg,
-                               const IndicatorPanelUtilityConfig& utilityCfg) {
+                               const IndicatorPanelUtilityConfig &utilityCfg) {
   _indicatorModifyTimerId = cfg.indicatorModifyTimerId;
 
   if (nullptr == utilityCfg.indicatorDepletedCb) {
@@ -25,8 +36,8 @@ ErrorCode IndicatorPanel::init(const IndicatorPanelConfig &cfg,
   _indicator.create(cfg.indicatorRsrcId);
   if (INDICATOR_PANEL_MAX_VALUE != _indicator.getImageWidth()) {
     LOGERR("Error, INDICATOR_PANEL_MAX_VALUE (%d) should be equal to "
-        "_indicator image width (%d)", INDICATOR_PANEL_MAX_VALUE,
-        _indicator.getImageWidth());
+           "_indicator image width (%d)", INDICATOR_PANEL_MAX_VALUE,
+           _indicator.getImageWidth());
     return ErrorCode::FAILURE;
   }
 
@@ -47,6 +58,7 @@ void IndicatorPanel::draw() const {
 
 void IndicatorPanel::modifyIndicator(int32_t delta) {
   _animTicksLeft += delta;
+
   const bool isAnimationActive = isActiveTimerId(_indicatorModifyTimerId);
   if (0 == _animTicksLeft) {
     if (isAnimationActive) {
@@ -80,7 +92,14 @@ void IndicatorPanel::onTimeout(const int32_t timerId) {
 }
 
 void IndicatorPanel::processIndicatorIncreaseAnim() {
+  const Point absPos = _indicator.getPosition();
   Rectangle cropRectangle = _indicator.getCropRect();
+
+  //dimension needs to be overridden, because
+  //crop rectangle::ZERO will zero out the crop rectangle position
+  cropRectangle.x = absPos.x;
+  cropRectangle.y = absPos.y;
+  cropRectangle.h = _indicator.getFrameHeight();
   auto &remainingIndicator = cropRectangle.w;
   if (INDICATOR_PANEL_MAX_VALUE == remainingIndicator) {
     _animTicksLeft = 0;
@@ -96,6 +115,7 @@ void IndicatorPanel::processIndicatorIncreaseAnim() {
   --_animTicksLeft;
 
   ++remainingIndicator;
+
   _indicator.setCropRect(cropRectangle);
   setAndCenterIndicatorText();
 }
@@ -122,14 +142,16 @@ void IndicatorPanel::processIndicatorReduceAnim() {
 }
 
 void IndicatorPanel::setAndCenterIndicatorText() {
-  const auto totalIndicator = _indicator.getImageWidth();
-  const auto indicatorCropRect = _indicator.getCropRect();
-  const auto remainingIndicator = indicatorCropRect.w;
-  const auto remainingIndicatorPecent =
-      (remainingIndicator * 100) / totalIndicator;
-  const auto healthContent = std::to_string(remainingIndicatorPecent) + "%";
+  const int32_t totalIndicator = _indicator.getImageWidth();
+  const Rectangle indicatorCropRect = _indicator.getCropRect();
+  const int32_t remainingIndicator = indicatorCropRect.w;
+  const double remainingIndicatorPecent = (remainingIndicator * 100.0)
+      / totalIndicator;
+  constexpr int32_t precision = 1;
+  const std::string textContent =
+      toStringWithPrecision(remainingIndicatorPecent, precision) + "%";
 
-  _indicatorText.setText(healthContent.c_str());
+  _indicatorText.setText(textContent.c_str());
 
   auto widgetAlignArea = indicatorCropRect;
   if (0 == remainingIndicatorPecent) {

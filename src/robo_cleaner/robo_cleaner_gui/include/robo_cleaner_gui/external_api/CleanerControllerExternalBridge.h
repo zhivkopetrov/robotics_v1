@@ -17,6 +17,7 @@
 
 //Forward declarations
 class RoboCleanerSolutionValidator;
+class EnergyHandler;
 
 struct CleanerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
@@ -24,8 +25,9 @@ struct CleanerControllerExternalBridgeOutInterface {
   SystemShutdownCb systemShutdownCb;
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
+  ReportInsufficientEnergyCb reportInsufficientEnergyCb;
   CancelFeedbackReportingCb cancelFeedbackReportingCb;
-  ModifyEnergyLevelCb modifyEnergyLevelCb;
+  EnergyHandler *energyHandler = nullptr;
   RoboCleanerSolutionValidator *solutionValidator = nullptr;
 };
 

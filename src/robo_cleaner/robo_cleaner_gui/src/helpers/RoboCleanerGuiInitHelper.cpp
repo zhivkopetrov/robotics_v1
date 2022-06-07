@@ -57,6 +57,12 @@ ErrorCode RoboCleanerGuiInitHelper::init(const std::any &cfg,
     return ErrorCode::FAILURE;
   }
 
+  if (ErrorCode::SUCCESS != initEnergyHandler(parsedCfg.energyHandlerConfig,
+          layoutInterface, gui)) {
+    LOGERR("initEnergyHandler() failed");
+    return ErrorCode::FAILURE;
+  }
+
   if (ErrorCode::SUCCESS != initSolutionValidator(
           parsedCfg.solutionValidatorConfig, layoutInterface, gui)) {
     LOGERR("initSolutionValidator() failed");
@@ -136,6 +142,18 @@ ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
   return ErrorCode::SUCCESS;
 }
 
+ErrorCode RoboCleanerGuiInitHelper::initEnergyHandler(
+    const EnergyHandlerConfig &cfg,
+    const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
+  if (ErrorCode::SUCCESS !=
+      gui._energyHandler.init(cfg, interface.modifyEnergyLevelCb)) {
+    LOGERR("Error in _energyHandler.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode RoboCleanerGuiInitHelper::initSolutionValidator(
     const RoboCleanerSolutionValidatorConfig &cfg,
     const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
@@ -164,9 +182,11 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
       &gui._movementReporter, _1);
   outInterface.reportRobotStartingActCb = std::bind(
       &MovementWatcher::onRobotStartingAct, &gui._movementWatcher, _1, _2);
+  outInterface.reportInsufficientEnergyCb = std::bind(
+      &MovementWatcher::onInsufficientEnergy, &gui._movementWatcher, _1);
   outInterface.cancelFeedbackReportingCb = std::bind(
       &MovementWatcher::cancelFeedbackReporting, &gui._movementWatcher);
-  outInterface.modifyEnergyLevelCb = interface.modifyEnergyLevelCb;
+  outInterface.energyHandler = &gui._energyHandler;
   outInterface.solutionValidator = &gui._solutionValidator;
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {

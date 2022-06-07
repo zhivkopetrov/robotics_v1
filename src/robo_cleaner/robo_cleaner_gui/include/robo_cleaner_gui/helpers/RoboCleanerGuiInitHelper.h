@@ -15,6 +15,7 @@ class RoboCleanerGui;
 struct RoboCleanerLayoutConfig;
 struct RoboCleanerLayoutInterface;
 struct RoboCleanerSolutionValidatorConfig;
+struct EnergyHandlerConfig;
 
 class RoboCleanerGuiInitHelper {
 public:
@@ -29,8 +30,11 @@ private:
 
   static ErrorCode initMovementWatcher(
       const RoboCleanerLayoutConfig &cfg,
-      const RoboCleanerLayoutInterface &interface,
-      RoboCleanerGui &gui);
+      const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui);
+
+  static ErrorCode initEnergyHandler(
+      const EnergyHandlerConfig &cfg,
+      const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui);
 
   static ErrorCode initSolutionValidator(
       const RoboCleanerSolutionValidatorConfig &cfg,

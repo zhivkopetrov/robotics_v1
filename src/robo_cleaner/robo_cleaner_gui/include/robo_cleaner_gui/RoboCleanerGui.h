@@ -14,6 +14,7 @@
 #include "robo_cleaner_gui/external_api/CleanerControllerExternalBridge.h"
 #include "robo_cleaner_gui/helpers/MovementWatcher.h"
 #include "robo_cleaner_gui/external_api/MovementReporter.h"
+#include "robo_cleaner_gui/helpers/EnergyHandler.h"
 #include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
 
 //Forward declarations
@@ -38,6 +39,7 @@ private:
   CollisionWatcher _collisionWatcher;
   MovementWatcher _movementWatcher;
   MovementReporter _movementReporter;
+  EnergyHandler _energyHandler;
   RoboCleanerSolutionValidator _solutionValidator;
 
   std::shared_ptr<CleanerControllerExternalBridge> _controllerExternalBridge;

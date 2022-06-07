@@ -13,6 +13,7 @@
 
 //Own components headers
 #include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"
+#include "robo_cleaner_gui/helpers/EnergyHandler.h"
 
 using namespace std::placeholders;
 
@@ -98,13 +99,18 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.reportInsufficientEnergyCb) {
+    LOGERR("Error, nullptr provided for ReportInsufficientEnergyCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.cancelFeedbackReportingCb) {
     LOGERR("Error, nullptr provided for CancelFeedbackReportingCb");
     return ErrorCode::FAILURE;
   }
 
-  if (nullptr == _outInterface.modifyEnergyLevelCb) {
-    LOGERR("Error, nullptr provided for ModifyEnergyLevelCb");
+  if (nullptr == _outInterface.energyHandler) {
+    LOGERR("Error, nullptr provided for energyHandler");
     return ErrorCode::FAILURE;
   }
 
@@ -191,6 +197,16 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto goal = goalHandle->get_goal();
   const MoveType moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
+    _outInterface.solutionValidator->increaseTotalRobotMovesCounter(1);
+
+    const auto [success, penaltyTurns] =
+        _outInterface.energyHandler->initiateMove();
+    if (!success) {
+      _outInterface.energyHandler->performPenaltyChange();
+      _outInterface.reportInsufficientEnergyCb(penaltyTurns);
+      return;
+    }
+
     _outInterface.robotActInterface.actCb(moveType);
      const char approachMarker =
          _outInterface.solutionValidator->getApproachingTileMarker(moveType);

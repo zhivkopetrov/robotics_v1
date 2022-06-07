@@ -51,6 +51,9 @@ public:
   MoveValidation finishMove(const RobotState &state, MoveOutcome outcome,
                             MoveType moveType);
 
+  void increaseTotalRobotMovesCounter(int32_t movesCount);
+  int32_t getTotalRobotMovesCounter() const;
+
 private:
   ErrorCode initOutInterface(
       const RoboCleanerSolutionValidatorOutInterface &outInterface);
@@ -67,6 +70,8 @@ private:
   RoboCleanerSolutionValidatorOutInterface _outInterface;
   std::set<FieldPos> _reveleadMapTiles;
   ValidationOptions _validationOptions;
+
+  int32_t _totalRobotMoves { };
 };
 
 #endif /* ROBO_CLEANER_GUI_SOLUTIONVALIDATOR_H_ */

@@ -44,6 +44,8 @@ public:
 
   void onRobotStartingAct(MoveType moveType, char approachingMarker);
 
+  void onInsufficientEnergy(int32_t penaltyMoves);
+
   void onObstacleApproachTrigger(const FieldPos& fieldPos);
 
   void cancelFeedbackReporting();

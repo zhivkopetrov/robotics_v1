@@ -74,6 +74,15 @@ void MovementWatcher::onRobotStartingAct(MoveType moveType,
   _isFeedbackReportActive = true;
 }
 
+void MovementWatcher::onInsufficientEnergy(int32_t penaltyMoves) {
+  LOGR("Insufficient energy to perform a move. Restoring 50 %% battery after "
+      "[%d] applied penalty moves", penaltyMoves);
+
+  _currProgress.hasEnergyForMovement = false;
+  _outInterface.reportMoveProgressCb(_currProgress);
+  reset();
+}
+
 void MovementWatcher::onObstacleApproachTrigger(const FieldPos &fieldPos) {
   const auto &fieldDescr = _outInterface.getFieldDescriptionCb();
   if (FieldUtils::isInsideField(fieldPos, fieldDescr)) {

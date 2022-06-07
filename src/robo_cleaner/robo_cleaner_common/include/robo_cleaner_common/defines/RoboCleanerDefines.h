@@ -14,6 +14,10 @@ namespace RoboCleanerDefines {
 enum FieldMarkers {
   CHARGING_STATION = '@'
 };
+
+enum EnergyDefines {
+  MOVES_REGAINED_ON_CHARGE_TURN = 5
+};
 } //namespace RoboCleanerDefines
 
 bool isRubbishMarker(char marker);

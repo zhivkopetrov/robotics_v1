@@ -167,3 +167,12 @@ ErrorCode RoboCleanerSolutionValidator::initOutInterface(
   return ErrorCode::SUCCESS;
 }
 
+void RoboCleanerSolutionValidator::increaseTotalRobotMovesCounter(
+    int32_t movesCount) {
+  _totalRobotMoves += movesCount;
+}
+
+int32_t RoboCleanerSolutionValidator::getTotalRobotMovesCounter() const {
+  return _totalRobotMoves;
+}
+

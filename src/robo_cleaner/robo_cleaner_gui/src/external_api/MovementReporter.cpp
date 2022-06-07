@@ -99,6 +99,15 @@ void MovementReporter::reportProgressLoop(
       return;
     }
 
+    if (!moveProgress.hasEnergyForMovement) {
+      result->success = false;
+      result->error_reason = "Insufficient energy to perform movement";
+      goalHandle->succeed(result);
+
+      _resetControllerStatusCb();
+      return;
+    }
+
     feedback->progress_percent = moveProgress.progress;
     feedback->approaching_field_marker = moveProgress.approachingFieldMarker;
     goalHandle->publish_feedback(feedback);
