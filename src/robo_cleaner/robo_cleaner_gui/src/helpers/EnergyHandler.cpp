@@ -56,9 +56,6 @@ BatteryStatus EnergyHandler::queryBatteryStatus() const {
 }
 
 void EnergyHandler::performPenaltyChange() {
-  LOGY("EnergyHandler::performPenaltyChange - _batteryStatus.movesLeft: %d", _batteryStatus.maxMovesOnFullEnergy / 2);
-  LOGY("EnergyHandler::performPenaltyChange - restoring energy: %d", _batteryStatus.maxMovesOnFullEnergy / 2 * _energyConsumedPerMove);
-
   _batteryStatus.movesLeft = _batteryStatus.maxMovesOnFullEnergy / 2;
   _modifyEnergyLevelCb(_batteryStatus.movesLeft * _energyConsumedPerMove);
 }
