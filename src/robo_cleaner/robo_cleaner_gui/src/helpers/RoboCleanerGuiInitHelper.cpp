@@ -166,6 +166,7 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
       &MovementWatcher::onRobotStartingAct, &gui._movementWatcher, _1, _2);
   outInterface.cancelFeedbackReportingCb = std::bind(
       &MovementWatcher::cancelFeedbackReporting, &gui._movementWatcher);
+  outInterface.modifyEnergyLevelCb = interface.modifyEnergyLevelCb;
   outInterface.solutionValidator = &gui._solutionValidator;
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {

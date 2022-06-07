@@ -25,6 +25,7 @@ struct CleanerControllerExternalBridgeOutInterface {
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
   CancelFeedbackReportingCb cancelFeedbackReportingCb;
+  ModifyEnergyLevelCb modifyEnergyLevelCb;
   RoboCleanerSolutionValidator *solutionValidator = nullptr;
 };
 

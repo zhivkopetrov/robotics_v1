@@ -17,6 +17,7 @@ class CollisionWatcher;
 struct RoboCleanerLayoutInterface {
   RoboCommonLayoutInterface commonLayoutInterface;
   ModifyRubbishWidgetCb modifyRubbishWidgetCb;
+  ModifyEnergyLevelCb modifyEnergyLevelCb;
   TileReleavedCb tileReleavedCb;
   TileCleanedCb tileCleanedCb;
 };

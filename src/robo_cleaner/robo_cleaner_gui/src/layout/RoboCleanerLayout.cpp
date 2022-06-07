@@ -48,6 +48,8 @@ void RoboCleanerLayout::produceInterface(
 
   interface.modifyRubbishWidgetCb = std::bind(
       &EntityHandler::modifyRubbishWidget, &_entityHandler, _1, _2);
+  interface.modifyEnergyLevelCb = std::bind(
+      &PanelHandler::modifyEnergyIndicator, &_panelHandler, _1);
   interface.tileReleavedCb = std::bind(&PanelHandler::onTileRevealed,
       &_panelHandler);
   interface.tileCleanedCb = std::bind(&PanelHandler::onTileCleaned,

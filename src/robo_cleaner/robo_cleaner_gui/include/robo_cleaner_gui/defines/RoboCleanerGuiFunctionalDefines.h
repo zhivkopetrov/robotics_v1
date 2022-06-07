@@ -26,5 +26,6 @@ using CancelFeedbackReportingCb = std::function<void()>;
 using AcceptGoalCb = std::function<void(const std::shared_ptr<GoalHandleRobotMove> &)>;
 using ModifyRubbishWidgetCb = std::function<void(const FieldPos&, char)>;
 using TileCleanedCb = std::function<void()>;
+using ModifyEnergyLevelCb = std::function<void(int32_t)>;
 
 #endif /* ROBO_CLEANER_GUI_ROBOCLEANERGUIFUNCTIONALDEFINES_H_ */

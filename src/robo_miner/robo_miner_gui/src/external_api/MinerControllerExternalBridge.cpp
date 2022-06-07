@@ -45,7 +45,11 @@ void MinerControllerExternalBridge::publishShutdownController() {
 }
 
 void MinerControllerExternalBridge::publishFieldMapRevealed() {
-  _outInterface.solutionValidator->fieldMapRevealed();
+  const auto f = [this]() {
+    _outInterface.solutionValidator->fieldMapRevealed();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 

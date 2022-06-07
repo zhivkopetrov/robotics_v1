@@ -46,12 +46,20 @@ void CleanerControllerExternalBridge::publishShutdownController() {
 }
 
 void CleanerControllerExternalBridge::publishFieldMapRevealed() {
-  _outInterface.solutionValidator->fieldMapRevealed();
+  const auto f = [this]() {
+    _outInterface.solutionValidator->fieldMapRevealed();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 
 void CleanerControllerExternalBridge::publishFieldMapCleaned() {
-  _outInterface.solutionValidator->fieldMapCleaned();
+  const auto f = [this]() {
+    _outInterface.solutionValidator->fieldMapCleaned();
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+
   _fieldMapCleanedPublisher->publish(Empty());
 }
 
@@ -92,6 +100,11 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.cancelFeedbackReportingCb) {
     LOGERR("Error, nullptr provided for CancelFeedbackReportingCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.modifyEnergyLevelCb) {
+    LOGERR("Error, nullptr provided for ModifyEnergyLevelCb");
     return ErrorCode::FAILURE;
   }
 
@@ -178,6 +191,7 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto goal = goalHandle->get_goal();
   const MoveType moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
+    _outInterface.modifyEnergyLevelCb(-45);
     _outInterface.robotActInterface.actCb(moveType);
      const char approachMarker =
          _outInterface.solutionValidator->getApproachingTileMarker(moveType);
