@@ -21,8 +21,10 @@ add_library(
     STATIC
         ${_INC_DIR}/defines/RoboCleanerTopics.h
         ${_INC_DIR}/message_helpers/RoboCleanerMessageHelpers.h
+        ${_INC_DIR}/defines/RoboCleanerDefines.h
      
         ${_SRC_DIR}/message_helpers/RoboCleanerMessageHelpers.cpp
+        ${_SRC_DIR}/defines/RoboCleanerDefines.cpp
 )
 
 target_include_directories(

@@ -1,5 +1,5 @@
 //Corresponding header
-#include "robo_cleaner_gui/defines/RoboCleanerGuiDefines.h"
+#include "robo_cleaner_common/defines/RoboCleanerDefines.h"
 
 //System headers
 #include <cctype>
@@ -16,3 +16,5 @@ bool isRubbishMarker(char marker) {
 int32_t getRubbishCounter(char marker) {
   return marker - '0';
 }
+
+

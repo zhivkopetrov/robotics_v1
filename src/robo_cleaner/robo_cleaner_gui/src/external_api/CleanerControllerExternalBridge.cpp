@@ -191,7 +191,6 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto goal = goalHandle->get_goal();
   const MoveType moveType = getMoveType(goal->robot_move_type.move_type);
   const auto f = [this, moveType]() {
-    _outInterface.modifyEnergyLevelCb(-45);
     _outInterface.robotActInterface.actCb(moveType);
      const char approachMarker =
          _outInterface.solutionValidator->getApproachingTileMarker(moveType);

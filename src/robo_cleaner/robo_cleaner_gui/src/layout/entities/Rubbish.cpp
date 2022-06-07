@@ -4,12 +4,12 @@
 //System headers
 
 //Other libraries headers
+#include "robo_cleaner_common/defines/RoboCleanerDefines.h"
 #include "robo_common/layout/field/FieldUtils.h"
 #include "manager_utils/drawing/Fbo.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "robo_cleaner_gui/defines/RoboCleanerGuiDefines.h"
 
 namespace {
 constexpr int32_t SMALL_RUBBISH_ID = 2;

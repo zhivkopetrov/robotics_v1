@@ -15,8 +15,6 @@
 
 //Forward declarations
 
-inline constexpr int32_t INDICATOR_PANEL_MAX_VALUE = 400; //measured in px
-
 struct IndicatorPanelUtilityConfig {
   IndicatorDepletedCb indicatorDepletedCb;
   Point pos;

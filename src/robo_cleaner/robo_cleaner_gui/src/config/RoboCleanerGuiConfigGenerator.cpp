@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include "robo_cleaner_common/defines/RoboCleanerDefines.h"
 #include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_common/helpers/LevelFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
@@ -14,7 +15,6 @@
 
 //Own components headers
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfig.h"
-#include "robo_cleaner_gui/defines/RoboCleanerGuiDefines.h"
 #include "generated/RoboCleanerGuiResources.h"
 
 namespace {
@@ -129,6 +129,17 @@ RoboCleanerSolutionValidatorConfig generateSolutionValidatorConfig(
   return cfg;
 }
 
+EnergyHandlerConfig generateEnergyHandlerConfig() {
+  EnergyHandlerConfig cfg;
+
+  constexpr auto baseEnergyMoves = 20;
+  constexpr auto additionalEnergyPerLevel = 20;
+  cfg.maxMovesOnFullEnergy = baseEnergyMoves +
+      (LEVEL_ID * additionalEnergyPerLevel);
+
+  return cfg;
+}
+
 FieldConfig generateFieldConfig() {
   FieldConfig cfg;
 
@@ -206,6 +217,7 @@ RoboCleanerGuiConfig generateGameConfig() {
   layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
 
   cfg.solutionValidatorConfig = generateSolutionValidatorConfig(fieldDescr);
+  cfg.energyHandlerConfig = generateEnergyHandlerConfig();
 
   return cfg;
 }

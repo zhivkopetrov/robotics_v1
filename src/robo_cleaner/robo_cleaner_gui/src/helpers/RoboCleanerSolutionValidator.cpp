@@ -5,6 +5,7 @@
 #include <algorithm>
 
 //Other libraries headers
+#include "robo_cleaner_common/defines/RoboCleanerDefines.h"
 #include "robo_common/layout/field/FieldUtils.h"
 #include "utils/Log.h"
 

@@ -1,9 +1,7 @@
 //Corresponding header
 #include "robo_cleaner_common/message_helpers/RoboCleanerMessageHelpers.h"
 
-//C system headers
-
-//C++ system headers
+//System headers
 
 //Other libraries headers
 #include "robo_cleaner_interfaces/msg/robot_move_type.hpp"
