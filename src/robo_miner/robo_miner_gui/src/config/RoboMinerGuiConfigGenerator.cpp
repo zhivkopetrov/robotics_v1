@@ -37,7 +37,7 @@ enum TimerId {
   ROBOT_ROTATE_ANIM_TIMER_ID,
   ROBOT_COLLISION_ANIM_TIMER_ID,
   ROBOT_DAMAGE_ANIM_TIMER_ID,
-  HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID,
+  HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID,
   TILE_PANEL_INCR_TIMER_ID,
   TILE_PANEL_DECR_TIMER_ID,
   CRYSTAL_PANEL_INCR_TIMER_ID,
@@ -81,8 +81,8 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
   healthPanelCfg.rsrcId = RoboMinerGuiResources::HEALTH_PANEL;
   healthPanelCfg.indicatorRsrcId = RoboMinerGuiResources::HEALTH_INDICATOR;
   healthPanelCfg.indicatorFontId = RoboMinerGuiResources::VINQUE_RG_30;
-  healthPanelCfg.indicatorReduceTimerId =
-      HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
+  healthPanelCfg.indicatorModifyTimerId =
+      HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID;
 
   auto &tilePanelCfg = cfg.tilePanelCfg;
   tilePanelCfg.startValue = 1; //robot is starting from a valid tile

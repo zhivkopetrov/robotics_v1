@@ -28,8 +28,8 @@ public:
   ErrorCode init(const PanelHandlerConfig &cfg,
                  const PanelHandlerOutInterface &interface);
   void draw() const;
-  void decreaseHealthIndicator(int32_t delta);
-  void decreaseEnergyIndicator(int32_t delta);
+  void modifyHealthIndicator(int32_t delta);
+  void modifyEnergyIndicator(int32_t delta);
 
   void onTileRevealed();
   void onTileCleaned();

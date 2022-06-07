@@ -10,7 +10,7 @@
 0                   
 
 # Size of all files in kBytes:
-1042                
+1045                
 
 0x50F97991CE94C9BC
 p/background/map.png
@@ -88,35 +88,35 @@ p/panels/rubbish_panel.png
 
 0x8DF7ACDAA833451F
 p/panels/health_panel.png
-13
+15
 0
-0 0 500 75
+0 0 495 74
 1
-0 0 500 75
+0 0 495 74
 
 0x47A8FA33A2F9F010
 p/panels/health_indicator.png
-6
+7
 0
-0 0 404 48
+0 0 400 47
 1
-0 0 404 48
+0 0 400 47
 
 0xAEF2F5040CE22D33
 p/panels/energy_panel.png
-20
+18
 0
-0 0 500 75
+0 0 495 74
 1
-0 0 500 75
+0 0 495 74
 
 0x56D61DB562833DFA
 p/panels/energy_indicator.png
-9
+11
 0
-0 0 404 48
+0 0 400 47
 1
-0 0 404 48
+0 0 400 47
 
 0x646E835630C3A191
 p/panels/hor_delimiter.png

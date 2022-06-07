@@ -24,7 +24,7 @@ public:
   ErrorCode init(const PanelHandlerConfig &cfg,
                  const PanelHandlerOutInterface &interface);
   void draw() const;
-  void decreaseHealthIndicator(int32_t damage);
+  void modifyHealthIndicator(int32_t damage);
   void increaseCollectedCoins(int32_t coins);
 
 private:

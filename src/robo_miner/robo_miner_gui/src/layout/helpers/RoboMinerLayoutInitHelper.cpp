@@ -24,7 +24,7 @@ ErrorCode RoboMinerLayoutInitHelper::init(
   commonOutInterface.collisionWatcher = outInterface.collisionWatcher;
   commonOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
   commonOutInterface.playerDamageCb = std::bind(
-      &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
+      &PanelHandler::modifyHealthIndicator, &layout._panelHandler, _1);
   commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
 
   if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,

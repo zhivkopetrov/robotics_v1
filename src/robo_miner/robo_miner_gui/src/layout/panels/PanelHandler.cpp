@@ -62,8 +62,8 @@ void PanelHandler::draw() const {
   _healthPanel.draw();
 }
 
-void PanelHandler::decreaseHealthIndicator(int32_t damage) {
-  _healthPanel.decreaseIndicator(damage);
+void PanelHandler::modifyHealthIndicator(int32_t damage) {
+  _healthPanel.modifyIndicator(-1 * damage);
 }
 
 void PanelHandler::onTileRevealed() {

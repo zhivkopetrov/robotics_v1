@@ -75,7 +75,7 @@ enum TimerId {
   COIN_PANEL_DECR_TIMER_ID,
   TIME_PANEL_CLOCK_TIMER_ID,
   TIME_PANEL_BLINK_TIMER_ID,
-  HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID
+  HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID
 };
 
 RobotBaseConfig generateRobotBaseConfig() {
@@ -135,8 +135,8 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   healthPanelCfg.rsrcId = RoboCollectorGuiResources::HEALTH_PANEL;
   healthPanelCfg.indicatorRsrcId = RoboCollectorGuiResources::HEALTH_INDICATOR;
   healthPanelCfg.indicatorFontId = RoboCollectorGuiResources::VINQUE_RG_30;
-  healthPanelCfg.indicatorReduceTimerId =
-      HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
+  healthPanelCfg.indicatorModifyTimerId =
+      HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID;
 
   auto &coinPanelCfg = cfg.coinPanelCfg;
   coinPanelCfg.targetNumber = TARGET_WIN_COINS;

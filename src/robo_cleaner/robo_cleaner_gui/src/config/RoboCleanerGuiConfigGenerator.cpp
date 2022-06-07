@@ -37,8 +37,8 @@ enum TimerId {
   ROBOT_COLLISION_ANIM_TIMER_ID,
   ROBOT_DAMAGE_ANIM_TIMER_ID,
 
-  HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID,
-  ENERGY_PANEL_REDUCE_INDICATOR_TIMER_ID,
+  HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID,
+  ENERGY_PANEL_MODIFY_INDICATOR_TIMER_ID,
   TILE_PANEL_INCR_TIMER_ID,
   TILE_PANEL_DECR_TIMER_ID,
   RUBBISH_PANEL_INCR_TIMER_ID,
@@ -97,15 +97,15 @@ PanelHandlerConfig generatePanelHandlerConfig(
   healthPanelCfg.rsrcId = RoboCleanerGuiResources::HEALTH_PANEL;
   healthPanelCfg.indicatorRsrcId = RoboCleanerGuiResources::HEALTH_INDICATOR;
   healthPanelCfg.indicatorFontId = RoboCleanerGuiResources::VINQUE_RG_30;
-  healthPanelCfg.indicatorReduceTimerId =
-      HEALTH_PANEL_REDUCE_INDICATOR_TIMER_ID;
+  healthPanelCfg.indicatorModifyTimerId =
+      HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID;
 
   auto &energyPanelCfg = cfg.energyPanelCfg;
   energyPanelCfg.rsrcId = RoboCleanerGuiResources::ENERGY_PANEL;
   energyPanelCfg.indicatorRsrcId = RoboCleanerGuiResources::ENERGY_INDICATOR;
   energyPanelCfg.indicatorFontId = RoboCleanerGuiResources::VINQUE_RG_30;
-  energyPanelCfg.indicatorReduceTimerId =
-      ENERGY_PANEL_REDUCE_INDICATOR_TIMER_ID;
+  energyPanelCfg.indicatorModifyTimerId =
+      ENERGY_PANEL_MODIFY_INDICATOR_TIMER_ID;
 
   return cfg;
 }

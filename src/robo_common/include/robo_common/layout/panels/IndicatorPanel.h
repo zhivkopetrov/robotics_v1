@@ -15,6 +15,8 @@
 
 //Forward declarations
 
+inline constexpr int32_t INDICATOR_PANEL_MAX_VALUE = 400; //measured in px
+
 struct IndicatorPanelUtilityConfig {
   IndicatorDepletedCb indicatorDepletedCb;
   Point pos;
@@ -26,10 +28,15 @@ public:
                  const IndicatorPanelUtilityConfig& utilityCfg);
   void draw() const;
 
-  void decreaseIndicator(int32_t delta);
+  void modifyIndicator(int32_t delta);
 
 private:
+  enum class IndicatorPanelAnimationType {
+    INCREASE, DECREASE
+  };
+
   void onTimeout(const int32_t timerId) final;
+  void processIndicatorIncreaseAnim();
   void processIndicatorReduceAnim();
   void setAndCenterIndicatorText();
 
@@ -37,8 +44,16 @@ private:
   Image _indicator;
   Text _indicatorText;
 
-  int32_t _indicatorReduceTimerId = 0;
-  int32_t _damageTicksLeft = 0;
+  int32_t _indicatorModifyTimerId = 0;
+
+  //negative values are used in combination with
+  //                                     IndicatorPanelAnimationType::DECREASE
+  //positive values are used in combination with
+  //                                     IndicatorPanelAnimationType::INCREASE
+  int32_t _animTicksLeft = 0;
+
+  IndicatorPanelAnimationType _currAnimType =
+      IndicatorPanelAnimationType::DECREASE;
 
   IndicatorDepletedCb _indicatorDepletedCb;
 };

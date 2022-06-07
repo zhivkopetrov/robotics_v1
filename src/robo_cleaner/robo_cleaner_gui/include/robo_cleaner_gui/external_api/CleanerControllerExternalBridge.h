@@ -28,6 +28,10 @@ struct CleanerControllerExternalBridgeOutInterface {
   RoboCleanerSolutionValidator *solutionValidator = nullptr;
 };
 
+//TODO invoke gameWonCb when successfully execute reveal + clean +
+//     get to charging station
+//grant TRIPLE_STAR if the robot is with full health at that point
+
 class CleanerControllerExternalBridge: public rclcpp::Node {
 public:
   CleanerControllerExternalBridge();

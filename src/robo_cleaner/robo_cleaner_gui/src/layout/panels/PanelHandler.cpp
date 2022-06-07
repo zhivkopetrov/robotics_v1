@@ -84,12 +84,12 @@ void PanelHandler::draw() const {
   _energyPanel.draw();
 }
 
-void PanelHandler::decreaseHealthIndicator(int32_t delta) {
-  _healthPanel.decreaseIndicator(delta);
+void PanelHandler::modifyHealthIndicator(int32_t delta) {
+  _healthPanel.modifyIndicator(-1 * delta);
 }
 
-void PanelHandler::decreaseEnergyIndicator(int32_t delta) {
-  _energyPanel.decreaseIndicator(delta);
+void PanelHandler::modifyEnergyIndicator(int32_t delta) {
+  _energyPanel.modifyIndicator(delta);
 }
 
 void PanelHandler::onTileRevealed() {

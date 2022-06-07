@@ -22,7 +22,7 @@ ErrorCode RoboCollectorLayoutInitHelper::init(
   commonOutInterface.collisionWatcher = outInterface.collisionWatcher;
   commonOutInterface.finishRobotActCb = outInterface.finishRobotActCb;
   commonOutInterface.playerDamageCb = std::bind(
-      &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
+      &PanelHandler::modifyHealthIndicator, &layout._panelHandler, _1);
 
   if (ErrorCode::SUCCESS != layout._commonLayout.init(cfg.commonLayoutCfg,
           commonOutInterface, commonInterface)) {
@@ -67,7 +67,7 @@ ErrorCode RoboCollectorLayoutInitHelper::initRobots(
 
   robotOutInterface.collisionWatcher = outInterface.collisionWatcher;
   robotOutInterface.playerDamageCb = std::bind(
-      &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
+      &PanelHandler::modifyHealthIndicator, &layout._panelHandler, _1);
   robotOutInterface.setFieldDataMarkerCb = commonInterface.setFieldDataMarkerCb;
   robotOutInterface.resetFieldDataMarkerCb =
       commonInterface.resetFieldDataMarkerCb;

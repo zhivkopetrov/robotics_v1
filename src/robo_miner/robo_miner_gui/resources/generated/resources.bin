@@ -10,7 +10,7 @@
 0                   
 
 # Size of all files in kBytes:
-1064                
+1067                
 
 0x50F97991CE94C9BC
 p/background/map.png
@@ -88,19 +88,19 @@ p/panels/crystal_panel.png
 
 0x8DF7ACDAA833451F
 p/panels/health_panel.png
-13
+15
 0
-0 0 500 75
+0 0 495 74
 1
-0 0 500 75
+0 0 495 74
 
 0x47A8FA33A2F9F010
 p/panels/health_indicator.png
-6
+7
 0
-0 0 404 48
+0 0 400 47
 1
-0 0 404 48
+0 0 400 47
 
 0x861DBFC99AF7A483
 p/entities/damage_marker.png

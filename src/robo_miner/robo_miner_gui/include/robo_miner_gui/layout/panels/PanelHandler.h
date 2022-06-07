@@ -26,7 +26,7 @@ public:
   ErrorCode init(const PanelHandlerConfig &cfg,
                  const PanelHandlerOutInterface &interface);
   void draw() const;
-  void decreaseHealthIndicator(int32_t damage);
+  void modifyHealthIndicator(int32_t damage);
   void onTileRevealed();
   void onCrystalMined();
 

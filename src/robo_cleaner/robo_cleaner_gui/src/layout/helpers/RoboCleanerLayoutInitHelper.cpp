@@ -25,7 +25,7 @@ ErrorCode RoboCleanerLayoutInitHelper::init(
   commonOutInterface.playerRobotDamageCollisionCb =
       outInterface.playerRobotDamageCollisionCb;
   commonOutInterface.playerDamageCb = std::bind(
-      &PanelHandler::decreaseHealthIndicator, &layout._panelHandler, _1);
+      &PanelHandler::modifyHealthIndicator, &layout._panelHandler, _1);
   commonOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
   commonOutInterface.objectApproachOverlayTriggeredCb =
       outInterface.objectApproachOverlayTriggeredCb;
