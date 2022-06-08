@@ -20,6 +20,7 @@ struct RoboCleanerLayoutInterface {
   ModifyEnergyLevelCb modifyEnergyLevelCb;
   TileReleavedCb tileReleavedCb;
   TileCleanedCb tileCleanedCb;
+  GetIndicatorPanelValue getRobotHealthIndicatorValueCb;
 };
 
 struct RoboCleanerLayoutOutInterface {

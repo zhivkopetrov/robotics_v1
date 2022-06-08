@@ -54,5 +54,7 @@ void RoboCleanerLayout::produceInterface(
       &_panelHandler);
   interface.tileCleanedCb = std::bind(&PanelHandler::onTileCleaned,
       &_panelHandler);
+  interface.getRobotHealthIndicatorValueCb = std::bind(
+      &PanelHandler::getHealthIndicatorValue, &_panelHandler);
 }
 

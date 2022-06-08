@@ -25,6 +25,9 @@ struct MovementWatcherOutInterface {
   ModifyRubbishWidgetCb modifyRubbishWidgetCb;
   TileReleavedCb tileReleavedCb;
   TileCleanedCb tileCleanedCb;
+  StartGameWonAnimCb startGameWonAnimCb;
+  StartAchievementWonAnimCb startAchievementWonAnimCb;
+  GetIndicatorPanelValue getRobotHealthIndicatorValueCb;
   RoboCleanerSolutionValidator* solutionValidator = nullptr;
 };
 

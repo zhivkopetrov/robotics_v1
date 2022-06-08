@@ -79,6 +79,10 @@ void IndicatorPanel::modifyIndicator(int32_t delta) {
   }
 }
 
+int32_t IndicatorPanel::getIndicatorValue() const {
+  return _indicator.getCroppedFrameWidth();
+}
+
 void IndicatorPanel::onTimeout(const int32_t timerId) {
   if (timerId == _indicatorModifyTimerId) {
     if (IndicatorPanelAnimationType::INCREASE == _currAnimType) {

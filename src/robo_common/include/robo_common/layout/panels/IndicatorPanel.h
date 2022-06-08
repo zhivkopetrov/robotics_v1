@@ -28,6 +28,8 @@ public:
 
   void modifyIndicator(int32_t delta);
 
+  int32_t getIndicatorValue() const;
+
 private:
   enum class IndicatorPanelAnimationType {
     INCREASE, DECREASE

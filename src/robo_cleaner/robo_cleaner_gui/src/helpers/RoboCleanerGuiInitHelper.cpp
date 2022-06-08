@@ -127,6 +127,12 @@ ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
   outInterface.modifyRubbishWidgetCb = interface.modifyRubbishWidgetCb;
   outInterface.tileReleavedCb = interface.tileReleavedCb;
   outInterface.tileCleanedCb = interface.tileCleanedCb;
+  outInterface.startGameWonAnimCb =
+      interface.commonLayoutInterface.startGameWonAnimCb;
+  outInterface.startAchievementWonAnimCb =
+      interface.commonLayoutInterface.startAchievementWonAnimCb;
+  outInterface.getRobotHealthIndicatorValueCb =
+      interface.getRobotHealthIndicatorValueCb;
   outInterface.solutionValidator = &gui._solutionValidator;
 
   const auto &fieldDescr = cfg.commonLayoutCfg.fieldCfg.description;
@@ -180,8 +186,6 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.startGameLostAnimCb =
       interface.commonLayoutInterface.startGameLostAnimCb;
-  outInterface.startGameWonAnimCb =
-      interface.commonLayoutInterface.startGameWonAnimCb;
   outInterface.acceptGoalCb = std::bind(&MovementReporter::acceptGoal,
       &gui._movementReporter, _1);
   outInterface.reportRobotStartingActCb = std::bind(

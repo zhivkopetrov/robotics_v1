@@ -94,11 +94,6 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
-  if (nullptr == _outInterface.startGameWonAnimCb) {
-    LOGERR("Error, nullptr provided for startGameWonAnimCb");
-    return ErrorCode::FAILURE;
-  }
-
   if (nullptr == _outInterface.acceptGoalCb) {
     LOGERR("Error, nullptr provided for AcceptGoalCb");
     return ErrorCode::FAILURE;

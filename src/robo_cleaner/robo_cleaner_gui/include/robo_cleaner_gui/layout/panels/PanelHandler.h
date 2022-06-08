@@ -34,6 +34,8 @@ public:
   void onTileRevealed();
   void onTileCleaned();
 
+  int32_t getHealthIndicatorValue() const;
+
 private:
   ErrorCode validateInterface(const PanelHandlerOutInterface &interface) const;
 

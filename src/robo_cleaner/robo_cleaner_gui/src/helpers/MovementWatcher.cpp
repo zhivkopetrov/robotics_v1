@@ -102,7 +102,7 @@ void MovementWatcher::changeState(const RobotState &state,
   _currProgress.outcome = outcome;
   _currProgress.hasMoveFinished = true;
 
-  const auto [tileRevealed, tileCleaned, processedMarker] =
+  const auto [tileRevealed, tileCleaned, processedMarker, reachedEndGameCond] =
       _outInterface.solutionValidator->finishMove(
           state, outcome, _currMoveType);
   _currProgress.processedFieldMarker = processedMarker;
@@ -115,6 +115,16 @@ void MovementWatcher::changeState(const RobotState &state,
     _outInterface.setFieldDataMarkerCb(state.fieldPos, processedMarker);
     _outInterface.modifyRubbishWidgetCb(state.fieldPos, processedMarker);
     _outInterface.tileCleanedCb();
+  }
+
+  if (reachedEndGameCond) {
+    const int32_t robotHealthValue =
+        _outInterface.getRobotHealthIndicatorValueCb();
+    const bool isAtFullHealth = INDICATOR_PANEL_MAX_VALUE == robotHealthValue;
+    if (isAtFullHealth) {
+      _outInterface.startAchievementWonAnimCb(Achievement::TRIPLE_STAR);
+    }
+    _outInterface.startGameWonAnimCb();
   }
 
   _outInterface.reportMoveProgressCb(_currProgress);
@@ -171,6 +181,21 @@ ErrorCode MovementWatcher::initOutInterface(
 
   if (nullptr == _outInterface.tileCleanedCb) {
     LOGERR("Error, nullptr provided for TileCleanedCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.startGameWonAnimCb) {
+    LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.startAchievementWonAnimCb) {
+    LOGERR("Error, nullptr provided for StartAchievementWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.getRobotHealthIndicatorValueCb) {
+    LOGERR("Error, nullptr provided for GetIndicatorPanelValue");
     return ErrorCode::FAILURE;
   }
 

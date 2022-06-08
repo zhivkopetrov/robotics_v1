@@ -32,10 +32,13 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
   }
 
   const auto achievementWonCb = interface.startAchievementWonAnimCb;
+  const auto gameWonCb = interface.startGameWonAnimCb;
   panelPos.y += 165;
-  numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb]() {
-    achievementWonCb(Achievement::TRIPLE_STAR);
-  };
+  numberCounterPanelUtilityCfg.targetReachedCb =
+      [achievementWonCb, gameWonCb]() {
+        achievementWonCb(Achievement::TRIPLE_STAR);
+        gameWonCb();
+      };
   numberCounterPanelUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _crystalPanel.init(cfg.crystalPanelCfg,
           numberCounterPanelUtilityCfg)) {
@@ -83,6 +86,11 @@ ErrorCode PanelHandler::validateInterface(
 
   if (nullptr == interface.startGameWonAnimCb) {
     LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == interface.startAchievementWonAnimCb) {
+    LOGERR("Error, nullptr provided for StartAchievementWonAnimCb");
     return ErrorCode::FAILURE;
   }
 

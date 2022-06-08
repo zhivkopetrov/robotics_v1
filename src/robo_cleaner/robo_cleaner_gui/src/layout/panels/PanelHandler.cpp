@@ -100,6 +100,10 @@ void PanelHandler::onTileCleaned() {
   _rubbishPanel.increaseCounter(1);
 }
 
+int32_t PanelHandler::getHealthIndicatorValue() const {
+  return _healthPanel.getIndicatorValue();
+}
+
 ErrorCode PanelHandler::validateInterface(
     const PanelHandlerOutInterface &interface) const {
   if (nullptr == interface.startGameLostAnimCb) {

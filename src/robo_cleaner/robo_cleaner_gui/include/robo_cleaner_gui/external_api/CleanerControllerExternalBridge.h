@@ -26,7 +26,6 @@ struct CleanerControllerExternalBridgeOutInterface {
   RobotActInterface robotActInterface;
   SystemShutdownCb systemShutdownCb;
   StartGameLostAnimCb startGameLostAnimCb;
-  StartGameWonAnimCb startGameWonAnimCb;
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
   ReportInsufficientEnergyCb reportInsufficientEnergyCb;

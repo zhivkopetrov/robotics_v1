@@ -4,7 +4,6 @@
 //System headers
 #include <cstdint>
 #include <string>
-#include <vector>
 #include <set>
 
 //Other libraries headers
@@ -31,6 +30,7 @@ struct MoveValidation {
   bool tileRevealed = false;
   bool tileCleaned = false;
   char processedMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
+  bool reachedEndGameCondition = false;
 };
 
 struct InitialRobotState {
@@ -50,10 +50,6 @@ public:
 
   void fieldMapCleaned();
 
-  ValidationResult validateFieldMap(const std::vector<uint8_t> &rawData,
-                                    uint32_t rows, uint32_t cols,
-                                    std::string &outError);
-
   char getApproachingTileMarker(MoveType moveType) const;
 
   MoveValidation finishMove(const RobotState &state, MoveOutcome outcome,
@@ -71,11 +67,7 @@ private:
   struct ValidationOptions {
     bool initialRobotStateRequested = false;
     bool fieldMapReveleaded = false;
-    bool fieldMapValidated = false;
     bool fieldMapCleaned = false;
-    std::vector<bool> longestSequenceValidationPoints;
-
-    int32_t fieldMapValidationsTriesLeft = 3;
   };
 
   RoboCleanerSolutionValidatorOutInterface _outInterface;
