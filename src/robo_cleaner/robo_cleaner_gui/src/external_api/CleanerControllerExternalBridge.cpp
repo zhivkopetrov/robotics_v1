@@ -154,6 +154,11 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
           &CleanerControllerExternalBridge::handleInitialRobotStateService,
           this, _1, _2));
 
+  _chargeBatteryService = create_service<ChargeBattery>(
+      CHARGE_BATTERY_SERVICE,
+      std::bind(&CleanerControllerExternalBridge::handleChargeBatteryService,
+          this, _1, _2));
+
   _moveActionServer = rclcpp_action::create_server<RobotMove>(this,
       ROBOT_MOVE_ACTION,
       std::bind(&CleanerControllerExternalBridge::handleMoveGoal, this, _1, _2),
@@ -172,9 +177,8 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
 
   const auto moveType = getMoveType(goal->robot_move_type.move_type);
   if (MoveType::UNKNOWN == moveType) {
-    LOGERR(
-        "Error, Rejecting goal with uuid: %s because of unsupported " "MoveType",
-        rclcpp_action::to_string(uuid).c_str());
+    LOGERR("Error, Rejecting goal with uuid: %s because of unsupported "
+           "MoveType", rclcpp_action::to_string(uuid).c_str());
     return rclcpp_action::GoalResponse::REJECT;
   }
 
@@ -182,9 +186,8 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
   const auto f =
       [this, &uuid, &response]() {
         if (ControllerStatus::ACTIVE == _controllerStatus) {
-          LOGERR(
-              "Error, Rejecting goal with uuid: %s because another one is " "already active",
-              rclcpp_action::to_string(uuid).c_str());
+          LOGERR("Error, Rejecting goal with uuid: %s because another one is "
+                 "already active", rclcpp_action::to_string(uuid).c_str());
           response = rclcpp_action::GoalResponse::REJECT;
           return;
         }
@@ -198,8 +201,8 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
 
 rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
     const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
-  LOG(
-      "Received request to cancel goal with uuid: %s, Rolling back robot " "position/rotation to previous state",
+  LOG("Received request to cancel goal with uuid: %s, Rolling back robot "
+      "position/rotation to previous state",
       rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
 
   const auto f = [this]() {
@@ -267,8 +270,8 @@ void CleanerControllerExternalBridge::handleInitialRobotStateService(
       return;
     }
 
-    response->initial_robot_state.robot_dir =
-        getRobotDirectionField(initialRobotState.robotDir);
+    response->initial_robot_state.robot_dir = getRobotDirectionField(
+        initialRobotState.robotDir);
     response->initial_robot_state.robot_tile = initialRobotState.robotTile;
 
     const auto [maxMoves, movesLeft] =
@@ -276,6 +279,47 @@ void CleanerControllerExternalBridge::handleInitialRobotStateService(
     response->initial_robot_state.battery_status.max_moves_on_full_energy =
         maxMoves;
     response->initial_robot_state.battery_status.moves_left = movesLeft;
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+}
+
+void CleanerControllerExternalBridge::handleChargeBatteryService(
+    const std::shared_ptr<ChargeBattery::Request> request,
+    std::shared_ptr<ChargeBattery::Response> response) {
+  //TODO add another state to controller status - CHARGING
+  //reject charing if controller is active
+  //reject movement if controller is charging
+
+  //TODO-2 add a callback to panelHandler anim modification end
+  //attach reset controller status on that callback
+
+  const auto f = [this, &request, &response]() {
+    const bool isAtChargingStation =
+        _outInterface.solutionValidator->isRobotAtChargingStation();
+    if (!isAtChargingStation) {
+      response->success = false;
+      response->error_reason =
+          "Robot is not at charging station. Finishing turn.";
+      _outInterface.solutionValidator->increaseTotalRobotMovesCounter(1);
+      return;
+    }
+
+    const ChargeDuration chargeDuration =
+        (ChargeBattery::Request::CHARGE_UNTIL_FULL == request->charge_turns) ?
+            ChargeDuration::UNTIL_FULL : ChargeDuration::TURN_BASED;
+
+    const ChargeOutcome outcome = _outInterface.energyHandler->charge(
+        chargeDuration, request->charge_turns);
+    response->success = outcome.success;
+    response->error_reason = outcome.errorReason;
+    response->turns_spend_charging = outcome.turnsSpendCharging;
+    response->battery_status.max_moves_on_full_energy =
+        outcome.batteryStatus.maxMovesOnFullEnergy;
+    response->battery_status.moves_left = outcome.batteryStatus.movesLeft;
+
+    _outInterface.solutionValidator->increaseTotalRobotMovesCounter(
+        outcome.turnsSpendCharging);
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);

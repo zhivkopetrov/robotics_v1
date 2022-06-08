@@ -1,0 +1,8 @@
+int32 CHARGE_UNTIL_FULL=0
+
+int32 charge_turns
+---
+bool success
+string error_reason
+BatteryStatus battery_status
+int32 turns_spend_charging

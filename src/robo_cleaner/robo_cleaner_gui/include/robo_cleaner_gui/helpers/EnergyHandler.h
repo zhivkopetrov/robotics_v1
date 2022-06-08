@@ -25,6 +25,17 @@ struct EnergyHandlerMoveOutcome {
   int32_t penaltyTurns { };
 };
 
+struct ChargeOutcome {
+  BatteryStatus batteryStatus;
+  int32_t turnsSpendCharging {};
+  std::string errorReason;
+  bool success = true;
+};
+
+enum class ChargeDuration {
+  TURN_BASED, UNTIL_FULL
+};
+
 class EnergyHandler: public NonCopyable, public NonMoveable {
 public:
   ErrorCode init(const EnergyHandlerConfig& cfg,
@@ -32,13 +43,15 @@ public:
 
   EnergyHandlerMoveOutcome initiateMove();
 
-  BatteryStatus charge();
+  ChargeOutcome charge(ChargeDuration duration, int32_t chargeTurns);
 
   BatteryStatus queryBatteryStatus() const;
 
   void performPenaltyChange();
 
 private:
+  BatteryStatus chargeOnce();
+
   BatteryStatus _batteryStatus;
 
   int32_t _energyConsumedPerMove { };

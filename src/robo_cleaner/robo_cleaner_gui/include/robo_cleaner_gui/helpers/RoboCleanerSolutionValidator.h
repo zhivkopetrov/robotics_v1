@@ -62,6 +62,8 @@ public:
   void increaseTotalRobotMovesCounter(int32_t movesCount);
   int32_t getTotalRobotMovesCounter() const;
 
+  bool isRobotAtChargingStation() const;
+
 private:
   ErrorCode initOutInterface(
       const RoboCleanerSolutionValidatorOutInterface &outInterface);

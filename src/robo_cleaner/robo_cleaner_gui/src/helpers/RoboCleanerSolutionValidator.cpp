@@ -196,3 +196,11 @@ int32_t RoboCleanerSolutionValidator::getTotalRobotMovesCounter() const {
   return _totalRobotMoves;
 }
 
+bool RoboCleanerSolutionValidator::isRobotAtChargingStation() const {
+  const FieldPos robotPos = _outInterface.getRobotStateCb().fieldPos;
+  const FieldData& fieldData = _outInterface.getFieldDescriptionCb().data;
+  const char currRobotFieldMarker = fieldData[robotPos.row][robotPos.col];
+
+  return RoboCleanerDefines::CHARGING_STATION == currRobotFieldMarker;
+}
+

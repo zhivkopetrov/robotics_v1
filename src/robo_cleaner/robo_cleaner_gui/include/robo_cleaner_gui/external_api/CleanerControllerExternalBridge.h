@@ -9,6 +9,7 @@
 #include <std_msgs/msg/empty.hpp>
 #include "robo_cleaner_interfaces/srv/query_initial_robot_state.hpp"
 #include "robo_cleaner_interfaces/srv/query_battery_status.hpp"
+#include "robo_cleaner_interfaces/srv/charge_battery.hpp"
 #include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "utils/ErrorCode.h"
@@ -60,6 +61,7 @@ private:
   using Empty = std_msgs::msg::Empty;
   using QueryBatteryStatus = robo_cleaner_interfaces::srv::QueryBatteryStatus;
   using QueryInitialRobotState = robo_cleaner_interfaces::srv::QueryInitialRobotState;
+  using ChargeBattery = robo_cleaner_interfaces::srv::ChargeBattery;
 
   enum class ControllerStatus {
     IDLE, ACTIVE
@@ -83,12 +85,17 @@ private:
       const std::shared_ptr<QueryInitialRobotState::Request> request,
       std::shared_ptr<QueryInitialRobotState::Response> response);
 
+  void handleChargeBatteryService(
+      const std::shared_ptr<ChargeBattery::Request> request,
+      std::shared_ptr<ChargeBattery::Response> response);
+
   CleanerControllerExternalBridgeOutInterface _outInterface;
 
   rclcpp_action::Server<RobotMove>::SharedPtr _moveActionServer;
 
   rclcpp::Service<QueryBatteryStatus>::SharedPtr _batteryStatusService;
   rclcpp::Service<QueryInitialRobotState>::SharedPtr _initialRobotStateService;
+  rclcpp::Service<ChargeBattery>::SharedPtr _chargeBatteryService;
 
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;

@@ -13,6 +13,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotMoveType.msg"
   "msg/UInt8MultiArray.msg"
   
+  "srv/ChargeBattery.srv"
   "srv/QueryBatteryStatus.srv"
   "srv/QueryInitialRobotState.srv"
    
