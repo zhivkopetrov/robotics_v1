@@ -119,7 +119,7 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
       FIELD_MAP_REVEALED_TOPIC, queueSize);
 
   _initialRobotPosService = create_service<QueryInitialRobotPosition>(
-      QUERY_INITIAL_ROBOT_POSITION,
+      QUERY_INITIAL_ROBOT_POSITION_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleInitialRobotPosService,
           this, _1, _2));
 
