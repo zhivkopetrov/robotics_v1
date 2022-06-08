@@ -9,6 +9,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/FieldPoint.msg"
+  "msg/RobotPositionResponse.msg"
   "msg/UInt8MultiArray.msg"
   "msg/RobotMoveType.msg"
   
@@ -16,6 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/RobotMove.srv"
   "srv/LongestSequenceValidate.srv"
   "srv/FieldMapValidate.srv"
+  "srv/QueryInitialRobotPosition.srv"
 )
 
 set_target_properties(

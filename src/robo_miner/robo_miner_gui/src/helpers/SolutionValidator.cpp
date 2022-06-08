@@ -46,8 +46,25 @@ void SolutionValidator::fieldMapRevealed() {
   _validationOptions.fieldMapReveleaded = true;
 }
 
-void SolutionValidator::fieldMapCleaned() {
+ValidationResult SolutionValidator::queryInitialRobotPos(
+    InitialRobotPos& outRobotPos, std::string &outError) {
+  ValidationResult result;
 
+  if (_validationOptions.initialRobotPosRequested) {
+    outError = "Initial Robot Position could be queried only once";
+    result.success = false;
+    result.majorError = true;
+  }
+  _validationOptions.initialRobotPosRequested = true;
+  outRobotPos.surroundingTiles = _outInterface.getPlayerSurroundingTilesCb();
+
+  const RobotState state = _outInterface.getRobotStateCb();
+  const auto& fieldDescr = _outInterface.getFieldDescriptionCb();
+  outRobotPos.robotTile =
+      fieldDescr.data[state.fieldPos.row][state.fieldPos.col];
+  outRobotPos.robotDir = state.dir;
+
+  return result;
 }
 
 ValidationResult SolutionValidator::validateFieldMap(
@@ -235,6 +252,11 @@ ErrorCode SolutionValidator::initOutInterface(
 
   if (nullptr == _outInterface.getRobotStateCb) {
     LOGERR("Error, nullptr provided for GetRobotStateCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.getPlayerSurroundingTilesCb) {
+    LOGERR("Error, nullptr provided for GetPlayerSurroundingTilesCb");
     return ErrorCode::FAILURE;
   }
 

@@ -19,7 +19,8 @@
 struct MovementWatchOutcome {
   SurroundingTiles surroundingTiles;
   FieldPos robotPos;
-  MoveOutcome moveOutcome;
+  Direction robotDir = Direction::UP;
+  MoveOutcome moveOutcome = MoveOutcome::SUCCESS;
 };
 
 class MovementWatcher: public NonCopyable, public NonMoveable {

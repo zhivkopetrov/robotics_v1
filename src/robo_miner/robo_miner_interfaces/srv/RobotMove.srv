@@ -1,6 +1,3 @@
 RobotMoveType robot_move_type
 ---
-bool success
-string error_reason
-#surrounding_tiles are reported in order: left, forward, right
-uint8[3] surrounding_tiles
+RobotPositionResponse robot_position_response

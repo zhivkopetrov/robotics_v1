@@ -9,6 +9,7 @@
 
 //Forward declarations
 
+constexpr auto QUERY_INITIAL_ROBOT_POSITION = "query_initial_robot_position";
 constexpr auto ROBOT_MOVE_SERVICE = "move_robot";
 constexpr auto FIELD_MAP_VALIDATE_SERVICE = "field_map_validate";
 constexpr auto LONGEST_SEQUENCE_VALIDATE_SERVICE = "longest_sequence_validate";

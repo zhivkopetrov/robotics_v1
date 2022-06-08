@@ -20,11 +20,18 @@ struct SolutionValidatorConfig;
 struct SolutionValidatorOutInterface {
   GetFieldDescriptionCb getFieldDescriptionCb;
   GetRobotStateCb getRobotStateCb;
+  GetPlayerSurroundingTilesCb getPlayerSurroundingTilesCb;
 };
 
 struct ValidationResult {
   bool success = true;
   bool majorError = false;
+};
+
+struct InitialRobotPos {
+  SurroundingTiles surroundingTiles;
+  Direction robotDir = Direction::UP;
+  uint8_t robotTile = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
 };
 
 class SolutionValidator {
@@ -34,7 +41,8 @@ public:
 
   void fieldMapRevealed();
 
-  void fieldMapCleaned();
+  ValidationResult queryInitialRobotPos(InitialRobotPos& outRobotPos,
+                                        std::string &outError);
 
   ValidationResult validateFieldMap(const std::vector<uint8_t> &rawData,
                                     uint32_t rows, uint32_t cols,
@@ -59,6 +67,7 @@ private:
                          size_t &foundLongestSequenceIdx) const;
 
   struct ValidationOptions {
+    bool initialRobotPosRequested = false;
     bool fieldMapReveleaded = false;
     bool fieldMapValidated = false;
     bool longestSequenceValidated = false;

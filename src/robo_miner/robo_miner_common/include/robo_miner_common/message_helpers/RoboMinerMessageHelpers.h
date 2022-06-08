@@ -13,4 +13,7 @@
 int8_t getMoveTypeField(MoveType moveType);
 MoveType getMoveType(int8_t moveType);
 
+int32_t getRobotDirectionField(Direction dir);
+Direction getRobotDirection(int32_t dir);
+
 #endif /* ROBO_MINER_COMMON_ROBOMINERMESSAGEHELPERS_H_ */

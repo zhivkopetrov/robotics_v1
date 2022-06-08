@@ -118,6 +118,11 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   _fieldMapReveleadedPublisher = create_publisher<Empty>(
       FIELD_MAP_REVEALED_TOPIC, queueSize);
 
+  _initialRobotPosService = create_service<QueryInitialRobotPosition>(
+      QUERY_INITIAL_ROBOT_POSITION,
+      std::bind(&MinerControllerExternalBridge::handleInitialRobotPosService,
+          this, _1, _2));
+
   _robotMoveService = create_service<RobotMove>(ROBOT_MOVE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleRobotMoveService, this,
           _1, _2));
@@ -142,32 +147,57 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   return ErrorCode::SUCCESS;
 }
 
+void MinerControllerExternalBridge::handleInitialRobotPosService(
+    [[maybe_unused]]const std::shared_ptr<QueryInitialRobotPosition::Request> request,
+    std::shared_ptr<QueryInitialRobotPosition::Response> response) {
+  InitialRobotPos initialRobotPos;
+  const auto f = [this, &response, &initialRobotPos]() {
+    const auto [success, majorError] =
+        _outInterface.solutionValidator->queryInitialRobotPos(initialRobotPos,
+                response->robot_position_response.error_reason);
+
+    response->robot_position_response.success = success && !majorError;
+    if (majorError) {
+      _outInterface.startGameLostAnimCb();
+      return;
+    }
+
+    response->robot_position_response.surrounding_tiles =
+        initialRobotPos.surroundingTiles;
+    response->robot_position_response.robot_dir =
+        getRobotDirectionField(initialRobotPos.robotDir);
+    response->robot_initial_tile = initialRobotPos.robotTile;
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+}
+
 void MinerControllerExternalBridge::handleRobotMoveService(
     const std::shared_ptr<RobotMove::Request> request,
     std::shared_ptr<RobotMove::Response> response) {
-  response->success = true;
+  response->robot_position_response.success = true;
 
   const auto moveType = getMoveType(request->robot_move_type.move_type);
   if (MoveType::UNKNOWN == moveType) {
     LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
-    response->success = false;
-    response->error_reason = "Invalid arguments. Unsupported 'move_type' value";
+    response->robot_position_response.success = false;
+    response->robot_position_response.error_reason =
+        "Invalid arguments. Unsupported 'move_type' value";
     return;
   }
 
   const auto f = [this, &response]() {
     if (ControllerStatus::ACTIVE == _controllerStatus) {
-      response->success = false;
-      response->error_reason =
+      response->robot_position_response.success = false;
+      response->robot_position_response.error_reason =
           "Rejecting Move Service because another one is already active";
-      LOGERR("%s", response->error_reason.c_str());
+      LOGERR("%s", response->robot_position_response.error_reason.c_str());
       return;
     }
 
     _controllerStatus = ControllerStatus::ACTIVE;
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
-  if (!response->success) {
+  if (!response->robot_position_response.success) {
     return;
   }
 
@@ -179,6 +209,8 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   MovementWatchOutcome outcome;
   const auto success = _outInterface.movementWatcher->waitForChange(5000ms,
       outcome);
+  response->robot_position_response.robot_dir =
+      getRobotDirectionField(outcome.robotDir);
 
   const auto f3 = [this]() {
     _controllerStatus = ControllerStatus::IDLE;
@@ -186,19 +218,22 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   _outInterface.invokeActionEventCb(f3, ActionEventType::NON_BLOCKING);
 
   if (!success) {
-    response->success = false;
-    response->error_reason = "Service timed out after 5000ms";
+    response->robot_position_response.success = false;
+    response->robot_position_response.error_reason =
+        "Service timed out after 5000ms";
     return;
   }
 
   if (MoveOutcome::COLLISION == outcome.moveOutcome) {
-    response->success = false;
-    response->error_reason = "Move resulted in collision";
+    response->robot_position_response.success = false;
+    response->robot_position_response.error_reason =
+        "Move resulted in collision";
     return;
   }
 
-  response->success = true;
-  response->surrounding_tiles = outcome.surroundingTiles;
+  response->robot_position_response.success = true;
+  response->robot_position_response.surrounding_tiles =
+      outcome.surroundingTiles;
 
   const auto f4 = [this, outcome]() {
     if (_outInterface.solutionValidator->isMiningActive()) {
@@ -219,7 +254,7 @@ void MinerControllerExternalBridge::handleFieldMapValidateService(
     const auto [success, majorError] =
         _outInterface.solutionValidator->validateFieldMap(data, rows, cols,
             response->error_reason);
-    response->success = success || majorError;
+    response->success = success && !majorError;
     if (majorError) {
       _outInterface.startGameLostAnimCb();
       return;
@@ -247,7 +282,7 @@ void MinerControllerExternalBridge::handleLongestSequenceValidateService(
     const auto [success, majorError] =
         _outInterface.solutionValidator->validateLongestSequence(sequence,
             response->error_reason);
-    response->success = success || majorError;
+    response->success = success && !majorError;
     if (majorError) {
       _outInterface.startGameLostAnimCb();
       return;
@@ -268,7 +303,7 @@ void MinerControllerExternalBridge::handleActivateMiningValidateService(
     const auto [success, majorError] =
         _outInterface.solutionValidator->validateActivateMining(
             response->error_reason);
-    response->success = success || majorError;
+    response->success = success && !majorError;
     if (majorError) {
       _outInterface.startGameLostAnimCb();
       return;

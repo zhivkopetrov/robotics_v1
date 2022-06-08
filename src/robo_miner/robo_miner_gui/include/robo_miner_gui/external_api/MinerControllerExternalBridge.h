@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include "robo_miner_interfaces/srv/query_initial_robot_position.hpp"
 #include "robo_miner_interfaces/srv/robot_move.hpp"
 #include "robo_miner_interfaces/srv/field_map_validate.hpp"
 #include "robo_miner_interfaces/srv/longest_sequence_validate.hpp"
@@ -48,6 +49,7 @@ private:
   using Empty = std_msgs::msg::Empty;
   using FieldPoint = robo_miner_interfaces::msg::FieldPoint;
   using RobotMove = robo_miner_interfaces::srv::RobotMove;
+  using QueryInitialRobotPosition = robo_miner_interfaces::srv::QueryInitialRobotPosition;
   using FieldMapValidate = robo_miner_interfaces::srv::FieldMapValidate;
   using LongestSequenceValidate = robo_miner_interfaces::srv::LongestSequenceValidate;
   using ActivateMiningValidate = robo_miner_interfaces::srv::ActivateMiningValidate;
@@ -59,6 +61,10 @@ private:
   ErrorCode initOutInterface(
       const MinerControllerExternalBridgeOutInterface &outInterface);
   ErrorCode initCommunication();
+
+  void handleInitialRobotPosService(
+      const std::shared_ptr<QueryInitialRobotPosition::Request> request,
+      std::shared_ptr<QueryInitialRobotPosition::Response> response);
 
   void handleRobotMoveService(const std::shared_ptr<RobotMove::Request> request,
                               std::shared_ptr<RobotMove::Response> response);
@@ -75,11 +81,12 @@ private:
       const std::shared_ptr<ActivateMiningValidate::Request> request,
       std::shared_ptr<ActivateMiningValidate::Response> response);
 
-  void handleNormalMove(const FieldPos& robotPos);
-  void handleMiningMove(const FieldPos& robotPos);
+  void handleNormalMove(const FieldPos &robotPos);
+  void handleMiningMove(const FieldPos &robotPos);
 
   MinerControllerExternalBridgeOutInterface _outInterface;
 
+  rclcpp::Service<QueryInitialRobotPosition>::SharedPtr _initialRobotPosService;
   rclcpp::Service<RobotMove>::SharedPtr _robotMoveService;
   rclcpp::Service<FieldMapValidate>::SharedPtr _fieldMapValidateService;
   rclcpp::Service<LongestSequenceValidate>::SharedPtr _longestSequenceValidateService;

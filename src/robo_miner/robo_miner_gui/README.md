@@ -13,6 +13,9 @@ ros2 run robo_miner_gui robo_miner_gui
 # how to call nested services
 # arguments must be in a valid YML format
 # add curcly braces around the nested messages
+
+ros2 service call /query_initial_robot_position robo_miner_interfaces/srv/QueryInitialRobotPosition {}\
+
 ros2 service call /move_robot robo_miner_interfaces/srv/RobotMove "{ robot_move_type: { move_type: 0} }"
 
 ros2 service call /field_map_validate robo_miner_interfaces/srv/FieldMapValidate "{ field_map: {rows: 6, cols: 7, data: [114, 114, 88, 88, 88, 98, 114, 103, 114, 88, 112, 112, 114, 114, 103, 114, 114, 114, 114, 114, 103, 103, 114, 99, 99, 99, 103, 103, 88, 114, 99, 98, 98, 88, 103, 88, 98, 88, 112, 112, 88, 103]} }"

@@ -93,6 +93,8 @@ ErrorCode RoboMinerGuiInitHelper::initSolutionValidator(
       interface.commonLayoutInterface.getFieldDescriptionCb;
   outInterface.getRobotStateCb =
       interface.commonLayoutInterface.playerRobotActInterface.getRobotStateCb;
+  outInterface.getPlayerSurroundingTilesCb =
+      interface.commonLayoutInterface.getPlayerSurroundingTilesCb;
 
   if (ErrorCode::SUCCESS != gui._solutionValidator.init(cfg, outInterface)) {
     LOGERR("_solutionValidator.init() failed");

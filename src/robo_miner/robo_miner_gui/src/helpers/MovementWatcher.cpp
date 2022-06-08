@@ -44,6 +44,7 @@ void MovementWatcher::changeState(const RobotState &state,
   _ready = true;
   _lastOutcome.moveOutcome = outcome;
   _lastOutcome.robotPos = state.fieldPos;
+  _lastOutcome.robotDir = state.dir;
   _lastOutcome.surroundingTiles = _getPlayerSurroundingTilesCb();
   _condVar.notify_one();
 }
