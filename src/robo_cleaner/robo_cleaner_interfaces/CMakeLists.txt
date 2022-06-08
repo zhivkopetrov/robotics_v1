@@ -8,13 +8,15 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/BatteryStatus.msg"
+  "msg/InitialRobotState.msg"
   "msg/RobotMoveType.msg"
   "msg/UInt8MultiArray.msg"
   
-  "srv/FieldMapValidate.srv"
+  "srv/QueryBatteryStatus.srv"
+  "srv/QueryInitialRobotState.srv"
    
   "action/RobotMove.action"
-  
 )
 
 set_target_properties(

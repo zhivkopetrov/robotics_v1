@@ -178,6 +178,10 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
   outInterface.robotActInterface =
       interface.commonLayoutInterface.playerRobotActInterface;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
+  outInterface.startGameLostAnimCb =
+      interface.commonLayoutInterface.startGameLostAnimCb;
+  outInterface.startGameWonAnimCb =
+      interface.commonLayoutInterface.startGameWonAnimCb;
   outInterface.acceptGoalCb = std::bind(&MovementReporter::acceptGoal,
       &gui._movementReporter, _1);
   outInterface.reportRobotStartingActCb = std::bind(

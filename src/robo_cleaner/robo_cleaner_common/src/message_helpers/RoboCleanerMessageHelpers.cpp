@@ -5,12 +5,14 @@
 
 //Other libraries headers
 #include "robo_cleaner_interfaces/msg/robot_move_type.hpp"
+#include "robo_cleaner_interfaces/msg/initial_robot_state.hpp"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
 
 using robo_cleaner_interfaces::msg::RobotMoveType;
+using robo_cleaner_interfaces::msg::InitialRobotState;
 
 int8_t getMoveTypeField(MoveType moveType) {
   switch (moveType) {
@@ -37,5 +39,37 @@ MoveType getMoveType(int8_t moveType) {
   default:
     LOGERR("Error, received unsupported RobotMoveType: %hhu", moveType);
     return MoveType::UNKNOWN;
+  }
+}
+
+int32_t getRobotDirectionField(Direction dir) {
+  switch (dir) {
+  case Direction::UP:
+    return InitialRobotState::DIRECTION_UP;
+  case Direction::RIGHT:
+    return InitialRobotState::DIRECTION_RIGHT;
+  case Direction::DOWN:
+    return InitialRobotState::DIRECTION_DOWN;
+  case Direction::LEFT:
+    return InitialRobotState::DIRECTION_LEFT;
+  default:
+    LOGERR("Error, received unsupported Direction: %d", dir);
+    return InitialRobotState::DIRECTION_UP;
+  }
+}
+Direction getRobotDirection(int32_t dir) {
+  switch (dir) {
+  case InitialRobotState::DIRECTION_UP:
+    return Direction::UP;
+  case InitialRobotState::DIRECTION_RIGHT:
+    return Direction::RIGHT;
+  case InitialRobotState::DIRECTION_DOWN:
+    return Direction::DOWN;
+  case InitialRobotState::DIRECTION_LEFT:
+    return Direction::LEFT;
+  default:
+    LOGERR("Error, received unsupported InitialRobotState direction field: "
+        "%d", dir);
+    return Direction::UP;
   }
 }

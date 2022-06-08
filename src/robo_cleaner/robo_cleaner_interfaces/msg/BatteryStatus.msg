@@ -1,0 +1,2 @@
+int32 max_moves_on_full_energy
+int32 moves_left

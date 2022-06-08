@@ -150,8 +150,8 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
 void MinerControllerExternalBridge::handleInitialRobotPosService(
     [[maybe_unused]]const std::shared_ptr<QueryInitialRobotPosition::Request> request,
     std::shared_ptr<QueryInitialRobotPosition::Response> response) {
-  InitialRobotPos initialRobotPos;
-  const auto f = [this, &response, &initialRobotPos]() {
+  const auto f = [this, &response]() {
+    InitialRobotPos initialRobotPos;
     const auto [success, majorError] =
         _outInterface.solutionValidator->queryInitialRobotPos(initialRobotPos,
                 response->robot_position_response.error_reason);

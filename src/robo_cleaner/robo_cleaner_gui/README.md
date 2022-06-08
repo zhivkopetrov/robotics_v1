@@ -13,4 +13,9 @@ ros2 run robo_cleaner_gui robo_cleaner_gui
 # how to call nested services
 # arguments must be in a valid YML format
 # add curcly braces around the nested messages
+
+ros2 service call /query_initial_robot_state robo_cleaner_interfaces/srv/QueryInitialRobotState {}\
+
+ros2 service call /query_battery_status robo_cleaner_interfaces/srv/QueryBatteryStatus {}\
+
 ros2 action send_goal --feedback /move_robot robo_cleaner_interfaces/action/RobotMove "{ robot_move_type: { move_type: 0 } }"

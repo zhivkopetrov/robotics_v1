@@ -33,6 +33,26 @@ void RoboCleanerSolutionValidator::fieldMapCleaned() {
   _validationOptions.fieldMapCleaned = true;
 }
 
+ValidationResult RoboCleanerSolutionValidator::queryInitialRobotPos(
+    InitialRobotState &outRobotState, std::string &outError) {
+  ValidationResult result;
+
+  if (_validationOptions.initialRobotStateRequested) {
+    outError = "Initial Robot State could be queried only once";
+    result.success = false;
+    result.majorError = true;
+  }
+  _validationOptions.initialRobotStateRequested = true;
+
+  const RobotState state = _outInterface.getRobotStateCb();
+  const auto& fieldDescr = _outInterface.getFieldDescriptionCb();
+  outRobotState.robotTile =
+      fieldDescr.data[state.fieldPos.row][state.fieldPos.col];
+  outRobotState.robotDir = state.dir;
+
+  return result;
+}
+
 ValidationResult RoboCleanerSolutionValidator::validateFieldMap(
     const std::vector<uint8_t> &rawData, uint32_t rows, uint32_t cols,
     std::string &outError) {

@@ -33,10 +33,18 @@ struct MoveValidation {
   char processedMarker = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
 };
 
+struct InitialRobotState {
+  Direction robotDir = Direction::UP;
+  uint8_t robotTile = RoboCommonDefines::UNKNOWN_FIELD_MARKER;
+};
+
 class RoboCleanerSolutionValidator {
 public:
   ErrorCode init(const RoboCleanerSolutionValidatorConfig &cfg,
                  const RoboCleanerSolutionValidatorOutInterface &outInterface);
+
+  ValidationResult queryInitialRobotPos(InitialRobotState &outRobotState,
+                                        std::string &outError);
 
   void fieldMapRevealed();
 
@@ -59,6 +67,7 @@ private:
       const RoboCleanerSolutionValidatorOutInterface &outInterface);
 
   struct ValidationOptions {
+    bool initialRobotStateRequested = false;
     bool fieldMapReveleaded = false;
     bool fieldMapValidated = false;
     bool fieldMapCleaned = false;

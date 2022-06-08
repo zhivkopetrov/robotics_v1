@@ -89,6 +89,16 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.startGameLostAnimCb) {
+    LOGERR("Error, nullptr provided for StartGameLostAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.startGameWonAnimCb) {
+    LOGERR("Error, nullptr provided for startGameWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.acceptGoalCb) {
     LOGERR("Error, nullptr provided for AcceptGoalCb");
     return ErrorCode::FAILURE;
@@ -133,6 +143,17 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
   _fieldMapCleanedPublisher = create_publisher<Empty>(FIELD_MAP_CLEANED_TOPIC,
       queueSize);
 
+  _batteryStatusService = create_service<QueryBatteryStatus>(
+      QUERY_BATTERY_STATUS_SERVICE,
+      std::bind(&CleanerControllerExternalBridge::handleBatteryStatusService,
+          this, _1, _2));
+
+  _initialRobotStateService = create_service<QueryInitialRobotState>(
+      QUERY_INITIAL_ROBOT_STATE_SERVICE,
+      std::bind(
+          &CleanerControllerExternalBridge::handleInitialRobotStateService,
+          this, _1, _2));
+
   _moveActionServer = rclcpp_action::create_server<RobotMove>(this,
       ROBOT_MOVE_ACTION,
       std::bind(&CleanerControllerExternalBridge::handleMoveGoal, this, _1, _2),
@@ -151,8 +172,9 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
 
   const auto moveType = getMoveType(goal->robot_move_type.move_type);
   if (MoveType::UNKNOWN == moveType) {
-    LOGERR("Error, Rejecting goal with uuid: %s because of unsupported "
-        "MoveType", rclcpp_action::to_string(uuid).c_str());
+    LOGERR(
+        "Error, Rejecting goal with uuid: %s because of unsupported " "MoveType",
+        rclcpp_action::to_string(uuid).c_str());
     return rclcpp_action::GoalResponse::REJECT;
   }
 
@@ -160,8 +182,8 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
   const auto f =
       [this, &uuid, &response]() {
         if (ControllerStatus::ACTIVE == _controllerStatus) {
-          LOGERR("Error, Rejecting goal with uuid: %s because another one is "
-              "already active",
+          LOGERR(
+              "Error, Rejecting goal with uuid: %s because another one is " "already active",
               rclcpp_action::to_string(uuid).c_str());
           response = rclcpp_action::GoalResponse::REJECT;
           return;
@@ -176,8 +198,8 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
 
 rclcpp_action::CancelResponse CleanerControllerExternalBridge::handleMoveCancel(
     const std::shared_ptr<GoalHandleRobotMove> goalHandle) {
-  LOG("Received request to cancel goal with uuid: %s, Rolling back robot "
-      "position/rotation to previous state",
+  LOG(
+      "Received request to cancel goal with uuid: %s, Rolling back robot " "position/rotation to previous state",
       rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
 
   const auto f = [this]() {
@@ -208,13 +230,54 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
     }
 
     _outInterface.robotActInterface.actCb(moveType);
-     const char approachMarker =
-         _outInterface.solutionValidator->getApproachingTileMarker(moveType);
+    const char approachMarker =
+        _outInterface.solutionValidator->getApproachingTileMarker(moveType);
     _outInterface.reportRobotStartingActCb(moveType, approachMarker);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 
   // return quickly to avoid blocking the executor
   _outInterface.acceptGoalCb(goalHandle);
+}
+
+void CleanerControllerExternalBridge::handleBatteryStatusService(
+    [[maybe_unused]]const std::shared_ptr<QueryBatteryStatus::Request> request,
+    std::shared_ptr<QueryBatteryStatus::Response> response) {
+  const auto f = [this, &response]() {
+    const auto [maxMoves, movesLeft] =
+        _outInterface.energyHandler->queryBatteryStatus();
+    response->battery_status.max_moves_on_full_energy = maxMoves;
+    response->battery_status.moves_left = movesLeft;
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+}
+
+void CleanerControllerExternalBridge::handleInitialRobotStateService(
+    [[maybe_unused]]const std::shared_ptr<QueryInitialRobotState::Request> request,
+    std::shared_ptr<QueryInitialRobotState::Response> response) {
+  const auto f = [this, &response]() {
+    InitialRobotState initialRobotState;
+    const auto [success, majorError] =
+        _outInterface.solutionValidator->queryInitialRobotPos(initialRobotState,
+            response->error_reason);
+    response->success = success && !majorError;
+    if (majorError) {
+      _outInterface.startGameLostAnimCb();
+      return;
+    }
+
+    response->initial_robot_state.robot_dir =
+        getRobotDirectionField(initialRobotState.robotDir);
+    response->initial_robot_state.robot_tile = initialRobotState.robotTile;
+
+    const auto [maxMoves, movesLeft] =
+        _outInterface.energyHandler->queryBatteryStatus();
+    response->initial_robot_state.battery_status.max_moves_on_full_energy =
+        maxMoves;
+    response->initial_robot_state.battery_status.moves_left = movesLeft;
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
 }
 
