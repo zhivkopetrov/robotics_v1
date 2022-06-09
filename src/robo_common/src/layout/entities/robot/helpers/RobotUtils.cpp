@@ -57,12 +57,15 @@ SurroundingTiles RobotUtils::getSurroundingTiles(const FieldDescription &descr,
       leftDir, state.fieldPos), FieldUtils::getAdjacentPos(state.dir,
       state.fieldPos), FieldUtils::getAdjacentPos(rightDir, state.fieldPos), };
 
+  //silence GCC nonsense
+  //[enumeral and non-enumeral type in conditional expression] warning
+  const char outOfBoundMarker = RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
+
   for (auto i = 0; i < posesCtn; ++i) {
     const auto &pos = futurePoses[i];
     result[i] =
         FieldUtils::isInsideField(pos, descr) ?
-            descr.data[pos.row][pos.col] :
-            RoboCommonDefines::FIELD_OUT_OF_BOUND_MARKER;
+            descr.data[pos.row][pos.col] : outOfBoundMarker;
   }
 
   return result;
