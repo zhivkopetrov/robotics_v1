@@ -158,7 +158,7 @@ FieldConfig generateFieldConfig() {
 
 FogOfWarConfig generateFogOfWarConfig(const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
-//  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
