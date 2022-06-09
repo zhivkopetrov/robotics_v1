@@ -219,8 +219,13 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
   const auto f = [this, moveType]() {
     _outInterface.solutionValidator->increaseTotalRobotMovesCounter(1);
 
-    const auto [success, penaltyTurns] =
+    const auto [success, majorError, penaltyTurns] =
         _outInterface.energyHandler->initiateMove();
+    if (majorError) {
+      _outInterface.startGameLostAnimCb();
+      return;
+    }
+
     if (!success) {
       _outInterface.energyHandler->performPenaltyChange();
       _outInterface.reportInsufficientEnergyCb(penaltyTurns);

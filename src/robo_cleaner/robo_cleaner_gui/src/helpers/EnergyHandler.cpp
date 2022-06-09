@@ -30,6 +30,15 @@ EnergyHandlerMoveOutcome EnergyHandler::initiateMove() {
   if (0 >= _batteryStatus.movesLeft) {
     outcome.success = false;
     outcome.penaltyTurns = _batteryStatus.maxMovesOnFullEnergy;
+
+    --_allowedPenaltyMoves;
+    LOGR("Insufficient energy to perform a movement. "
+        "Applying penalty. Allowed penalties left: %d", _allowedPenaltyMoves);
+
+    if (0 >= _allowedPenaltyMoves) {
+      outcome.majorError = true;
+    }
+
     return outcome;
   }
   --_batteryStatus.movesLeft;

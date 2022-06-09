@@ -22,6 +22,7 @@ struct EnergyHandlerConfig;
 
 struct EnergyHandlerMoveOutcome {
   bool success = true;
+  bool majorError = false;
   int32_t penaltyTurns { };
 };
 
@@ -55,6 +56,8 @@ private:
   BatteryStatus _batteryStatus;
 
   int32_t _energyConsumedPerMove { };
+
+  int32_t _allowedPenaltyMoves = 3;
 
   ModifyEnergyLevelCb _modifyEnergyLevelCb;
 };
