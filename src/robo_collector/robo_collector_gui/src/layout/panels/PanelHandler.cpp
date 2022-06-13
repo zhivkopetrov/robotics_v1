@@ -10,20 +10,22 @@
 
 ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
                              const PanelHandlerOutInterface &interface) {
-  //TODO attach gameWonCb on end of triple star animation
-  //SINGLE_STAR will be don't collect silver coins
-  //DOUBLE_STAR will be to collect at least 3 bronze coins
-  //TRIPLE_STAR will be to finish the game
-  //            with at least 30 seconds left on the timer
-
   if (ErrorCode::SUCCESS != validateInterface(interface)) {
     LOGERR("Error, validateInterface() failed");
     return ErrorCode::FAILURE;
   }
 
+  const auto startGameLostAnimCb = interface.startGameLostAnimCb;
+  const auto startGameWonAnimCb = interface.startGameWonAnimCb;
+  const auto shutdownControllerCb = interface.shutdownControllerCb;
+
   auto panelPos = Point(1250, 50);
   TimePanelUtilityConfig timePanelUtilityCfg;
-  timePanelUtilityCfg.timeFinishedCb = interface.startGameLostAnimCb;
+  timePanelUtilityCfg.timeFinishedCb =
+      [startGameLostAnimCb, shutdownControllerCb](){
+    shutdownControllerCb();
+    startGameLostAnimCb();
+  };
   timePanelUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _timePanel.init(cfg.timePanelCfg,
           timePanelUtilityCfg)) {
@@ -34,7 +36,11 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
   panelPos.y += 165;
   const auto lightGoldColor = Color(0xD4AF37FF);
   NumberCounterPanelUtilityConfig numberCounterPanelUtilityCfg;
-  numberCounterPanelUtilityCfg.targetReachedCb = interface.startGameWonAnimCb;
+  numberCounterPanelUtilityCfg.targetReachedCb =
+      [startGameWonAnimCb, shutdownControllerCb](){
+    shutdownControllerCb();
+    startGameWonAnimCb();
+  };
   numberCounterPanelUtilityCfg.pos = panelPos;
   numberCounterPanelUtilityCfg.textColor = lightGoldColor;
   if (ErrorCode::SUCCESS != _coinPanel.init(cfg.coinPanelCfg,
@@ -45,7 +51,11 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
 
   panelPos.y += 175;
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
-  indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
+  indicatorUtilityCfg.indicatorDepletedCb =
+      [startGameLostAnimCb, shutdownControllerCb](){
+    shutdownControllerCb();
+    startGameLostAnimCb();
+  };
   indicatorUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _healthPanel.init(cfg.healthPanelCfg,
           indicatorUtilityCfg)) {
@@ -79,6 +89,11 @@ ErrorCode PanelHandler::validateInterface(
 
   if (nullptr == interface.startGameWonAnimCb) {
     LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == interface.shutdownControllerCb) {
+    LOGERR("Error, nullptr provided for ShutdownControllerCb");
     return ErrorCode::FAILURE;
   }
 

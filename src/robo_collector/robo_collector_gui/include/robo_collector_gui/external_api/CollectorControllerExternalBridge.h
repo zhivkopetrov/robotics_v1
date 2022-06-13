@@ -18,7 +18,6 @@
 struct CollectorControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   MoveButtonClickCb moveButtonClickCb;
-  SystemShutdownCb systemShutdownCb;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
 };
@@ -39,8 +38,12 @@ private:
   using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
 
   enum class ControllerStatus {
-    IDLE, ACTIVE
+    IDLE, ACTIVE, SHUTTING_DOWN
   };
+
+  ErrorCode initOutInterface(
+      const CollectorControllerExternalBridgeOutInterface &outInterface);
+  ErrorCode initCommunication();
 
   void onMoveMsg(const RobotMoveType::SharedPtr msg);
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);

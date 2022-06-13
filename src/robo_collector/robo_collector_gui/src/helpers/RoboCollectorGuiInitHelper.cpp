@@ -69,7 +69,8 @@ ErrorCode RoboCollectorGuiInitHelper::initLayout(
       &gui._turnHelper);
   outInterface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
       &gui._turnHelper, _1, _2);
-  outInterface.shutdownGameCb = std::bind(
+  outInterface.shutdownGameCb = gui._systemShutdownCb;
+  outInterface.shutdownControllerCb = std::bind(
       &CollectorControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
 
@@ -118,7 +119,6 @@ ErrorCode RoboCollectorGuiInitHelper::initControllerExternalBridge(
   CollectorControllerExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.moveButtonClickCb = interface.moveButtonClickCb;
-  outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.toggleHelpPageCb =
       interface.commonLayoutInterface.toggleHelpPageCb;
   outInterface.toggleDebugInfoCb =

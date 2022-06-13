@@ -19,17 +19,47 @@ CollectorControllerExternalBridge::CollectorControllerExternalBridge()
 
 ErrorCode CollectorControllerExternalBridge::init(
     const CollectorControllerExternalBridgeOutInterface &interface) {
-  _outInterface = interface;
+  if (ErrorCode::SUCCESS != initOutInterface(interface)) {
+    LOGERR("Error, initOutInterface() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initCommunication()) {
+    LOGERR("Error, initCommunication() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+void CollectorControllerExternalBridge::publishEnablePlayerInput() {
+  const auto f = [this]() {
+    if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
+      return;
+    }
+    _controllerStatus = ControllerStatus::IDLE;
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+
+  _playerEnableInputPublisher->publish(Empty());
+}
+
+//called from the main thread
+void CollectorControllerExternalBridge::publishShutdownController() {
+  _controllerStatus = ControllerStatus::SHUTTING_DOWN;
+
+  _shutdownControllerPublisher->publish(Empty());
+}
+
+ErrorCode CollectorControllerExternalBridge::initOutInterface(
+    const CollectorControllerExternalBridgeOutInterface &outInterface) {
+  _outInterface = outInterface;
   if (nullptr == _outInterface.invokeActionEventCb) {
     LOGERR("Error, nullptr provided for InvokeActionEventCb");
     return ErrorCode::FAILURE;
   }
   if (nullptr == _outInterface.moveButtonClickCb) {
     LOGERR("Error, nullptr provided for MoveButtonClickCb");
-    return ErrorCode::FAILURE;
-  }
-  if (nullptr == _outInterface.systemShutdownCb) {
-    LOGERR("Error, nullptr provided for SystemShutdownCb");
     return ErrorCode::FAILURE;
   }
   if (nullptr == _outInterface.toggleHelpPageCb) {
@@ -41,6 +71,10 @@ ErrorCode CollectorControllerExternalBridge::init(
     return ErrorCode::FAILURE;
   }
 
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode CollectorControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
   _playerActSubscriber = create_subscription<RobotMoveType>(
@@ -66,24 +100,6 @@ ErrorCode CollectorControllerExternalBridge::init(
   return ErrorCode::SUCCESS;
 }
 
-void CollectorControllerExternalBridge::publishEnablePlayerInput() {
-  const auto f = [this]() {
-    _controllerStatus = ControllerStatus::IDLE;
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-
-  _playerEnableInputPublisher->publish(Empty());
-}
-
-void CollectorControllerExternalBridge::publishShutdownController() {
-  _shutdownControllerPublisher->publish(Empty());
-
-  const auto f = [this]() {
-    _outInterface.systemShutdownCb();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-}
-
 void CollectorControllerExternalBridge::onMoveMsg(
     const RobotMoveType::SharedPtr msg) {
   const auto moveType = getMoveType(msg->move_type);
@@ -97,6 +113,11 @@ void CollectorControllerExternalBridge::onMoveMsg(
     if (ControllerStatus::ACTIVE == _controllerStatus) {
       success = false;
       LOGERR("Rejecting Move Request because another one is already active");
+      return;
+    }
+    if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
+      success = false;
+      LOGERR("Rejecting Move Request because controller is shutting down");
       return;
     }
 

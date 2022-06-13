@@ -35,9 +35,11 @@ private:
       const RoboCommonLayoutInterface &commonInterface,
       RoboCollectorLayout &layout);
 
-  static ErrorCode initPanelHandler(const PanelHandlerConfig &cfg,
-                                    RoboCommonLayoutInterface &commonInterface,
-                                    RoboCollectorLayout &layout);
+  static ErrorCode initPanelHandler(
+      const PanelHandlerConfig &cfg,
+      const RoboCollectorLayoutOutInterface &outInterface,
+      const RoboCommonLayoutInterface &commonInterface,
+      RoboCollectorLayout &layout);
 
   static ErrorCode initCoinHandler(
       const CoinHandlerConfig &cfg,

@@ -23,6 +23,7 @@ struct RoboCollectorLayoutInterface {
 };
 
 struct RoboCollectorLayoutOutInterface {
+  ShutdownControllerCb shutdownControllerCb;
   ShutdownGameCb shutdownGameCb;
   FinishRobotActCb finishRobotActCb;
   IsPlayerTurnActiveCb isPlayerTurnActiveCb;

@@ -16,7 +16,7 @@
 struct PanelHandlerOutInterface {
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
-  StartAchievementWonAnimCb startAchievementWonAnimCb;
+  ShutdownControllerCb shutdownControllerCb;
 };
 
 class PanelHandler {

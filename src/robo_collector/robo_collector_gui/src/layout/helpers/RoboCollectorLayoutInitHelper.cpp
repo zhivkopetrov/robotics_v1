@@ -30,8 +30,8 @@ ErrorCode RoboCollectorLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS !=
-      initPanelHandler(cfg.panelHandlerCfg, commonInterface, layout)) {
+  if (ErrorCode::SUCCESS != initPanelHandler(cfg.panelHandlerCfg, outInterface,
+      commonInterface, layout)) {
     LOGERR("initPanelHandler() failed");
     return ErrorCode::FAILURE;
   }
@@ -120,15 +120,20 @@ ErrorCode RoboCollectorLayoutInitHelper::initRobots(
 }
 
 ErrorCode RoboCollectorLayoutInitHelper::initPanelHandler(
-    const PanelHandlerConfig &cfg, RoboCommonLayoutInterface &commonInterface,
+    const PanelHandlerConfig &cfg,
+    const RoboCollectorLayoutOutInterface &outInterface,
+    const RoboCommonLayoutInterface &commonInterface,
     RoboCollectorLayout &layout) {
-  PanelHandlerOutInterface outInterface;
-  outInterface.startGameWonAnimCb = commonInterface.startGameWonAnimCb;
-  outInterface.startGameLostAnimCb = commonInterface.startGameLostAnimCb;
-  outInterface.startAchievementWonAnimCb =
-      commonInterface.startAchievementWonAnimCb;
+  PanelHandlerOutInterface panelHandlerOutInterface;
+  panelHandlerOutInterface.startGameWonAnimCb =
+      commonInterface.startGameWonAnimCb;
+  panelHandlerOutInterface.startGameLostAnimCb =
+      commonInterface.startGameLostAnimCb;
+  panelHandlerOutInterface.shutdownControllerCb =
+      outInterface.shutdownControllerCb;
 
-  if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS !=
+      layout._panelHandler.init(cfg, panelHandlerOutInterface)) {
     LOGERR("Error in _panel.init()");
     return ErrorCode::FAILURE;
   }
