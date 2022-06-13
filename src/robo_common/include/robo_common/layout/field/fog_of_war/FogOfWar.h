@@ -33,6 +33,7 @@ public:
 
 private:
   ErrorCode createFogTiles(const FieldConfig &fieldCfg,
+                           const FieldPos &playerStartingPos,
                            const std::vector<int> &fogTilesFadeAnimTimerIds);
 
   ErrorCode populateFogTiles(uint64_t cloudRsrcId);

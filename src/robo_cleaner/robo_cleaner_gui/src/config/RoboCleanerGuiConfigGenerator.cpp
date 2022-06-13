@@ -140,24 +140,21 @@ EnergyHandlerConfig generateEnergyHandlerConfig() {
   return cfg;
 }
 
-FieldConfig generateFieldConfig() {
+FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   FieldConfig cfg;
 
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-
-  cfg.description = LevelFileLoader::readFieldDescription(projectInstallPrefix,
-      LEVEL_ID);
+  cfg.description = fieldDescr;
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
-
   cfg.tileRsrcId = RoboCleanerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
 
   return cfg;
 }
 
-FogOfWarConfig generateFogOfWarConfig(const FieldDescription &fieldDescr) {
+FogOfWarConfig generateFogOfWarConfig(const FieldPos &playerStartPos,
+                                      const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
+  cfg.playerStartingPos = playerStartPos;
   cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
@@ -179,9 +176,7 @@ EntityHandlerConfig generateEntityHandlerConfig() {
   return cfg;
 }
 
-EngineConfig generateEngineConfig() {
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -200,24 +195,27 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
-RoboCleanerGuiConfig generateGameConfig() {
+RoboCleanerGuiConfig generateGameConfig(
+    const std::string& projectInstallPrefix) {
   RoboCleanerGuiConfig cfg;
-  auto &layoutCfg = cfg.layoutCfg;
-
-  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.fieldCfg = generateFieldConfig();
-  const auto& fieldDescr = commonLayoutCfg.fieldCfg.description;
-
-  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(fieldDescr);
-  commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
-  commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
-
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(fieldDescr);
-  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
+  const auto [fieldDescr, initialRobotState] =
+      LevelFileLoader::readLevelData(projectInstallPrefix, LEVEL_ID);
 
   cfg.solutionValidatorConfig = generateSolutionValidatorConfig(fieldDescr);
   cfg.energyHandlerConfig = generateEnergyHandlerConfig();
+
+  auto &layoutCfg = cfg.layoutCfg;
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(fieldDescr);
+  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
+
+  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
+  commonLayoutCfg.robotInitialState = initialRobotState;
+  commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
+  commonLayoutCfg.fogOfWarConfig =
+      generateFogOfWarConfig(initialRobotState.fieldPos, fieldDescr);
+  commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
+  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
   return cfg;
 }
@@ -251,8 +249,11 @@ std::vector<DependencyDescription> RoboCleanerGuiConfigGenerator::generateDepend
 
 ApplicationConfig RoboCleanerGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
-  cfg.engineCfg = generateEngineConfig();
-  cfg.gameCfg = generateGameConfig();
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix);
   return cfg;
 }
 

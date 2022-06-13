@@ -102,29 +102,28 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
   return cfg;
 }
 
-FieldConfig generateFieldConfig() {
+FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   FieldConfig cfg;
 
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  cfg.description = LevelFileLoader::readFieldDescription(projectInstallPrefix,
-      LEVEL_ID);
-
+  cfg.description = fieldDescr;
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
-
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
 
   return cfg;
 }
 
-FogOfWarConfig generateFogOfWarConfig(int32_t mapTilesCount) {
+FogOfWarConfig generateFogOfWarConfig(const FieldPos& playerStartPos,
+                                      const FieldDescription& fieldDescr) {
   FogOfWarConfig cfg;
+  cfg.playerStartingPos = playerStartPos;
   cfg.status = FogOfWarStatus::ENABLED;
   cfg.cloudRsrcId = RoboMinerGuiResources::FOG_OF_WAR;
 
-  constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
+  const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
   cfg.fogTilesFadeAnimTimerIds.resize(mapTilesCount);
+
+  constexpr int startTimerId = FOG_OF_WAR_FADE_TIMER_IDS_START;
   std::iota(cfg.fogTilesFadeAnimTimerIds.begin(),
       cfg.fogTilesFadeAnimTimerIds.end(), startTimerId);
 
@@ -146,9 +145,7 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
   return cfg;
 }
 
-EngineConfig generateEngineConfig() {
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -167,29 +164,27 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
-RoboMinerGuiConfig generateGameConfig() {
+RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix) {
   RoboMinerGuiConfig cfg;
+  const auto [fieldDescr, initialRobotState] =
+      LevelFileLoader::readLevelData(projectInstallPrefix, LEVEL_ID);
+
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(fieldDescr);
 
   auto &layoutCfg = cfg.layoutCfg;
-
-  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.fieldCfg = generateFieldConfig();
-  const auto mapTilesCount = commonLayoutCfg.fieldCfg.description.rows
-      * commonLayoutCfg.fieldCfg.description.cols;
-  const auto emptyTilesCount =
-      commonLayoutCfg.fieldCfg.description.emptyTilesCount;
-
-  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(mapTilesCount);
-  commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
-  commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
-  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
-
-  cfg.solutionValidatorCfg =
-      generateSolutionValidatorConfig(commonLayoutCfg.fieldCfg.description);
-
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(emptyTilesCount,
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
+      fieldDescr.emptyTilesCount,
       cfg.solutionValidatorCfg.longestSequence.size());
   layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
+
+  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
+  commonLayoutCfg.robotInitialState = initialRobotState;
+  commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
+  commonLayoutCfg.fogOfWarConfig =
+      generateFogOfWarConfig(initialRobotState.fieldPos, fieldDescr);
+  commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
+  commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
   return cfg;
 }
@@ -223,8 +218,11 @@ std::vector<DependencyDescription> RoboMinerGuiConfigGenerator::generateDependen
 
 ApplicationConfig RoboMinerGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
-  cfg.engineCfg = generateEngineConfig();
-  cfg.gameCfg = generateGameConfig();
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix);
   return cfg;
 }
 

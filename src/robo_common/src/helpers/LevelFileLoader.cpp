@@ -8,6 +8,7 @@
 
 //Other libraries headers
 #include "resource_utils/common/ResourceFileHeader.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/file_system/FileSystemUtils.h"
 #include "utils/Log.h"
 
@@ -18,9 +19,9 @@ constexpr auto FIELD_MAP_FILE_NAME = "field_map.txt";
 constexpr auto MINER_LONGEST_SOLUTION_FILE_NAME = "solution.txt";
 }
 
-FieldDescription LevelFileLoader::readFieldDescription(
+LevelData LevelFileLoader::readLevelData(
     const std::string &projectInstallPrefix, int32_t levelId) {
-  FieldDescription fieldDescr;
+  LevelData levelData;
 
   std::string filePath;
   if (ErrorCode::SUCCESS != readLevelFolder(projectInstallPrefix, levelId,
@@ -37,8 +38,8 @@ FieldDescription LevelFileLoader::readFieldDescription(
     return {};
   }
 
-  ifstream >> fieldDescr.rows >> fieldDescr.cols
-           >> fieldDescr.tileWidth >> fieldDescr.tileHeight;
+  auto& fieldDescr = levelData.fieldDescr;
+  ifstream >> fieldDescr.rows >> fieldDescr.cols;
   fieldDescr.data.resize(fieldDescr.rows);
   for (auto &row : fieldDescr.data) {
     row.resize(fieldDescr.cols);
@@ -54,7 +55,21 @@ FieldDescription LevelFileLoader::readFieldDescription(
     }
   }
 
-  return fieldDescr;
+  ifstream >> fieldDescr.tileWidth >> fieldDescr.tileHeight;
+
+  auto& robotState = levelData.robotState;
+  ifstream >> robotState.fieldPos.row >> robotState.fieldPos.col;
+  int32_t robotDirInt {};
+  ifstream >> robotDirInt;
+  robotState.dir = [robotDirInt](){
+    if (robotDirInt >= (getEnumValue(Direction::UP)) &&
+        (robotDirInt <= getEnumValue(Direction::LEFT))) {
+      return toEnum<Direction>(robotDirInt);
+    }
+    return Direction::UP;
+  }();
+
+  return levelData;
 }
 
 std::vector<FieldPos> LevelFileLoader::readMinerLongestSolution(

@@ -8,6 +8,7 @@
 //Other libraries headers
 
 //Own components headers
+#include "robo_common/layout/field/FieldPos.h"
 
 //Forward declarations
 
@@ -16,6 +17,7 @@ enum class FogOfWarStatus {
 };
 
 struct FogOfWarConfig {
+  FieldPos playerStartingPos;
   std::vector<int> fogTilesFadeAnimTimerIds; //size == number of field tiles
   uint64_t cloudRsrcId = 0;
   FogOfWarStatus status = FogOfWarStatus::DISABLED;

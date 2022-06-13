@@ -18,6 +18,7 @@ struct RoboCommonLayoutConfig {
   FieldConfig fieldCfg;
   FogOfWarConfig fogOfWarConfig;
   RobotBaseConfig robotBaseCfg;
+  RobotState robotInitialState;
 
   uint64_t mapRsrcId = 0;
 

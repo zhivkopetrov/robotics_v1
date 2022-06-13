@@ -1,8 +1,9 @@
 6 7
-160 160
 rrXXXbr
 grXpprr
 grrrrrg
 grcccgg
 XrcbbXg
 XbXppXg
+160 160
+5 4 3

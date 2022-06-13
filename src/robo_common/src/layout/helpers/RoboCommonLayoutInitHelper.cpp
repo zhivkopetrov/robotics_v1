@@ -93,18 +93,16 @@ ErrorCode RoboCommonLayoutInitHelper::initPlayerRobot(
       &layout._field);
 
   const auto &baseCfg = layoutCfg.robotBaseCfg;
-  RobotState initialState;
+  RobotState initialState = layoutCfg.robotInitialState;
+  initialState.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
+
   RobotAnimatorConfigBase animatorCfgBase;
   animatorCfgBase.damageMarkerRsrcId = baseCfg.damageMarkerRsrcId;
   animatorCfgBase.robotRsrcId = baseCfg.playerRsrcId;
   animatorCfgBase.frameId = 0;
   animatorCfgBase.width = layoutCfg.fieldCfg.description.tileWidth;
   animatorCfgBase.height = layoutCfg.fieldCfg.description.tileHeight;
-  initialState.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
   animatorCfgBase.robotId = RoboCommonDefines::PLAYER_ROBOT_IDX;
-  initialState.fieldPos = FieldPos(layoutCfg.fieldCfg.description.rows - 1,
-      layoutCfg.fieldCfg.description.cols - 1);
-  initialState.dir = Direction::UP;
   animatorCfgBase.moveAnimTimerId = baseCfg.moveAnimStartTimerId;
   animatorCfgBase.rotateAnimTimerId = baseCfg.rotateAnimStartTimerId;
   animatorCfgBase.robotCollisionAnimTimerId =

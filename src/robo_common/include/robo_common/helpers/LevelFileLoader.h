@@ -13,11 +13,16 @@
 
 //Forward declarations
 
+struct LevelData {
+  FieldDescription fieldDescr;
+  RobotState robotState;
+};
+
 class LevelFileLoader {
 public:
   LevelFileLoader() = delete;
 
-  static FieldDescription readFieldDescription(
+  static LevelData readLevelData(
       const std::string &projectInstallPrefix, int32_t levelId);
 
   static std::vector<FieldPos> readMinerLongestSolution(

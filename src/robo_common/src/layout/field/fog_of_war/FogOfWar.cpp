@@ -25,7 +25,7 @@ ErrorCode FogOfWar::init(const FogOfWarConfig &fogCfg,
   }
 
   if (ErrorCode::SUCCESS != createFogTiles(fieldCfg,
-          fogCfg.fogTilesFadeAnimTimerIds)) {
+      fogCfg.playerStartingPos, fogCfg.fogTilesFadeAnimTimerIds)) {
     LOGERR("createFogTiles() failed");
     return ErrorCode::FAILURE;
   }
@@ -56,6 +56,7 @@ void FogOfWar::revealAllFogTiles() {
 
 ErrorCode FogOfWar::createFogTiles(
     const FieldConfig &fieldCfg,
+    const FieldPos &playerStartingPos,
     const std::vector<int> &fogTilesFadeAnimTimerIds) {
   const auto &fieldDescr = fieldCfg.description;
   Rectangle cloudFboDimensions { 0, 0, fieldDescr.tileWidth,
@@ -70,22 +71,21 @@ ErrorCode FogOfWar::createFogTiles(
   const auto onFogObjectAimCompleteCb = std::bind(
       &FogOfWar::onFogObjectAnimComplete, this, std::placeholders::_1);
 
-  //remove the tile (bottom-right corner) for the starting position of the robot
-  const auto fogTilesCount = tilesCount - 1;
-  _fogTiles.reserve(fogTilesCount);
-
+  _fogTiles.reserve(tilesCount - 1);
   int32_t currTileId = 0;
-
+  FieldPos currrFieldPos;
   for (int32_t row = 0; row < fieldDescr.rows; ++row) {
+    currrFieldPos.row = row;
     cloudFboDimensions.y = RoboCommonDefines::FIRST_TILE_Y_POS
         + (row * fieldDescr.tileHeight);
 
     for (int32_t col = 0; col < fieldDescr.cols; ++col) {
+      currrFieldPos.col = col;
       cloudFboDimensions.x = RoboCommonDefines::FIRST_TILE_X_POS
           + (col * fieldDescr.tileWidth);
 
-      if (fogTilesCount == currTileId) {
-        break; //skip the last index
+      if (currrFieldPos == playerStartingPos) {
+        continue; //skip the starting position of the robot
       }
 
       if (ErrorCode::SUCCESS != _fogTiles[currTileId].init(cloudFboDimensions,

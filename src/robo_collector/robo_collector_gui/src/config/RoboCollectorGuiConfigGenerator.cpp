@@ -164,15 +164,10 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   return cfg;
 }
 
-FieldConfig generateFieldConfig() {
+FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   FieldConfig cfg;
 
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
-  const auto levelId = 1;
-
-  cfg.description =
-      LevelFileLoader::readFieldDescription(projectInstallPrefix, levelId);
+  cfg.description = fieldDescr;
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
@@ -180,9 +175,7 @@ FieldConfig generateFieldConfig() {
   return cfg;
 }
 
-EngineConfig generateEngineConfig() {
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -201,15 +194,21 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
-RoboCollectorGuiConfig generateGameConfig() {
+RoboCollectorGuiConfig generateGameConfig(
+    const std::string& projectInstallPrefix) {
   RoboCollectorGuiConfig cfg;
+  const auto levelId = 1;
+  const auto [fieldDescr, initialRobotState] =
+      LevelFileLoader::readLevelData(projectInstallPrefix, levelId);
+
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
   layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
   layoutCfg.controllerCfg = generateRoboCollectorUiControllerConfig();
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.fieldCfg = generateFieldConfig();
+  commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
+  commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
@@ -248,8 +247,11 @@ RoboCollectorGuiConfigGenerator::generateDependencies(
 
 ApplicationConfig RoboCollectorGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
-  cfg.engineCfg = generateEngineConfig();
-  cfg.gameCfg = generateGameConfig();
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix);
   return cfg;
 }
 

@@ -1,5 +1,4 @@
 12 14
-80 80
 XppXgXcXbrrrgr
 rpggbbbbbpprrg
 rXpbbcXbXrrppX
@@ -12,3 +11,5 @@ pcpXXggXcprpXb
 ppXpXbgXcprXbc
 pXprXbgXcpbrrc
 XgrrgggXcpbrcc
+80 80
+1 9 2
