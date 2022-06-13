@@ -26,7 +26,6 @@ struct CleanerControllerExternalBridgeOutInterface {
   RobotActInterface robotActInterface;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
-  SystemShutdownCb systemShutdownCb;
   StartGameLostAnimCb startGameLostAnimCb;
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
@@ -39,6 +38,7 @@ struct CleanerControllerExternalBridgeOutInterface {
 class CleanerControllerExternalBridge: public rclcpp::Node {
 public:
   CleanerControllerExternalBridge();
+  ~CleanerControllerExternalBridge() noexcept;
 
   ErrorCode init(const CleanerControllerExternalBridgeOutInterface &interface);
 
@@ -61,7 +61,7 @@ private:
   using ChargeBattery = robo_cleaner_interfaces::srv::ChargeBattery;
 
   enum class ControllerStatus {
-    IDLE, ACTIVE
+    IDLE, ACTIVE, SHUTTING_DOWN
   };
 
   rclcpp_action::GoalResponse handleMoveGoal(
@@ -85,6 +85,8 @@ private:
   void handleChargeBatteryService(
       const std::shared_ptr<ChargeBattery::Request> request,
       std::shared_ptr<ChargeBattery::Response> response);
+
+  void handleMajorError();
 
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);
   void onToggleDebugInfoMsg(const Empty::SharedPtr msg);

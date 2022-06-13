@@ -22,6 +22,10 @@ CleanerControllerExternalBridge::CleanerControllerExternalBridge()
 
 }
 
+CleanerControllerExternalBridge::~CleanerControllerExternalBridge() noexcept {
+  _shutdownControllerPublisher->publish(Empty());
+}
+
 ErrorCode CleanerControllerExternalBridge::init(
     const CleanerControllerExternalBridgeOutInterface &interface) {
   if (ErrorCode::SUCCESS != initOutInterface(interface)) {
@@ -37,35 +41,30 @@ ErrorCode CleanerControllerExternalBridge::init(
   return ErrorCode::SUCCESS;
 }
 
+//called by the main thread
 void CleanerControllerExternalBridge::publishShutdownController() {
+  _controllerStatus = ControllerStatus::SHUTTING_DOWN;
   _shutdownControllerPublisher->publish(Empty());
-
-  const auto f = [this]() {
-    _outInterface.systemShutdownCb();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
+//called by the main thread
 void CleanerControllerExternalBridge::publishFieldMapRevealed() {
-  const auto f = [this]() {
-    _outInterface.solutionValidator->fieldMapRevealed();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-
+  _outInterface.solutionValidator->fieldMapRevealed();
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 
+//called by the main thread
 void CleanerControllerExternalBridge::publishFieldMapCleaned() {
-  const auto f = [this]() {
-    _outInterface.solutionValidator->fieldMapCleaned();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-
+  _outInterface.solutionValidator->fieldMapCleaned();
   _fieldMapCleanedPublisher->publish(Empty());
 }
 
 void CleanerControllerExternalBridge::resetControllerStatus() {
   const auto f = [this]() {
+    if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
+      return;
+    }
+
     _controllerStatus = ControllerStatus::IDLE;
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
@@ -91,11 +90,6 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.toggleDebugInfoCb) {
     LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
-    return ErrorCode::FAILURE;
-  }
-
-  if (nullptr == _outInterface.systemShutdownCb) {
-    LOGERR("Error, nullptr provided for SystemShutdownCb");
     return ErrorCode::FAILURE;
   }
 
@@ -201,8 +195,14 @@ rclcpp_action::GoalResponse CleanerControllerExternalBridge::handleMoveGoal(
   const auto f =
       [this, &uuid, &response]() {
         if (ControllerStatus::ACTIVE == _controllerStatus) {
-          LOGERR("Error, Rejecting goal with uuid: %s because another one is "
-                 "already active", rclcpp_action::to_string(uuid).c_str());
+          LOGR("Rejecting goal with uuid: %s because another one is already "
+               "active", rclcpp_action::to_string(uuid).c_str());
+          response = rclcpp_action::GoalResponse::REJECT;
+          return;
+        }
+        if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
+          LOGR("Rejecting goal with uuid: %s because controller is shutting "
+               "down", rclcpp_action::to_string(uuid).c_str());
           response = rclcpp_action::GoalResponse::REJECT;
           return;
         }
@@ -242,7 +242,7 @@ void CleanerControllerExternalBridge::handleMoveAccepted(
     const auto [success, majorError, penaltyTurns] =
         _outInterface.energyHandler->initiateMove();
     if (majorError) {
-      _outInterface.startGameLostAnimCb();
+      handleMajorError();
       return;
     }
 
@@ -286,7 +286,7 @@ void CleanerControllerExternalBridge::handleInitialRobotStateService(
             response->error_reason);
     response->success = success && !majorError;
     if (majorError) {
-      _outInterface.startGameLostAnimCb();
+      handleMajorError();
       return;
     }
 
@@ -343,6 +343,11 @@ void CleanerControllerExternalBridge::handleChargeBatteryService(
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+}
+
+void CleanerControllerExternalBridge::handleMajorError() {
+  _controllerStatus = ControllerStatus::SHUTTING_DOWN;
+  _outInterface.startGameLostAnimCb();
 }
 
 void CleanerControllerExternalBridge::onToggleHelpPageMsg(

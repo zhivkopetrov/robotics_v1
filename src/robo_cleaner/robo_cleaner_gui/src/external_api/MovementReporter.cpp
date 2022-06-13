@@ -86,13 +86,13 @@ void MovementReporter::reportProgressLoop(
         result->processed_field_marker = moveProgress.processedFieldMarker;
         goalHandle->succeed(result);
         LOGG("Goal with uuid: %s succeeded",
-            rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
+             rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
       } else {
         result->success = false;
         result->error_reason = "Move resulted in collision";
         goalHandle->succeed(result);
         LOGR("Goal with uuid: %s resulted in collision",
-            rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
+             rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
       }
 
       _resetControllerStatusCb();

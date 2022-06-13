@@ -16,21 +16,18 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
     return ErrorCode::FAILURE;
   }
 
-  //TODO attach gameWonCb on end of triple star animation
-  //SINGLE_STAR will be to reveal the whole tile map
-  //DOUBLE_STAR will be to clean all the rubbish
-  //TRIPLE_STAR will be to successfully execute reveal + clean
-  //            and get to the charging station with full health
-
-  const auto achievementWonCb = interface.startAchievementWonAnimCb;
+  const auto startGameLostAnimCb = interface.startGameLostAnimCb;
+  const auto shutdownControllerCb = interface.shutdownControllerCb;
+  const auto startAchievementWonCb = interface.startAchievementWonAnimCb;
   const auto fieldMapRevelealedCb = interface.fieldMapRevelealedCb;
+
   auto panelPos = Point(1250, 50);
   const auto lightGoldColor = Color(0xD4AF37FF);
   NumberCounterPanelUtilityConfig numberCounterPanelUtilityCfg;
-  numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb,
+  numberCounterPanelUtilityCfg.targetReachedCb = [startAchievementWonCb,
                                                   fieldMapRevelealedCb]() {
     fieldMapRevelealedCb();
-    achievementWonCb(Achievement::SINGLE_STAR);
+    startAchievementWonCb(Achievement::SINGLE_STAR);
   };
 
   numberCounterPanelUtilityCfg.pos = panelPos;
@@ -43,10 +40,10 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
 
   const auto fieldMapCleanedCb = interface.fieldMapCleanedCb;
   panelPos.y += 165;
-  numberCounterPanelUtilityCfg.targetReachedCb = [achievementWonCb,
+  numberCounterPanelUtilityCfg.targetReachedCb = [startAchievementWonCb,
                                                   fieldMapCleanedCb]() {
     fieldMapCleanedCb();
-    achievementWonCb(Achievement::DOUBLE_STAR);
+    startAchievementWonCb(Achievement::DOUBLE_STAR);
   };
   numberCounterPanelUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _rubbishPanel.init(cfg.rubbishPanelCfg,
@@ -57,7 +54,11 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
 
   panelPos.y += 175;
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
-  indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
+  indicatorUtilityCfg.indicatorDepletedCb = [startGameLostAnimCb,
+                                             shutdownControllerCb]() {
+    shutdownControllerCb();
+    startGameLostAnimCb();
+  };
   indicatorUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _healthPanel.init(cfg.healthPanelCfg,
           indicatorUtilityCfg)) {
@@ -111,8 +112,18 @@ ErrorCode PanelHandler::validateInterface(
     return ErrorCode::FAILURE;
   }
 
-  if (nullptr == interface.startGameWonAnimCb) {
-    LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+  if (nullptr == interface.startAchievementWonAnimCb) {
+    LOGERR("Error, nullptr provided for startAchievementWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == interface.shutdownControllerCb) {
+    LOGERR("Error, nullptr provided for ShutdownControllerCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == interface.energyDepletedCb) {
+    LOGERR("Error, nullptr provided for EnergyDepletedCb");
     return ErrorCode::FAILURE;
   }
 

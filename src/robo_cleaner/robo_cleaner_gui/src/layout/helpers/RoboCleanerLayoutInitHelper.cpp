@@ -75,12 +75,12 @@ ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
     const RoboCleanerLayoutOutInterface &outInterface,
     RoboCleanerLayout &layout) {
   PanelHandlerOutInterface panelHandlerOutInterface;
-  panelHandlerOutInterface.startGameWonAnimCb =
-      commonInterface.startGameWonAnimCb;
   panelHandlerOutInterface.startGameLostAnimCb =
       commonInterface.startGameLostAnimCb;
   panelHandlerOutInterface.startAchievementWonAnimCb =
       commonInterface.startAchievementWonAnimCb;
+  panelHandlerOutInterface.shutdownControllerCb =
+      outInterface.shutdownControllerCb;
   panelHandlerOutInterface.fieldMapRevelealedCb =
       outInterface.fieldMapRevelealedCb;
   panelHandlerOutInterface.fieldMapCleanedCb = outInterface.fieldMapCleanedCb;

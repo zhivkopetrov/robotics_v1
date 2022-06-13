@@ -82,6 +82,7 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
     const RoboCleanerLayoutConfig &cfg, RoboCleanerLayoutInterface &interface,
     RoboCleanerGui &gui) {
   RoboCleanerLayoutOutInterface outInterface;
+  const auto externalBridgeRawPtr = gui._controllerExternalBridge.get();
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb = std::bind(&MovementWatcher::changeState,
       &gui._movementWatcher, _1, _2);
@@ -89,13 +90,14 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
       &MovementWatcher::cancelFeedbackReporting, &gui._movementWatcher);
   outInterface.fieldMapRevelealedCb = std::bind(
       &CleanerControllerExternalBridge::publishFieldMapRevealed,
-      gui._controllerExternalBridge.get());
+      externalBridgeRawPtr);
   outInterface.fieldMapCleanedCb = std::bind(
       &CleanerControllerExternalBridge::publishFieldMapCleaned,
-      gui._controllerExternalBridge.get());
-  outInterface.shutdownGameCb = std::bind(
+      externalBridgeRawPtr);
+  outInterface.shutdownGameCb = gui._systemShutdownCb;
+  outInterface.shutdownControllerCb = std::bind(
       &CleanerControllerExternalBridge::publishShutdownController,
-      gui._controllerExternalBridge.get());
+      externalBridgeRawPtr);
   outInterface.objectApproachOverlayTriggeredCb = std::bind(
       &MovementWatcher::onObstacleApproachTrigger, &gui._movementWatcher, _1);
 
@@ -149,10 +151,10 @@ ErrorCode RoboCleanerGuiInitHelper::initMovementWatcher(
 }
 
 ErrorCode RoboCleanerGuiInitHelper::initEnergyHandler(
-    const EnergyHandlerConfig &cfg,
-    const RoboCleanerLayoutInterface &interface, RoboCleanerGui &gui) {
-  if (ErrorCode::SUCCESS !=
-      gui._energyHandler.init(cfg, interface.modifyEnergyLevelCb)) {
+    const EnergyHandlerConfig &cfg, const RoboCleanerLayoutInterface &interface,
+    RoboCleanerGui &gui) {
+  if (ErrorCode::SUCCESS != gui._energyHandler.init(cfg,
+          interface.modifyEnergyLevelCb)) {
     LOGERR("Error in _energyHandler.init()");
     return ErrorCode::FAILURE;
   }
@@ -187,7 +189,6 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
       interface.commonLayoutInterface.toggleHelpPageCb;
   outInterface.toggleDebugInfoCb =
       interface.commonLayoutInterface.toggleDebugInfoCb;
-  outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.startGameLostAnimCb =
       interface.commonLayoutInterface.startGameLostAnimCb;
   outInterface.acceptGoalCb = std::bind(&MovementReporter::acceptGoal,

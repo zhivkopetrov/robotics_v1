@@ -25,6 +25,7 @@ struct RoboCleanerLayoutInterface {
 
 struct RoboCleanerLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
+  ShutdownControllerCb shutdownControllerCb;
   FinishRobotActCb finishRobotActCb;
   PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
   FieldMapRevelealedCb fieldMapRevelealedCb;

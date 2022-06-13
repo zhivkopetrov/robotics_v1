@@ -27,14 +27,14 @@ void GameEndAnimator::startGameWonAnim() {
   LOGG("You've Won");
 
   //TODO add animation and invoke shutdownGameCb on animation end
-//  _shutdownGameCb();
+  _shutdownGameCb();
 }
 
 void GameEndAnimator::startGameLostAnim() {
   LOGR("You've Lost");
 
   //TODO add animation and invoke shutdownGameCb on animation end
-//  _shutdownGameCb();
+  _shutdownGameCb();
 }
 
 void GameEndAnimator::startAchievementWonAnim(Achievement achievement) {
