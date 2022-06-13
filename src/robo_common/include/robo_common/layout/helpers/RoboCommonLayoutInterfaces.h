@@ -19,6 +19,8 @@ struct RoboCommonLayoutInterface {
   GetFieldDescriptionCb getFieldDescriptionCb;
   GetPlayerSurroundingTilesCb getPlayerSurroundingTilesCb;
   RobotActInterface playerRobotActInterface;
+  ToggleHelpPageCb toggleHelpPageCb;
+  ToggleDebugInfoCb toggleDebugInfoCb;
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;

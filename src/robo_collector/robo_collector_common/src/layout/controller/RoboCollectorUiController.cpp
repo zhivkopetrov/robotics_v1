@@ -39,14 +39,14 @@ ErrorCode RoboCollectorUiController::init(
   _vertDelimiter.setPosition(1200, 550);
 
   if (ErrorCode::SUCCESS !=
-      _helpButton.init(cfg.helpBtnCfg, interface.helpActivatedCb)) {
+      _helpButton.init(cfg.helpBtnCfg, interface.toggleHelpPageCb)) {
     LOGERR("Error, _helpButton.init() failed");
     return ErrorCode::FAILURE;
   }
 
   if (ErrorCode::SUCCESS !=
-      _settingsButton.init(cfg.settingsBtnCfg, interface.settingActivatedCb)) {
-    LOGERR("Error, _helpButton.init() failed");
+      _settingsButton.init(cfg.settingsBtnCfg, interface.toggleDebugInfoCb)) {
+    LOGERR("Error, _settingsButton.init() failed");
     return ErrorCode::FAILURE;
   }
 

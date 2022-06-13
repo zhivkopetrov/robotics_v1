@@ -110,6 +110,10 @@ ErrorCode RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotActCb =
       interface.commonLayoutInterface.playerRobotActInterface.actCb;
+  outInterface.toggleHelpPageCb =
+      interface.commonLayoutInterface.toggleHelpPageCb;
+  outInterface.toggleDebugInfoCb =
+      interface.commonLayoutInterface.toggleDebugInfoCb;
   outInterface.startAchievementWonAnimCb =
       interface.commonLayoutInterface.startAchievementWonAnimCb;
   outInterface.startGameLostAnimCb =

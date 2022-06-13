@@ -34,8 +34,8 @@ ErrorCode RoboCollectorControllerLayoutInitHelper::initController(
     RoboCollectorControllerLayout &layout) {
   RoboCollectorUiControllerOutInterface uiControllerOutInterface;
   uiControllerOutInterface.robotActCb = outInterface.robotActCb;
-  uiControllerOutInterface.helpActivatedCb = outInterface.helpActivatedCb;
-  uiControllerOutInterface.settingActivatedCb = outInterface.settingActivatedCb;
+  uiControllerOutInterface.toggleHelpPageCb = outInterface.toggleHelpPageCb;
+  uiControllerOutInterface.toggleDebugInfoCb = outInterface.toggleDebugInfoCb;
 
   RoboCollectorUiControllerConfig cfg;
   cfg.horDelimiterRsrcId = baseCfg.horDelimiterRsrcId;

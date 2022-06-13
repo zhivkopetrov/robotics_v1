@@ -183,6 +183,10 @@ ErrorCode RoboCleanerGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotActInterface =
       interface.commonLayoutInterface.playerRobotActInterface;
+  outInterface.toggleHelpPageCb =
+      interface.commonLayoutInterface.toggleHelpPageCb;
+  outInterface.toggleDebugInfoCb =
+      interface.commonLayoutInterface.toggleDebugInfoCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.startGameLostAnimCb =
       interface.commonLayoutInterface.startGameLostAnimCb;

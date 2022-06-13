@@ -27,6 +27,8 @@ public:
   void toggleDebugText();
 
 private:
+  void createDebugText(const TileConfig &cfg);
+
   Image _tileImg;
   Text _debugText;
 };

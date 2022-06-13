@@ -66,6 +66,16 @@ ErrorCode MinerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.toggleHelpPageCb) {
+    LOGERR("Error, nullptr provided for ToggleHelpPageCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.toggleDebugInfoCb) {
+    LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.startAchievementWonAnimCb) {
     LOGERR("Error, nullptr provided for StartAchievementWonAnimCb");
     return ErrorCode::FAILURE;
@@ -143,6 +153,16 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
       std::bind(
           &MinerControllerExternalBridge::handleActivateMiningValidateService,
           this, _1, _2));
+
+  _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
+      queueSize,
+      std::bind(&MinerControllerExternalBridge::onToggleHelpPageMsg, this,
+          _1));
+
+  _toggleDebugInfoSubscriber = create_subscription<Empty>(
+      TOGGLE_DEBUG_INFO_TOPIC, queueSize,
+      std::bind(&MinerControllerExternalBridge::onToggleDebugInfoMsg, this,
+          _1));
 
   return ErrorCode::SUCCESS;
 }
@@ -315,6 +335,24 @@ void MinerControllerExternalBridge::handleActivateMiningValidateService(
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+}
+
+void MinerControllerExternalBridge::onToggleHelpPageMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.toggleHelpPageCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void MinerControllerExternalBridge::onToggleDebugInfoMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.toggleDebugInfoCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 void MinerControllerExternalBridge::handleNormalMove(const FieldPos &robotPos) {

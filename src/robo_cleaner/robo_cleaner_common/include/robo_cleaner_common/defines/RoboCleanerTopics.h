@@ -18,5 +18,7 @@ constexpr auto CHARGE_BATTERY_SERVICE = "charge_battery";
 constexpr auto FIELD_MAP_REVEALED_TOPIC = "field_map_revealed";
 constexpr auto FIELD_MAP_CLEANED_TOPIC = "field_map_cleaned";
 constexpr auto SHUTDOWN_CONTROLLER_TOPIC = "shutdown_controller";
+constexpr auto TOGGLE_DEBUG_INFO_TOPIC = "toggle_debug_info";
+constexpr auto TOGGLE_HELP_PAGE_TOPIC = "toggle_help_page";
 
 #endif /* ROBO_CLEANER_COMMON_ROBOCLEANERTOPICS_H_ */

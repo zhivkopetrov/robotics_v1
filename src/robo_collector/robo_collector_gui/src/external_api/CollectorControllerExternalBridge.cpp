@@ -32,12 +32,30 @@ ErrorCode CollectorControllerExternalBridge::init(
     LOGERR("Error, nullptr provided for SystemShutdownCb");
     return ErrorCode::FAILURE;
   }
+  if (nullptr == _outInterface.toggleHelpPageCb) {
+    LOGERR("Error, nullptr provided for ToggleHelpPageCb");
+    return ErrorCode::FAILURE;
+  }
+  if (nullptr == _outInterface.toggleDebugInfoCb) {
+    LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
+    return ErrorCode::FAILURE;
+  }
 
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
   _playerActSubscriber = create_subscription<RobotMoveType>(
       ROBOT_MOVE_TYPE_TOPIC, queueSize,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
+
+  _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
+      queueSize,
+      std::bind(&CollectorControllerExternalBridge::onToggleHelpPageMsg, this,
+          _1));
+
+  _toggleDebugInfoSubscriber = create_subscription<Empty>(
+      TOGGLE_DEBUG_INFO_TOPIC, queueSize,
+      std::bind(&CollectorControllerExternalBridge::onToggleDebugInfoMsg, this,
+          _1));
 
   _playerEnableInputPublisher = create_publisher<Empty>(
       ENABLE_ROBOT_INPUT_TOPIC, queueSize);
@@ -96,4 +114,21 @@ void CollectorControllerExternalBridge::onMoveMsg(
   _outInterface.invokeActionEventCb(f2, ActionEventType::NON_BLOCKING);
 }
 
+void CollectorControllerExternalBridge::onToggleHelpPageMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.toggleHelpPageCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void CollectorControllerExternalBridge::onToggleDebugInfoMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.toggleDebugInfoCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
 

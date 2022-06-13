@@ -34,7 +34,9 @@ public:
   void drawThirdLayer() const;
 
   //TODO create a separate help page class
-  void activateHelpPage();
+  void toggleHelpPage();
+
+  void toggleDebugInfo();
 
 private:
   RoboCommonLayoutInterface produceInterface();

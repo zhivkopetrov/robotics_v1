@@ -73,11 +73,11 @@ void RoboCollectorLayout::handleEvent(const InputEvent &e) {
   }
 }
 
-void RoboCollectorLayout::activateHelpPage() {
-  _commonLayout.activateHelpPage();
+void RoboCollectorLayout::toggleHelpPage() {
+  _commonLayout.toggleHelpPage();
 }
 
-void RoboCollectorLayout::settingsActivated() {
+void RoboCollectorLayout::toggleDebugInfo() {
 
 }
 

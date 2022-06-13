@@ -84,6 +84,16 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.toggleHelpPageCb) {
+    LOGERR("Error, nullptr provided for ToggleHelpPageCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.toggleDebugInfoCb) {
+    LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.systemShutdownCb) {
     LOGERR("Error, nullptr provided for SystemShutdownCb");
     return ErrorCode::FAILURE;
@@ -159,6 +169,16 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
       std::bind(&CleanerControllerExternalBridge::handleMoveGoal, this, _1, _2),
       std::bind(&CleanerControllerExternalBridge::handleMoveCancel, this, _1),
       std::bind(&CleanerControllerExternalBridge::handleMoveAccepted, this,
+          _1));
+
+  _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
+      queueSize,
+      std::bind(&CleanerControllerExternalBridge::onToggleHelpPageMsg, this,
+          _1));
+
+  _toggleDebugInfoSubscriber = create_subscription<Empty>(
+      TOGGLE_DEBUG_INFO_TOPIC, queueSize,
+      std::bind(&CleanerControllerExternalBridge::onToggleDebugInfoMsg, this,
           _1));
 
   return ErrorCode::SUCCESS;
@@ -323,5 +343,23 @@ void CleanerControllerExternalBridge::handleChargeBatteryService(
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
+}
+
+void CleanerControllerExternalBridge::onToggleHelpPageMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.toggleHelpPageCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void CleanerControllerExternalBridge::onToggleDebugInfoMsg(
+    [[maybe_unused]]const Empty::SharedPtr msg) {
+  const auto f = [this]() {
+    _outInterface.toggleDebugInfoCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 

@@ -10,12 +10,12 @@
 //Own components headers
 
 ErrorCode HelpButton::init(const HelpButtonConfig& cfg,
-                           const HelpActivatedCb& helpActivatedCb) {
-  if (nullptr == helpActivatedCb) {
-    LOGERR("Error, nullptr provided for HelpActivatedCb");
+                           const ToggleHelpPageCb& toggleHelpPageCb) {
+  if (nullptr == toggleHelpPageCb) {
+    LOGERR("Error, nullptr provided for ToggleHelpPageCb");
     return ErrorCode::FAILURE;
   }
-  _helpActivatedCb = helpActivatedCb;
+  _toggleHelpPageCb = toggleHelpPageCb;
 
   create(cfg.rsrcId);
   setPosition(cfg.pos);
@@ -28,7 +28,7 @@ void HelpButton::handleEvent(const InputEvent& e) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
     setFrame(UNCLICKED);
-    _helpActivatedCb();
+    _toggleHelpPageCb();
   }
 }
 

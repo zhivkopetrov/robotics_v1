@@ -32,9 +32,9 @@ public:
   void handleEvent(const InputEvent &e);
 
   //TODO create a separate help page class
-  void activateHelpPage();
+  void toggleHelpPage();
 
-  void settingsActivated();
+  void toggleDebugInfo();
 
 private:
   void produceInterface(RoboCollectorLayoutInterface& interface);

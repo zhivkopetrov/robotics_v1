@@ -34,6 +34,12 @@ ErrorCode CollectorGuiExternalBridge::init(
   _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,
       queueSize);
 
+  _toggleHelpPagePublisher = create_publisher<Empty>(TOGGLE_HELP_PAGE_TOPIC,
+      queueSize);
+
+  _toggleDebugInfoPublisher = create_publisher<Empty>(TOGGLE_DEBUG_INFO_TOPIC,
+      queueSize);
+
   _enableRobotTurnSubscription = create_subscription<Empty>(
       ENABLE_ROBOT_INPUT_TOPIC, queueSize,
       std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1));
@@ -46,15 +52,15 @@ ErrorCode CollectorGuiExternalBridge::init(
   return ErrorCode::SUCCESS;
 }
 
-void CollectorGuiExternalBridge::publishToggleSettings() {
-
+void CollectorGuiExternalBridge::publishToggleDebugInfo() const {
+  _toggleDebugInfoPublisher->publish(Empty());
 }
 
-void CollectorGuiExternalBridge::publishToggleHelp() {
-
+void CollectorGuiExternalBridge::publishToggleHelpPage() const {
+  _toggleHelpPagePublisher->publish(Empty());
 }
 
-void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) {
+void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) const {
   if (MoveType::UNKNOWN == moveType) {
     LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
     return;

@@ -164,10 +164,10 @@ ErrorCode RoboCollectorLayoutInitHelper::initController(
     RoboCollectorLayout &layout) {
   RoboCollectorUiControllerOutInterface outInterface;
   outInterface.robotActCb = commonInterface.playerRobotActInterface.actCb;
-  outInterface.helpActivatedCb = std::bind(
-      &RoboCollectorLayout::activateHelpPage, &layout);
-  outInterface.settingActivatedCb = std::bind(
-      &RoboCollectorLayout::settingsActivated, &layout);
+  outInterface.toggleHelpPageCb = std::bind(
+      &RoboCollectorLayout::toggleHelpPage, &layout);
+  outInterface.toggleDebugInfoCb = std::bind(
+      &RoboCollectorLayout::toggleDebugInfo, &layout);
 
   RoboCollectorUiControllerConfig cfg;
   cfg.horDelimiterRsrcId = baseCfg.horDelimiterRsrcId;

@@ -19,6 +19,8 @@ struct CollectorControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   MoveButtonClickCb moveButtonClickCb;
   SystemShutdownCb systemShutdownCb;
+  ToggleHelpPageCb toggleHelpPageCb;
+  ToggleDebugInfoCb toggleDebugInfoCb;
 };
 
 class CollectorControllerExternalBridge: public rclcpp::Node {
@@ -41,10 +43,15 @@ private:
   };
 
   void onMoveMsg(const RobotMoveType::SharedPtr msg);
+  void onToggleHelpPageMsg(const Empty::SharedPtr msg);
+  void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
 
   CollectorControllerExternalBridgeOutInterface _outInterface;
 
   rclcpp::Subscription<RobotMoveType>::SharedPtr _playerActSubscriber;
+  rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
+  rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
+
   rclcpp::Publisher<Empty>::SharedPtr _playerEnableInputPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
 

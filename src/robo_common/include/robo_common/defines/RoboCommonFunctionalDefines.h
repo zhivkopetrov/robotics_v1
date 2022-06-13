@@ -27,6 +27,8 @@ using FinishRobotActCb = std::function<void(const RobotState&, MoveOutcome)>;
 using CancelRobotMove = std::function<void()>;
 
 //invoked before the collision animation has been started
+using ToggleDebugInfoCb = std::function<void()>;
+using ToggleHelpPageCb = std::function<void()>;
 using PlayerRobotDamageCollisionCb = std::function<void()>;
 using IndicatorDepletedCb = std::function<void()>;
 using NumberCounterTargetReachedCb = std::function<void()>;

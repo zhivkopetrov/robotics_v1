@@ -24,6 +24,8 @@ class EnergyHandler;
 struct CleanerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActInterface robotActInterface;
+  ToggleHelpPageCb toggleHelpPageCb;
+  ToggleDebugInfoCb toggleDebugInfoCb;
   SystemShutdownCb systemShutdownCb;
   StartGameLostAnimCb startGameLostAnimCb;
   AcceptGoalCb acceptGoalCb;
@@ -33,10 +35,6 @@ struct CleanerControllerExternalBridgeOutInterface {
   EnergyHandler *energyHandler = nullptr;
   RoboCleanerSolutionValidator *solutionValidator = nullptr;
 };
-
-//TODO invoke gameWonCb when successfully execute reveal + clean +
-//     get to charging station
-//grant TRIPLE_STAR if the robot is with full health at that point
 
 class CleanerControllerExternalBridge: public rclcpp::Node {
 public:
@@ -88,6 +86,9 @@ private:
       const std::shared_ptr<ChargeBattery::Request> request,
       std::shared_ptr<ChargeBattery::Response> response);
 
+  void onToggleHelpPageMsg(const Empty::SharedPtr msg);
+  void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
+
   CleanerControllerExternalBridgeOutInterface _outInterface;
 
   rclcpp_action::Server<RobotMove>::SharedPtr _moveActionServer;
@@ -99,6 +100,9 @@ private:
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapCleanedPublisher;
+
+  rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
+  rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
 
   ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };

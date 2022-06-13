@@ -22,11 +22,11 @@ struct SettingsButtonConfig {
 class SettingsButton final : public ButtonBase {
 public:
   ErrorCode init(const SettingsButtonConfig& cfg,
-                 const SettingActivatedCb& settingActivatedCb);
+                 const ToggleDebugInfoCb& toggleDebugInfoCb);
   void handleEvent(const InputEvent& e) override;
 
 private:
-  SettingActivatedCb _settingActivatedCb;
+  ToggleDebugInfoCb _toggleDebugInfoCb;
 };
 
 #endif /* ROBO_COLLECTOR_COMMON_SETTINGSBUTTON_H_ */

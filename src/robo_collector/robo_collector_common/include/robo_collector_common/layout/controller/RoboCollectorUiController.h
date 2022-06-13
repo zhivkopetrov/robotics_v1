@@ -27,8 +27,8 @@ struct RoboCollectorUiControllerConfig {
 
 struct RoboCollectorUiControllerOutInterface {
   RobotActCb robotActCb;
-  HelpActivatedCb helpActivatedCb;
-  SettingActivatedCb settingActivatedCb;
+  ToggleHelpPageCb toggleHelpPageCb;
+  ToggleDebugInfoCb toggleDebugInfoCb;
 };
 
 class RoboCollectorUiController {

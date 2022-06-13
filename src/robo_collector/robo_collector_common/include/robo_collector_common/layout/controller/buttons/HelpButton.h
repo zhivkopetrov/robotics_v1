@@ -22,11 +22,12 @@ struct HelpButtonConfig {
 class HelpButton final : public ButtonBase {
 public:
   ErrorCode init(const HelpButtonConfig& cfg,
-                 const HelpActivatedCb& helpActivatedCb);
+                 const ToggleHelpPageCb& toggleHelpPageCb);
+
   void handleEvent(const InputEvent& e) override;
 
 private:
-  HelpActivatedCb _helpActivatedCb;
+  ToggleHelpPageCb _toggleHelpPageCb;
 };
 
 #endif /* ROBO_COLLECTOR_COMMON_HELPBUTTON_H_ */

@@ -62,11 +62,11 @@ ErrorCode RoboCollectorControllerInitHelper::initLayout(
   outInterface.robotActCb = std::bind(
       &CollectorGuiExternalBridge::publishRobotAct,
       guiExternalBridgeRawPointer, _1);
-  outInterface.helpActivatedCb = std::bind(
-      &CollectorGuiExternalBridge::publishToggleHelp,
+  outInterface.toggleDebugInfoCb = std::bind(
+      &CollectorGuiExternalBridge::publishToggleDebugInfo,
       guiExternalBridgeRawPointer);
-  outInterface.settingActivatedCb = std::bind(
-      &CollectorGuiExternalBridge::publishToggleSettings,
+  outInterface.toggleHelpPageCb = std::bind(
+      &CollectorGuiExternalBridge::publishToggleHelpPage,
       guiExternalBridgeRawPointer);
 
   if (ErrorCode::SUCCESS !=

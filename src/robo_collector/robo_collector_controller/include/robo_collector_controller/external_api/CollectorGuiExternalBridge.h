@@ -27,9 +27,9 @@ public:
 
   ErrorCode init(const CollectorGuiExternalBridgeOutInterface &interface);
 
-  void publishToggleSettings();
-  void publishToggleHelp();
-  void publishRobotAct(MoveType moveType);
+  void publishToggleDebugInfo() const;
+  void publishToggleHelpPage() const;
+  void publishRobotAct(MoveType moveType) const;
 
 private:
   using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
@@ -40,6 +40,8 @@ private:
 
   CollectorGuiExternalBridgeOutInterface _outInterface;
   rclcpp::Publisher<RobotMoveType>::SharedPtr _robotActPublisher;
+  rclcpp::Publisher<Empty>::SharedPtr _toggleHelpPagePublisher;
+  rclcpp::Publisher<Empty>::SharedPtr _toggleDebugInfoPublisher;
 
   rclcpp::Subscription<Empty>::SharedPtr _enableRobotTurnSubscription;
   rclcpp::Subscription<Empty>::SharedPtr _shutdownControllerSubscription;

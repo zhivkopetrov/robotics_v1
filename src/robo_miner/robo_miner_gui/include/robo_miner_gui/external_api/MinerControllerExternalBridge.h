@@ -25,6 +25,8 @@ class SolutionValidator;
 struct MinerControllerExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
   RobotActCb robotActCb;
+  ToggleHelpPageCb toggleHelpPageCb;
+  ToggleDebugInfoCb toggleDebugInfoCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   StartGameLostAnimCb startGameLostAnimCb;
   TileReleavedCb tileReleavedCb;
@@ -81,6 +83,9 @@ private:
       const std::shared_ptr<ActivateMiningValidate::Request> request,
       std::shared_ptr<ActivateMiningValidate::Response> response);
 
+  void onToggleHelpPageMsg(const Empty::SharedPtr msg);
+  void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
+
   void handleNormalMove(const FieldPos &robotPos);
   void handleMiningMove(const FieldPos &robotPos);
 
@@ -94,6 +99,9 @@ private:
 
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
+
+  rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
+  rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
 
   ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };

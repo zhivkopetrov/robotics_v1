@@ -119,6 +119,10 @@ ErrorCode RoboCollectorGuiInitHelper::initControllerExternalBridge(
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.moveButtonClickCb = interface.moveButtonClickCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
+  outInterface.toggleHelpPageCb =
+      interface.commonLayoutInterface.toggleHelpPageCb;
+  outInterface.toggleDebugInfoCb =
+      interface.commonLayoutInterface.toggleDebugInfoCb;
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

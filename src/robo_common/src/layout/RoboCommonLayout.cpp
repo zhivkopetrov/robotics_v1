@@ -42,7 +42,11 @@ void RoboCommonLayout::drawThirdLayer() const {
   _gameEndAnimator.draw();
 }
 
-void RoboCommonLayout::activateHelpPage() {
+void RoboCommonLayout::toggleHelpPage() {
+
+}
+
+void RoboCommonLayout::toggleDebugInfo() {
   _field.toggleDebugTexts();
 }
 
@@ -64,6 +68,10 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
       std::bind(&Robot::getAbsolutePos, &_playerRobot),
       std::bind(&Robot::getRotationAngle, &_playerRobot)
   };
+  interface.toggleHelpPageCb = std::bind(&RoboCommonLayout::toggleHelpPage,
+      this);
+  interface.toggleDebugInfoCb = std::bind(&RoboCommonLayout::toggleDebugInfo,
+      this);
   interface.startGameWonAnimCb = std::bind(&GameEndAnimator::startGameWonAnim,
       &_gameEndAnimator);
   interface.startGameLostAnimCb = std::bind(&GameEndAnimator::startGameLostAnim,

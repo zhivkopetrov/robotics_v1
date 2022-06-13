@@ -12,12 +12,12 @@
 //Own components headers
 
 ErrorCode SettingsButton::init(const SettingsButtonConfig& cfg,
-                               const SettingActivatedCb& settingActivatedCb) {
-  if (nullptr == settingActivatedCb) {
-    LOGERR("Error, nullptr provided for SettingActivatedCb");
+                               const ToggleDebugInfoCb& toggleDebugInfoCb) {
+  if (nullptr == toggleDebugInfoCb) {
+    LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
     return ErrorCode::FAILURE;
   }
-  _settingActivatedCb = settingActivatedCb;
+  _toggleDebugInfoCb = toggleDebugInfoCb;
 
   create(cfg.rsrcId);
   setPosition(cfg.pos);
@@ -30,7 +30,7 @@ void SettingsButton::handleEvent(const InputEvent& e) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
     setFrame(UNCLICKED);
-    _settingActivatedCb();
+    _toggleDebugInfoCb();
   }
 }
 

@@ -19,8 +19,8 @@ struct RoboCollectorControllerLayoutInterface {
 
 struct RoboCollectorControllerLayoutOutInterface {
   RobotActCb robotActCb;
-  HelpActivatedCb helpActivatedCb;
-  SettingActivatedCb settingActivatedCb;
+  ToggleDebugInfoCb toggleDebugInfoCb;
+  ToggleHelpPageCb toggleHelpPageCb;
 };
 
 
