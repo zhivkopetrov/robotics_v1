@@ -16,8 +16,11 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
     return ErrorCode::FAILURE;
   }
 
-  //TODO attach gameWonCb on end of triple star animation
-  //the DOUBLE_STAR will be the longest sequence algorithm completion
+  const auto startGameLostAnimCb = interface.startGameLostAnimCb;
+  const auto startGameWonAnimCb = interface.startGameWonAnimCb;
+  const auto shutdownControllerCb = interface.shutdownControllerCb;
+  const auto startAchievementWonCb = interface.startAchievementWonAnimCb;
+
   auto panelPos = Point(1250, 50);
   const auto lightGoldColor = Color(0xD4AF37FF);
   NumberCounterPanelUtilityConfig numberCounterPanelUtilityCfg;
@@ -31,13 +34,12 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
     return ErrorCode::FAILURE;
   }
 
-  const auto achievementWonCb = interface.startAchievementWonAnimCb;
-  const auto gameWonCb = interface.startGameWonAnimCb;
   panelPos.y += 165;
   numberCounterPanelUtilityCfg.targetReachedCb =
-      [achievementWonCb, gameWonCb]() {
-        achievementWonCb(Achievement::TRIPLE_STAR);
-        gameWonCb();
+      [shutdownControllerCb, startAchievementWonCb, startGameWonAnimCb]() {
+        shutdownControllerCb();
+        startAchievementWonCb(Achievement::TRIPLE_STAR);
+        startGameWonAnimCb();
       };
   numberCounterPanelUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _crystalPanel.init(cfg.crystalPanelCfg,
@@ -48,7 +50,11 @@ ErrorCode PanelHandler::init(const PanelHandlerConfig &cfg,
 
   panelPos.y += 175;
   IndicatorPanelUtilityConfig indicatorUtilityCfg;
-  indicatorUtilityCfg.indicatorDepletedCb = interface.startGameLostAnimCb;
+  indicatorUtilityCfg.indicatorDepletedCb =
+      [shutdownControllerCb, startGameLostAnimCb]() {
+        shutdownControllerCb();
+        startGameLostAnimCb();
+      };
   indicatorUtilityCfg.pos = panelPos;
   if (ErrorCode::SUCCESS != _healthPanel.init(cfg.healthPanelCfg,
           indicatorUtilityCfg)) {
@@ -86,6 +92,11 @@ ErrorCode PanelHandler::validateInterface(
 
   if (nullptr == interface.startGameWonAnimCb) {
     LOGERR("Error, nullptr provided for StartGameWonAnimCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == interface.shutdownControllerCb) {
+    LOGERR("Error, nullptr provided for ShutdownControllerCb");
     return ErrorCode::FAILURE;
   }
 

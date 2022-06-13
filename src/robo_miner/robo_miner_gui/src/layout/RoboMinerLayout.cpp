@@ -15,8 +15,8 @@
 using namespace std::placeholders;
 
 ErrorCode RoboMinerLayout::init(const RoboMinerLayoutConfig &cfg,
-                              const RoboMinerLayoutOutInterface &outInterface,
-                              RoboMinerLayoutInterface &interface) {
+                                const RoboMinerLayoutOutInterface &outInterface,
+                                RoboMinerLayoutInterface &interface) {
   if (ErrorCode::SUCCESS != RoboMinerLayoutInitHelper::init(cfg, outInterface,
           interface.commonLayoutInterface, *this)) {
     LOGERR("Error, RoboMinerLayoutInitHelper::init() failed");

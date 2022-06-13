@@ -20,6 +20,10 @@ MinerControllerExternalBridge::MinerControllerExternalBridge()
 
 }
 
+MinerControllerExternalBridge::~MinerControllerExternalBridge() noexcept {
+  _shutdownControllerPublisher->publish(Empty());
+}
+
 ErrorCode MinerControllerExternalBridge::init(
     const MinerControllerExternalBridgeOutInterface &interface) {
   if (ErrorCode::SUCCESS != initOutInterface(interface)) {
@@ -35,21 +39,15 @@ ErrorCode MinerControllerExternalBridge::init(
   return ErrorCode::SUCCESS;
 }
 
+//called from the main thread
 void MinerControllerExternalBridge::publishShutdownController() {
+  _controllerStatus = ControllerStatus::SHUTTING_DOWN;
   _shutdownControllerPublisher->publish(Empty());
-
-  const auto f = [this]() {
-    _outInterface.systemShutdownCb();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
+//called from the main thread
 void MinerControllerExternalBridge::publishFieldMapRevealed() {
-  const auto f = [this]() {
-    _outInterface.solutionValidator->fieldMapRevealed();
-  };
-  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
-
+  _outInterface.solutionValidator->fieldMapRevealed();
   _fieldMapReveleadedPublisher->publish(Empty());
 }
 
@@ -98,11 +96,6 @@ ErrorCode MinerControllerExternalBridge::initOutInterface(
 
   if (nullptr == _outInterface.crystalMinedCb) {
     LOGERR("Error, nullptr provided for CrystalMinedCb");
-    return ErrorCode::FAILURE;
-  }
-
-  if (nullptr == _outInterface.systemShutdownCb) {
-    LOGERR("Error, nullptr provided for SystemShutdownCb");
     return ErrorCode::FAILURE;
   }
 
@@ -178,7 +171,7 @@ void MinerControllerExternalBridge::handleInitialRobotPosService(
 
     response->robot_position_response.success = success && !majorError;
     if (majorError) {
-      _outInterface.startGameLostAnimCb();
+      handleMajorError();
       return;
     }
 
@@ -210,7 +203,14 @@ void MinerControllerExternalBridge::handleRobotMoveService(
       response->robot_position_response.success = false;
       response->robot_position_response.error_reason =
           "Rejecting Move Service because another one is already active";
-      LOGERR("%s", response->robot_position_response.error_reason.c_str());
+      LOGR("%s", response->robot_position_response.error_reason.c_str());
+      return;
+    }
+    if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
+      response->robot_position_response.success = false;
+      response->robot_position_response.error_reason =
+          "Rejecting Move Service because controller is shutting down";
+      LOGR("%s", response->robot_position_response.error_reason.c_str());
       return;
     }
 
@@ -276,7 +276,7 @@ void MinerControllerExternalBridge::handleFieldMapValidateService(
             response->error_reason);
     response->success = success && !majorError;
     if (majorError) {
-      _outInterface.startGameLostAnimCb();
+      handleMajorError();
       return;
     }
 
@@ -304,7 +304,7 @@ void MinerControllerExternalBridge::handleLongestSequenceValidateService(
             response->error_reason);
     response->success = success && !majorError;
     if (majorError) {
-      _outInterface.startGameLostAnimCb();
+      handleMajorError();
       return;
     }
 
@@ -325,7 +325,7 @@ void MinerControllerExternalBridge::handleActivateMiningValidateService(
             response->error_reason);
     response->success = success && !majorError;
     if (majorError) {
-      _outInterface.startGameLostAnimCb();
+      handleMajorError();
       return;
     }
 
@@ -368,12 +368,17 @@ void MinerControllerExternalBridge::handleMiningMove(const FieldPos &robotPos) {
   const auto [success, majorError] =
       _outInterface.solutionValidator->handleMiningMove(robotPos);
   if (majorError) {
-    _outInterface.startGameLostAnimCb();
+    handleMajorError();
     return;
   }
 
   if (success) {
     _outInterface.crystalMinedCb();
   }
+}
+
+void MinerControllerExternalBridge::handleMajorError() {
+  _controllerStatus = ControllerStatus::SHUTTING_DOWN;
+  _outInterface.startGameLostAnimCb();
 }
 

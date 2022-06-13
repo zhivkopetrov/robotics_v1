@@ -70,7 +70,8 @@ ErrorCode RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
   outInterface.collisionWatcher = &gui._collisionWatcher;
   outInterface.finishRobotActCb = std::bind(&MovementWatcher::changeState,
       &gui._movementWatcher, _1, _2);
-  outInterface.shutdownGameCb = std::bind(
+  outInterface.shutdownGameCb = gui._systemShutdownCb;
+  outInterface.shutdownControllerCb = std::bind(
       &MinerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());
   outInterface.fieldMapRevelealedCb = std::bind(
@@ -122,7 +123,6 @@ ErrorCode RoboMinerGuiInitHelper::initControllerExternalBridge(
   outInterface.revealFogOfWarTilesCb =
       interface.commonLayoutInterface.revealFogOfWarTilesCb;
   outInterface.crystalMinedCb = interface.crystalMinedCb;
-  outInterface.systemShutdownCb = gui._systemShutdownCb;
   outInterface.movementWatcher = &gui._movementWatcher;
   outInterface.solutionValidator = &gui._solutionValidator;
 

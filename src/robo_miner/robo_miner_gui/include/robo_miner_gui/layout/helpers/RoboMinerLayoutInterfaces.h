@@ -22,6 +22,7 @@ struct RoboMinerLayoutInterface {
 
 struct RoboMinerLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
+  ShutdownControllerCb shutdownControllerCb;
   FieldMapRevelealedCb fieldMapRevelealedCb;
   FinishRobotActCb finishRobotActCb;
   CollisionWatcher *collisionWatcher = nullptr;

@@ -32,7 +32,6 @@ struct MinerControllerExternalBridgeOutInterface {
   TileReleavedCb tileReleavedCb;
   RevealFogOfWarTilesCb revealFogOfWarTilesCb;
   CrystalMinedCb crystalMinedCb;
-  SystemShutdownCb systemShutdownCb;
   MovementWatcher *movementWatcher = nullptr;
   SolutionValidator *solutionValidator = nullptr;
 };
@@ -40,6 +39,7 @@ struct MinerControllerExternalBridgeOutInterface {
 class MinerControllerExternalBridge: public rclcpp::Node {
 public:
   MinerControllerExternalBridge();
+  ~MinerControllerExternalBridge() noexcept;
 
   ErrorCode init(const MinerControllerExternalBridgeOutInterface &interface);
 
@@ -57,7 +57,7 @@ private:
   using ActivateMiningValidate = robo_miner_interfaces::srv::ActivateMiningValidate;
 
   enum class ControllerStatus {
-    IDLE, ACTIVE
+    IDLE, ACTIVE, SHUTTING_DOWN
   };
 
   ErrorCode initOutInterface(
@@ -88,6 +88,8 @@ private:
 
   void handleNormalMove(const FieldPos &robotPos);
   void handleMiningMove(const FieldPos &robotPos);
+
+  void handleMajorError();
 
   MinerControllerExternalBridgeOutInterface _outInterface;
 

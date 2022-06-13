@@ -56,6 +56,8 @@ ErrorCode RoboMinerLayoutInitHelper::initPanelHandler(
       commonInterface.startGameWonAnimCb;
   panelHandlerOutInterface.startGameLostAnimCb =
       commonInterface.startGameLostAnimCb;
+  panelHandlerOutInterface.shutdownControllerCb =
+      outInterface.shutdownControllerCb;
   panelHandlerOutInterface.startAchievementWonAnimCb =
       commonInterface.startAchievementWonAnimCb;
   panelHandlerOutInterface.fieldMapRevelealedCb =
