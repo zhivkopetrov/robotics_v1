@@ -14,8 +14,8 @@
 
 //Own components headers
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
-#include "robo_collector_gui/config/RoboCollectorROS2ParamProvider.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
+#include "robo_collector_gui/external_api/RoboCollectorGuiRos2ParamProvider.h"
 #include "generated/RoboCollectorGuiResources.h"
 
 namespace {
@@ -243,7 +243,8 @@ ApplicationConfig RoboCollectorGuiConfigGenerator::generateConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
 
-  auto paramProviderNode = std::make_shared<RoboCollectorROS2ParamProvider>();
+  auto paramProviderNode =
+      std::make_shared<RoboCollectorGuiRos2ParamProvider>();
   const auto rosParams = paramProviderNode->getParams();
   rosParams.print();
 

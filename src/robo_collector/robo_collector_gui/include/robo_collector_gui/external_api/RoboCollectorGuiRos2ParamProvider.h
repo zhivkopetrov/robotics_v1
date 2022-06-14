@@ -1,5 +1,5 @@
-#ifndef ROBO_COLLECTOR_GUI_ROBOCOLLECTORROS2PARAMPROVIDER_H_
-#define ROBO_COLLECTOR_GUI_ROBOCOLLECTORROS2PARAMPROVIDER_H_
+#ifndef ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIROS2PARAMPROVIDER_H_
+#define ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIROS2PARAMPROVIDER_H_
 
 //System headers
 
@@ -21,9 +21,9 @@ struct RoboCollectorGuiRos2Params {
   void print() const;
 };
 
-class RoboCollectorROS2ParamProvider : public rclcpp::Node {
+class RoboCollectorGuiRos2ParamProvider : public rclcpp::Node {
 public:
-  RoboCollectorROS2ParamProvider();
+  RoboCollectorGuiRos2ParamProvider();
 
   RoboCollectorGuiRos2Params getParams();
 
@@ -31,4 +31,4 @@ private:
   RoboCollectorGuiRos2Params _params;
 };
 
-#endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORROS2PARAMPROVIDER_H_ */
+#endif /* ROBO_COLLECTOR_GUI_ROBOCOLLECTORGUIROS2PARAMPROVIDER_H_ */

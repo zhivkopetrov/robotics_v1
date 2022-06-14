@@ -12,26 +12,14 @@
 
 //Own components headers
 #include "robo_collector_controller/config/RoboCollectorControllerConfig.h"
+#include "robo_collector_controller/external_api/RoboCollectorControllerRos2ParamProvider.h"
 #include "generated/RoboCollectorControllerResources.h"
 
 namespace {
-//TODO parse the params from config
 constexpr auto PROJECT_FOLDER_NAME = "robo_collector_controller";
 
-//screen
-constexpr auto WINDOW_X = 1272;
-constexpr auto WINDOW_Y = 527;
-constexpr auto WINDOW_WIDTH = 648;
-constexpr auto WINDOW_HEIGHT = 553;
-
-//misc
-constexpr auto LOCAL_CONTROLLER_MODE = LocalControllerMode::ENABLED;
-
-enum TimerId {
-
-};
-
-RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig() {
+RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig(
+    LocalControllerMode localControllerMode) {
   RoboCollectorUiControllerBaseConfig cfg;
 
   cfg.moveButtonsRsrcIds = { RoboCollectorControllerResources::UP_BUTTON,
@@ -42,12 +30,13 @@ RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig() {
   cfg.vertDelimiterRsrcId = RoboCollectorControllerResources::VERT_DELIMITER;
   cfg.helpButtonRsrcId = RoboCollectorControllerResources::HELP_BUTTON;
   cfg.settingsButtonRsrcId = RoboCollectorControllerResources::SETTINGS_BUTTON;
-  cfg.localControllerMode = LOCAL_CONTROLLER_MODE;
+  cfg.localControllerMode = localControllerMode;
 
   return cfg;
 }
 
-EngineConfig generateEngineConfig() {
+EngineConfig generateEngineConfig(
+    const RoboCollectorControllerRos2Params& rosParams) {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -57,9 +46,9 @@ EngineConfig generateEngineConfig() {
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/icons/joystick.png");
-  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
-  windowCfg.width = WINDOW_WIDTH;
-  windowCfg.height = WINDOW_HEIGHT;
+  windowCfg.pos = Point(rosParams.guiWindow.x, rosParams.guiWindow.y);
+  windowCfg.width = rosParams.guiWindow.w;
+  windowCfg.height = rosParams.guiWindow.h;
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
@@ -69,10 +58,12 @@ EngineConfig generateEngineConfig() {
   return cfg;
 }
 
-RoboCollectorControllerConfig generateGameConfig() {
+RoboCollectorControllerConfig generateGameConfig(
+    const RoboCollectorControllerRos2Params& rosParams) {
   RoboCollectorControllerConfig cfg;
   auto& layoutCfg = cfg.layoutCfg;
-  layoutCfg.uiControllerCfg = generateRoboCollectorUiControllerConfig();
+  layoutCfg.uiControllerCfg =
+      generateRoboCollectorUiControllerConfig(rosParams.localControrllerMode);
   layoutCfg.mapRsrcId = RoboCollectorControllerResources::MAP;
 
   return cfg;
@@ -108,8 +99,14 @@ RoboCollectorControllerConfigGenerator::generateDependencies(
 
 ApplicationConfig RoboCollectorControllerConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
-  cfg.engineCfg = generateEngineConfig();
-  cfg.gameCfg = generateGameConfig();
+
+  auto paramProviderNode =
+      std::make_shared<RoboCollectorControllerRos2ParamProvider>();
+  const auto rosParams = paramProviderNode->getParams();
+  rosParams.print();
+
+  cfg.engineCfg = generateEngineConfig(rosParams);
+  cfg.gameCfg = generateGameConfig(rosParams);
   return cfg;
 }
 
