@@ -1,0 +1,10 @@
+/RoboCollectorGuiRos2ParamProvider:
+  ros__parameters:
+    use_sim_time: false
+    gui_window_x: 72
+    gui_window_y: 27
+    gui_window_width: 1848
+    gui_window_height: 1053
+    total_game_seconds: 180
+    target_win_coins: 30
+    use_local_controller_mode: False

@@ -31,6 +31,17 @@ ErrorCode CoinRespawnAnim::init(const CoinRespawnAnimConfig& cfg) {
 }
 
 void CoinRespawnAnim::start() {
+  //the game is going too fast. This is not a logical error,
+  //but animation needs to be updated accordingly
+  //This is due to the fact that the coin was collided while still
+  //in respawn phase
+  //the new position is already set -> keep the animation active and reset state
+  if (isAnimationActive()) {
+    animationSteps = ANIM_STEPS;
+    restartTimerInterval(_timerId);
+    return;
+  }
+
   constexpr auto timerInterval = 250;
   startTimer(timerInterval, _timerId, TimerType::PULSE);
 }

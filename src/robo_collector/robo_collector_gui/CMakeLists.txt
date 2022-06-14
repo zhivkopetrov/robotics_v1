@@ -26,6 +26,7 @@ add_executable(
         ${_INC_DIR}/RoboCollectorGui.h
         ${_INC_DIR}/config/RoboCollectorGuiConfig.h
         ${_INC_DIR}/config/RoboCollectorGuiConfigGenerator.h
+        ${_INC_DIR}/config/RoboCollectorROS2ParamProvider.h
         ${_INC_DIR}/defines/RoboCollectorGuiDefines.h
         ${_INC_DIR}/defines/RoboCollectorGuiFunctionalDefines.h
         ${_INC_DIR}/helpers/RoboCollectorBuilder.h
@@ -48,6 +49,7 @@ add_executable(
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/RoboCollectorGui.cpp
         ${_SRC_DIR}/config/RoboCollectorGuiConfigGenerator.cpp
+        ${_SRC_DIR}/config/RoboCollectorROS2ParamProvider.cpp
         ${_SRC_DIR}/helpers/TurnHelper.cpp
         ${_SRC_DIR}/helpers/RoboCollectorBuilder.cpp
         ${_SRC_DIR}/helpers/RoboCollectorGuiInitHelper.cpp

@@ -19,6 +19,7 @@
 
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>ament_index_cpp</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
   <exec_depend>robo_collector_interfaces</exec_depend>
   <exec_depend>robo_collector_common</exec_depend>
   <exec_depend>ros2_game_engine</exec_depend>

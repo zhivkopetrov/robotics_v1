@@ -78,6 +78,6 @@ void RoboCollectorLayout::toggleHelpPage() {
 }
 
 void RoboCollectorLayout::toggleDebugInfo() {
-
+  _commonLayout.toggleDebugInfo();
 }
 

@@ -14,26 +14,13 @@
 
 //Own components headers
 #include "robo_collector_gui/config/RoboCollectorGuiConfig.h"
+#include "robo_collector_gui/config/RoboCollectorROS2ParamProvider.h"
 #include "robo_collector_gui/defines/RoboCollectorGuiDefines.h"
 #include "generated/RoboCollectorGuiResources.h"
 
 namespace {
-//TODO parse the params from config
 constexpr auto PROJECT_FOLDER_NAME = "robo_collector_gui";
-
-//screen
-constexpr auto WINDOW_X = 72;
-constexpr auto WINDOW_Y = 27;
-constexpr auto WINDOW_WIDTH = 1848;
-constexpr auto WINDOW_HEIGHT = 1053;
-
-//field
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::ENABLED;
-
-//misc
-constexpr auto TOTAL_GAME_SECONDS = 180;
-constexpr auto LOCAL_CONTROLLER_MODE = LocalControllerMode::DISABLED;
-constexpr auto TARGET_WIN_COINS = 30;
 
 enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_START,
@@ -94,7 +81,8 @@ RobotBaseConfig generateRobotBaseConfig() {
   return cfg;
 }
 
-RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig() {
+RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig(
+    LocalControllerMode localControllerMode) {
   RoboCollectorUiControllerBaseConfig cfg;
 
   cfg.moveButtonsRsrcIds = { RoboCollectorGuiResources::UP_BUTTON,
@@ -105,12 +93,12 @@ RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig() {
   cfg.vertDelimiterRsrcId = RoboCollectorGuiResources::VERT_DELIMITER;
   cfg.helpButtonRsrcId = RoboCollectorGuiResources::HELP_BUTTON;
   cfg.settingsButtonRsrcId = RoboCollectorGuiResources::SETTINGS_BUTTON;
-  cfg.localControllerMode = LOCAL_CONTROLLER_MODE;
+  cfg.localControllerMode = localControllerMode;
 
   return cfg;
 }
 
-CoinHandlerConfig generateCoinHandlerConfig() {
+CoinHandlerConfig generateCoinHandlerConfig(int32_t targetWinCoints) {
   CoinHandlerConfig cfg;
 
   cfg.animRsrcIds = { RoboCollectorGuiResources::COIN_ANIM_GOLD,
@@ -119,7 +107,7 @@ CoinHandlerConfig generateCoinHandlerConfig() {
   cfg.fieldMarkers = { 'g', 's', 'b' //gold, silver, bronze
       };
   cfg.maxCoins = Defines::COINS_CTN;
-  cfg.targetWinCoins = TARGET_WIN_COINS;
+  cfg.targetWinCoins = targetWinCoints;
   cfg.rotateAnimFirstTimerId = COIN_ROTATE_ANIM_TIMER_ID_START;
   cfg.collectAnimFirstTimerId = COIN_COLLECT_ANIM_TIMER_ID_START;
   cfg.respawnAnimFirstTimerId = COIN_RESPAWN_ANIM_TIMER_ID_START;
@@ -128,7 +116,8 @@ CoinHandlerConfig generateCoinHandlerConfig() {
   return cfg;
 }
 
-PanelHandlerConfig generatePanelHandlerConfig() {
+PanelHandlerConfig generatePanelHandlerConfig(int32_t targetWinCoints,
+                                              int32_t totalGameSeconds) {
   PanelHandlerConfig cfg;
 
   auto &healthPanelCfg = cfg.healthPanelCfg;
@@ -139,7 +128,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
       HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID;
 
   auto &coinPanelCfg = cfg.coinPanelCfg;
-  coinPanelCfg.targetNumber = TARGET_WIN_COINS;
+  coinPanelCfg.targetNumber = targetWinCoints;
   coinPanelCfg.rsrcId = RoboCollectorGuiResources::COIN_PANEL;
   coinPanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
   coinPanelCfg.incrTimerId = COIN_PANEL_INCR_TIMER_ID;
@@ -150,7 +139,7 @@ PanelHandlerConfig generatePanelHandlerConfig() {
   timePanelCfg.fontId = RoboCollectorGuiResources::VINQUE_RG_75;
   timePanelCfg.clockTimerId = TIME_PANEL_CLOCK_TIMER_ID;
   timePanelCfg.blinkTimerId = TIME_PANEL_BLINK_TIMER_ID;
-  timePanelCfg.totalSeconds = TOTAL_GAME_SECONDS;
+  timePanelCfg.totalSeconds = totalGameSeconds;
 
   return cfg;
 }
@@ -175,7 +164,8 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
+EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
+                                  const RoboCollectorGuiRos2Params& rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -183,9 +173,9 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/entities/player_robot.png");
-  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
-  windowCfg.width = WINDOW_WIDTH;
-  windowCfg.height = WINDOW_HEIGHT;
+  windowCfg.pos = Point(rosParams.guiWindow.x, rosParams.guiWindow.y);
+  windowCfg.width = rosParams.guiWindow.w;
+  windowCfg.height = rosParams.guiWindow.h;
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
@@ -195,16 +185,19 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
 }
 
 RoboCollectorGuiConfig generateGameConfig(
-    const std::string& projectInstallPrefix) {
+    const std::string& projectInstallPrefix,
+    const RoboCollectorGuiRos2Params& rosParams) {
   RoboCollectorGuiConfig cfg;
   const auto levelId = 1;
   const auto [fieldDescr, initialRobotState] =
       LevelFileLoader::readLevelData(projectInstallPrefix, levelId);
 
   auto &layoutCfg = cfg.layoutCfg;
-  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig();
-  layoutCfg.coinHandlerCfg = generateCoinHandlerConfig();
-  layoutCfg.controllerCfg = generateRoboCollectorUiControllerConfig();
+  layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
+      rosParams.targetWinCoins, rosParams.totalGameSeconds);
+  layoutCfg.coinHandlerCfg = generateCoinHandlerConfig(rosParams.targetWinCoins);
+  layoutCfg.controllerCfg = generateRoboCollectorUiControllerConfig(
+      rosParams.localControrllerMode);
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
@@ -250,8 +243,13 @@ ApplicationConfig RoboCollectorGuiConfigGenerator::generateConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
 
-  cfg.engineCfg = generateEngineConfig(projectInstallPrefix);
-  cfg.gameCfg = generateGameConfig(projectInstallPrefix);
+  auto paramProviderNode = std::make_shared<RoboCollectorROS2ParamProvider>();
+  const auto rosParams = paramProviderNode->getParams();
+  rosParams.print();
+
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
+
   return cfg;
 }
 
