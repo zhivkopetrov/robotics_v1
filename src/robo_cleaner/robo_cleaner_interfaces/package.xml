@@ -3,9 +3,9 @@
 <package format="3">
   <name>robo_cleaner_interfaces</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>robo_cleaner_interfaces definitions</description>
   <maintainer email="zhivko.petrov@ocado.com">Zhivko Petrov</maintainer>
-  <license>TODO: License declaration</license>
+  <license file="LICENSE_apache_2_0">Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
