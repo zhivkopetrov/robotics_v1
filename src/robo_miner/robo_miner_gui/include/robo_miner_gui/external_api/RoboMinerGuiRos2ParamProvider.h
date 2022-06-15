@@ -18,6 +18,7 @@ struct RoboMinerGuiRos2Params {
   FogOfWarStatus fogOfWarStatus = FogOfWarStatus::ENABLED;
 
   void print() const;
+  void validate();
 };
 
 class RoboMinerGuiRos2ParamProvider : public rclcpp::Node {

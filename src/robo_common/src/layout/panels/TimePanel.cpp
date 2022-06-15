@@ -64,7 +64,9 @@ void TimePanel::processClockTick() {
 
   if (0 == _remainingSeconds) {
     stopTimer(_clockTimerId);
-    stopTimer(_blinkTimerId);
+    if (isActiveTimerId(_blinkTimerId)) {
+      stopTimer(_blinkTimerId);
+    }
     _timeFinishedCb();
     return;
   }

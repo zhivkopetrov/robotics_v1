@@ -18,6 +18,7 @@ struct RoboCleanerGuiRos2Params {
   FogOfWarStatus fogOfWarStatus = FogOfWarStatus::ENABLED;
 
   void print() const;
+  void validate();
 };
 
 class RoboCleanerGuiRos2ParamProvider : public rclcpp::Node {

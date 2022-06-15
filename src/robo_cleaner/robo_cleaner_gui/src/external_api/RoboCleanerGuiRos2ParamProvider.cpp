@@ -20,14 +20,26 @@ constexpr auto LEVEL_ID_PARAM_NAME = "level_id";
 constexpr auto USE_FOG_OF_WAR_PARAM_NAME = "use_fog_of_war";
 
 //screen
-constexpr auto DEFAULT_WINDOW_X = 1272;
-constexpr auto DEFAULT_WINDOW_Y = 527;
-constexpr auto DEFAULT_WINDOW_WIDTH = 648;
-constexpr auto DEFAULT_WINDOW_HEIGHT = 553;
+constexpr auto DEFAULT_WINDOW_X = 72;
+constexpr auto DEFAULT_WINDOW_Y = 27;
+constexpr auto DEFAULT_WINDOW_WIDTH = 1848;
+constexpr auto DEFAULT_WINDOW_HEIGHT = 1053;
 
 //misc
 constexpr auto DEFAULT_LEVEL_ID = 1;
 constexpr auto DEFAULT_USE_FOG_OF_WAR = true;
+
+constexpr auto MAX_SUPPORTED_LEVEL_ID = 3;
+
+template<typename T>
+void handleParamError(const char* paramName, T& value, const T& defaultValue) {
+  std::ostringstream ostr;
+  ostr << "Param: [" << paramName << "] has invalid value: [" << value
+       << "]. Overriding with default value: [" << defaultValue << "]";
+  LOGR("%s", ostr.str().c_str());
+
+  value = defaultValue;
+}
 }
 
 void RoboCleanerGuiRos2Params::print() const {
@@ -45,6 +57,20 @@ void RoboCleanerGuiRos2Params::print() const {
        << "=================================================================\n";
 
   LOG("%s", ostr.str().c_str());
+}
+
+void RoboCleanerGuiRos2Params::validate() {
+  if (0 >= guiWindow.w) {
+    handleParamError(GUI_WINDOW_WIDTH_PARAM_NAME, guiWindow.w,
+        DEFAULT_WINDOW_WIDTH);
+  }
+  if (0 >= guiWindow.h) {
+    handleParamError(GUI_WINDOW_HEIGHT_PARAM_NAME, guiWindow.h,
+        DEFAULT_WINDOW_HEIGHT);
+  }
+  if ((0 >= levelId) || (MAX_SUPPORTED_LEVEL_ID < levelId)) {
+    handleParamError(LEVEL_ID_PARAM_NAME, levelId, DEFAULT_LEVEL_ID);
+  }
 }
 
 RoboCleanerGuiRos2ParamProvider::RoboCleanerGuiRos2ParamProvider()
@@ -70,6 +96,8 @@ RoboCleanerGuiRos2Params RoboCleanerGuiRos2ParamProvider::getParams() {
   get_parameter(USE_FOG_OF_WAR_PARAM_NAME, useFogOfWar);
   _params.fogOfWarStatus = useFogOfWar ?
       FogOfWarStatus::ENABLED : FogOfWarStatus::DISABLED;
+
+  _params.validate();
 
   return _params;
 }
