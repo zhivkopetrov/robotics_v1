@@ -17,6 +17,7 @@ struct RoboCollectorControllerRos2Params {
   LocalControllerMode localControrllerMode = LocalControllerMode::DISABLED;
 
   void print() const;
+  void validate();
 };
 
 class RoboCollectorControllerRos2ParamProvider : public rclcpp::Node {

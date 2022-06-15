@@ -27,6 +27,16 @@ constexpr auto DEFAULT_WINDOW_HEIGHT = 553;
 
 //misc
 constexpr auto DEFAULT_USE_LOCAL_CONTROLLER_MODE = true;
+
+template<typename T>
+void handleParamError(const char* paramName, T& value, const T& defaultValue) {
+  std::ostringstream ostr;
+  ostr << "Param: [" << paramName << "] has invalid value: [" << value
+       << "]. Overriding with default value: [" << defaultValue << "]";
+  LOGR("%s", ostr.str().c_str());
+
+  value = defaultValue;
+}
 }
 
 void RoboCollectorControllerRos2Params::print() const {
@@ -43,6 +53,17 @@ void RoboCollectorControllerRos2Params::print() const {
        << "=================================================================\n";
 
   LOG("%s", ostr.str().c_str());
+}
+
+void RoboCollectorControllerRos2Params::validate() {
+  if (0 >= guiWindow.w) {
+    handleParamError(GUI_WINDOW_WIDTH_PARAM_NAME, guiWindow.w,
+        DEFAULT_WINDOW_WIDTH);
+  }
+  if (0 >= guiWindow.h) {
+    handleParamError(GUI_WINDOW_HEIGHT_PARAM_NAME, guiWindow.h,
+        DEFAULT_WINDOW_HEIGHT);
+  }
 }
 
 RoboCollectorControllerRos2ParamProvider::RoboCollectorControllerRos2ParamProvider()
@@ -66,6 +87,8 @@ RoboCollectorControllerRos2Params RoboCollectorControllerRos2ParamProvider::getP
   get_parameter(USE_LOCAL_CONTROLLER_MODE_PARAM_NAME, useLocalControllerMode);
   _params.localControrllerMode = useLocalControllerMode ?
       LocalControllerMode::ENABLED : LocalControllerMode::DISABLED;
+
+  _params.validate();
 
   return _params;
 }
