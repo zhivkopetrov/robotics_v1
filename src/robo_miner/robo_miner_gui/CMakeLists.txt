@@ -35,6 +35,7 @@ add_executable(
         ${_INC_DIR}/helpers/SolutionValidator.h
         ${_INC_DIR}/helpers/config/SolutionValidatorConfig.h
         ${_INC_DIR}/external_api/MinerControllerExternalBridge.h
+        ${_INC_DIR}/external_api/RoboMinerGuiRos2ParamProvider.h
         ${_INC_DIR}/layout/entities/Crystal.h
         ${_INC_DIR}/layout/entities/CrystalHandler.h
         ${_INC_DIR}/layout/panels/PanelHandler.h
@@ -47,6 +48,7 @@ add_executable(
         ${_SRC_DIR}/config/RoboMinerGuiConfigGenerator.cpp
         ${_SRC_DIR}/defines/RoboMinerGuiDefines.cpp
         ${_SRC_DIR}/external_api/MinerControllerExternalBridge.cpp
+        ${_SRC_DIR}/external_api/RoboMinerGuiRos2ParamProvider.cpp
         ${_SRC_DIR}/helpers/RoboMinerBuilder.cpp
         ${_SRC_DIR}/helpers/RoboMinerGuiInitHelper.cpp
         ${_SRC_DIR}/helpers/MovementWatcher.cpp

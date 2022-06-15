@@ -15,21 +15,11 @@
 
 //Own components headers
 #include "robo_cleaner_gui/config/RoboCleanerGuiConfig.h"
+#include "robo_cleaner_gui/external_api/RoboCleanerGuiRos2ParamProvider.h"
 #include "generated/RoboCleanerGuiResources.h"
 
 namespace {
-//TODO parse the params from config
 constexpr auto PROJECT_FOLDER_NAME = "robo_cleaner_gui";
-
-//screen
-constexpr auto WINDOW_X = 72;
-constexpr auto WINDOW_Y = 27;
-constexpr auto WINDOW_WIDTH = 1848;
-constexpr auto WINDOW_HEIGHT = 1053;
-
-//misc
-constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
-constexpr int32_t LEVEL_ID = 1;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -60,7 +50,6 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.rotateAnimStartTimerId = ROBOT_ROTATE_ANIM_TIMER_ID;
   cfg.robotCollisionAnimStartTimerId = ROBOT_COLLISION_ANIM_TIMER_ID;
   cfg.robotDamageAnimStartTimerId = ROBOT_DAMAGE_ANIM_TIMER_ID;
-  cfg.robotFieldMarkers = ROBOT_FIELD_MARKERS;
 
   return cfg;
 }
@@ -129,13 +118,13 @@ RoboCleanerSolutionValidatorConfig generateSolutionValidatorConfig(
   return cfg;
 }
 
-EnergyHandlerConfig generateEnergyHandlerConfig() {
+EnergyHandlerConfig generateEnergyHandlerConfig(int32_t levelId) {
   EnergyHandlerConfig cfg;
 
   constexpr auto baseEnergyMoves = 20;
   constexpr auto additionalEnergyPerLevel = 20;
   cfg.maxMovesOnFullEnergy = baseEnergyMoves +
-      (LEVEL_ID * additionalEnergyPerLevel);
+      (levelId * additionalEnergyPerLevel);
 
   return cfg;
 }
@@ -151,11 +140,12 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   return cfg;
 }
 
-FogOfWarConfig generateFogOfWarConfig(const FieldPos &playerStartPos,
+FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
+                                      const FieldPos &playerStartPos,
                                       const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
   cfg.playerStartingPos = playerStartPos;
-//  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.status = status;
   cfg.cloudRsrcId = RoboCleanerGuiResources::FOG_OF_WAR;
 
   const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
@@ -176,7 +166,8 @@ EntityHandlerConfig generateEntityHandlerConfig() {
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
+EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
+                                  const RoboCleanerGuiRos2Params& rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -184,9 +175,9 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/entities/player_robot.png");
-  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
-  windowCfg.width = WINDOW_WIDTH;
-  windowCfg.height = WINDOW_HEIGHT;
+  windowCfg.pos = Point(rosParams.guiWindow.x, rosParams.guiWindow.y);
+  windowCfg.width = rosParams.guiWindow.w;
+  windowCfg.height = rosParams.guiWindow.h;
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
@@ -196,13 +187,14 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
 }
 
 RoboCleanerGuiConfig generateGameConfig(
-    const std::string& projectInstallPrefix) {
+    const std::string& projectInstallPrefix,
+    const RoboCleanerGuiRos2Params& rosParams) {
   RoboCleanerGuiConfig cfg;
   const auto [fieldDescr, initialRobotState] =
-      LevelFileLoader::readLevelData(projectInstallPrefix, LEVEL_ID);
+      LevelFileLoader::readLevelData(projectInstallPrefix, rosParams.levelId);
 
   cfg.solutionValidatorConfig = generateSolutionValidatorConfig(fieldDescr);
-  cfg.energyHandlerConfig = generateEnergyHandlerConfig();
+  cfg.energyHandlerConfig = generateEnergyHandlerConfig(rosParams.levelId);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(fieldDescr);
@@ -212,8 +204,8 @@ RoboCleanerGuiConfig generateGameConfig(
   commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
   commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
-  commonLayoutCfg.fogOfWarConfig =
-      generateFogOfWarConfig(initialRobotState.fieldPos, fieldDescr);
+  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(
+      rosParams.fogOfWarStatus, initialRobotState.fieldPos, fieldDescr);
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
@@ -252,8 +244,12 @@ ApplicationConfig RoboCleanerGuiConfigGenerator::generateConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
 
-  cfg.engineCfg = generateEngineConfig(projectInstallPrefix);
-  cfg.gameCfg = generateGameConfig(projectInstallPrefix);
+  auto paramProviderNode = std::make_shared<RoboCleanerGuiRos2ParamProvider>();
+  const auto rosParams = paramProviderNode->getParams();
+  rosParams.print();
+
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
   return cfg;
 }
 

@@ -16,21 +16,11 @@
 //Own components headers
 #include "robo_miner_gui/config/RoboMinerGuiConfig.h"
 #include "robo_miner_gui/defines/RoboMinerGuiDefines.h"
+#include "robo_miner_gui/external_api/RoboMinerGuiRos2ParamProvider.h"
 #include "generated/RoboMinerGuiResources.h"
 
 namespace {
-//TODO parse the params from config
 constexpr auto PROJECT_FOLDER_NAME = "robo_miner_gui";
-
-//screen
-constexpr auto WINDOW_X = 72;
-constexpr auto WINDOW_Y = 27;
-constexpr auto WINDOW_WIDTH = 1848;
-constexpr auto WINDOW_HEIGHT = 1053;
-
-//misc
-constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::DISABLED;
-constexpr auto LEVEL_ID = 1;
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -68,7 +58,6 @@ RobotBaseConfig generateRobotBaseConfig() {
   cfg.rotateAnimStartTimerId = ROBOT_ROTATE_ANIM_TIMER_ID;
   cfg.robotCollisionAnimStartTimerId = ROBOT_COLLISION_ANIM_TIMER_ID;
   cfg.robotDamageAnimStartTimerId = ROBOT_DAMAGE_ANIM_TIMER_ID;
-  cfg.robotFieldMarkers = ROBOT_FIELD_MARKERS;
 
   return cfg;
 }
@@ -113,11 +102,12 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   return cfg;
 }
 
-FogOfWarConfig generateFogOfWarConfig(const FieldPos& playerStartPos,
+FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
+                                      const FieldPos& playerStartPos,
                                       const FieldDescription& fieldDescr) {
   FogOfWarConfig cfg;
   cfg.playerStartingPos = playerStartPos;
-  cfg.status = FogOfWarStatus::ENABLED;
+  cfg.status = status;
   cfg.cloudRsrcId = RoboMinerGuiResources::FOG_OF_WAR;
 
   const auto mapTilesCount = fieldDescr.rows * fieldDescr.cols;
@@ -131,13 +121,13 @@ FogOfWarConfig generateFogOfWarConfig(const FieldPos& playerStartPos,
 }
 
 SolutionValidatorConfig generateSolutionValidatorConfig(
-    const FieldDescription& fieldDescr) {
+    const FieldDescription& fieldDescr, int32_t levelId) {
   SolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
-      projectInstallPrefix, LEVEL_ID);
+      projectInstallPrefix, levelId);
   cfg.targetMapTilesCount = fieldDescr.emptyTilesCount;
   cfg.playerStartLocation.row = fieldDescr.rows - 1;
   cfg.playerStartLocation.col = fieldDescr.cols - 1;
@@ -145,7 +135,8 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
+EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
+                                  const RoboMinerGuiRos2Params& rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -153,9 +144,9 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/entities/player_robot.png");
-  windowCfg.pos = Point(WINDOW_X, WINDOW_Y);
-  windowCfg.width = WINDOW_WIDTH;
-  windowCfg.height = WINDOW_HEIGHT;
+  windowCfg.pos = Point(rosParams.guiWindow.x, rosParams.guiWindow.y);
+  windowCfg.width = rosParams.guiWindow.w;
+  windowCfg.height = rosParams.guiWindow.h;
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
@@ -164,12 +155,14 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix) {
   return cfg;
 }
 
-RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix) {
+RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix,
+                                      const RoboMinerGuiRos2Params& rosParams) {
   RoboMinerGuiConfig cfg;
   const auto [fieldDescr, initialRobotState] =
-      LevelFileLoader::readLevelData(projectInstallPrefix, LEVEL_ID);
+      LevelFileLoader::readLevelData(projectInstallPrefix, rosParams.levelId);
 
-  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(fieldDescr);
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(fieldDescr,
+      rosParams.levelId);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
@@ -181,8 +174,8 @@ RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix) {
   commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
   commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
-  commonLayoutCfg.fogOfWarConfig =
-      generateFogOfWarConfig(initialRobotState.fieldPos, fieldDescr);
+  commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(
+      rosParams.fogOfWarStatus, initialRobotState.fieldPos, fieldDescr);
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
@@ -221,8 +214,12 @@ ApplicationConfig RoboMinerGuiConfigGenerator::generateConfig() {
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
 
-  cfg.engineCfg = generateEngineConfig(projectInstallPrefix);
-  cfg.gameCfg = generateGameConfig(projectInstallPrefix);
+  auto paramProviderNode = std::make_shared<RoboMinerGuiRos2ParamProvider>();
+  const auto rosParams = paramProviderNode->getParams();
+  rosParams.print();
+
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
   return cfg;
 }
 
