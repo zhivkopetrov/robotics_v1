@@ -6,6 +6,7 @@
 //Other libraries headers
 #include "robo_cleaner_common/defines/RoboCleanerDefines.h"
 #include "robo_common/layout/field/FieldUtils.h"
+#include "utils/drawing/WidgetAligner.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -22,6 +23,9 @@ ErrorCode EntityHandler::init(const EntityHandlerConfig &cfg,
     LOGERR("Error, createRubbishEntities() failed");
     return ErrorCode::FAILURE;
   }
+
+  createChargingStation(cfg.chargingStationRsrcId, cfg.playerStartPosition,
+      fieldDescr);
 
   updateEntityHandlerFbo();
   return ErrorCode::SUCCESS;
@@ -65,11 +69,9 @@ ErrorCode EntityHandler::createRubbishEntities(
 
   const RubbishOutInterface rubbishOutInterface = {
       .objectApproachOverlayTriggeredCb =
-          interface.objectApproachOverlayTriggeredCb,
-      .containerRedrawCb =
+          interface.objectApproachOverlayTriggeredCb, .containerRedrawCb =
           std::bind(&EntityHandler::updateEntityHandlerFbo, this),
-      .collisionWatcher = interface.collisionWatcher
-  };
+      .collisionWatcher = interface.collisionWatcher };
 
   constexpr double rubbishToTileRatio = 0.5;
   constexpr double offBegin = (1.0 - rubbishToTileRatio) / 2.0;
@@ -117,10 +119,38 @@ ErrorCode EntityHandler::createRubbishEntities(
   return ErrorCode::SUCCESS;
 }
 
+void EntityHandler::createChargingStation(uint64_t rsrcId,
+                                          const FieldPos &fieldPos,
+                                          const FieldDescription &fieldDescr) {
+  _chargingStationImg.create(rsrcId);
+
+  constexpr double imgToTileRatio = 0.7;
+  const int32_t originalWidth = _chargingStationImg.getImageWidth();
+  const int32_t originalHeight = _chargingStationImg.getImageHeight();
+  const double widthToHeightRatio =
+      static_cast<double>(originalWidth) / originalHeight;
+  const int32_t scaledWidth = static_cast<int32_t>(fieldDescr.tileWidth
+      * widthToHeightRatio * imgToTileRatio);
+  const int32_t scaledHeight = static_cast<int32_t>(fieldDescr.tileHeight
+      * imgToTileRatio);
+
+  const Point absTilePos = FieldUtils::getAbsPos(fieldPos, fieldDescr);
+  const Rectangle tileBoundary =
+      Rectangle(absTilePos, fieldDescr.tileWidth, fieldDescr.tileHeight);
+  const Point imgCenteredPos = WidgetAligner::getPosition(scaledWidth,
+      scaledHeight, tileBoundary, WidgetAlignment::CENTER_CENTER);
+
+  _chargingStationImg.activateScaling();
+  _chargingStationImg.setScaledWidth(scaledWidth);
+  _chargingStationImg.setScaledHeight(scaledHeight);
+  _chargingStationImg.setPosition(imgCenteredPos);
+}
+
 void EntityHandler::updateEntityHandlerFbo() {
   _fbo.unlock();
   _fbo.reset();
 
+  _fbo.addWidget(_chargingStationImg);
   for (const auto &rubbish : _rubbish) {
     rubbish.drawOnFbo(_fbo);
   }

@@ -109,11 +109,10 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
 }
 
 RoboCleanerSolutionValidatorConfig generateSolutionValidatorConfig(
-    const FieldDescription& fieldDescr) {
+    const FieldPos &playerStartPos) {
   RoboCleanerSolutionValidatorConfig cfg;
 
-  cfg.playerStartLocation.row = fieldDescr.rows - 1;
-  cfg.playerStartLocation.col = fieldDescr.cols - 1;
+  cfg.playerStartLocation = playerStartPos;
 
   return cfg;
 }
@@ -158,10 +157,13 @@ FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
   return cfg;
 }
 
-EntityHandlerConfig generateEntityHandlerConfig() {
+EntityHandlerConfig generateEntityHandlerConfig(
+    const FieldPos &playerStartPos) {
   EntityHandlerConfig cfg;
   cfg.rubbishRsrcId = RoboCleanerGuiResources::RUBBISH;
   cfg.rubbishFontId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.chargingStationRsrcId = RoboCleanerGuiResources::DAMAGE_MARKER;
+  cfg.playerStartPosition = playerStartPos;
 
   return cfg;
 }
@@ -193,12 +195,14 @@ RoboCleanerGuiConfig generateGameConfig(
   const auto [fieldDescr, initialRobotState] =
       LevelFileLoader::readLevelData(projectInstallPrefix, rosParams.levelId);
 
-  cfg.solutionValidatorConfig = generateSolutionValidatorConfig(fieldDescr);
+  cfg.solutionValidatorConfig = generateSolutionValidatorConfig(
+      initialRobotState.fieldPos);
   cfg.energyHandlerConfig = generateEnergyHandlerConfig(rosParams.levelId);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(fieldDescr);
-  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig();
+  layoutCfg.entityHandlerCfg = generateEntityHandlerConfig(
+      initialRobotState.fieldPos);
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);

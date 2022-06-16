@@ -37,7 +37,12 @@ private:
                                   const EntityHandlerOutInterface& interface,
                                   const FieldDescription &fieldDescr);
 
+  void createChargingStation(uint64_t rsrcId, const FieldPos& fieldPos,
+                             const FieldDescription &fieldDescr);
+
   void updateEntityHandlerFbo();
+
+  Image _chargingStationImg;
 
   std::vector<Rubbish> _rubbish;
 

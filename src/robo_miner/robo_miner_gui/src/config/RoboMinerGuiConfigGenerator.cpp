@@ -121,16 +121,15 @@ FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
 }
 
 SolutionValidatorConfig generateSolutionValidatorConfig(
-    const FieldDescription& fieldDescr, int32_t levelId) {
+    int32_t emptyTilesCount, int32_t levelId, const FieldPos& playerStartPos) {
   SolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
       ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
-  cfg.targetMapTilesCount = fieldDescr.emptyTilesCount;
-  cfg.playerStartLocation.row = fieldDescr.rows - 1;
-  cfg.playerStartLocation.col = fieldDescr.cols - 1;
+  cfg.targetMapTilesCount = emptyTilesCount;
+  cfg.playerStartLocation = playerStartPos;
 
   return cfg;
 }
@@ -161,8 +160,9 @@ RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix,
   const auto [fieldDescr, initialRobotState] =
       LevelFileLoader::readLevelData(projectInstallPrefix, rosParams.levelId);
 
-  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(fieldDescr,
-      rosParams.levelId);
+  cfg.solutionValidatorCfg = generateSolutionValidatorConfig(
+      fieldDescr.emptyTilesCount, rosParams.levelId,
+      initialRobotState.fieldPos);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
