@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
+#include <string>
 
 //Other libraries headers
 
@@ -70,6 +71,10 @@ enum class ObstacleHandlerApproachOverlayStatus {
   ENABLED, DISABLED
 };
 
+enum class EndGameOutcome {
+  WIN, LOSE
+};
+
 using SurroundingTiles = std::array<uint8_t, RoboCommonDefines::SURROUNDING_TILES_CTN>;
 using FieldData = std::vector<std::vector<char>>;
 
@@ -84,6 +89,12 @@ struct FieldDescription {
   char emptyDataMarker = RoboCommonDefines::EMPTY_TILE_MARKER;
   std::vector<char> obstacleMarkers { RoboCommonDefines::BIG_OBSTACLE_MARKER,
       RoboCommonDefines::SMALL_OBSTACLE_MARKER };
+};
+
+struct UserData {
+  std::string user = "not_set";
+  std::string repository = "not_set";
+  std::string commitSha = "not_set";
 };
 
 inline constexpr int32_t INDICATOR_PANEL_MAX_VALUE = 400;

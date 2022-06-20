@@ -32,6 +32,9 @@ enum TimerId {
   TILE_PANEL_DECR_TIMER_ID,
   CRYSTAL_PANEL_INCR_TIMER_ID,
   CRYSTAL_PANEL_DECR_TIMER_ID,
+  GAME_END_EXPAND_ANIM_TIMER_ID,
+  GAME_END_FADE_ANIM_TIMER_ID,
+  ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
 
   FOG_OF_WAR_FADE_TIMER_IDS_START,
 
@@ -120,6 +123,32 @@ FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
   return cfg;
 }
 
+GameEndAnimatorConfig generateGameEndAnimatorConfig(
+    const RoboMinerGuiRos2Params& rosParams) {
+  GameEndAnimatorConfig cfg;
+  cfg.bgrRsrcId = RoboMinerGuiResources::MAP;
+  cfg.winStatusFontId = RoboMinerGuiResources::VINQUE_RG_75;
+  cfg.userDataFontId = RoboMinerGuiResources::VINQUE_RG_30;
+  cfg.expandAnimTimerId = GAME_END_EXPAND_ANIM_TIMER_ID;
+  cfg.fadeAnimTimerId = GAME_END_FADE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  return cfg;
+}
+
+AchievementAnimatorConfig generateAchievementAnimatorConfig(
+    const RoboMinerGuiRos2Params& rosParams) {
+  AchievementAnimatorConfig cfg;
+  cfg.allStarsRsrcId = RoboMinerGuiResources::STARS;
+  cfg.singleStarRsrcId = RoboMinerGuiResources::STAR_SINGLE;
+  cfg.fadeAndMoveTimerId = ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  return cfg;
+}
+
 SolutionValidatorConfig generateSolutionValidatorConfig(
     int32_t emptyTilesCount, int32_t levelId, const FieldPos& playerStartPos) {
   SolutionValidatorConfig cfg;
@@ -176,6 +205,10 @@ RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix,
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(
       rosParams.fogOfWarStatus, initialRobotState.fieldPos, fieldDescr);
+  commonLayoutCfg.gameEndAnimatorConfig =
+      generateGameEndAnimatorConfig(rosParams);
+  commonLayoutCfg.achievementAnimatorConfig =
+      generateAchievementAnimatorConfig(rosParams);
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 

@@ -3,26 +3,58 @@
 
 //System headers
 #include <cstdint>
+#include <set>
 
 //Other libraries headers
+#include "manager_utils/drawing/Fbo.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
-#include "utils/ErrorCode.h"
+#include "robo_common/layout/animators/EndScreenAppearAnimator.h"
 
 //Forward declarations
 
+using IsAchievementAnimatorActive = std::function<bool()>;
+using StartEndGameSequence = std::function<void(const std::set<Achievement>&)>;
+
+struct GameEndAnimatorOutInterface {
+  ShutdownGameCb shutdownGameCb;
+  StartAchievementWonAnimCb startAchievementWonAnimCb;
+  IsAchievementAnimatorActive isAchievementAnimatorActive;
+  StartEndGameSequence startEndGameSequence;
+};
+
 class GameEndAnimator {
 public:
-  ErrorCode init(const ShutdownGameCb& shutdownGameCb);
+  ErrorCode init(const GameEndAnimatorConfig& cfg,
+                 const GameEndAnimatorOutInterface& outInterface);
   void draw() const;
 
   void startGameWonAnim();
   void startGameLostAnim();
   void startAchievementWonAnim(Achievement achievement);
+  void setUserData(const UserData& userData);
+
+  void onAchievementWonAnimFinish(Achievement achievement);
 
 private:
-  ShutdownGameCb _shutdownGameCb;
+  ErrorCode initOutInterface(const GameEndAnimatorOutInterface& outInterface);
+
+  void onAppearAnimFinish();
+
+  void createFinalScreenFbo(const GameEndAnimatorConfig& cfg);
+
+  GameEndAnimatorOutInterface _outInterface;
+
+  EndScreenAppearAnimator _appearAnimator;
+  Fbo _finalScreenFbo;
+
+  std::set<Achievement> _wonAchievements;
+
+  bool _isActive = false;
+  bool _hasPendingEndStatus = false;
+  EndGameOutcome _pendingGameOutcome = EndGameOutcome::WIN;
 };
 
 #endif /* ROBO_COMMON_GAMEENDANIMATOR_H_ */

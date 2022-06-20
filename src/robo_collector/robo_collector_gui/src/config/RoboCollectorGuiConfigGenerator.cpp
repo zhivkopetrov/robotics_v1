@@ -62,6 +62,9 @@ enum TimerId {
   COIN_PANEL_DECR_TIMER_ID,
   TIME_PANEL_CLOCK_TIMER_ID,
   TIME_PANEL_BLINK_TIMER_ID,
+  GAME_END_EXPAND_ANIM_TIMER_ID,
+  GAME_END_FADE_ANIM_TIMER_ID,
+  ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
   HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID
 };
 
@@ -164,6 +167,32 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
   return cfg;
 }
 
+GameEndAnimatorConfig generateGameEndAnimatorConfig(
+    const RoboCollectorGuiRos2Params& rosParams) {
+  GameEndAnimatorConfig cfg;
+  cfg.bgrRsrcId = RoboCollectorGuiResources::MAP;
+  cfg.winStatusFontId = RoboCollectorGuiResources::VINQUE_RG_75;
+  cfg.userDataFontId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.expandAnimTimerId = GAME_END_EXPAND_ANIM_TIMER_ID;
+  cfg.fadeAnimTimerId = GAME_END_FADE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  return cfg;
+}
+
+AchievementAnimatorConfig generateAchievementAnimatorConfig(
+    const RoboCollectorGuiRos2Params& rosParams) {
+  AchievementAnimatorConfig cfg;
+  cfg.allStarsRsrcId = RoboCollectorGuiResources::STARS;
+  cfg.singleStarRsrcId = RoboCollectorGuiResources::STAR_SINGLE;
+  cfg.fadeAndMoveTimerId = ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  return cfg;
+}
+
 EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
                                   const RoboCollectorGuiRos2Params& rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -203,6 +232,10 @@ RoboCollectorGuiConfig generateGameConfig(
   commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
   commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
+  commonLayoutCfg.gameEndAnimatorConfig =
+      generateGameEndAnimatorConfig(rosParams);
+  commonLayoutCfg.achievementAnimatorConfig =
+      generateAchievementAnimatorConfig(rosParams);
   commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
   commonLayoutCfg.enemyFieldMarker = RoboCommonDefines::ENEMY_MARKER;

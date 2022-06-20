@@ -11,6 +11,8 @@
 #include "robo_common/layout/RoboCommonLayout.h"
 #include "robo_common/layout/config/RoboCommonLayoutConfig.h"
 
+using namespace std::placeholders;
+
 ErrorCode RoboCommonLayoutInitHelper::init(
     const RoboCommonLayoutConfig &cfg,
     const RoboCommonLayoutOutInterface &outInterface,
@@ -27,9 +29,18 @@ ErrorCode RoboCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != layout._gameEndAnimator.init(
-          outInterface.shutdownGameCb)) {
-    LOGERR("_gameEndAnimator.init() failed");
+  if (ErrorCode::SUCCESS != initGameEndAnimator(cfg.gameEndAnimatorConfig,
+          outInterface, layout)) {
+    LOGERR("initFogOfWar failed");
+    return ErrorCode::FAILURE;
+  }
+
+  const OnAchievementWonAnimFinished cb = std::bind(
+      &GameEndAnimator::onAchievementWonAnimFinish, &layout._gameEndAnimator,
+      _1);
+  if (ErrorCode::SUCCESS != layout._achievementAnimator.init(
+          cfg.achievementAnimatorConfig, cb)) {
+    LOGERR("_achievementAnimator.init() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -57,6 +68,29 @@ ErrorCode RoboCommonLayoutInitHelper::initField(
   return ErrorCode::SUCCESS;
 }
 
+ErrorCode RoboCommonLayoutInitHelper::initGameEndAnimator(
+    const GameEndAnimatorConfig &cfg,
+    const RoboCommonLayoutOutInterface &outInterface,
+    RoboCommonLayout &layout) {
+  GameEndAnimatorOutInterface gameEndAnimatorOutInterface;
+  gameEndAnimatorOutInterface.shutdownGameCb = outInterface.shutdownGameCb;
+  gameEndAnimatorOutInterface.startAchievementWonAnimCb = std::bind(
+      &AchievementAnimator::startAnim, &layout._achievementAnimator, _1);
+  gameEndAnimatorOutInterface.isAchievementAnimatorActive = std::bind(
+      &AchievementAnimator::isActive, &layout._achievementAnimator);
+  gameEndAnimatorOutInterface.startEndGameSequence = std::bind(
+      &AchievementAnimator::startEndGameSequence, &layout._achievementAnimator,
+      _1);
+
+  if (ErrorCode::SUCCESS != layout._gameEndAnimator.init(cfg,
+          gameEndAnimatorOutInterface)) {
+    LOGERR("_gameEndAnimator.init() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode RoboCommonLayoutInitHelper::initFogOfWar(
     const RoboCommonLayoutConfig &layoutCfg,
     const RoboCommonLayoutOutInterface &outInterface,
@@ -77,8 +111,6 @@ ErrorCode RoboCommonLayoutInitHelper::initPlayerRobot(
     const RoboCommonLayoutConfig &layoutCfg,
     const RoboCommonLayoutOutInterface &outInterface,
     RoboCommonLayout &layout) {
-  using namespace std::placeholders;
-
   RobotOutInterface robotOutInterface;
   robotOutInterface.collisionWatcher = outInterface.collisionWatcher;
   robotOutInterface.playerDamageCb = outInterface.playerDamageCb;

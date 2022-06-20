@@ -9,6 +9,8 @@
 #include "robo_common/layout/field/config/FieldConfig.h"
 #include "robo_common/layout/field/config/FogOfWarConfig.h"
 #include "robo_common/layout/entities/robot/config/RobotBaseConfig.h"
+#include "robo_common/layout/animators/config/GameEndAnimatorConfig.h"
+#include "robo_common/layout/animators/config/AchievementAnimatorConfig.h"
 
 //Own components headers
 
@@ -19,6 +21,8 @@ struct RoboCommonLayoutConfig {
   FogOfWarConfig fogOfWarConfig;
   RobotBaseConfig robotBaseCfg;
   RobotState robotInitialState;
+  GameEndAnimatorConfig gameEndAnimatorConfig;
+  AchievementAnimatorConfig achievementAnimatorConfig;
 
   uint64_t mapRsrcId = 0;
 

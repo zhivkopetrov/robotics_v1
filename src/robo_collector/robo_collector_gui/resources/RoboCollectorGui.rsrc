@@ -36,16 +36,16 @@ position=0,0
 load=on_init
 
 tag=[STAR_SINGLE]
-type=image
+type=sprite
 path=p/stars/star_single.png
-description=empty
+description=335,318,2,0
 position=0,0
 load=on_init
 
 tag=[STARS]
 type=sprite
 path=p/stars/stars.png
-description=160,160,3,0
+description=358,165,4,0
 position=0,0
 load=on_init
 

@@ -15,6 +15,7 @@ struct RoboCommonLayoutInterface;
 struct RoboCommonLayoutOutInterface;
 struct RoboCommonLayoutConfig;
 struct FieldConfig;
+struct GameEndAnimatorConfig;
 
 class RoboCommonLayoutInitHelper {
 public:
@@ -28,6 +29,11 @@ private:
   static ErrorCode initField(const FieldConfig &cfg,
                              const RoboCommonLayoutOutInterface &outInterface,
                              RoboCommonLayout &layout);
+
+  static ErrorCode initGameEndAnimator(
+      const GameEndAnimatorConfig &cfg,
+      const RoboCommonLayoutOutInterface &outInterface,
+      RoboCommonLayout &layout);
 
   static ErrorCode initFogOfWar(
       const RoboCommonLayoutConfig &layoutCfg,

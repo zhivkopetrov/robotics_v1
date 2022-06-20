@@ -12,6 +12,7 @@
 #include "robo_common/layout/field/fog_of_war/FogOfWar.h"
 #include "robo_common/layout/entities/robot/Robot.h"
 #include "robo_common/layout/animators/GameEndAnimator.h"
+#include "robo_common/layout/animators/AchievementAnimator.h"
 
 //Forward declarations
 class RoboCommonLayoutInitHelper;
@@ -46,6 +47,7 @@ private:
   FogOfWar _fogOfWar;
   Robot _playerRobot;
   GameEndAnimator _gameEndAnimator;
+  AchievementAnimator _achievementAnimator;
 };
 
 #endif /* ROBO_COMMON_ROBOCOMMONLAYOUT_H_ */

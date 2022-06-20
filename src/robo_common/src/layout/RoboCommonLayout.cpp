@@ -40,6 +40,7 @@ void RoboCommonLayout::drawSecondLayer() const {
 
 void RoboCommonLayout::drawThirdLayer() const {
   _gameEndAnimator.draw();
+  _achievementAnimator.draw();
 }
 
 void RoboCommonLayout::toggleHelpPage() {

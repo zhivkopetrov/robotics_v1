@@ -31,6 +31,9 @@ enum TimerId {
   ENERGY_PANEL_MODIFY_INDICATOR_TIMER_ID,
   TILE_PANEL_INCR_TIMER_ID,
   TILE_PANEL_DECR_TIMER_ID,
+  GAME_END_EXPAND_ANIM_TIMER_ID,
+  GAME_END_FADE_ANIM_TIMER_ID,
+  ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
   RUBBISH_PANEL_INCR_TIMER_ID,
   RUBBISH_PANEL_DECR_TIMER_ID,
 
@@ -168,6 +171,32 @@ EntityHandlerConfig generateEntityHandlerConfig(
   return cfg;
 }
 
+GameEndAnimatorConfig generateGameEndAnimatorConfig(
+    const RoboCleanerGuiRos2Params& rosParams) {
+  GameEndAnimatorConfig cfg;
+  cfg.bgrRsrcId = RoboCleanerGuiResources::MAP;
+  cfg.winStatusFontId = RoboCleanerGuiResources::VINQUE_RG_75;
+  cfg.userDataFontId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.expandAnimTimerId = GAME_END_EXPAND_ANIM_TIMER_ID;
+  cfg.fadeAnimTimerId = GAME_END_FADE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  return cfg;
+}
+
+AchievementAnimatorConfig generateAchievementAnimatorConfig(
+    const RoboCleanerGuiRos2Params& rosParams) {
+  AchievementAnimatorConfig cfg;
+  cfg.allStarsRsrcId = RoboCleanerGuiResources::STARS;
+  cfg.singleStarRsrcId = RoboCleanerGuiResources::STAR_SINGLE;
+  cfg.fadeAndMoveTimerId = ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  return cfg;
+}
+
 EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
                                   const RoboCleanerGuiRos2Params& rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -210,6 +239,10 @@ RoboCleanerGuiConfig generateGameConfig(
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(
       rosParams.fogOfWarStatus, initialRobotState.fieldPos, fieldDescr);
+  commonLayoutCfg.gameEndAnimatorConfig =
+      generateGameEndAnimatorConfig(rosParams);
+  commonLayoutCfg.achievementAnimatorConfig =
+      generateAchievementAnimatorConfig(rosParams);
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
