@@ -54,6 +54,11 @@ void CountdownAnimator::processAnim() {
   if (0 == _countdownSecondsLeft) {
     //TODO automatically save screenshot
 
+    //TODO add user params to robo collector controller yaml file
+    //TODO create a message with user data
+    //TODO authenticate user to server from robo collector controller
+    //TODO do this for all 3 robo games
+
     stopTimer(_timerId);
     _shutdownGameCb();
     return;

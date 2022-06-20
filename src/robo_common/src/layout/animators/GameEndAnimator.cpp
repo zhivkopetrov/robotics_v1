@@ -65,13 +65,10 @@ void GameEndAnimator::startGameWonAnim() {
 void GameEndAnimator::startGameLostAnim() {
   LOGR("You've Lost");
   if (_outInterface.isAchievementAnimatorActive()) {
-    LOGC("GameEndAnimator::startGameLostAnim() - PENDING animations");
     _hasPendingEndStatus = true;
     _pendingGameOutcome = EndGameOutcome::LOSE;
     return;
   }
-
-  LOGC("GameEndAnimator::startGameLostAnim() - not pending animations");
 
   _isActive = true;
   _appearAnimator.startAnim(EndGameOutcome::LOSE);
@@ -93,7 +90,6 @@ void GameEndAnimator::setUserData(const UserData &userData) {
 }
 
 void GameEndAnimator::onAchievementWonAnimFinish(Achievement achievement) {
-  LOGC("GameEndAnimator::onAchievementWonAnimFinish()");
   if (_hasPendingEndStatus) {
     if (_outInterface.isAchievementAnimatorActive()) {
       return;
@@ -142,7 +138,6 @@ ErrorCode GameEndAnimator::initOutInterface(
 }
 
 void GameEndAnimator::onAppearAnimFinish() {
-  LOGC("GameEndAnimator::onAppearAnimFinish()");
   _outInterface.startEndGameSequence(_wonAchievements);
 }
 
