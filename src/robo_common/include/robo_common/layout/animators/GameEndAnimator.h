@@ -12,6 +12,7 @@
 //Own components headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "robo_common/layout/animators/EndScreenAppearAnimator.h"
+#include "robo_common/layout/animators/CountdownAnimator.h"
 
 //Forward declarations
 
@@ -48,6 +49,7 @@ private:
   GameEndAnimatorOutInterface _outInterface;
 
   EndScreenAppearAnimator _appearAnimator;
+  CountdownAnimator _countdownAnimator;
   Fbo _finalScreenFbo;
 
   std::set<Achievement> _wonAchievements;

@@ -27,6 +27,16 @@ ErrorCode GameEndAnimator::init(
     LOGERR("Error, _appearAnimator.init");
     return ErrorCode::FAILURE;
   }
+
+  const CountdownAnimatorConfig countCfg = { .containerDimensions =
+      _finalScreenFbo.getScaledRect(), .fontId = cfg.countdownFontId,
+      .countdownSeconds = 10, .timerId = cfg.countdownAnimTimerId };
+  if (ErrorCode::SUCCESS != _countdownAnimator.init(countCfg,
+          outInterface.shutdownGameCb)) {
+    LOGERR("Error, _countdownAnimator.init");
+    return ErrorCode::FAILURE;
+  }
+
   return ErrorCode::SUCCESS;
 }
 
@@ -37,6 +47,7 @@ void GameEndAnimator::draw() const {
 
   _appearAnimator.draw();
   _finalScreenFbo.draw();
+  _countdownAnimator.draw();
 }
 
 void GameEndAnimator::startGameWonAnim() {
@@ -100,14 +111,7 @@ void GameEndAnimator::onAchievementWonAnimFinish(Achievement achievement) {
 
   _wonAchievements.erase(achievement);
   if (_wonAchievements.empty()) {
-    LOGC("GameEndAnimator::shutdownGameCb()");
-    _outInterface.shutdownGameCb();
-    //TODO implement a CountDown class which will be activated if you've won
-    //the class will not be part of the fbo, because it will change frequently
-    //Text "Please take a screenshot"
-    //Application shutting down in "9, 8, 7, 6, 5"
-
-    //TODO automatically save screenshot
+    _countdownAnimator.startAnim();
   }
 }
 

@@ -35,6 +35,7 @@ enum TimerId {
   GAME_END_EXPAND_ANIM_TIMER_ID,
   GAME_END_FADE_ANIM_TIMER_ID,
   ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
+  COUNTDOWN_ANIM_TIMER_ID,
 
   FOG_OF_WAR_FADE_TIMER_IDS_START,
 
@@ -128,9 +129,11 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
   GameEndAnimatorConfig cfg;
   cfg.bgrRsrcId = RoboMinerGuiResources::MAP;
   cfg.winStatusFontId = RoboMinerGuiResources::VINQUE_RG_75;
-  cfg.userDataFontId = RoboMinerGuiResources::VINQUE_RG_30;
+  cfg.countdownFontId = RoboMinerGuiResources::VINQUE_RG_30;
+  cfg.userDataFontId = RoboMinerGuiResources::VINQUE_RG_20;
   cfg.expandAnimTimerId = GAME_END_EXPAND_ANIM_TIMER_ID;
   cfg.fadeAnimTimerId = GAME_END_FADE_ANIM_TIMER_ID;
+  cfg.countdownAnimTimerId = COUNTDOWN_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
   cfg.screenDimensions.h = rosParams.guiWindow.h;
 

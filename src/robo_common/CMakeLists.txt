@@ -50,6 +50,7 @@ add_library(
         ${_INC_DIR}/layout/animators/GameEndAnimator.h
         ${_INC_DIR}/layout/animators/AchievementAnimator.h
         ${_INC_DIR}/layout/animators/EndScreenAppearAnimator.h
+        ${_INC_DIR}/layout/animators/CountdownAnimator.h
         ${_INC_DIR}/layout/animators/config/GameEndAnimatorConfig.h
         ${_INC_DIR}/layout/animators/config/AchievementAnimatorConfig.h
         ${_INC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.h
@@ -79,6 +80,7 @@ add_library(
         ${_SRC_DIR}/layout/entities/robot/animation/PlayerDamageAnimEndCb.cpp
         ${_SRC_DIR}/layout/animators/GameEndAnimator.cpp
         ${_SRC_DIR}/layout/animators/EndScreenAppearAnimator.cpp
+        ${_SRC_DIR}/layout/animators/CountdownAnimator.cpp
         ${_SRC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/LevelFileLoader.cpp

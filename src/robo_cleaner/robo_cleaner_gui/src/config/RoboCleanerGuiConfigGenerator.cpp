@@ -34,6 +34,7 @@ enum TimerId {
   GAME_END_EXPAND_ANIM_TIMER_ID,
   GAME_END_FADE_ANIM_TIMER_ID,
   ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
+  COUNTDOWN_ANIM_TIMER_ID,
   RUBBISH_PANEL_INCR_TIMER_ID,
   RUBBISH_PANEL_DECR_TIMER_ID,
 
@@ -176,9 +177,11 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
   GameEndAnimatorConfig cfg;
   cfg.bgrRsrcId = RoboCleanerGuiResources::MAP;
   cfg.winStatusFontId = RoboCleanerGuiResources::VINQUE_RG_75;
-  cfg.userDataFontId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.countdownFontId = RoboCleanerGuiResources::VINQUE_RG_30;
+  cfg.userDataFontId = RoboCleanerGuiResources::VINQUE_RG_20;
   cfg.expandAnimTimerId = GAME_END_EXPAND_ANIM_TIMER_ID;
   cfg.fadeAnimTimerId = GAME_END_FADE_ANIM_TIMER_ID;
+  cfg.countdownAnimTimerId = COUNTDOWN_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
   cfg.screenDimensions.h = rosParams.guiWindow.h;
 

@@ -38,6 +38,7 @@ ErrorCode AchievementAnimator::init(
       allStarsFrameRect.h, cfg.screenDimensions,
       WidgetAlignment::CENTER_CENTER);
   _allStars.setPosition(allStarsPos);
+  _allStars.hide();
 
   _animData.allStarsDimensions = Rectangle(allStarsPos, allStarsFrameRect.w,
       allStarsFrameRect.h);
@@ -52,21 +53,19 @@ ErrorCode AchievementAnimator::init(
   _singleStar.setScaledWidth(SINGLE_SCALED_WIDTH);
   _singleStar.setScaledHeight(SINGLE_SCALED_HEIGHT);
   _singleStar.setPosition(allStarsPos);
+  _singleStar.hide();
 
   return ErrorCode::SUCCESS;
 }
 
 void AchievementAnimator::draw() const {
-  if (!_isActive) {
-    return;
-  }
-
   _allStars.draw();
   _singleStar.draw();
 }
 
 void AchievementAnimator::startAnim(Achievement achievement) {
   _isActive = true;
+  _allStars.show();
   _achievementsToProcess.push(achievement);
   if (1 < _achievementsToProcess.size()) {
     return; //currently process another achievement

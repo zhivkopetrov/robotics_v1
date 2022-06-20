@@ -120,6 +120,11 @@ position=0,0
 load=on_init
 
 ##### FONTS
+tag=[VINQUE_RG_20]
+type=font
+path=f/vinque_rg_20.ttf
+description=20
+
 tag=[VINQUE_RG_30]
 type=font
 path=f/vinque_rg_30.ttf

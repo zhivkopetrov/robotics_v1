@@ -64,6 +64,7 @@ enum TimerId {
   TIME_PANEL_BLINK_TIMER_ID,
   GAME_END_EXPAND_ANIM_TIMER_ID,
   GAME_END_FADE_ANIM_TIMER_ID,
+  COUNTDOWN_ANIM_TIMER_ID,
   ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
   HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID
 };
@@ -172,9 +173,11 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
   GameEndAnimatorConfig cfg;
   cfg.bgrRsrcId = RoboCollectorGuiResources::MAP;
   cfg.winStatusFontId = RoboCollectorGuiResources::VINQUE_RG_75;
-  cfg.userDataFontId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.countdownFontId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.userDataFontId = RoboCollectorGuiResources::VINQUE_RG_20;
   cfg.expandAnimTimerId = GAME_END_EXPAND_ANIM_TIMER_ID;
   cfg.fadeAnimTimerId = GAME_END_FADE_ANIM_TIMER_ID;
+  cfg.countdownAnimTimerId = COUNTDOWN_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
   cfg.screenDimensions.h = rosParams.guiWindow.h;
 
