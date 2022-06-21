@@ -3,6 +3,7 @@
 
 //System headers
 #include <cstdint>
+#include <string>
 
 //Other libraries headers
 #include "utils/drawing/Rectangle.h"
@@ -12,6 +13,7 @@
 //Forward declarations
 
 struct GameEndAnimatorConfig {
+  std::string projectName;
   uint64_t bgrRsrcId { };
   uint64_t winStatusFontId { };
   uint64_t userDataFontId { };

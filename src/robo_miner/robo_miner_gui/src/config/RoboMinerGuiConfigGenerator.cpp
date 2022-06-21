@@ -20,7 +20,7 @@
 #include "generated/RoboMinerGuiResources.h"
 
 namespace {
-constexpr auto PROJECT_FOLDER_NAME = "robo_miner_gui";
+constexpr auto PROJECT_NAME = "robo_miner_gui";
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -127,6 +127,7 @@ FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
 GameEndAnimatorConfig generateGameEndAnimatorConfig(
     const RoboMinerGuiRos2Params& rosParams) {
   GameEndAnimatorConfig cfg;
+  cfg.projectName = PROJECT_NAME;
   cfg.bgrRsrcId = RoboMinerGuiResources::MAP;
   cfg.winStatusFontId = RoboMinerGuiResources::VINQUE_RG_75;
   cfg.countdownFontId = RoboMinerGuiResources::VINQUE_RG_30;
@@ -157,7 +158,7 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
   SolutionValidatorConfig cfg;
 
   const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+      ament_index_cpp::get_package_share_directory(PROJECT_NAME);
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
   cfg.targetMapTilesCount = emptyTilesCount;
@@ -171,7 +172,7 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
-  windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/entities/player_robot.png");
@@ -248,7 +249,7 @@ std::vector<DependencyDescription> RoboMinerGuiConfigGenerator::generateDependen
 ApplicationConfig RoboMinerGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
   const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+      ament_index_cpp::get_package_share_directory(PROJECT_NAME);
 
   auto paramProviderNode = std::make_shared<RoboMinerGuiRos2ParamProvider>();
   const auto rosParams = paramProviderNode->getParams();

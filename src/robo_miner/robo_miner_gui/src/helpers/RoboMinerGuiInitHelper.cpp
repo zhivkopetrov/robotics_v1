@@ -71,6 +71,7 @@ ErrorCode RoboMinerGuiInitHelper::initLayout(const RoboMinerLayoutConfig &cfg,
   outInterface.finishRobotActCb = std::bind(&MovementWatcher::changeState,
       &gui._movementWatcher, _1, _2);
   outInterface.shutdownGameCb = gui._systemShutdownCb;
+  outInterface.takeScreenshotCb = gui._takeScreenshotCb;
   outInterface.shutdownControllerCb = std::bind(
       &MinerControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());

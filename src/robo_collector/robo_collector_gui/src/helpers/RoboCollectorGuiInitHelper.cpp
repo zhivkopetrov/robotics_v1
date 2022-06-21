@@ -70,6 +70,7 @@ ErrorCode RoboCollectorGuiInitHelper::initLayout(
   outInterface.finishRobotActCb = std::bind(&TurnHelper::onRobotFinishAct,
       &gui._turnHelper, _1, _2);
   outInterface.shutdownGameCb = gui._systemShutdownCb;
+  outInterface.takeScreenshotCb = gui._takeScreenshotCb;
   outInterface.shutdownControllerCb = std::bind(
       &CollectorControllerExternalBridge::publishShutdownController,
       gui._controllerExternalBridge.get());

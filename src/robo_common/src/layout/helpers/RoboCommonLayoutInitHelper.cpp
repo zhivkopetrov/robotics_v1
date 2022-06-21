@@ -81,6 +81,7 @@ ErrorCode RoboCommonLayoutInitHelper::initGameEndAnimator(
   gameEndAnimatorOutInterface.startEndGameSequence = std::bind(
       &AchievementAnimator::startEndGameSequence, &layout._achievementAnimator,
       _1);
+  gameEndAnimatorOutInterface.takeScreenshotCb = outInterface.takeScreenshotCb;
 
   if (ErrorCode::SUCCESS != layout._gameEndAnimator.init(cfg,
           gameEndAnimatorOutInterface)) {

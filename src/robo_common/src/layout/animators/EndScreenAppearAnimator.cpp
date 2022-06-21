@@ -88,12 +88,16 @@ void EndScreenAppearAnimator::createUserDataTexts(
       + _userData.user, "Repository: " + _userData.repository, "Commit SHA: "
       + _userData.commitSha };
 
+  const Rectangle containerBoundary = finalScreenFbo->getScaledRect();
+  constexpr int32_t offset = 10;
+  const int32_t maxTextWidth = (containerBoundary.w / 2) - (4 * offset);
+
   std::array<int32_t, USER_TEXTS_COUNT> textWidths;
   for (int32_t i = 0; i < USER_TEXTS_COUNT; ++i) {
     _userTexts[i].create(cfg.userDataFontId, textsContent[i].c_str(),
         Colors::RED);
     _userTexts[i].activateScaling();
-    _userTexts[i].setMaxScalingWidth(500);
+    _userTexts[i].setMaxScalingWidth(maxTextWidth);
     textWidths[i] = _userTexts[i].getScaledWidth();
   }
 
@@ -101,14 +105,13 @@ void EndScreenAppearAnimator::createUserDataTexts(
   const size_t maxTextWidthIdx = it - textWidths.begin();
 
   Point textPos = WidgetAligner::getPosition(
-      _userTexts[maxTextWidthIdx].getFrameWidth(),
-      _userTexts[lastTextIdx].getFrameHeight(), finalScreenFbo->getScaledRect(),
+      _userTexts[maxTextWidthIdx].getScaledWidth(),
+      _userTexts[lastTextIdx].getScaledHeight(), containerBoundary,
       WidgetAlignment::LOWER_RIGHT, Margin(30, 30, 30, 30));
 
-  constexpr auto yOffset = 10;
   int32_t newY { };
   for (int32_t i = lastTextIdx; 0 <= i; --i) {
-    newY = textPos.y - i * (_userTexts[i].getFrameHeight() + yOffset);
+    newY = textPos.y - i * (_userTexts[i].getFrameHeight() + offset);
     const int32_t currTextIdx = lastTextIdx - i;
     _userTexts[currTextIdx].setPosition(textPos.x, newY);
   }

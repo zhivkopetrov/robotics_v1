@@ -95,6 +95,7 @@ ErrorCode RoboCleanerGuiInitHelper::initLayout(
       &CleanerControllerExternalBridge::publishFieldMapCleaned,
       externalBridgeRawPtr);
   outInterface.shutdownGameCb = gui._systemShutdownCb;
+  outInterface.takeScreenshotCb = gui._takeScreenshotCb;
   outInterface.shutdownControllerCb = std::bind(
       &CleanerControllerExternalBridge::publishShutdownController,
       externalBridgeRawPtr);

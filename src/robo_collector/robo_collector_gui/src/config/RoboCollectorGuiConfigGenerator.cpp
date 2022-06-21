@@ -19,7 +19,7 @@
 #include "generated/RoboCollectorGuiResources.h"
 
 namespace {
-constexpr auto PROJECT_FOLDER_NAME = "robo_collector_gui";
+constexpr auto PROJECT_NAME = "robo_collector_gui";
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::ENABLED;
 
 enum TimerId {
@@ -171,6 +171,7 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
 GameEndAnimatorConfig generateGameEndAnimatorConfig(
     const RoboCollectorGuiRos2Params& rosParams) {
   GameEndAnimatorConfig cfg;
+  cfg.projectName = PROJECT_NAME;
   cfg.bgrRsrcId = RoboCollectorGuiResources::MAP;
   cfg.winStatusFontId = RoboCollectorGuiResources::VINQUE_RG_75;
   cfg.countdownFontId = RoboCollectorGuiResources::VINQUE_RG_30;
@@ -201,7 +202,7 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
-  windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/entities/player_robot.png");
@@ -277,7 +278,7 @@ RoboCollectorGuiConfigGenerator::generateDependencies(
 ApplicationConfig RoboCollectorGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
   const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+      ament_index_cpp::get_package_share_directory(PROJECT_NAME);
 
   auto paramProviderNode =
       std::make_shared<RoboCollectorGuiRos2ParamProvider>();

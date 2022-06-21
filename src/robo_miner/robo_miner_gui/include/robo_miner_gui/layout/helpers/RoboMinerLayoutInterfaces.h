@@ -22,6 +22,7 @@ struct RoboMinerLayoutInterface {
 
 struct RoboMinerLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
+  TakeScreenshotCb takeScreenshotCb;
   ShutdownControllerCb shutdownControllerCb;
   FieldMapRevelealedCb fieldMapRevelealedCb;
   FinishRobotActCb finishRobotActCb;

@@ -9,6 +9,7 @@
 //Own components headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
+#include "sdl_utils/drawing/defines/DrawUtilityDefines.h"
 
 //Forward declarations
 class CollisionWatcher;
@@ -29,6 +30,7 @@ struct RoboCommonLayoutInterface {
 
 struct RoboCommonLayoutOutInterface {
   ShutdownGameCb shutdownGameCb;
+  TakeScreenshotCb takeScreenshotCb;
   FinishRobotActCb finishRobotActCb;
   PlayerRobotDamageCollisionCb playerRobotDamageCollisionCb;
   PlayerDamageCb playerDamageCb;

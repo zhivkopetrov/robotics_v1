@@ -24,6 +24,7 @@ struct GameEndAnimatorOutInterface {
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   IsAchievementAnimatorActive isAchievementAnimatorActive;
   StartEndGameSequence startEndGameSequence;
+  TakeScreenshotCb takeScreenshotCb;
 };
 
 class GameEndAnimator {

@@ -19,7 +19,7 @@
 #include "generated/RoboCleanerGuiResources.h"
 
 namespace {
-constexpr auto PROJECT_FOLDER_NAME = "robo_cleaner_gui";
+constexpr auto PROJECT_NAME = "robo_cleaner_gui";
 
 enum TimerId {
   ROBOT_MOVE_ANIM_TIMER_ID,
@@ -175,6 +175,7 @@ EntityHandlerConfig generateEntityHandlerConfig(
 GameEndAnimatorConfig generateGameEndAnimatorConfig(
     const RoboCleanerGuiRos2Params& rosParams) {
   GameEndAnimatorConfig cfg;
+  cfg.projectName = PROJECT_NAME;
   cfg.bgrRsrcId = RoboCleanerGuiResources::MAP;
   cfg.winStatusFontId = RoboCleanerGuiResources::VINQUE_RG_75;
   cfg.countdownFontId = RoboCleanerGuiResources::VINQUE_RG_30;
@@ -205,7 +206,7 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
-  windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/entities/player_robot.png");
@@ -282,7 +283,7 @@ std::vector<DependencyDescription> RoboCleanerGuiConfigGenerator::generateDepend
 ApplicationConfig RoboCleanerGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
   const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+      ament_index_cpp::get_package_share_directory(PROJECT_NAME);
 
   auto paramProviderNode = std::make_shared<RoboCleanerGuiRos2ParamProvider>();
   const auto rosParams = paramProviderNode->getParams();

@@ -28,11 +28,12 @@ ErrorCode GameEndAnimator::init(
     return ErrorCode::FAILURE;
   }
 
-  const CountdownAnimatorConfig countCfg = { .containerDimensions =
-      _finalScreenFbo.getScaledRect(), .fontId = cfg.countdownFontId,
+  const CountdownAnimatorConfig countCfg = { .projectName = cfg.projectName,
+      .containerDimensions = _finalScreenFbo.getScaledRect(), .countdownFontId =
+          cfg.countdownFontId, .screenshotFontId = cfg.userDataFontId,
       .countdownSeconds = 10, .timerId = cfg.countdownAnimTimerId };
   if (ErrorCode::SUCCESS != _countdownAnimator.init(countCfg,
-          outInterface.shutdownGameCb)) {
+          outInterface.shutdownGameCb, outInterface.takeScreenshotCb)) {
     LOGERR("Error, _countdownAnimator.init");
     return ErrorCode::FAILURE;
   }
@@ -87,6 +88,7 @@ void GameEndAnimator::startAchievementWonAnim(Achievement achievement) {
 
 void GameEndAnimator::setUserData(const UserData &userData) {
   _appearAnimator.setUserData(userData);
+  _countdownAnimator.setUserName(userData.user);
 }
 
 void GameEndAnimator::onAchievementWonAnimFinish(Achievement achievement) {
@@ -134,11 +136,22 @@ ErrorCode GameEndAnimator::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.takeScreenshotCb) {
+    LOGERR("Error, nullptr provided for TakeScreenshotCb");
+    return ErrorCode::FAILURE;
+  }
+
   return ErrorCode::SUCCESS;
 }
 
 void GameEndAnimator::onAppearAnimFinish() {
-  _outInterface.startEndGameSequence(_wonAchievements);
+  if (!_wonAchievements.empty()) {
+    //animate won achievements as part of end game animation
+    _outInterface.startEndGameSequence(_wonAchievements);
+  } else {
+    //no achievements to animate -> skip a phase and jump to next one
+    _countdownAnimator.startAnim();
+  }
 }
 
 void GameEndAnimator::createFinalScreenFbo(const GameEndAnimatorConfig &cfg) {
