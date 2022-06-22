@@ -77,9 +77,6 @@ void CountdownAnimator::onTimeout(const int32_t timerId) {
 void CountdownAnimator::processAnim() {
   --_countdownSecondsLeft;
   if (0 == _countdownSecondsLeft) {
-    //TODO authenticate user to server from robo collector controller
-    //TODO do this for all 3 robo games
-
     stopTimer(_timerId);
     _shutdownGameCb();
     return;
