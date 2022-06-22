@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include "robo_collector_interfaces/msg/user_authenticate.hpp"
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"
 #include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
 #include "game_engine/defines/ActionEventDefines.h"
@@ -20,6 +21,7 @@ struct CollectorControllerExternalBridgeOutInterface {
   MoveButtonClickCb moveButtonClickCb;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
+  SetUserDataCb setUserDataCb;
 };
 
 class CollectorControllerExternalBridge: public rclcpp::Node {
@@ -35,6 +37,7 @@ public:
 
 private:
   using Empty = std_msgs::msg::Empty;
+  using UserAuthenticate = robo_collector_interfaces::msg::UserAuthenticate;
   using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
 
   enum class ControllerStatus {
@@ -45,12 +48,14 @@ private:
       const CollectorControllerExternalBridgeOutInterface &outInterface);
   ErrorCode initCommunication();
 
+  void onUserAuthenticateMsg(const UserAuthenticate::SharedPtr msg);
   void onMoveMsg(const RobotMoveType::SharedPtr msg);
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);
   void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
 
   CollectorControllerExternalBridgeOutInterface _outInterface;
 
+  rclcpp::Subscription<UserAuthenticate>::SharedPtr _userAuthenticateSubscriber;
   rclcpp::Subscription<RobotMoveType>::SharedPtr _playerActSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;

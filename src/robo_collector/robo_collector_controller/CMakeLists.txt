@@ -29,9 +29,10 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorControllerConfigGenerator.h
         ${_INC_DIR}/external_api/CollectorGuiExternalBridge.h
         ${_INC_DIR}/external_api/RoboCollectorControllerRos2ParamProvider.h
-        ${_INC_DIR}/external_api/config/CollectorGuiExternalBridgeConfig.h
         ${_INC_DIR}/helpers/RoboCollectorControllerBuilder.h
         ${_INC_DIR}/helpers/RoboCollectorControllerInitHelper.h
+        ${_INC_DIR}/helpers/UserAuthenticateHelper.h
+        ${_INC_DIR}/helpers/config/UserAuthenticateHelperConfig.h
         ${_INC_DIR}/layout/RoboCollectorControllerLayout.h
         ${_INC_DIR}/layout/config/RoboCollectorControllerLayoutConfig.h
         ${_INC_DIR}/layout/helpers/RoboCollectorControllerLayoutInterfaces.h
@@ -44,6 +45,7 @@ add_executable(
         ${_SRC_DIR}/external_api/RoboCollectorControllerRos2ParamProvider.cpp
         ${_SRC_DIR}/helpers/RoboCollectorControllerBuilder.cpp
         ${_SRC_DIR}/helpers/RoboCollectorControllerInitHelper.cpp
+        ${_SRC_DIR}/helpers/UserAuthenticateHelper.cpp
         ${_SRC_DIR}/layout/RoboCollectorControllerLayout.cpp
         ${_SRC_DIR}/layout/helpers/RoboCollectorControllerLayoutInitHelper.cpp
 )

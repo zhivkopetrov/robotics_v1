@@ -12,6 +12,7 @@
 //Own components headers
 #include "robo_collector_controller/layout/RoboCollectorControllerLayout.h"
 #include "robo_collector_controller/external_api/CollectorGuiExternalBridge.h"
+#include "robo_collector_controller/helpers/UserAuthenticateHelper.h"
 
 //Forward declarations
 class InputEvent;
@@ -33,6 +34,7 @@ public:
 
 private:
   RoboCollectorControllerLayout _layout;
+  UserAuthenticateHelper _userAuthenticateHelper;
 
   std::shared_ptr<CollectorGuiExternalBridge> _controllerExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;

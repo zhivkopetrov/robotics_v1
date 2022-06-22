@@ -70,6 +70,10 @@ ErrorCode CollectorControllerExternalBridge::initOutInterface(
     LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
     return ErrorCode::FAILURE;
   }
+  if (nullptr == _outInterface.setUserDataCb) {
+    LOGERR("Error, nullptr provided for SetUserDataCb");
+    return ErrorCode::FAILURE;
+  }
 
   return ErrorCode::SUCCESS;
 }
@@ -77,6 +81,12 @@ ErrorCode CollectorControllerExternalBridge::initOutInterface(
 ErrorCode CollectorControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
+
+  _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
+      USER_AUTHENTICATE_TOPIC, queueSize,
+      std::bind(&CollectorControllerExternalBridge::onUserAuthenticateMsg, this,
+          _1));
+
   _playerActSubscriber = create_subscription<RobotMoveType>(
       ROBOT_MOVE_TYPE_TOPIC, queueSize,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
@@ -98,6 +108,17 @@ ErrorCode CollectorControllerExternalBridge::initCommunication() {
       SHUTDOWN_CONTROLLER_TOPIC, queueSize);
 
   return ErrorCode::SUCCESS;
+}
+
+void CollectorControllerExternalBridge::onUserAuthenticateMsg(
+    const UserAuthenticate::SharedPtr msg) {
+  const UserData data = { .user = msg->user, .repository = msg->repository,
+      .commitSha = msg->commit_sha };
+
+  const auto f = [this, data]() {
+    _outInterface.setUserDataCb(data);
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 void CollectorControllerExternalBridge::onMoveMsg(

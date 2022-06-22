@@ -62,13 +62,10 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
   interface.getFieldDescriptionCb = std::bind(&Field::getDescription, &_field);
   interface.getPlayerSurroundingTilesCb = std::bind(&Robot::getSurroundingTiles,
       &_playerRobot);
-  interface.playerRobotActInterface = {
-      std::bind(&Robot::act, &_playerRobot, _1),
-      std::bind(&Robot::getState, &_playerRobot),
-      std::bind(&Robot::cancelMove, &_playerRobot),
-      std::bind(&Robot::getAbsolutePos, &_playerRobot),
-      std::bind(&Robot::getRotationAngle, &_playerRobot)
-  };
+  interface.playerRobotActInterface = { std::bind(&Robot::act, &_playerRobot,
+      _1), std::bind(&Robot::getState, &_playerRobot), std::bind(
+      &Robot::cancelMove, &_playerRobot), std::bind(&Robot::getAbsolutePos,
+      &_playerRobot), std::bind(&Robot::getRotationAngle, &_playerRobot) };
   interface.toggleHelpPageCb = std::bind(&RoboCommonLayout::toggleHelpPage,
       this);
   interface.toggleDebugInfoCb = std::bind(&RoboCommonLayout::toggleDebugInfo,
@@ -77,6 +74,8 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
       &_gameEndAnimator);
   interface.startGameLostAnimCb = std::bind(&GameEndAnimator::startGameLostAnim,
       &_gameEndAnimator);
+  interface.setUserDataCb = std::bind(&GameEndAnimator::setUserData,
+      &_gameEndAnimator, _1);
   interface.startAchievementWonAnimCb = std::bind(
       &GameEndAnimator::startAchievementWonAnim, &_gameEndAnimator, _1);
   interface.revealFogOfWarTilesCb = std::bind(&FogOfWar::revealAllFogTiles,

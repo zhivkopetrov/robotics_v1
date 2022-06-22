@@ -11,6 +11,8 @@
 #include "robo_collector_controller/config/RoboCollectorControllerConfig.h"
 #include "robo_collector_controller/layout/helpers/RoboCollectorControllerLayoutInterfaces.h"
 
+using namespace std::placeholders;
+
 ErrorCode RoboCollectorControllerInitHelper::init(
     const std::any &cfg, RoboCollectorController &controller) {
   auto err = ErrorCode::SUCCESS;
@@ -31,18 +33,24 @@ ErrorCode RoboCollectorControllerInitHelper::init(
   }
 
   //allocate memory for the external bridge in order to attach it's callbacks
-  controller._controllerExternalBridge =
-      std::make_shared<CollectorGuiExternalBridge>();
+  controller._controllerExternalBridge = std::make_shared<
+      CollectorGuiExternalBridge>();
 
   RoboCollectorControllerLayoutInterface layoutInterface;
-  if (ErrorCode::SUCCESS !=
-      initLayout(parsedCfg.layoutCfg, layoutInterface, controller)) {
+  if (ErrorCode::SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface,
+          controller)) {
     LOGERR("Error, initLayout() failed");
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initControllerExternalBridge(
-      parsedCfg.externalBridgeConfig, layoutInterface, controller)) {
+  if (ErrorCode::SUCCESS != initUserAuthenticateHelper(
+          parsedCfg.userAuthenticateHelperConfig, controller)) {
+    LOGERR("initUserAuthenticateHelper() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initControllerExternalBridge(layoutInterface,
+          controller)) {
     LOGERR("initControllerExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
@@ -54,14 +62,13 @@ ErrorCode RoboCollectorControllerInitHelper::initLayout(
     const RoboCollectorControllerLayoutConfig &cfg,
     RoboCollectorControllerLayoutInterface &interface,
     RoboCollectorController &controller) {
-  using namespace std::placeholders;
 
   RoboCollectorControllerLayoutOutInterface outInterface;
   const auto guiExternalBridgeRawPointer =
       controller._controllerExternalBridge.get();
   outInterface.robotActCb = std::bind(
-      &CollectorGuiExternalBridge::publishRobotAct,
-      guiExternalBridgeRawPointer, _1);
+      &CollectorGuiExternalBridge::publishRobotAct, guiExternalBridgeRawPointer,
+      _1);
   outInterface.toggleDebugInfoCb = std::bind(
       &CollectorGuiExternalBridge::publishToggleDebugInfo,
       guiExternalBridgeRawPointer);
@@ -69,8 +76,8 @@ ErrorCode RoboCollectorControllerInitHelper::initLayout(
       &CollectorGuiExternalBridge::publishToggleHelpPage,
       guiExternalBridgeRawPointer);
 
-  if (ErrorCode::SUCCESS !=
-      controller._layout.init(cfg, outInterface, interface)) {
+  if (ErrorCode::SUCCESS != controller._layout.init(cfg, outInterface,
+          interface)) {
     LOGERR("Error in _layout.init()");
     return ErrorCode::FAILURE;
   }
@@ -78,8 +85,21 @@ ErrorCode RoboCollectorControllerInitHelper::initLayout(
   return ErrorCode::SUCCESS;
 }
 
+ErrorCode RoboCollectorControllerInitHelper::initUserAuthenticateHelper(
+    const UserAuthenticateHelperConfig &cfg,
+    RoboCollectorController &controller) {
+  const InitiateUserAuthenticateCb cb = std::bind(
+      &CollectorGuiExternalBridge::publishUserAuthenticate,
+      controller._controllerExternalBridge.get(), _1);
+  if (ErrorCode::SUCCESS != controller._userAuthenticateHelper.init(cfg, cb)) {
+    LOGERR("Error in _controllerExternalBridge.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode RoboCollectorControllerInitHelper::initControllerExternalBridge(
-    const CollectorGuiExternalBridgeConfig& cfg,
     const RoboCollectorControllerLayoutInterface &interface,
     RoboCollectorController &controller) {
   CollectorGuiExternalBridgeOutInterface outInterface;
@@ -87,8 +107,8 @@ ErrorCode RoboCollectorControllerInitHelper::initControllerExternalBridge(
   outInterface.enablePlayerInputCb = interface.enablePlayerInputCb;
   outInterface.systemShutdownCb = controller._systemShutdownCb;
 
-  if (ErrorCode::SUCCESS !=
-      controller._controllerExternalBridge->init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != controller._controllerExternalBridge->init(
+          outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return ErrorCode::FAILURE;
   }

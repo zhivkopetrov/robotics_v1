@@ -22,7 +22,7 @@ struct GameEndAnimatorConfig {
   int32_t fadeAnimTimerId { };
   int32_t expandAnimTimerId { };
   int32_t countdownAnimTimerId { };
-  double endScreenToBgrRatio = 0.4;
+  double endScreenToBgrRatio = 0.5;
 };
 
 #endif /* ROBO_COMMON_GAMEENDANIMATORCONFIG_H_ */

@@ -17,7 +17,6 @@ CollectorGuiExternalBridge::CollectorGuiExternalBridge()
 }
 
 ErrorCode CollectorGuiExternalBridge::init(
-    const CollectorGuiExternalBridgeConfig &cfg,
     const CollectorGuiExternalBridgeOutInterface &interface) {
   if (ErrorCode::SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
@@ -29,7 +28,6 @@ ErrorCode CollectorGuiExternalBridge::init(
     return ErrorCode::FAILURE;
   }
 
-  publishUserAuthenticate(cfg.userData);
   return ErrorCode::SUCCESS;
 }
 
@@ -50,6 +48,14 @@ void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) const {
   RobotMoveType msg;
   msg.move_type = getMoveTypeField(moveType);
   _robotActPublisher->publish(msg);
+}
+
+void CollectorGuiExternalBridge::publishUserAuthenticate(const UserData& data) {
+  UserAuthenticate msg;
+  msg.user = data.user;
+  msg.commit_sha = data.commitSha;
+  msg.repository = data.repository;
+  _userAuthenticatePublisher->publish(msg);
 }
 
 ErrorCode CollectorGuiExternalBridge::initOutInterface(
@@ -101,14 +107,6 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
           _1));
 
   return ErrorCode::SUCCESS;
-}
-
-void CollectorGuiExternalBridge::publishUserAuthenticate(const UserData& data) {
-  UserAuthenticate msg;
-  msg.user = data.user;
-  msg.commit_sha = data.commitSha;
-  msg.repository = data.repository;
-  _userAuthenticatePublisher->publish(msg);
 }
 
 void CollectorGuiExternalBridge::onEnableRobotTurnMsg(

@@ -13,7 +13,7 @@
 
 //Forward declarations
 
-using SetUserData = std::function<void(const UserData&)>;
+using SetUserDataCb = std::function<void(const UserData&)>;
 using PlayerDamageCb = std::function<void(int32_t)>;
 using SetFieldDataMarkerCb = std::function<void(const FieldPos&, char)>;
 using ResetFieldDataMarkerCb = std::function<void(const FieldPos&)>;

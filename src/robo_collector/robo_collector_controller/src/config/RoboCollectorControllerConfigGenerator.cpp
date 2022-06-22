@@ -18,10 +18,15 @@
 namespace {
 constexpr auto PROJECT_FOLDER_NAME = "robo_collector_controller";
 
-CollectorGuiExternalBridgeConfig generateExternalBridgeConfig(
+enum TimerIds {
+  INITIATE_USER_AUTHENTICATE_TIMER_ID
+};
+
+UserAuthenticateHelperConfig generateUserAuthenticateHelperConfig(
     const RoboCollectorControllerRos2Params& rosParams) {
-  CollectorGuiExternalBridgeConfig cfg;
+  UserAuthenticateHelperConfig cfg;
   cfg.userData = rosParams.userData;
+  cfg.timerId = INITIATE_USER_AUTHENTICATE_TIMER_ID;
 
   return cfg;
 }
@@ -69,7 +74,8 @@ EngineConfig generateEngineConfig(
 RoboCollectorControllerConfig generateGameConfig(
     const RoboCollectorControllerRos2Params& rosParams) {
   RoboCollectorControllerConfig cfg;
-  cfg.externalBridgeConfig = generateExternalBridgeConfig(rosParams);
+  cfg.userAuthenticateHelperConfig =
+      generateUserAuthenticateHelperConfig(rosParams);
 
   auto& layoutCfg = cfg.layoutCfg;
   layoutCfg.uiControllerCfg =

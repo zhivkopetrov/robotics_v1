@@ -13,7 +13,6 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "robo_collector_controller/external_api/config/CollectorGuiExternalBridgeConfig.h"
 
 //Forward declarations
 
@@ -27,12 +26,12 @@ class CollectorGuiExternalBridge: public rclcpp::Node {
 public:
   CollectorGuiExternalBridge();
 
-  ErrorCode init(const CollectorGuiExternalBridgeConfig &cfg,
-                 const CollectorGuiExternalBridgeOutInterface &interface);
+  ErrorCode init(const CollectorGuiExternalBridgeOutInterface &interface);
 
   void publishToggleDebugInfo() const;
   void publishToggleHelpPage() const;
   void publishRobotAct(MoveType moveType) const;
+  void publishUserAuthenticate(const UserData& data);
 
 private:
   using UserAuthenticate = robo_collector_interfaces::msg::UserAuthenticate;
@@ -42,8 +41,6 @@ private:
   ErrorCode initOutInterface(
       const CollectorGuiExternalBridgeOutInterface &outInterface);
   ErrorCode initCommunication();
-
-  void publishUserAuthenticate(const UserData& data);
 
   void onEnableRobotTurnMsg(const Empty::SharedPtr msg);
   void onControllerShutdownMsg(const Empty::SharedPtr msg);

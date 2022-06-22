@@ -34,11 +34,10 @@ public:
   void startAnim(EndGameOutcome outcome);
 
 private:
-  void createVisuals(const GameEndAnimatorConfig &cfg, Fbo *finalScreenFbo);
-  void createBgrImage(const GameEndAnimatorConfig &cfg, Fbo *finalScreenFbo);
-  void createUserDataTexts(const GameEndAnimatorConfig &cfg,
-                           Fbo *finalScreenFbo);
-  void populateEndGameOutcomeText(EndGameOutcome outcome);
+  void createBlackBgrFbo(const Rectangle& dimensions);
+  void createBgrImage();
+  void createUserDataTexts();
+  void createEndGameOutcomeText(EndGameOutcome outcome);
 
   void onTimeout(const int32_t timerId) override;
 
@@ -64,6 +63,12 @@ private:
     const int32_t lastStepIdx = totalSteps - 1;
   };
 
+  struct RsrcIdsLocal {
+    uint64_t bgrRsrcId { };
+    uint64_t winStatusFontId { };
+    uint64_t userDataFontId { };
+  };
+
   enum InternalDefines {
     USER_TEXTS_COUNT = 3
   };
@@ -73,6 +78,8 @@ private:
   std::array<Text, USER_TEXTS_COUNT> _userTexts;
   Text _endGameOutcomeText;
   Fbo *_finalScreenFbo = nullptr;
+
+  RsrcIdsLocal _rsrcIdsLocal;
 
   FadeAnimData _fadeAnimData;
   ExpandAnimData _expandAnimData;

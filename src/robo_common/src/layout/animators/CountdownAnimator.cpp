@@ -97,7 +97,7 @@ void CountdownAnimator::createTexts(const CountdownAnimatorConfig &cfg) {
 
   Point pos;
   pos.x = cfg.containerDimensions.x + offset;
-  pos.x -= 120; //manual modification
+  pos.x -= 170; //manual modification
   pos.y = WidgetAligner::getAlignedY(descrTextRect.h, cfg.containerDimensions.y,
       cfg.containerDimensions.h, WidgetAlignment::LOWER_LEFT,
       Margin(30, 30, 30, 30));

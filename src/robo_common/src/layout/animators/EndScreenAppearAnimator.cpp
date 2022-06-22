@@ -19,6 +19,10 @@ ErrorCode EndScreenAppearAnimator::init(
   }
   _onAppearAnimFinish = onAppearAnimFinish;
 
+  _rsrcIdsLocal.bgrRsrcId = cfg.bgrRsrcId;
+  _rsrcIdsLocal.winStatusFontId = cfg.winStatusFontId;
+  _rsrcIdsLocal.userDataFontId = cfg.userDataFontId;
+
   _finalScreenFbo = finalScreenFbo;
   _fadeAnimData.timerId = cfg.fadeAnimTimerId;
 
@@ -33,7 +37,7 @@ ErrorCode EndScreenAppearAnimator::init(
   _expandAnimData.widthStep = shrinkedWidth / _expandAnimData.totalSteps;
   _expandAnimData.heighStep = shrinkedHeight / _expandAnimData.totalSteps;
 
-  createVisuals(cfg, finalScreenFbo);
+  createBlackBgrFbo(cfg.screenDimensions);
 
   return ErrorCode::SUCCESS;
 }
@@ -47,7 +51,9 @@ void EndScreenAppearAnimator::setUserData(const UserData &userData) {
 }
 
 void EndScreenAppearAnimator::startAnim(EndGameOutcome outcome) {
-  populateEndGameOutcomeText(outcome);
+  createBgrImage();
+  createUserDataTexts();
+  createEndGameOutcomeText(outcome);
   updateFinalScreenFbo(_finalScreenFbo);
 
   constexpr int64_t interval = 50;
@@ -55,46 +61,37 @@ void EndScreenAppearAnimator::startAnim(EndGameOutcome outcome) {
   startTimer(interval, _expandAnimData.timerId, TimerType::PULSE);
 }
 
-void EndScreenAppearAnimator::createVisuals(const GameEndAnimatorConfig &cfg,
-                                            Fbo *finalScreenFbo) {
-  _blackBgrFbo.create(cfg.screenDimensions);
+void EndScreenAppearAnimator::createBlackBgrFbo(const Rectangle &dimensions) {
+  _blackBgrFbo.create(dimensions);
   _blackBgrFbo.setResetColor(Colors::BLACK);
   _blackBgrFbo.unlock();
   _blackBgrFbo.reset();
   _blackBgrFbo.lock();
   _blackBgrFbo.activateAlphaModulation();
   _blackBgrFbo.setOpacity(_fadeAnimData.currOpacity);
-
-  createBgrImage(cfg, finalScreenFbo);
-  createUserDataTexts(cfg, finalScreenFbo);
-
-  //create a text to reuse later on
-  _endGameOutcomeText.create(cfg.winStatusFontId, " ", Colors::RED);
 }
 
-void EndScreenAppearAnimator::createBgrImage(const GameEndAnimatorConfig &cfg,
-                                             Fbo *finalScreenFbo) {
-  _bgrImg.create(cfg.bgrRsrcId);
+void EndScreenAppearAnimator::createBgrImage() {
+  _bgrImg.create(_rsrcIdsLocal.bgrRsrcId);
   _bgrImg.activateScaling();
-  _bgrImg.setScaledWidth(finalScreenFbo->getFrameWidth());
-  _bgrImg.setScaledHeight(finalScreenFbo->getFrameHeight());
-  _bgrImg.setPosition(finalScreenFbo->getPosition());
+  _bgrImg.setScaledWidth(_finalScreenFbo->getFrameWidth());
+  _bgrImg.setScaledHeight(_finalScreenFbo->getFrameHeight());
+  _bgrImg.setPosition(_finalScreenFbo->getPosition());
 }
 
-void EndScreenAppearAnimator::createUserDataTexts(
-    const GameEndAnimatorConfig &cfg, Fbo *finalScreenFbo) {
+void EndScreenAppearAnimator::createUserDataTexts() {
   constexpr int32_t lastTextIdx = USER_TEXTS_COUNT - 1;
   std::array<std::string, USER_TEXTS_COUNT> textsContent { "User: "
       + _userData.user, "Repository: " + _userData.repository, "Commit SHA: "
       + _userData.commitSha };
 
-  const Rectangle containerBoundary = finalScreenFbo->getScaledRect();
+  const Rectangle containerBoundary = _finalScreenFbo->getScaledRect();
   constexpr int32_t offset = 10;
   const int32_t maxTextWidth = (containerBoundary.w / 2) - (4 * offset);
 
   std::array<int32_t, USER_TEXTS_COUNT> textWidths;
   for (int32_t i = 0; i < USER_TEXTS_COUNT; ++i) {
-    _userTexts[i].create(cfg.userDataFontId, textsContent[i].c_str(),
+    _userTexts[i].create(_rsrcIdsLocal.userDataFontId, textsContent[i].c_str(),
         Colors::RED);
     _userTexts[i].activateScaling();
     _userTexts[i].setMaxScalingWidth(maxTextWidth);
@@ -117,11 +114,11 @@ void EndScreenAppearAnimator::createUserDataTexts(
   }
 }
 
-void EndScreenAppearAnimator::populateEndGameOutcomeText(
-    EndGameOutcome outcome) {
+void EndScreenAppearAnimator::createEndGameOutcomeText(EndGameOutcome outcome) {
   const std::string textStr =
       (EndGameOutcome::WIN == outcome) ? "You WIN" : "You Lose";
-  _endGameOutcomeText.setText(textStr.c_str());
+  _endGameOutcomeText.create(_rsrcIdsLocal.winStatusFontId, textStr.c_str(),
+      Colors::RED);
 
   const Rectangle frameRect = _endGameOutcomeText.getFrameRect();
   const Point pos = WidgetAligner::getPosition(frameRect.w, frameRect.h,
