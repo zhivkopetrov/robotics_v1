@@ -11,6 +11,7 @@
 #include "robo_miner_interfaces/srv/field_map_validate.hpp"
 #include "robo_miner_interfaces/srv/longest_sequence_validate.hpp"
 #include "robo_miner_interfaces/srv/activate_mining_validate.hpp"
+#include "robo_miner_interfaces/msg/user_authenticate.hpp"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
 #include "utils/ErrorCode.h"
@@ -27,6 +28,7 @@ struct MinerControllerExternalBridgeOutInterface {
   RobotActCb robotActCb;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
+  SetUserDataCb setUserDataCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   StartGameLostAnimCb startGameLostAnimCb;
   TileReleavedCb tileReleavedCb;
@@ -49,6 +51,7 @@ public:
 
 private:
   using Empty = std_msgs::msg::Empty;
+  using UserAuthenticate = robo_miner_interfaces::msg::UserAuthenticate;
   using FieldPoint = robo_miner_interfaces::msg::FieldPoint;
   using RobotMove = robo_miner_interfaces::srv::RobotMove;
   using QueryInitialRobotPosition = robo_miner_interfaces::srv::QueryInitialRobotPosition;
@@ -83,6 +86,7 @@ private:
       const std::shared_ptr<ActivateMiningValidate::Request> request,
       std::shared_ptr<ActivateMiningValidate::Response> response);
 
+  void onUserAuthenticateMsg(const UserAuthenticate::SharedPtr msg);
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);
   void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
 
@@ -102,6 +106,7 @@ private:
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
 
+  rclcpp::Subscription<UserAuthenticate>::SharedPtr _userAuthenticateSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
 

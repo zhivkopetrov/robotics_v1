@@ -93,6 +93,11 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.setUserDataCb) {
+    LOGERR("Error, nullptr provided for SetUserDataCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.startGameLostAnimCb) {
     LOGERR("Error, nullptr provided for StartGameLostAnimCb");
     return ErrorCode::FAILURE;
@@ -163,6 +168,11 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
       std::bind(&CleanerControllerExternalBridge::handleMoveGoal, this, _1, _2),
       std::bind(&CleanerControllerExternalBridge::handleMoveCancel, this, _1),
       std::bind(&CleanerControllerExternalBridge::handleMoveAccepted, this,
+          _1));
+
+  _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
+      USER_AUTHENTICATE_TOPIC, queueSize,
+      std::bind(&CleanerControllerExternalBridge::onUserAuthenticateMsg, this,
           _1));
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
@@ -348,6 +358,17 @@ void CleanerControllerExternalBridge::handleChargeBatteryService(
 void CleanerControllerExternalBridge::handleMajorError() {
   _controllerStatus = ControllerStatus::SHUTTING_DOWN;
   _outInterface.startGameLostAnimCb();
+}
+
+void CleanerControllerExternalBridge::onUserAuthenticateMsg(
+    const UserAuthenticate::SharedPtr msg) {
+  const UserData data = { .user = msg->user, .repository = msg->repository,
+      .commitSha = msg->commit_sha };
+
+  const auto f = [this, data]() {
+    _outInterface.setUserDataCb(data);
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 void CleanerControllerExternalBridge::onToggleHelpPageMsg(

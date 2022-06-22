@@ -11,7 +11,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/BatteryStatus.msg"
   "msg/InitialRobotState.msg"
   "msg/RobotMoveType.msg"
-  "msg/UInt8MultiArray.msg"
   "msg/UserAuthenticate.msg"
   
   "srv/ChargeBattery.srv"

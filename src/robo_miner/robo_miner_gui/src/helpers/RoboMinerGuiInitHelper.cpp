@@ -116,6 +116,7 @@ ErrorCode RoboMinerGuiInitHelper::initControllerExternalBridge(
       interface.commonLayoutInterface.toggleHelpPageCb;
   outInterface.toggleDebugInfoCb =
       interface.commonLayoutInterface.toggleDebugInfoCb;
+  outInterface.setUserDataCb = interface.commonLayoutInterface.setUserDataCb;
   outInterface.startAchievementWonAnimCb =
       interface.commonLayoutInterface.startAchievementWonAnimCb;
   outInterface.startGameLostAnimCb =

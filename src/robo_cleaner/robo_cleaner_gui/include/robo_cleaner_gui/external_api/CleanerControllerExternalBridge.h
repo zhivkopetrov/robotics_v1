@@ -10,6 +10,7 @@
 #include "robo_cleaner_interfaces/srv/query_initial_robot_state.hpp"
 #include "robo_cleaner_interfaces/srv/query_battery_status.hpp"
 #include "robo_cleaner_interfaces/srv/charge_battery.hpp"
+#include "robo_cleaner_interfaces/msg/user_authenticate.hpp"
 #include "robo_common/layout/entities/robot/helpers/RobotActInterface.h"
 #include "game_engine/defines/ActionEventDefines.h"
 #include "utils/ErrorCode.h"
@@ -26,6 +27,7 @@ struct CleanerControllerExternalBridgeOutInterface {
   RobotActInterface robotActInterface;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
+  SetUserDataCb setUserDataCb;
   StartGameLostAnimCb startGameLostAnimCb;
   AcceptGoalCb acceptGoalCb;
   ReportRobotStartingActCb reportRobotStartingActCb;
@@ -56,6 +58,7 @@ private:
   ErrorCode initCommunication();
 
   using Empty = std_msgs::msg::Empty;
+  using UserAuthenticate = robo_cleaner_interfaces::msg::UserAuthenticate;
   using QueryBatteryStatus = robo_cleaner_interfaces::srv::QueryBatteryStatus;
   using QueryInitialRobotState = robo_cleaner_interfaces::srv::QueryInitialRobotState;
   using ChargeBattery = robo_cleaner_interfaces::srv::ChargeBattery;
@@ -88,6 +91,7 @@ private:
 
   void handleMajorError();
 
+  void onUserAuthenticateMsg(const UserAuthenticate::SharedPtr msg);
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);
   void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
 
@@ -103,6 +107,7 @@ private:
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapReveleadedPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _fieldMapCleanedPublisher;
 
+  rclcpp::Subscription<UserAuthenticate>::SharedPtr _userAuthenticateSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
 
