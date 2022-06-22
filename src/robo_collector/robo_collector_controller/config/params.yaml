@@ -6,3 +6,6 @@
     gui_window_width: 648
     gui_window_height: 553
     use_local_controller_mode: True
+    user: not_set
+    repository: not_set
+    commit_sha: not_set

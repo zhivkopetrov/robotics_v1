@@ -29,6 +29,7 @@ add_executable(
         ${_INC_DIR}/config/RoboCollectorControllerConfigGenerator.h
         ${_INC_DIR}/external_api/CollectorGuiExternalBridge.h
         ${_INC_DIR}/external_api/RoboCollectorControllerRos2ParamProvider.h
+        ${_INC_DIR}/external_api/config/CollectorGuiExternalBridgeConfig.h
         ${_INC_DIR}/helpers/RoboCollectorControllerBuilder.h
         ${_INC_DIR}/helpers/RoboCollectorControllerInitHelper.h
         ${_INC_DIR}/layout/RoboCollectorControllerLayout.h

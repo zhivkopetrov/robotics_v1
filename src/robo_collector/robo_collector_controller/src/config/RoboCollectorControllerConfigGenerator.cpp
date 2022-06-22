@@ -18,6 +18,14 @@
 namespace {
 constexpr auto PROJECT_FOLDER_NAME = "robo_collector_controller";
 
+CollectorGuiExternalBridgeConfig generateExternalBridgeConfig(
+    const RoboCollectorControllerRos2Params& rosParams) {
+  CollectorGuiExternalBridgeConfig cfg;
+  cfg.userData = rosParams.userData;
+
+  return cfg;
+}
+
 RoboCollectorUiControllerBaseConfig generateRoboCollectorUiControllerConfig(
     LocalControllerMode localControllerMode) {
   RoboCollectorUiControllerBaseConfig cfg;
@@ -61,6 +69,8 @@ EngineConfig generateEngineConfig(
 RoboCollectorControllerConfig generateGameConfig(
     const RoboCollectorControllerRos2Params& rosParams) {
   RoboCollectorControllerConfig cfg;
+  cfg.externalBridgeConfig = generateExternalBridgeConfig(rosParams);
+
   auto& layoutCfg = cfg.layoutCfg;
   layoutCfg.uiControllerCfg =
       generateRoboCollectorUiControllerConfig(rosParams.localControrllerMode);

@@ -9,6 +9,7 @@
 
 //Forward declarations
 
+constexpr auto USER_AUTHENTICATE_TOPIC = "user_authenticate";
 constexpr auto ROBOT_MOVE_TYPE_TOPIC = "move_type";
 constexpr auto ENABLE_ROBOT_INPUT_TOPIC = "enable_input";
 constexpr auto SHUTDOWN_CONTROLLER_TOPIC = "shutdown_controller";

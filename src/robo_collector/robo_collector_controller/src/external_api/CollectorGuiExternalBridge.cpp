@@ -17,6 +17,7 @@ CollectorGuiExternalBridge::CollectorGuiExternalBridge()
 }
 
 ErrorCode CollectorGuiExternalBridge::init(
+    const CollectorGuiExternalBridgeConfig &cfg,
     const CollectorGuiExternalBridgeOutInterface &interface) {
   if (ErrorCode::SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
@@ -28,6 +29,7 @@ ErrorCode CollectorGuiExternalBridge::init(
     return ErrorCode::FAILURE;
   }
 
+  publishUserAuthenticate(cfg.userData);
   return ErrorCode::SUCCESS;
 }
 
@@ -74,8 +76,14 @@ ErrorCode CollectorGuiExternalBridge::initOutInterface(
 ErrorCode CollectorGuiExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
+  _userAuthenticatePublisher = create_publisher<UserAuthenticate>(
+      USER_AUTHENTICATE_TOPIC, queueSize);
+
+  rclcpp::QoS qos(rclcpp::KeepLast(1));
+  qos.transient_local(); //enable message latching for late joining subscribers
+
   _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,
-      queueSize);
+      qos);
 
   _toggleHelpPagePublisher = create_publisher<Empty>(TOGGLE_HELP_PAGE_TOPIC,
       queueSize);
@@ -93,6 +101,14 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
           _1));
 
   return ErrorCode::SUCCESS;
+}
+
+void CollectorGuiExternalBridge::publishUserAuthenticate(const UserData& data) {
+  UserAuthenticate msg;
+  msg.user = data.user;
+  msg.commit_sha = data.commitSha;
+  msg.repository = data.repository;
+  _userAuthenticatePublisher->publish(msg);
 }
 
 void CollectorGuiExternalBridge::onEnableRobotTurnMsg(

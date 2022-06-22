@@ -9,6 +9,7 @@
 
 //Forward declarations
 
+constexpr auto USER_AUTHENTICATE_TOPIC = "user_authenticate";
 constexpr auto ROBOT_MOVE_SERVICE = "move_robot";
 constexpr auto QUERY_INITIAL_ROBOT_POSITION_SERVICE = "query_initial_robot_position";
 constexpr auto FIELD_MAP_VALIDATE_SERVICE = "field_map_validate";

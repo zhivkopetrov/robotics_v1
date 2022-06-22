@@ -5,6 +5,7 @@
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
+#include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_collector_common/layout/controller/config/RoboCollectorUiControllerBaseConfig.h"
 #include "utils/drawing/Rectangle.h"
 
@@ -15,6 +16,7 @@
 struct RoboCollectorControllerRos2Params {
   Rectangle guiWindow;
   LocalControllerMode localControrllerMode = LocalControllerMode::DISABLED;
+  UserData userData;
 
   void print() const;
   void validate();

@@ -14,6 +14,7 @@
 class RoboCollectorController;
 struct RoboCollectorControllerLayoutConfig;
 struct RoboCollectorControllerLayoutInterface;
+struct CollectorGuiExternalBridgeConfig;
 
 class RoboCollectorControllerInitHelper {
 public:
@@ -28,6 +29,7 @@ private:
                               RoboCollectorController &controller);
 
   static ErrorCode initControllerExternalBridge(
+      const CollectorGuiExternalBridgeConfig& cfg,
       const RoboCollectorControllerLayoutInterface &interface,
       RoboCollectorController &controller);
 };

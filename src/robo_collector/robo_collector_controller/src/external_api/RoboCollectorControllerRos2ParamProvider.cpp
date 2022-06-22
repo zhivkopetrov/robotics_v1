@@ -18,6 +18,9 @@ constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
 constexpr auto USE_LOCAL_CONTROLLER_MODE_PARAM_NAME =
     "use_local_controller_mode";
+constexpr auto USER_PARAM_NAME = "user";
+constexpr auto REPOSITORY_PARAM_NAME = "repository";
+constexpr auto COMMIT_SHA_PARAM_NAME = "commit_sha";
 
 //screen
 constexpr auto DEFAULT_WINDOW_X = 1272;
@@ -27,6 +30,11 @@ constexpr auto DEFAULT_WINDOW_HEIGHT = 553;
 
 //misc
 constexpr auto DEFAULT_USE_LOCAL_CONTROLLER_MODE = true;
+
+//user data
+constexpr auto DEFAULT_USER = "not_set";
+constexpr auto DEFAULT_REPOSITORY = "not_set";
+constexpr auto DEFAULT_COMMIT_SHA = "not_set";
 
 template<typename T>
 void handleParamError(const char* paramName, T& value, const T& defaultValue) {
@@ -50,6 +58,9 @@ void RoboCollectorControllerRos2Params::print() const {
        << USE_LOCAL_CONTROLLER_MODE_PARAM_NAME << ": "
            << ((LocalControllerMode::ENABLED == localControrllerMode) ?
                "true" : "false") << '\n'
+       << USER_PARAM_NAME << ": " << userData.user << '\n'
+       << REPOSITORY_PARAM_NAME << ": " << userData.repository << '\n'
+       << COMMIT_SHA_PARAM_NAME << ": " << userData.commitSha << '\n'
        << "=================================================================\n";
 
   LOG("%s", ostr.str().c_str());
@@ -75,6 +86,9 @@ RoboCollectorControllerRos2ParamProvider::RoboCollectorControllerRos2ParamProvid
       DEFAULT_WINDOW_HEIGHT);
   declare_parameter<bool>(USE_LOCAL_CONTROLLER_MODE_PARAM_NAME,
       DEFAULT_USE_LOCAL_CONTROLLER_MODE);
+  declare_parameter<std::string>(USER_PARAM_NAME, DEFAULT_USER);
+  declare_parameter<std::string>(REPOSITORY_PARAM_NAME, DEFAULT_REPOSITORY);
+  declare_parameter<std::string>(COMMIT_SHA_PARAM_NAME, DEFAULT_COMMIT_SHA);
 }
 
 RoboCollectorControllerRos2Params RoboCollectorControllerRos2ParamProvider::getParams() {
@@ -87,6 +101,10 @@ RoboCollectorControllerRos2Params RoboCollectorControllerRos2ParamProvider::getP
   get_parameter(USE_LOCAL_CONTROLLER_MODE_PARAM_NAME, useLocalControllerMode);
   _params.localControrllerMode = useLocalControllerMode ?
       LocalControllerMode::ENABLED : LocalControllerMode::DISABLED;
+
+  get_parameter(USER_PARAM_NAME, _params.userData.user);
+  get_parameter(REPOSITORY_PARAM_NAME, _params.userData.repository);
+  get_parameter(COMMIT_SHA_PARAM_NAME, _params.userData.commitSha);
 
   _params.validate();
 

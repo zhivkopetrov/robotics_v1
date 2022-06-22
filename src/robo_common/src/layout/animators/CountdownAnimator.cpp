@@ -77,8 +77,6 @@ void CountdownAnimator::onTimeout(const int32_t timerId) {
 void CountdownAnimator::processAnim() {
   --_countdownSecondsLeft;
   if (0 == _countdownSecondsLeft) {
-    //TODO add user params to robo collector controller yaml file
-    //TODO create a message with user data
     //TODO authenticate user to server from robo collector controller
     //TODO do this for all 3 robo games
 

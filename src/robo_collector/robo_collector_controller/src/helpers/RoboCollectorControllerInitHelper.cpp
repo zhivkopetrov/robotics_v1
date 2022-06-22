@@ -41,8 +41,8 @@ ErrorCode RoboCollectorControllerInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS !=
-      initControllerExternalBridge(layoutInterface, controller)) {
+  if (ErrorCode::SUCCESS != initControllerExternalBridge(
+      parsedCfg.externalBridgeConfig, layoutInterface, controller)) {
     LOGERR("initControllerExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
@@ -79,6 +79,7 @@ ErrorCode RoboCollectorControllerInitHelper::initLayout(
 }
 
 ErrorCode RoboCollectorControllerInitHelper::initControllerExternalBridge(
+    const CollectorGuiExternalBridgeConfig& cfg,
     const RoboCollectorControllerLayoutInterface &interface,
     RoboCollectorController &controller) {
   CollectorGuiExternalBridgeOutInterface outInterface;
@@ -87,7 +88,7 @@ ErrorCode RoboCollectorControllerInitHelper::initControllerExternalBridge(
   outInterface.systemShutdownCb = controller._systemShutdownCb;
 
   if (ErrorCode::SUCCESS !=
-      controller._controllerExternalBridge->init(outInterface)) {
+      controller._controllerExternalBridge->init(cfg, outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return ErrorCode::FAILURE;
   }

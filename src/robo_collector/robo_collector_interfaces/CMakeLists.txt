@@ -9,6 +9,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotMoveType.msg"
+  "msg/UserAuthenticate.msg"
 )
 
 set_target_properties(
