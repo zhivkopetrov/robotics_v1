@@ -19,6 +19,7 @@ ErrorCode EndScreenAppearAnimator::init(
   }
   _onAppearAnimFinish = onAppearAnimFinish;
 
+  _levelId = cfg.levelId;
   _rsrcIdsLocal.bgrRsrcId = cfg.bgrRsrcId;
   _rsrcIdsLocal.winStatusFontId = cfg.winStatusFontId;
   _rsrcIdsLocal.userDataFontId = cfg.userDataFontId;
@@ -54,6 +55,7 @@ void EndScreenAppearAnimator::startAnim(EndGameOutcome outcome) {
   createBgrImage();
   createUserDataTexts();
   createEndGameOutcomeText(outcome);
+  createLevelIdText();
   updateFinalScreenFbo(_finalScreenFbo);
 
   constexpr int64_t interval = 50;
@@ -112,6 +114,18 @@ void EndScreenAppearAnimator::createUserDataTexts() {
     const int32_t currTextIdx = lastTextIdx - i;
     _userTexts[currTextIdx].setPosition(textPos.x, newY);
   }
+}
+
+void EndScreenAppearAnimator::createLevelIdText() {
+  constexpr int32_t offset = 10;
+  const Text &upperMostUserDataText = _userTexts.front();
+  const Point textPos = upperMostUserDataText.getPosition();
+  const int32_t textWidth = upperMostUserDataText.getScaledHeight();
+  const Point levelIdTextPos = Point(textPos.x, textPos.y - textWidth - offset);
+
+  const std::string levelIdStr = "Level ID: " + std::to_string(_levelId);
+  _levelIdText.create(_rsrcIdsLocal.userDataFontId, levelIdStr.c_str(),
+      Colors::RED, levelIdTextPos);
 }
 
 void EndScreenAppearAnimator::createEndGameOutcomeText(EndGameOutcome outcome) {
@@ -173,6 +187,7 @@ void EndScreenAppearAnimator::updateFinalScreenFbo(Fbo *finalScreenFbo) {
   for (const Text &text : _userTexts) {
     finalScreenFbo->addWidget(text);
   }
+  finalScreenFbo->addWidget(_levelIdText);
 
   finalScreenFbo->update();
   finalScreenFbo->lock();

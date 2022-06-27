@@ -34,9 +34,10 @@ public:
   void startAnim(EndGameOutcome outcome);
 
 private:
-  void createBlackBgrFbo(const Rectangle& dimensions);
+  void createBlackBgrFbo(const Rectangle &dimensions);
   void createBgrImage();
   void createUserDataTexts();
+  void createLevelIdText();
   void createEndGameOutcomeText(EndGameOutcome outcome);
 
   void onTimeout(const int32_t timerId) override;
@@ -76,6 +77,7 @@ private:
   Fbo _blackBgrFbo;
   Image _bgrImg;
   std::array<Text, USER_TEXTS_COUNT> _userTexts;
+  Text _levelIdText;
   Text _endGameOutcomeText;
   Fbo *_finalScreenFbo = nullptr;
 
@@ -84,6 +86,7 @@ private:
   FadeAnimData _fadeAnimData;
   ExpandAnimData _expandAnimData;
   UserData _userData;
+  int32_t _levelId { };
 
   OnAppearAnimFinish _onAppearAnimFinish;
 };

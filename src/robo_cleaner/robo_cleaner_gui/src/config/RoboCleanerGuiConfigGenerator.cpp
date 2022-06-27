@@ -185,6 +185,7 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
   cfg.countdownAnimTimerId = COUNTDOWN_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
   cfg.screenDimensions.h = rosParams.guiWindow.h;
+  cfg.levelId = rosParams.levelId;
 
   return cfg;
 }

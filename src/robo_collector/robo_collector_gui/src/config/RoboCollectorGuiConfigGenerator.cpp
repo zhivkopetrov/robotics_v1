@@ -21,6 +21,7 @@
 namespace {
 constexpr auto PROJECT_NAME = "robo_collector_gui";
 constexpr auto ROBOT_FIELD_MARKERS = RobotFieldMarkers::ENABLED;
+constexpr int32_t LEVEL_ID = 1;
 
 enum TimerId {
   ROBOTS_MOVE_ANIM_TIMER_ID_START,
@@ -181,6 +182,7 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
   cfg.countdownAnimTimerId = COUNTDOWN_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
   cfg.screenDimensions.h = rosParams.guiWindow.h;
+  cfg.levelId = LEVEL_ID;
 
   return cfg;
 }
@@ -221,9 +223,8 @@ RoboCollectorGuiConfig generateGameConfig(
     const std::string& projectInstallPrefix,
     const RoboCollectorGuiRos2Params& rosParams) {
   RoboCollectorGuiConfig cfg;
-  const auto levelId = 1;
   const auto [fieldDescr, initialRobotState] =
-      LevelFileLoader::readLevelData(projectInstallPrefix, levelId);
+      LevelFileLoader::readLevelData(projectInstallPrefix, LEVEL_ID);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(

@@ -22,6 +22,7 @@ struct GameEndAnimatorConfig {
   int32_t fadeAnimTimerId { };
   int32_t expandAnimTimerId { };
   int32_t countdownAnimTimerId { };
+  int32_t levelId { };
   double endScreenToBgrRatio = 0.5;
 };
 
