@@ -203,6 +203,7 @@ AchievementAnimatorConfig generateAchievementAnimatorConfig(
 HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
     const RoboCollectorGuiRos2Params &rosParams) {
   HelpPageAnimatorConfig cfg;
+  cfg.bgrToScreenRatio = 0.5;
   cfg.bgrRsrcId = RoboCollectorGuiResources::MAP;
   cfg.moveAndFadeAnimTimerId = HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
@@ -242,7 +243,6 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
   entry.content = "  - Deplete Health indicator";
   cfg.entries.push_back(entry);
 
-  entry.color = Colors::BLACK;
   entry.content = "  - Timer reaches 0";
   cfg.entries.push_back(entry);
 

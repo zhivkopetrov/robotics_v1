@@ -39,7 +39,7 @@ void HelpPageAnimator::toggleStatus() {
   }
 
   _isActive = true;
-  constexpr int64_t interval = 40;
+  constexpr int64_t interval = 20;
   startTimer(interval, _animData.timerId, TimerType::PULSE);
 }
 

@@ -23,7 +23,7 @@ struct HelpPageEntry {
 
 struct HelpPageAnimatorConfig {
   uint64_t bgrRsrcId { };
-  double bgrToScreenRatio = 0.7;
+  double bgrToScreenRatio = 0.8;
   Rectangle screenDimensions;
   HelpPageEntry titleEntry;
   std::vector<HelpPageEntry> entries;

@@ -36,6 +36,7 @@ enum TimerId {
   GAME_END_FADE_ANIM_TIMER_ID,
   ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
   COUNTDOWN_ANIM_TIMER_ID,
+  HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID,
 
   FOG_OF_WAR_FADE_TIMER_IDS_START,
 
@@ -95,7 +96,7 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
   return cfg;
 }
 
-FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
+FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
   FieldConfig cfg;
 
   cfg.description = fieldDescr;
@@ -107,8 +108,8 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
 }
 
 FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
-                                      const FieldPos& playerStartPos,
-                                      const FieldDescription& fieldDescr) {
+                                      const FieldPos &playerStartPos,
+                                      const FieldDescription &fieldDescr) {
   FogOfWarConfig cfg;
   cfg.playerStartingPos = playerStartPos;
   cfg.status = status;
@@ -125,7 +126,7 @@ FogOfWarConfig generateFogOfWarConfig(FogOfWarStatus status,
 }
 
 GameEndAnimatorConfig generateGameEndAnimatorConfig(
-    const RoboMinerGuiRos2Params& rosParams) {
+    const RoboMinerGuiRos2Params &rosParams) {
   GameEndAnimatorConfig cfg;
   cfg.projectName = PROJECT_NAME;
   cfg.bgrRsrcId = RoboMinerGuiResources::MAP;
@@ -143,7 +144,7 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
 }
 
 AchievementAnimatorConfig generateAchievementAnimatorConfig(
-    const RoboMinerGuiRos2Params& rosParams) {
+    const RoboMinerGuiRos2Params &rosParams) {
   AchievementAnimatorConfig cfg;
   cfg.allStarsRsrcId = RoboMinerGuiResources::STARS;
   cfg.singleStarRsrcId = RoboMinerGuiResources::STAR_SINGLE;
@@ -154,12 +155,82 @@ AchievementAnimatorConfig generateAchievementAnimatorConfig(
   return cfg;
 }
 
+HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
+    const RoboMinerGuiRos2Params &rosParams) {
+  HelpPageAnimatorConfig cfg;
+  cfg.bgrRsrcId = RoboMinerGuiResources::MAP;
+  cfg.moveAndFadeAnimTimerId = HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  HelpPageEntry entry;
+  entry.content = PROJECT_NAME + std::string(" Rules");
+  entry.color = Colors::BLACK;
+  entry.fontRsrcId = RoboMinerGuiResources::VINQUE_RG_75;
+  cfg.titleEntry = entry;
+
+  entry.fontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
+  entry.content = "Objectives:";
+  entry.color = Colors::BLUE;
+  cfg.entries.push_back(entry);
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Stay in the map boundaries";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Reveal the map & Validate the map content - yields 1 point";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - Validate the longest sequence of connected crystals - yields 1 point";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - Activate mining while being located on a tile from the longest crystal sequence";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - Mine all crystals from the longest crystal sequence - yields 1 point";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "      - Passing multiple times over the same tile while mining is active is allowed";
+  cfg.entries.push_back(entry);
+
+  //create a boundary between objectives and lose conditions
+  entry.prependedVerticalSpacing = 20;
+  entry.color = Colors::RED;
+  entry.content = "Lose conditions:";
+  cfg.entries.push_back(entry);
+
+  entry.prependedVerticalSpacing = 0; //reset the vertical spacing
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Deplete Health indicator";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - 3 incorrect map validations";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - 3 incorrect longest crystal sequence validations";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - activate mining while being outside of the longest crystal sequence tile";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - step outside of longest crystal sequence tile while mining is active";
+  cfg.entries.push_back(entry);
+
+  return cfg;
+}
+
 SolutionValidatorConfig generateSolutionValidatorConfig(
-    int32_t emptyTilesCount, int32_t levelId, const FieldPos& playerStartPos) {
+    const std::string &projectInstallPrefix, int32_t emptyTilesCount,
+    int32_t levelId, const FieldPos &playerStartPos) {
   SolutionValidatorConfig cfg;
 
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_NAME);
   cfg.longestSequence = LevelFileLoader::readMinerLongestSolution(
       projectInstallPrefix, levelId);
   cfg.targetMapTilesCount = emptyTilesCount;
@@ -168,8 +239,8 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
-                                  const RoboMinerGuiRos2Params& rosParams) {
+EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
+                                  const RoboMinerGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -188,14 +259,14 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
   return cfg;
 }
 
-RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix,
-                                      const RoboMinerGuiRos2Params& rosParams) {
+RoboMinerGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
+                                      const RoboMinerGuiRos2Params &rosParams) {
   RoboMinerGuiConfig cfg;
-  const auto [fieldDescr, initialRobotState] =
-      LevelFileLoader::readLevelData(projectInstallPrefix, rosParams.levelId);
+  const auto [fieldDescr, initialRobotState] = LevelFileLoader::readLevelData(
+      projectInstallPrefix, rosParams.levelId);
 
   cfg.solutionValidatorCfg = generateSolutionValidatorConfig(
-      fieldDescr.emptyTilesCount, rosParams.levelId,
+      projectInstallPrefix, fieldDescr.emptyTilesCount, rosParams.levelId,
       initialRobotState.fieldPos);
 
   auto &layoutCfg = cfg.layoutCfg;
@@ -210,10 +281,12 @@ RoboMinerGuiConfig generateGameConfig(const std::string& projectInstallPrefix,
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(
       rosParams.fogOfWarStatus, initialRobotState.fieldPos, fieldDescr);
-  commonLayoutCfg.gameEndAnimatorConfig =
-      generateGameEndAnimatorConfig(rosParams);
-  commonLayoutCfg.achievementAnimatorConfig =
-      generateAchievementAnimatorConfig(rosParams);
+  commonLayoutCfg.gameEndAnimatorConfig = generateGameEndAnimatorConfig(
+      rosParams);
+  commonLayoutCfg.achievementAnimatorConfig = generateAchievementAnimatorConfig(
+      rosParams);
+  commonLayoutCfg.helpPageAnimatorConfig = generateHelpPageAnimatorConfig(
+      rosParams);
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 
