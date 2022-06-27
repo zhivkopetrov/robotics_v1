@@ -44,6 +44,12 @@ ErrorCode RoboCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
+  if (ErrorCode::SUCCESS != layout._helpPageAnimator.init(
+          cfg.helpPageAnimatorConfig)) {
+    LOGERR("Error in _helpPageAnimator.init()");
+    return ErrorCode::FAILURE;
+  }
+
   if (ErrorCode::SUCCESS != initPlayerRobot(cfg, outInterface, layout)) {
     LOGERR("initPlayerRobot failed");
     return ErrorCode::FAILURE;

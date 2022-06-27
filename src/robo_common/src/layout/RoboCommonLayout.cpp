@@ -36,15 +36,16 @@ void RoboCommonLayout::draw() const {
 
 void RoboCommonLayout::drawSecondLayer() const {
   _fogOfWar.draw();
+  _helpPageAnimator.draw();
 }
 
 void RoboCommonLayout::drawThirdLayer() const {
   _gameEndAnimator.draw();
-  _achievementAnimator.draw();
+  _achievementAnimator.draw(); //is drawn as part of end screen animator
 }
 
 void RoboCommonLayout::toggleHelpPage() {
-
+  _helpPageAnimator.toggleStatus();
 }
 
 void RoboCommonLayout::toggleDebugInfo() {

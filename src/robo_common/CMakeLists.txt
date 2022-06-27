@@ -51,8 +51,10 @@ add_library(
         ${_INC_DIR}/layout/animators/AchievementAnimator.h
         ${_INC_DIR}/layout/animators/EndScreenAppearAnimator.h
         ${_INC_DIR}/layout/animators/CountdownAnimator.h
+        ${_INC_DIR}/layout/animators/HelpPageAnimator.h
         ${_INC_DIR}/layout/animators/config/GameEndAnimatorConfig.h
         ${_INC_DIR}/layout/animators/config/AchievementAnimatorConfig.h
+        ${_INC_DIR}/layout/animators/config/HelpPageAnimatorConfig.h
         ${_INC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.h
         ${_INC_DIR}/helpers/CollisionObject.h
         ${_INC_DIR}/helpers/CollisionWatcher.h
@@ -74,13 +76,14 @@ add_library(
         ${_SRC_DIR}/layout/entities/robot/Robot.cpp
         ${_SRC_DIR}/layout/entities/robot/helpers/RobotInitHelper.cpp
         ${_SRC_DIR}/layout/entities/robot/helpers/RobotUtils.cpp
-        ${_SRC_DIR}/layout/animators/AchievementAnimator.cpp
         ${_SRC_DIR}/layout/entities/robot/animation/RobotAnimator.cpp
         ${_SRC_DIR}/layout/entities/robot/animation/RobotAnimEndCb.cpp
         ${_SRC_DIR}/layout/entities/robot/animation/PlayerDamageAnimEndCb.cpp
         ${_SRC_DIR}/layout/animators/GameEndAnimator.cpp
+        ${_SRC_DIR}/layout/animators/AchievementAnimator.cpp
         ${_SRC_DIR}/layout/animators/EndScreenAppearAnimator.cpp
         ${_SRC_DIR}/layout/animators/CountdownAnimator.cpp
+        ${_SRC_DIR}/layout/animators/HelpPageAnimator.cpp
         ${_SRC_DIR}/layout/helpers/RoboCommonLayoutInitHelper.cpp
         ${_SRC_DIR}/helpers/CollisionWatcher.cpp
         ${_SRC_DIR}/helpers/LevelFileLoader.cpp

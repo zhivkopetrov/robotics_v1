@@ -11,6 +11,7 @@
 #include "robo_common/layout/entities/robot/config/RobotBaseConfig.h"
 #include "robo_common/layout/animators/config/GameEndAnimatorConfig.h"
 #include "robo_common/layout/animators/config/AchievementAnimatorConfig.h"
+#include "robo_common/layout/animators/config/HelpPageAnimatorConfig.h"
 
 //Own components headers
 
@@ -23,6 +24,7 @@ struct RoboCommonLayoutConfig {
   RobotState robotInitialState;
   GameEndAnimatorConfig gameEndAnimatorConfig;
   AchievementAnimatorConfig achievementAnimatorConfig;
+  HelpPageAnimatorConfig helpPageAnimatorConfig;
 
   uint64_t mapRsrcId = 0;
 

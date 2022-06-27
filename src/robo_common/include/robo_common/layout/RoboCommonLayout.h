@@ -13,6 +13,7 @@
 #include "robo_common/layout/entities/robot/Robot.h"
 #include "robo_common/layout/animators/GameEndAnimator.h"
 #include "robo_common/layout/animators/AchievementAnimator.h"
+#include "robo_common/layout/animators/HelpPageAnimator.h"
 
 //Forward declarations
 class RoboCommonLayoutInitHelper;
@@ -34,7 +35,6 @@ public:
   //contains FogOfWar
   void drawThirdLayer() const;
 
-  //TODO create a separate help page class
   void toggleHelpPage();
 
   void toggleDebugInfo();
@@ -48,6 +48,7 @@ private:
   Robot _playerRobot;
   GameEndAnimator _gameEndAnimator;
   AchievementAnimator _achievementAnimator;
+  HelpPageAnimator _helpPageAnimator;
 };
 
 #endif /* ROBO_COMMON_ROBOCOMMONLAYOUT_H_ */
