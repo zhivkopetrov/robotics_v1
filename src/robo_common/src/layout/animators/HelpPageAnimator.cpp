@@ -19,12 +19,11 @@ ErrorCode HelpPageAnimator::init(const HelpPageAnimatorConfig &cfg) {
   createHelpPageFbo(cfg);
 
   const Rectangle helpPageBoundary = _helpPageFbo.getImageRect();
-  //add _animData.totalSteps to account for rounding error and prevent from
-  //the image being seen on the screen while animation is hidden
   const int32_t yMoveDistance = std::abs(helpPageBoundary.y)
       + helpPageBoundary.h;
-  _animData.moveStep = (yMoveDistance + _animData.totalSteps)
-      / _animData.totalSteps;
+  _animData.totalDownRemainder = yMoveDistance % _animData.totalSteps;
+  _animData.leftRemainderMoveDown = _animData.totalDownRemainder;
+  _animData.moveStep = yMoveDistance / _animData.totalSteps;
 
   //set initial state after the FBO has been populated in it's relative position
   _helpPageFbo.moveUp(yMoveDistance);
@@ -106,14 +105,15 @@ void HelpPageAnimator::createHelpPageFbo(const HelpPageAnimatorConfig &cfg) {
   const int32_t titleTextWidth = titleText.getFrameWidth();
   const int32_t titleTextHeight = titleText.getFrameHeight();
   constexpr int32_t offset = 10;
+  constexpr int32_t doubleOffset = offset * 2;
   pos = WidgetAligner::getPosition(titleTextWidth, titleTextHeight,
       helpPageBoundary, WidgetAlignment::UPPER_CENTER,
-      Margin(offset, offset, offset, offset));
+      Margin(doubleOffset, doubleOffset, doubleOffset, doubleOffset));
   titleText.setPosition(pos);
   _helpPageFbo.addWidget(titleText);
 
   //prepare y position for first entry text
-  pos.y += ( (offset * 2) + titleTextHeight);
+  pos.y += (doubleOffset + titleTextHeight);
   pos.x = helpPageBoundary.x + (offset * 4);
 
   const size_t entriesSize = cfg.entries.size();
@@ -148,6 +148,11 @@ void HelpPageAnimator::processShowAnim() {
   _blackBgrFbo.setOpacity(_animData.currOpacity);
 
   _helpPageFbo.moveDown(_animData.moveStep);
+
+  if (0 < _animData.leftRemainderMoveDown) {
+    --_animData.leftRemainderMoveDown;
+    _helpPageFbo.moveDown(1);
+  }
 }
 
 void HelpPageAnimator::processHideAnim() {
@@ -164,12 +169,19 @@ void HelpPageAnimator::processHideAnim() {
   _blackBgrFbo.setOpacity(_animData.currOpacity);
 
   _helpPageFbo.moveUp(_animData.moveStep);
+
+  if (0 > _animData.leftRemainderMoveDown) {
+    ++_animData.leftRemainderMoveDown;
+    _helpPageFbo.moveUp(1);
+  }
 }
 
 void HelpPageAnimator::changeAnimDirection() {
   if (AnimType::SHOW == _currAnimType) {
     _currAnimType = AnimType::HIDE;
+    _animData.leftRemainderMoveDown = -1 * _animData.totalDownRemainder;
   } else {
     _currAnimType = AnimType::SHOW;
+    _animData.leftRemainderMoveDown = _animData.totalDownRemainder;
   }
 }

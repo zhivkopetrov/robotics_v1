@@ -33,7 +33,7 @@ EnergyHandlerMoveOutcome EnergyHandler::initiateMove() {
 
     --_allowedPenaltyMoves;
     LOGR("Insufficient energy to perform a movement. "
-        "Applying penalty. Allowed penalties left: %d", _allowedPenaltyMoves);
+         "Applying penalty. Allowed penalties left: %d", _allowedPenaltyMoves);
 
     if (0 >= _allowedPenaltyMoves) {
       outcome.majorError = true;

@@ -210,7 +210,7 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
   cfg.screenDimensions.h = rosParams.guiWindow.h;
 
   HelpPageEntry entry;
-  entry.content = PROJECT_NAME + std::string(" Rules");
+  entry.content = "Robo Collector Rules";
   entry.color = Colors::BLACK;
   entry.fontRsrcId = RoboCollectorGuiResources::VINQUE_RG_75;
   cfg.titleEntry = entry;

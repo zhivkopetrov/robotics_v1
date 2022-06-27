@@ -158,13 +158,14 @@ AchievementAnimatorConfig generateAchievementAnimatorConfig(
 HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
     const RoboMinerGuiRos2Params &rosParams) {
   HelpPageAnimatorConfig cfg;
+  cfg.bgrToScreenRatio = 0.85;
   cfg.bgrRsrcId = RoboMinerGuiResources::MAP;
   cfg.moveAndFadeAnimTimerId = HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID;
   cfg.screenDimensions.w = rosParams.guiWindow.w;
   cfg.screenDimensions.h = rosParams.guiWindow.h;
 
   HelpPageEntry entry;
-  entry.content = PROJECT_NAME + std::string(" Rules");
+  entry.content = "Robo Miner Rules";
   entry.color = Colors::BLACK;
   entry.fontRsrcId = RoboMinerGuiResources::VINQUE_RG_75;
   cfg.titleEntry = entry;
@@ -178,7 +179,7 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
   entry.content = "  - Stay in the map boundaries";
   cfg.entries.push_back(entry);
 
-  entry.content = "  - Reveal the map & Validate the map content - yields 1 point";
+  entry.content = "  - Reveal the map and validate its content - yields 1 point";
   cfg.entries.push_back(entry);
 
   entry.content =
@@ -197,6 +198,9 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
       "      - Passing multiple times over the same tile while mining is active is allowed";
   cfg.entries.push_back(entry);
 
+  entry.content = "  - Gathering all achievements on level ID 3 - yields 1 point";
+  cfg.entries.push_back(entry);
+
   //create a boundary between objectives and lose conditions
   entry.prependedVerticalSpacing = 20;
   entry.color = Colors::RED;
@@ -206,6 +210,9 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
   entry.prependedVerticalSpacing = 0; //reset the vertical spacing
 
   entry.color = Colors::BLACK;
+  entry.content = "  - Query initial robot state more than once";
+  cfg.entries.push_back(entry);
+
   entry.content = "  - Deplete Health indicator";
   cfg.entries.push_back(entry);
 
@@ -216,11 +223,11 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
   cfg.entries.push_back(entry);
 
   entry.content =
-      "  - activate mining while being outside of the longest crystal sequence tile";
+      "  - Activate mining while being outside of the longest crystal sequence tile";
   cfg.entries.push_back(entry);
 
   entry.content =
-      "  - step outside of longest crystal sequence tile while mining is active";
+      "  - Step outside of longest crystal sequence tile while mining is active";
   cfg.entries.push_back(entry);
 
   return cfg;

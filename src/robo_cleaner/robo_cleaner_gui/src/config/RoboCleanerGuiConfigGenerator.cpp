@@ -35,6 +35,7 @@ enum TimerId {
   GAME_END_FADE_ANIM_TIMER_ID,
   ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
   COUNTDOWN_ANIM_TIMER_ID,
+  HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID,
   RUBBISH_PANEL_INCR_TIMER_ID,
   RUBBISH_PANEL_DECR_TIMER_ID,
 
@@ -126,13 +127,13 @@ EnergyHandlerConfig generateEnergyHandlerConfig(int32_t levelId) {
 
   constexpr auto baseEnergyMoves = 20;
   constexpr auto additionalEnergyPerLevel = 20;
-  cfg.maxMovesOnFullEnergy = baseEnergyMoves +
-      (levelId * additionalEnergyPerLevel);
+  cfg.maxMovesOnFullEnergy = baseEnergyMoves
+      + (levelId * additionalEnergyPerLevel);
 
   return cfg;
 }
 
-FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
+FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
   FieldConfig cfg;
 
   cfg.description = fieldDescr;
@@ -173,7 +174,7 @@ EntityHandlerConfig generateEntityHandlerConfig(
 }
 
 GameEndAnimatorConfig generateGameEndAnimatorConfig(
-    const RoboCleanerGuiRos2Params& rosParams) {
+    const RoboCleanerGuiRos2Params &rosParams) {
   GameEndAnimatorConfig cfg;
   cfg.projectName = PROJECT_NAME;
   cfg.bgrRsrcId = RoboCleanerGuiResources::MAP;
@@ -191,7 +192,7 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
 }
 
 AchievementAnimatorConfig generateAchievementAnimatorConfig(
-    const RoboCleanerGuiRos2Params& rosParams) {
+    const RoboCleanerGuiRos2Params &rosParams) {
   AchievementAnimatorConfig cfg;
   cfg.allStarsRsrcId = RoboCleanerGuiResources::STARS;
   cfg.singleStarRsrcId = RoboCleanerGuiResources::STAR_SINGLE;
@@ -202,8 +203,89 @@ AchievementAnimatorConfig generateAchievementAnimatorConfig(
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
-                                  const RoboCleanerGuiRos2Params& rosParams) {
+HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
+    const RoboCleanerGuiRos2Params &rosParams) {
+  HelpPageAnimatorConfig cfg;
+  cfg.bgrToScreenRatio = 0.95;
+  cfg.bgrRsrcId = RoboCleanerGuiResources::MAP;
+  cfg.moveAndFadeAnimTimerId = HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  HelpPageEntry entry;
+  entry.content = "Robo Cleaner Rules";
+  entry.color = Colors::BLACK;
+  entry.fontRsrcId = RoboCleanerGuiResources::VINQUE_RG_75;
+  cfg.titleEntry = entry;
+
+  entry.fontRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
+  entry.content = "Objectives:";
+  entry.color = Colors::BLUE;
+  cfg.entries.push_back(entry);
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Stay in the map boundaries";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Reveal the map - yields 1 point";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Clean all rubbish from the map - yields 2 points";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - Finish the cleaning with a full health indicator - yields 1 point";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - Gathering all achievements on level ID 3 - yields 1 point";
+  cfg.entries.push_back(entry);
+
+  entry.content =
+      "  - The top 3 players, who clean the map with the lowest total moves wins additional points:";
+  cfg.entries.push_back(entry);
+
+  entry.content = "    - 1st place (3 points), 2nd place (2 points), 3rd place (1 point)";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Battery charging:";
+  cfg.entries.push_back(entry);
+
+  entry.content = "    - 1 turn spend on the charging station regenerates energy for 5 moves";
+  cfg.entries.push_back(entry);
+
+  entry.content = "    - you can specify how many turns to spend charging or 'charge_until_full'";
+  cfg.entries.push_back(entry);
+
+  entry.content = "    - if you run out of energy - an energy depleted penalty is applied";
+  cfg.entries.push_back(entry);
+
+  entry.content = "      - 50% of the total battery capacity is restored immediately and 'max_moves_on_full_energy' moves are wasted";
+  cfg.entries.push_back(entry);
+
+  //create a boundary between objectives and lose conditions
+  entry.prependedVerticalSpacing = 20;
+  entry.color = Colors::RED;
+  entry.content = "Lose conditions:";
+  cfg.entries.push_back(entry);
+
+  entry.prependedVerticalSpacing = 0; //reset the vertical spacing
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Query initial robot state more than once";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Deplete Health indicator";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - 3 energy depleted penalties";
+  cfg.entries.push_back(entry);
+
+  return cfg;
+}
+
+EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
+                                  const RoboCleanerGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -223,11 +305,11 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
 }
 
 RoboCleanerGuiConfig generateGameConfig(
-    const std::string& projectInstallPrefix,
-    const RoboCleanerGuiRos2Params& rosParams) {
+    const std::string &projectInstallPrefix,
+    const RoboCleanerGuiRos2Params &rosParams) {
   RoboCleanerGuiConfig cfg;
-  const auto [fieldDescr, initialRobotState] =
-      LevelFileLoader::readLevelData(projectInstallPrefix, rosParams.levelId);
+  const auto [fieldDescr, initialRobotState] = LevelFileLoader::readLevelData(
+      projectInstallPrefix, rosParams.levelId);
 
   cfg.solutionValidatorConfig = generateSolutionValidatorConfig(
       initialRobotState.fieldPos);
@@ -244,10 +326,12 @@ RoboCleanerGuiConfig generateGameConfig(
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(
       rosParams.fogOfWarStatus, initialRobotState.fieldPos, fieldDescr);
-  commonLayoutCfg.gameEndAnimatorConfig =
-      generateGameEndAnimatorConfig(rosParams);
-  commonLayoutCfg.achievementAnimatorConfig =
-      generateAchievementAnimatorConfig(rosParams);
+  commonLayoutCfg.gameEndAnimatorConfig = generateGameEndAnimatorConfig(
+      rosParams);
+  commonLayoutCfg.achievementAnimatorConfig = generateAchievementAnimatorConfig(
+      rosParams);
+  commonLayoutCfg.helpPageAnimatorConfig = generateHelpPageAnimatorConfig(
+      rosParams);
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 

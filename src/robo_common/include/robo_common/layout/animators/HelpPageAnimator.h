@@ -41,6 +41,8 @@ private:
     int32_t timerId { };
     int32_t currStepIdx { };
     int32_t moveStep { };
+    int32_t totalDownRemainder { };
+    int32_t leftRemainderMoveDown { };
     const int32_t totalSteps = 100;
     const int32_t lastShowStepIdx = totalSteps - 1;
     const int32_t lastHideStepIdx = 0;
