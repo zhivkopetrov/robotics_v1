@@ -67,7 +67,8 @@ enum TimerId {
   GAME_END_FADE_ANIM_TIMER_ID,
   COUNTDOWN_ANIM_TIMER_ID,
   ACHIEVEMENT_FADE_AND_MODE_ANIM_TIMER_ID,
-  HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID
+  HEALTH_PANEL_MODIFY_INDICATOR_TIMER_ID,
+  HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID
 };
 
 RobotBaseConfig generateRobotBaseConfig() {
@@ -158,7 +159,7 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   return cfg;
 }
 
-FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
+FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
   FieldConfig cfg;
 
   cfg.description = fieldDescr;
@@ -170,7 +171,7 @@ FieldConfig generateFieldConfig(const FieldDescription& fieldDescr) {
 }
 
 GameEndAnimatorConfig generateGameEndAnimatorConfig(
-    const RoboCollectorGuiRos2Params& rosParams) {
+    const RoboCollectorGuiRos2Params &rosParams) {
   GameEndAnimatorConfig cfg;
   cfg.projectName = PROJECT_NAME;
   cfg.bgrRsrcId = RoboCollectorGuiResources::MAP;
@@ -188,7 +189,7 @@ GameEndAnimatorConfig generateGameEndAnimatorConfig(
 }
 
 AchievementAnimatorConfig generateAchievementAnimatorConfig(
-    const RoboCollectorGuiRos2Params& rosParams) {
+    const RoboCollectorGuiRos2Params &rosParams) {
   AchievementAnimatorConfig cfg;
   cfg.allStarsRsrcId = RoboCollectorGuiResources::STARS;
   cfg.singleStarRsrcId = RoboCollectorGuiResources::STAR_SINGLE;
@@ -199,8 +200,57 @@ AchievementAnimatorConfig generateAchievementAnimatorConfig(
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
-                                  const RoboCollectorGuiRos2Params& rosParams) {
+HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
+    const RoboCollectorGuiRos2Params &rosParams) {
+  HelpPageAnimatorConfig cfg;
+  cfg.bgrRsrcId = RoboCollectorGuiResources::MAP;
+  cfg.moveAndFadeAnimTimerId = HELP_PAGE_MOVE_AND_FADE_ANIM_TIMER_ID;
+  cfg.screenDimensions.w = rosParams.guiWindow.w;
+  cfg.screenDimensions.h = rosParams.guiWindow.h;
+
+  HelpPageEntry entry;
+  entry.content = PROJECT_NAME + std::string(" Rules");
+  entry.color = Colors::BLACK;
+  entry.fontRsrcId = RoboCollectorGuiResources::VINQUE_RG_75;
+  cfg.titleEntry = entry;
+
+  entry.fontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+  entry.content = "Objectives:";
+  entry.color = Colors::BLUE;
+  cfg.entries.push_back(entry);
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Collect " + std::to_string(rosParams.targetWinCoins)
+                  + " coins before timer runs out";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Avoid enemies";
+  cfg.entries.push_back(entry);
+
+  entry.content = "  - Stay in the map boundaries";
+  cfg.entries.push_back(entry);
+
+  //create a boundary between objectives and lose conditions
+  entry.prependedVerticalSpacing = 20;
+  entry.color = Colors::RED;
+  entry.content = "Lose conditions:";
+  cfg.entries.push_back(entry);
+
+  entry.prependedVerticalSpacing = 0; //reset the vertical spacing
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Deplete Health indicator";
+  cfg.entries.push_back(entry);
+
+  entry.color = Colors::BLACK;
+  entry.content = "  - Timer reaches 0";
+  cfg.entries.push_back(entry);
+
+  return cfg;
+}
+
+EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
+                                  const RoboCollectorGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
@@ -220,16 +270,17 @@ EngineConfig generateEngineConfig(const std::string& projectInstallPrefix,
 }
 
 RoboCollectorGuiConfig generateGameConfig(
-    const std::string& projectInstallPrefix,
-    const RoboCollectorGuiRos2Params& rosParams) {
+    const std::string &projectInstallPrefix,
+    const RoboCollectorGuiRos2Params &rosParams) {
   RoboCollectorGuiConfig cfg;
-  const auto [fieldDescr, initialRobotState] =
-      LevelFileLoader::readLevelData(projectInstallPrefix, LEVEL_ID);
+  const auto [fieldDescr, initialRobotState] = LevelFileLoader::readLevelData(
+      projectInstallPrefix, LEVEL_ID);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.panelHandlerCfg = generatePanelHandlerConfig(
       rosParams.targetWinCoins, rosParams.totalGameSeconds);
-  layoutCfg.coinHandlerCfg = generateCoinHandlerConfig(rosParams.targetWinCoins);
+  layoutCfg.coinHandlerCfg = generateCoinHandlerConfig(
+      rosParams.targetWinCoins);
   layoutCfg.controllerCfg = generateRoboCollectorUiControllerConfig(
       rosParams.localControrllerMode);
 
@@ -237,10 +288,12 @@ RoboCollectorGuiConfig generateGameConfig(
   commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
   commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
-  commonLayoutCfg.gameEndAnimatorConfig =
-      generateGameEndAnimatorConfig(rosParams);
-  commonLayoutCfg.achievementAnimatorConfig =
-      generateAchievementAnimatorConfig(rosParams);
+  commonLayoutCfg.gameEndAnimatorConfig = generateGameEndAnimatorConfig(
+      rosParams);
+  commonLayoutCfg.achievementAnimatorConfig = generateAchievementAnimatorConfig(
+      rosParams);
+  commonLayoutCfg.helpPageAnimatorConfig = generateHelpPageAnimatorConfig(
+      rosParams);
   commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
   commonLayoutCfg.enemyFieldMarker = RoboCommonDefines::ENEMY_MARKER;
@@ -250,8 +303,7 @@ RoboCollectorGuiConfig generateGameConfig(
 
 } //end anonymous namespace
 
-std::vector<DependencyDescription>
-RoboCollectorGuiConfigGenerator::generateDependencies(
+std::vector<DependencyDescription> RoboCollectorGuiConfigGenerator::generateDependencies(
     int32_t argc, char **args) {
   std::vector<DependencyDescription> dependecies = getDefaultEngineDependencies(
       argc, args);
