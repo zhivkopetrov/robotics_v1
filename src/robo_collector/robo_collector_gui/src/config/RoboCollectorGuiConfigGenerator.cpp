@@ -249,6 +249,14 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
   return cfg;
 }
 
+DebugFieldConfig generateDebugFieldConfig() {
+  DebugFieldConfig cfg;
+  cfg.panelRsrcId = RoboCollectorGuiResources::MAP;
+  cfg.texFotnRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+
+  return cfg;
+}
+
 EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
                                   const RoboCollectorGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -294,6 +302,7 @@ RoboCollectorGuiConfig generateGameConfig(
       rosParams);
   commonLayoutCfg.helpPageAnimatorConfig = generateHelpPageAnimatorConfig(
       rosParams);
+  commonLayoutCfg.debugFieldConfig = generateDebugFieldConfig();
   commonLayoutCfg.mapRsrcId = RoboCollectorGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
   commonLayoutCfg.enemyFieldMarker = RoboCommonDefines::ENEMY_MARKER;

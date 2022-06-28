@@ -40,6 +40,7 @@ void RoboCleanerGui::handleEvent([[maybe_unused]]const InputEvent &e) {
 }
 
 void RoboCleanerGui::process() {
+  _layout.process();
   _collisionWatcher.process();
   _movementWatcher.process();
 }

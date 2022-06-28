@@ -44,6 +44,9 @@ private:
       const RoboCommonLayoutConfig &layoutCfg,
       const RoboCommonLayoutOutInterface &outInterface,
       RoboCommonLayout &layout);
+
+  static ErrorCode initDebugField(const RoboCommonLayoutConfig &layoutCfg,
+                                  RoboCommonLayout &layout);
 };
 
 #endif /* ROBO_COMMON_ROBOCOMMONLAYOUTINITHELPER_H_ */

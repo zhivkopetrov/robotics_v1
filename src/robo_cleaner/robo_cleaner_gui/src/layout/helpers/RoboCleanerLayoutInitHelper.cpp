@@ -85,8 +85,7 @@ ErrorCode RoboCleanerLayoutInitHelper::initPanelHandler(
   panelHandlerOutInterface.fieldMapRevelealedCb =
       outInterface.fieldMapRevelealedCb;
   panelHandlerOutInterface.fieldMapCleanedCb = outInterface.fieldMapCleanedCb;
-  panelHandlerOutInterface.energyDepletedCb = std::bind(
-      &RoboCleanerLayout::onEnergyDepleted, &layout);
+  panelHandlerOutInterface.energyDepletedCb = [](){}; //do nothing
 
   if (ErrorCode::SUCCESS != layout._panelHandler.init(cfg,
           panelHandlerOutInterface)) {

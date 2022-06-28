@@ -44,6 +44,10 @@ void RoboMinerLayout::handleEvent(const InputEvent &e) {
   _crystalHandler.handleEvent(e);
 }
 
+void RoboMinerLayout::process() {
+  _commonLayout.process();
+}
+
 void RoboMinerLayout::produceInterface(RoboMinerLayoutInterface &interface) {
   interface.crystalMinedCb = std::bind(&PanelHandler::onCrystalMined,
       &_panelHandler);

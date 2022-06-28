@@ -14,6 +14,7 @@
 #include "robo_common/layout/animators/GameEndAnimator.h"
 #include "robo_common/layout/animators/AchievementAnimator.h"
 #include "robo_common/layout/animators/HelpPageAnimator.h"
+#include "robo_common/layout/debug/DebugField.h"
 
 //Forward declarations
 class RoboCommonLayoutInitHelper;
@@ -35,6 +36,8 @@ public:
   //contains FogOfWar
   void drawThirdLayer() const;
 
+  void process();
+
   void toggleHelpPage();
 
   void toggleDebugInfo();
@@ -49,6 +52,7 @@ private:
   GameEndAnimator _gameEndAnimator;
   AchievementAnimator _achievementAnimator;
   HelpPageAnimator _helpPageAnimator;
+  DebugField _debugField;
 };
 
 #endif /* ROBO_COMMON_ROBOCOMMONLAYOUT_H_ */

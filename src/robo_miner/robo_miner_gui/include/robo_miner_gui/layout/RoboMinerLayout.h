@@ -28,6 +28,7 @@ public:
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent &e);
+  void process();
 
 private:
   void produceInterface(RoboMinerLayoutInterface& interface);

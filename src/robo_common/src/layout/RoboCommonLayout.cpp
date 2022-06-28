@@ -36,6 +36,7 @@ void RoboCommonLayout::draw() const {
 
 void RoboCommonLayout::drawSecondLayer() const {
   _fogOfWar.draw();
+  _debugField.draw();
   _helpPageAnimator.draw();
 }
 
@@ -44,12 +45,17 @@ void RoboCommonLayout::drawThirdLayer() const {
   _achievementAnimator.draw(); //is drawn as part of end screen animator
 }
 
+void RoboCommonLayout::process() {
+  _debugField.process();
+}
+
 void RoboCommonLayout::toggleHelpPage() {
   _helpPageAnimator.toggleStatus();
 }
 
 void RoboCommonLayout::toggleDebugInfo() {
   _field.toggleDebugTexts();
+  _debugField.toggleStatus();
 }
 
 RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {

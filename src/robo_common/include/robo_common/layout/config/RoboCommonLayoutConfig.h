@@ -12,6 +12,7 @@
 #include "robo_common/layout/animators/config/GameEndAnimatorConfig.h"
 #include "robo_common/layout/animators/config/AchievementAnimatorConfig.h"
 #include "robo_common/layout/animators/config/HelpPageAnimatorConfig.h"
+#include "robo_common/layout/debug/config/DebugFieldConfig.h"
 
 //Own components headers
 
@@ -25,6 +26,7 @@ struct RoboCommonLayoutConfig {
   GameEndAnimatorConfig gameEndAnimatorConfig;
   AchievementAnimatorConfig achievementAnimatorConfig;
   HelpPageAnimatorConfig helpPageAnimatorConfig;
+  DebugFieldConfig debugFieldConfig;
 
   uint64_t mapRsrcId = 0;
 

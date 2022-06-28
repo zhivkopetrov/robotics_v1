@@ -40,6 +40,7 @@ void RoboCollectorGui::handleEvent(const InputEvent &e) {
 }
 
 void RoboCollectorGui::process() {
+  _layout.process();
   _collisionWatcher.process();
 }
 

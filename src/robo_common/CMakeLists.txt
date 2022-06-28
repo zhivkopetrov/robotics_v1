@@ -39,6 +39,8 @@ add_library(
         ${_INC_DIR}/layout/panels/config/TimePanelConfig.h
         ${_INC_DIR}/layout/panels/NumberCounterPanel.h
         ${_INC_DIR}/layout/panels/config/NumberCounterPanelConfig.h
+        ${_INC_DIR}/layout/debug/DebugField.h
+        ${_INC_DIR}/layout/debug/config/DebugFieldConfig.h
         ${_INC_DIR}/layout/entities/robot/Robot.h
         ${_INC_DIR}/layout/entities/robot/helpers/RobotActInterface.h
         ${_INC_DIR}/layout/entities/robot/helpers/RobotInitHelper.h
@@ -73,6 +75,7 @@ add_library(
         ${_SRC_DIR}/layout/panels/TimePanel.cpp
         ${_SRC_DIR}/layout/panels/NumberCounterPanel.cpp
         ${_SRC_DIR}/layout/panels/IndicatorPanel.cpp
+        ${_SRC_DIR}/layout/debug/DebugField.cpp
         ${_SRC_DIR}/layout/entities/robot/Robot.cpp
         ${_SRC_DIR}/layout/entities/robot/helpers/RobotInitHelper.cpp
         ${_SRC_DIR}/layout/entities/robot/helpers/RobotUtils.cpp

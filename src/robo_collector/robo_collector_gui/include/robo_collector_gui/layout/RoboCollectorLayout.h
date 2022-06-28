@@ -31,7 +31,8 @@ public:
   void draw() const;
   void handleEvent(const InputEvent &e);
 
-  //TODO create a separate help page class
+  void process();
+
   void toggleHelpPage();
 
   void toggleDebugInfo();

@@ -27,8 +27,7 @@ public:
   void deinit();
   void draw() const;
 
-  //TODO move to some dedicated class
-  void onEnergyDepleted();
+  void process();
 
 private:
   void produceInterface(RoboCleanerLayoutInterface& interface);

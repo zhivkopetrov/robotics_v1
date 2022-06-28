@@ -38,8 +38,8 @@ void RoboCleanerLayout::draw() const {
   _commonLayout.drawThirdLayer();
 }
 
-void RoboCleanerLayout::onEnergyDepleted() {
-  LOGR("Energy depleted");
+void RoboCleanerLayout::process() {
+  _commonLayout.process();
 }
 
 void RoboCleanerLayout::produceInterface(

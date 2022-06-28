@@ -40,6 +40,7 @@ void RoboMinerGui::handleEvent(const InputEvent &e) {
 }
 
 void RoboMinerGui::process() {
+  _layout.process();
   _collisionWatcher.process();
 }
 

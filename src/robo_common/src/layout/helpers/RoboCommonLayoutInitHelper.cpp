@@ -51,7 +51,12 @@ ErrorCode RoboCommonLayoutInitHelper::init(
   }
 
   if (ErrorCode::SUCCESS != initPlayerRobot(cfg, outInterface, layout)) {
-    LOGERR("initPlayerRobot failed");
+    LOGERR("initPlayerRobot() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initDebugField(cfg, layout)) {
+    LOGERR("initDebugField() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -154,6 +159,22 @@ ErrorCode RoboCommonLayoutInitHelper::initPlayerRobot(
 
   if (ErrorCode::SUCCESS != layout._playerRobot.init(initialState, robotCfg,
           animatorCfgBase, robotOutInterface)) {
+    LOGERR("Error in _playerRobot.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode RoboCommonLayoutInitHelper::initDebugField(
+    const RoboCommonLayoutConfig &layoutCfg,
+    RoboCommonLayout &layout) {
+
+  const GetRobotAbsolutePosCb getRobotAbsolutePosCb = std::bind(
+      &Robot::getAbsolutePos, &layout._playerRobot);
+
+  if (ErrorCode::SUCCESS != layout._debugField.init(layoutCfg.debugFieldConfig,
+          layoutCfg.fieldCfg.description, getRobotAbsolutePosCb)) {
     LOGERR("Error in _playerRobot.init()");
     return ErrorCode::FAILURE;
   }

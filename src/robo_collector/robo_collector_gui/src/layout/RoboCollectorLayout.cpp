@@ -67,6 +67,10 @@ void RoboCollectorLayout::draw() const {
   _commonLayout.drawThirdLayer();
 }
 
+void RoboCollectorLayout::process() {
+  _commonLayout.process();
+}
+
 void RoboCollectorLayout::handleEvent(const InputEvent &e) {
   if (_controller.isEnabled()) {
     _controller.handleEvent(e);
