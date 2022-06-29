@@ -245,22 +245,27 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
       "  - The top 3 players, who clean the map with the lowest total moves wins additional points:";
   cfg.entries.push_back(entry);
 
-  entry.content = "    - 1st place (3 points), 2nd place (2 points), 3rd place (1 point)";
+  entry.content =
+      "    - 1st place (3 points), 2nd place (2 points), 3rd place (1 point)";
   cfg.entries.push_back(entry);
 
   entry.content = "  - Battery charging:";
   cfg.entries.push_back(entry);
 
-  entry.content = "    - 1 turn spend on the charging station regenerates energy for 5 moves";
+  entry.content =
+      "    - 1 turn spend on the charging station regenerates energy for 5 moves";
   cfg.entries.push_back(entry);
 
-  entry.content = "    - you can specify how many turns to spend charging or 'charge_until_full'";
+  entry.content =
+      "    - you can specify how many turns to spend charging or 'charge_until_full'";
   cfg.entries.push_back(entry);
 
-  entry.content = "    - if you run out of energy - an energy depleted penalty is applied";
+  entry.content =
+      "    - if you run out of energy - an energy depleted penalty is applied";
   cfg.entries.push_back(entry);
 
-  entry.content = "      - 50% of the total battery capacity is restored immediately and 'max_moves_on_full_energy' moves are wasted";
+  entry.content =
+      "      - 50% of the total battery capacity is restored immediately and 'max_moves_on_full_energy' moves are wasted";
   cfg.entries.push_back(entry);
 
   //create a boundary between objectives and lose conditions
@@ -280,6 +285,14 @@ HelpPageAnimatorConfig generateHelpPageAnimatorConfig(
 
   entry.content = "  - 3 energy depleted penalties";
   cfg.entries.push_back(entry);
+
+  return cfg;
+}
+
+DebugFieldConfig generateDebugFieldConfig() {
+  DebugFieldConfig cfg;
+  cfg.panelRsrcId = RoboCleanerGuiResources::MAP;
+  cfg.texFotnRsrcId = RoboCleanerGuiResources::VINQUE_RG_30;
 
   return cfg;
 }
@@ -332,6 +345,7 @@ RoboCleanerGuiConfig generateGameConfig(
       rosParams);
   commonLayoutCfg.helpPageAnimatorConfig = generateHelpPageAnimatorConfig(
       rosParams);
+  commonLayoutCfg.debugFieldConfig = generateDebugFieldConfig();
   commonLayoutCfg.mapRsrcId = RoboCleanerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 

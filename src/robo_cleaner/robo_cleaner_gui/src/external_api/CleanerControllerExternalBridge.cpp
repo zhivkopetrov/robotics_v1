@@ -93,6 +93,11 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.setDebugMsgCb) {
+    LOGERR("Error, nullptr provided for SetDebugMsgCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.setUserDataCb) {
     LOGERR("Error, nullptr provided for SetUserDataCb");
     return ErrorCode::FAILURE;
@@ -137,15 +142,16 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 }
 
 ErrorCode CleanerControllerExternalBridge::initCommunication() {
-  constexpr auto queueSize = 10;
+  constexpr size_t queueSize = 10;
+  const rclcpp::QoS qos(queueSize);
   _shutdownControllerPublisher = create_publisher<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, queueSize);
+      SHUTDOWN_CONTROLLER_TOPIC, qos);
 
   _fieldMapReveleadedPublisher = create_publisher<Empty>(
-      FIELD_MAP_REVEALED_TOPIC, queueSize);
+      FIELD_MAP_REVEALED_TOPIC, qos);
 
   _fieldMapCleanedPublisher = create_publisher<Empty>(FIELD_MAP_CLEANED_TOPIC,
-      queueSize);
+      qos);
 
   _batteryStatusService = create_service<QueryBatteryStatus>(
       QUERY_BATTERY_STATUS_SERVICE,
@@ -171,19 +177,23 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
           _1));
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
-      USER_AUTHENTICATE_TOPIC, queueSize,
+      USER_AUTHENTICATE_TOPIC, qos,
       std::bind(&CleanerControllerExternalBridge::onUserAuthenticateMsg, this,
           _1));
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
-      queueSize,
+      qos,
       std::bind(&CleanerControllerExternalBridge::onToggleHelpPageMsg, this,
           _1));
 
   _toggleDebugInfoSubscriber = create_subscription<Empty>(
-      TOGGLE_DEBUG_INFO_TOPIC, queueSize,
+      TOGGLE_DEBUG_INFO_TOPIC, qos,
       std::bind(&CleanerControllerExternalBridge::onToggleDebugInfoMsg, this,
           _1));
+
+  _setDebugMsgSubscriber = create_subscription<String>(
+      DEBUG_MSG_TOPIC, qos,
+      std::bind(&CleanerControllerExternalBridge::onDebugMsg, this, _1));
 
   return ErrorCode::SUCCESS;
 }
@@ -384,6 +394,15 @@ void CleanerControllerExternalBridge::onToggleDebugInfoMsg(
     [[maybe_unused]]const Empty::SharedPtr msg) {
   const auto f = [this]() {
     _outInterface.toggleDebugInfoCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void CleanerControllerExternalBridge::onDebugMsg(
+    const String::SharedPtr msg) {
+  const auto f = [this, msg]() {
+    _outInterface.setDebugMsgCb(msg->data);
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);

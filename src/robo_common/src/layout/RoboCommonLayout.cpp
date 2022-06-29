@@ -77,6 +77,7 @@ RoboCommonLayoutInterface RoboCommonLayout::produceInterface() {
       this);
   interface.toggleDebugInfoCb = std::bind(&RoboCommonLayout::toggleDebugInfo,
       this);
+  interface.setDebugMsgCb = std::bind(&DebugField::setMsg, &_debugField, _1);
   interface.startGameWonAnimCb = std::bind(&GameEndAnimator::startGameWonAnim,
       &_gameEndAnimator);
   interface.startGameLostAnimCb = std::bind(&GameEndAnimator::startGameLostAnim,

@@ -70,6 +70,10 @@ ErrorCode CollectorControllerExternalBridge::initOutInterface(
     LOGERR("Error, nullptr provided for ToggleDebugInfoCb");
     return ErrorCode::FAILURE;
   }
+  if (nullptr == _outInterface.setDebugMsgCb) {
+    LOGERR("Error, nullptr provided for SetDebugMsgCb");
+    return ErrorCode::FAILURE;
+  }
   if (nullptr == _outInterface.setUserDataCb) {
     LOGERR("Error, nullptr provided for SetUserDataCb");
     return ErrorCode::FAILURE;
@@ -80,32 +84,37 @@ ErrorCode CollectorControllerExternalBridge::initOutInterface(
 
 ErrorCode CollectorControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
-  constexpr auto queueSize = 10;
+  constexpr size_t queueSize = 10;
+  const rclcpp::QoS qos(queueSize);
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
-      USER_AUTHENTICATE_TOPIC, queueSize,
+      USER_AUTHENTICATE_TOPIC, qos,
       std::bind(&CollectorControllerExternalBridge::onUserAuthenticateMsg, this,
           _1));
 
   _playerActSubscriber = create_subscription<RobotMoveType>(
-      ROBOT_MOVE_TYPE_TOPIC, queueSize,
+      ROBOT_MOVE_TYPE_TOPIC, qos,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
-      queueSize,
+      qos,
       std::bind(&CollectorControllerExternalBridge::onToggleHelpPageMsg, this,
           _1));
 
   _toggleDebugInfoSubscriber = create_subscription<Empty>(
-      TOGGLE_DEBUG_INFO_TOPIC, queueSize,
+      TOGGLE_DEBUG_INFO_TOPIC, qos,
       std::bind(&CollectorControllerExternalBridge::onToggleDebugInfoMsg, this,
           _1));
 
+  _setDebugMsgSubscriber = create_subscription<String>(
+      DEBUG_MSG_TOPIC, qos,
+      std::bind(&CollectorControllerExternalBridge::onDebugMsg, this, _1));
+
   _playerEnableInputPublisher = create_publisher<Empty>(
-      ENABLE_ROBOT_INPUT_TOPIC, queueSize);
+      ENABLE_ROBOT_INPUT_TOPIC, qos);
 
   _shutdownControllerPublisher = create_publisher<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, queueSize);
+      SHUTDOWN_CONTROLLER_TOPIC, qos);
 
   return ErrorCode::SUCCESS;
 }
@@ -169,6 +178,15 @@ void CollectorControllerExternalBridge::onToggleDebugInfoMsg(
     [[maybe_unused]]const Empty::SharedPtr msg) {
   const auto f = [this]() {
     _outInterface.toggleDebugInfoCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void CollectorControllerExternalBridge::onDebugMsg(
+    const String::SharedPtr msg) {
+  const auto f = [this, msg]() {
+    _outInterface.setDebugMsgCb(msg->data);
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);

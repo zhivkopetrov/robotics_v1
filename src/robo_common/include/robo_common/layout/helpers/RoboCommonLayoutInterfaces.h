@@ -22,6 +22,7 @@ struct RoboCommonLayoutInterface {
   RobotActInterface playerRobotActInterface;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
+  SetDebugMsgCb setDebugMsgCb;
   StartGameLostAnimCb startGameLostAnimCb;
   StartGameWonAnimCb startGameWonAnimCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;

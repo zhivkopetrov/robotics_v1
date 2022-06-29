@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include <std_msgs/msg/string.hpp>
 #include "robo_collector_interfaces/msg/user_authenticate.hpp"
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"
 #include "robo_collector_common/defines/RoboCollectorFunctionalDefines.h"
@@ -21,6 +22,7 @@ struct CollectorControllerExternalBridgeOutInterface {
   MoveButtonClickCb moveButtonClickCb;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
+  SetDebugMsgCb setDebugMsgCb;
   SetUserDataCb setUserDataCb;
 };
 
@@ -37,6 +39,7 @@ public:
 
 private:
   using Empty = std_msgs::msg::Empty;
+  using String = std_msgs::msg::String;
   using UserAuthenticate = robo_collector_interfaces::msg::UserAuthenticate;
   using RobotMoveType = robo_collector_interfaces::msg::RobotMoveType;
 
@@ -52,6 +55,7 @@ private:
   void onMoveMsg(const RobotMoveType::SharedPtr msg);
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);
   void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
+  void onDebugMsg(const String::SharedPtr msg);
 
   CollectorControllerExternalBridgeOutInterface _outInterface;
 
@@ -59,6 +63,7 @@ private:
   rclcpp::Subscription<RobotMoveType>::SharedPtr _playerActSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
+  rclcpp::Subscription<String>::SharedPtr _setDebugMsgSubscriber;
 
   rclcpp::Publisher<Empty>::SharedPtr _playerEnableInputPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;

@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include <std_msgs/msg/string.hpp>
 #include "robo_miner_interfaces/srv/query_initial_robot_position.hpp"
 #include "robo_miner_interfaces/srv/robot_move.hpp"
 #include "robo_miner_interfaces/srv/field_map_validate.hpp"
@@ -28,6 +29,7 @@ struct MinerControllerExternalBridgeOutInterface {
   RobotActCb robotActCb;
   ToggleHelpPageCb toggleHelpPageCb;
   ToggleDebugInfoCb toggleDebugInfoCb;
+  SetDebugMsgCb setDebugMsgCb;
   SetUserDataCb setUserDataCb;
   StartAchievementWonAnimCb startAchievementWonAnimCb;
   StartGameLostAnimCb startGameLostAnimCb;
@@ -51,6 +53,7 @@ public:
 
 private:
   using Empty = std_msgs::msg::Empty;
+  using String = std_msgs::msg::String;
   using UserAuthenticate = robo_miner_interfaces::msg::UserAuthenticate;
   using FieldPoint = robo_miner_interfaces::msg::FieldPoint;
   using RobotMove = robo_miner_interfaces::srv::RobotMove;
@@ -89,6 +92,7 @@ private:
   void onUserAuthenticateMsg(const UserAuthenticate::SharedPtr msg);
   void onToggleHelpPageMsg(const Empty::SharedPtr msg);
   void onToggleDebugInfoMsg(const Empty::SharedPtr msg);
+  void onDebugMsg(const String::SharedPtr msg);
 
   void handleNormalMove(const FieldPos &robotPos);
   void handleMiningMove(const FieldPos &robotPos);
@@ -109,6 +113,7 @@ private:
   rclcpp::Subscription<UserAuthenticate>::SharedPtr _userAuthenticateSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleHelpPageSubscriber;
   rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
+  rclcpp::Subscription<String>::SharedPtr _setDebugMsgSubscriber;
 
   ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };

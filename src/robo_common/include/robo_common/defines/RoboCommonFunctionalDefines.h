@@ -3,6 +3,7 @@
 
 //System headers
 #include <functional>
+#include <string>
 
 //Other libraries headers
 
@@ -26,10 +27,11 @@ using GetRobotRotationAngleCb = std::function<double()>;
 using GetPlayerSurroundingTilesCb = std::function<SurroundingTiles()>;
 using FinishRobotActCb = std::function<void(const RobotState&, MoveOutcome)>;
 using CancelRobotMove = std::function<void()>;
-
-//invoked before the collision animation has been started
 using ToggleDebugInfoCb = std::function<void()>;
 using ToggleHelpPageCb = std::function<void()>;
+using SetDebugMsgCb = std::function<void(const std::string& msg)>;
+
+//invoked before the collision animation has been started
 using PlayerRobotDamageCollisionCb = std::function<void()>;
 using IndicatorDepletedCb = std::function<void()>;
 using NumberCounterTargetReachedCb = std::function<void()>;

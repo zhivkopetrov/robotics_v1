@@ -124,6 +124,7 @@ ErrorCode RoboCollectorGuiInitHelper::initControllerExternalBridge(
       interface.commonLayoutInterface.toggleHelpPageCb;
   outInterface.toggleDebugInfoCb =
       interface.commonLayoutInterface.toggleDebugInfoCb;
+  outInterface.setDebugMsgCb = interface.commonLayoutInterface.setDebugMsgCb;
   outInterface.setUserDataCb = interface.commonLayoutInterface.setUserDataCb;
 
   if (ErrorCode::SUCCESS != gui._controllerExternalBridge->init(outInterface)) {

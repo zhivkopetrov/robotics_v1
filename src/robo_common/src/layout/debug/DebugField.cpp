@@ -51,7 +51,11 @@ ErrorCode DebugField::init(const DebugFieldConfig &cfg,
   _msgText.activateAlphaModulation();
   _msgText.setOpacity(TARGET_OPACITY);
 
+  // bypass the check during initialization
+  _isActive = true;
   setMsg("Debug text placeholder");
+  _isActive = false;
+
   updateFbo();
 
   return ErrorCode::SUCCESS;
@@ -70,6 +74,12 @@ void DebugField::toggleStatus() {
 }
 
 void DebugField::setMsg(const std::string &msg) {
+  if (!_isActive) {
+    LOGR("Debug mode is not active. Discarding received debug message: [%s]",
+        msg.c_str());
+    return;
+  }
+
   _msgText.setText(msg.c_str());
   _msgText.setScaledWidth(_msgText.getFrameWidth());
   const Rectangle scaledBoundary = _msgText.getScaledRect();
@@ -84,6 +94,10 @@ void DebugField::setMsg(const std::string &msg) {
 }
 
 void DebugField::process() {
+  if (!_isActive) {
+    return;
+  }
+
   const Point robotPos = _getRobotAbsolutePosCb();
 
   //TODO change position based on _xDelimiter and _yDelimiter

@@ -246,6 +246,14 @@ SolutionValidatorConfig generateSolutionValidatorConfig(
   return cfg;
 }
 
+DebugFieldConfig generateDebugFieldConfig() {
+  DebugFieldConfig cfg;
+  cfg.panelRsrcId = RoboMinerGuiResources::MAP;
+  cfg.texFotnRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
+
+  return cfg;
+}
+
 EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
                                   const RoboMinerGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -294,6 +302,7 @@ RoboMinerGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
       rosParams);
   commonLayoutCfg.helpPageAnimatorConfig = generateHelpPageAnimatorConfig(
       rosParams);
+  commonLayoutCfg.debugFieldConfig = generateDebugFieldConfig();
   commonLayoutCfg.mapRsrcId = RoboMinerGuiResources::MAP;
   commonLayoutCfg.playerFieldMarker = RoboCommonDefines::PLAYER_MARKER;
 

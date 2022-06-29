@@ -74,6 +74,11 @@ ErrorCode MinerControllerExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
+  if (nullptr == _outInterface.setDebugMsgCb) {
+    LOGERR("Error, nullptr provided for SetDebugMsgCb");
+    return ErrorCode::FAILURE;
+  }
+
   if (nullptr == _outInterface.setUserDataCb) {
     LOGERR("Error, nullptr provided for SetUserDataCb");
     return ErrorCode::FAILURE;
@@ -119,12 +124,14 @@ ErrorCode MinerControllerExternalBridge::initOutInterface(
 
 ErrorCode MinerControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
-  constexpr auto queueSize = 10;
+  constexpr size_t queueSize = 10;
+  const rclcpp::QoS qos(queueSize);
+
   _shutdownControllerPublisher = create_publisher<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, queueSize);
+      SHUTDOWN_CONTROLLER_TOPIC, qos);
 
   _fieldMapReveleadedPublisher = create_publisher<Empty>(
-      FIELD_MAP_REVEALED_TOPIC, queueSize);
+      FIELD_MAP_REVEALED_TOPIC, qos);
 
   _initialRobotPosService = create_service<QueryInitialRobotPosition>(
       QUERY_INITIAL_ROBOT_POSITION_SERVICE,
@@ -153,19 +160,21 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
           this, _1, _2));
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
-      USER_AUTHENTICATE_TOPIC, queueSize,
+      USER_AUTHENTICATE_TOPIC, qos,
       std::bind(&MinerControllerExternalBridge::onUserAuthenticateMsg, this,
           _1));
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
-      queueSize,
-      std::bind(&MinerControllerExternalBridge::onToggleHelpPageMsg, this,
-          _1));
+      qos,
+      std::bind(&MinerControllerExternalBridge::onToggleHelpPageMsg, this, _1));
 
   _toggleDebugInfoSubscriber = create_subscription<Empty>(
-      TOGGLE_DEBUG_INFO_TOPIC, queueSize,
+      TOGGLE_DEBUG_INFO_TOPIC, qos,
       std::bind(&MinerControllerExternalBridge::onToggleDebugInfoMsg, this,
           _1));
+
+  _setDebugMsgSubscriber = create_subscription<String>(DEBUG_MSG_TOPIC, qos,
+      std::bind(&MinerControllerExternalBridge::onDebugMsg, this, _1));
 
   return ErrorCode::SUCCESS;
 }
@@ -177,7 +186,7 @@ void MinerControllerExternalBridge::handleInitialRobotPosService(
     InitialRobotPos initialRobotPos;
     const auto [success, majorError] =
         _outInterface.solutionValidator->queryInitialRobotPos(initialRobotPos,
-                response->robot_position_response.error_reason);
+            response->robot_position_response.error_reason);
 
     response->robot_position_response.success = success && !majorError;
     if (majorError) {
@@ -187,8 +196,8 @@ void MinerControllerExternalBridge::handleInitialRobotPosService(
 
     response->robot_position_response.surrounding_tiles =
         initialRobotPos.surroundingTiles;
-    response->robot_position_response.robot_dir =
-        getRobotDirectionField(initialRobotPos.robotDir);
+    response->robot_position_response.robot_dir = getRobotDirectionField(
+        initialRobotPos.robotDir);
     response->robot_initial_tile = initialRobotPos.robotTile;
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::BLOCKING);
@@ -239,8 +248,8 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   MovementWatchOutcome outcome;
   const auto success = _outInterface.movementWatcher->waitForChange(5000ms,
       outcome);
-  response->robot_position_response.robot_dir =
-      getRobotDirectionField(outcome.robotDir);
+  response->robot_position_response.robot_dir = getRobotDirectionField(
+      outcome.robotDir);
 
   const auto f3 = [this]() {
     _controllerStatus = ControllerStatus::IDLE;
@@ -371,6 +380,14 @@ void MinerControllerExternalBridge::onToggleDebugInfoMsg(
     [[maybe_unused]]const Empty::SharedPtr msg) {
   const auto f = [this]() {
     _outInterface.toggleDebugInfoCb();
+  };
+
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void MinerControllerExternalBridge::onDebugMsg(const String::SharedPtr msg) {
+  const auto f = [this, msg]() {
+    _outInterface.setDebugMsgCb(msg->data);
   };
 
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
