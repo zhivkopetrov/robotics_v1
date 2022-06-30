@@ -32,7 +32,18 @@ public:
   void process();
 
 private:
+  enum class Quadrant {
+    TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+  };
+
+  void createVisuals(const DebugFieldConfig &cfg);
+
   void updateFbo();
+
+  Quadrant determineRobotQuadrant() const;
+  Quadrant determineFieldQuadrant() const;
+
+  void changeFieldPositionFromQuadrant(Quadrant quadrant);
 
   GetRobotAbsolutePosCb _getRobotAbsolutePosCb;
 
@@ -42,6 +53,8 @@ private:
 
   int32_t _xDelimiter { };
   int32_t _yDelimiter { };
+  int32_t _robotWidth { };
+  int32_t _robotHeight { };
 
   bool _isActive = false;
 };

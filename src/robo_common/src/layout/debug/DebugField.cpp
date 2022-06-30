@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/drawing/WidgetAligner.h"
 #include "utils/Log.h"
 
@@ -11,6 +12,8 @@
 
 namespace {
 constexpr int32_t TARGET_OPACITY = 200;
+
+constexpr int32_t FIELD_FROM_ROBOT_OFFSET = 20;
 }
 
 ErrorCode DebugField::init(const DebugFieldConfig &cfg,
@@ -30,33 +33,10 @@ ErrorCode DebugField::init(const DebugFieldConfig &cfg,
   _xDelimiter = fieldDimensios.x + (fieldDimensios.w / 2);
   _yDelimiter = fieldDimensios.y + (fieldDimensios.h / 2);
 
-  _fbo.create(cfg.dimensions);
-  _fbo.activateAlphaModulation();
-  _fbo.setResetColor(Colors::FULL_TRANSPARENT);
-  _fbo.setOpacity(TARGET_OPACITY);
+  _robotWidth = fieldDescr.tileWidth;
+  _robotHeight = fieldDescr.tileHeight;
 
-  _bgrImg.create(cfg.panelRsrcId);
-  _bgrImg.activateScaling();
-  _bgrImg.setScaledWidth(cfg.dimensions.w);
-  _bgrImg.setScaledHeight(cfg.dimensions.h);
-  _bgrImg.activateAlphaModulation();
-  _bgrImg.setOpacity(TARGET_OPACITY);
-
-  constexpr int32_t offset = 20;
-  const int32_t maxTextWidth = cfg.dimensions.w - (2 * offset);
-
-  _msgText.create(cfg.texFotnRsrcId, " ", Colors::RED);
-  _msgText.activateScaling();
-  _msgText.setMaxScalingWidth(maxTextWidth);
-  _msgText.activateAlphaModulation();
-  _msgText.setOpacity(TARGET_OPACITY);
-
-  // bypass the check during initialization
-  _isActive = true;
-  setMsg("Debug text placeholder");
-  _isActive = false;
-
-  updateFbo();
+  createVisuals(cfg);
 
   return ErrorCode::SUCCESS;
 }
@@ -98,15 +78,46 @@ void DebugField::process() {
     return;
   }
 
-  const Point robotPos = _getRobotAbsolutePosCb();
-
-  //TODO change position based on _xDelimiter and _yDelimiter
-  _fbo.setPosition(robotPos);
+  const Quadrant quadrant = determineFieldQuadrant();
+  changeFieldPositionFromQuadrant(quadrant);
 
   //TODO add a move animation once the transition from left to right quarter
   //     or from up to down quarter or vice-versa
   //     don't forget to use relative offset, because .setPosition is used
   //     in the process method
+}
+
+void DebugField::createVisuals(const DebugFieldConfig &cfg) {
+  _fbo.create(cfg.dimensions);
+  _fbo.activateAlphaModulation();
+  _fbo.setResetColor(Colors::FULL_TRANSPARENT);
+  _fbo.setOpacity(TARGET_OPACITY);
+
+  _bgrImg.create(cfg.panelRsrcId);
+  _bgrImg.activateScaling();
+  _bgrImg.setScaledWidth(cfg.dimensions.w);
+  _bgrImg.setScaledHeight(cfg.dimensions.h);
+  _bgrImg.activateAlphaModulation();
+  _bgrImg.setOpacity(TARGET_OPACITY);
+
+  constexpr int32_t offset = 20;
+  const int32_t maxTextWidth = cfg.dimensions.w - (2 * offset);
+
+  _msgText.create(cfg.texFotnRsrcId, " ", Colors::RED);
+  _msgText.activateScaling();
+  _msgText.setMaxScalingWidth(maxTextWidth);
+  _msgText.activateAlphaModulation();
+  _msgText.setOpacity(TARGET_OPACITY);
+
+  // bypass the check during initialization
+  _isActive = true;
+  setMsg("Debug text placeholder");
+  _isActive = false;
+
+  updateFbo();
+
+  const Quadrant quadrant = determineFieldQuadrant();
+  changeFieldPositionFromQuadrant(quadrant);
 }
 
 void DebugField::updateFbo() {
@@ -121,4 +132,75 @@ void DebugField::updateFbo() {
 
   _fbo.update();
   _fbo.lock();
+}
+
+DebugField::Quadrant DebugField::determineRobotQuadrant() const {
+  const Point robotPos = _getRobotAbsolutePosCb();
+  const int32_t robotCenterX = robotPos.x + (_robotWidth / 2);
+  const int32_t robotCenterY = robotPos.y + (_robotHeight / 2);
+  if (robotCenterX <= _xDelimiter) {
+    if (robotCenterY <= _yDelimiter) {
+      return Quadrant::TOP_LEFT;
+    }
+
+    return Quadrant::BOTTOM_LEFT;
+  }
+
+  if (robotCenterY <= _yDelimiter) {
+    return Quadrant::TOP_RIGHT;
+  }
+
+  return Quadrant::BOTTOM_RIGHT;
+}
+
+DebugField::Quadrant DebugField::determineFieldQuadrant() const {
+  const Quadrant robotQuadrant = determineRobotQuadrant();
+  switch (robotQuadrant) {
+  case Quadrant::TOP_LEFT:
+    return Quadrant::BOTTOM_RIGHT;
+
+  case Quadrant::TOP_RIGHT:
+    return Quadrant::BOTTOM_LEFT;
+
+  case Quadrant::BOTTOM_LEFT:
+    return Quadrant::TOP_RIGHT;
+
+  case Quadrant::BOTTOM_RIGHT:
+    return Quadrant::TOP_LEFT;
+
+  default:
+    LOGERR("Error, received unsupported Quadrant type: %d",
+        getEnumValue(robotQuadrant));
+    break;
+  }
+
+  return Quadrant::BOTTOM_RIGHT;
+}
+
+void DebugField::changeFieldPositionFromQuadrant(Quadrant quadrant) {
+  const Rectangle fboBoundary = _fbo.getImageRect();
+  const Point robotPos = _getRobotAbsolutePosCb();
+  switch (quadrant) {
+  case Quadrant::TOP_LEFT:
+    _fbo.setPosition(robotPos.x - FIELD_FROM_ROBOT_OFFSET - fboBoundary.w,
+        robotPos.y - FIELD_FROM_ROBOT_OFFSET - fboBoundary.h);
+    break;
+  case Quadrant::TOP_RIGHT:
+    _fbo.setPosition(robotPos.x + FIELD_FROM_ROBOT_OFFSET + _robotWidth,
+        robotPos.y - FIELD_FROM_ROBOT_OFFSET - fboBoundary.h);
+    break;
+  case Quadrant::BOTTOM_LEFT:
+    _fbo.setPosition(robotPos.x - FIELD_FROM_ROBOT_OFFSET - fboBoundary.w,
+        robotPos.y + FIELD_FROM_ROBOT_OFFSET + _robotHeight);
+    break;
+  case Quadrant::BOTTOM_RIGHT:
+    _fbo.setPosition(robotPos.x + FIELD_FROM_ROBOT_OFFSET + _robotWidth,
+        robotPos.y + FIELD_FROM_ROBOT_OFFSET + _robotHeight);
+    break;
+
+  default:
+    LOGERR("Error, received unsupported Quadrant type: %d",
+        getEnumValue(quadrant));
+    break;
+  }
 }
