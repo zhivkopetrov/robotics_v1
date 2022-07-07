@@ -85,7 +85,7 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
   _userAuthenticatePublisher = create_publisher<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, queueSize);
 
-  rclcpp::QoS qos(rclcpp::KeepLast(1));
+  rclcpp::QoS qos(queueSize);
   qos.transient_local(); //enable message latching for late joining subscribers
 
   _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,

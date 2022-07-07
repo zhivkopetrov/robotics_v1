@@ -86,6 +86,8 @@ ErrorCode CollectorControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr size_t queueSize = 10;
   const rclcpp::QoS qos(queueSize);
+  rclcpp::QoS latchQoS = qos;
+  latchQoS.transient_local();
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, qos,
@@ -93,7 +95,7 @@ ErrorCode CollectorControllerExternalBridge::initCommunication() {
           _1));
 
   _playerActSubscriber = create_subscription<RobotMoveType>(
-      ROBOT_MOVE_TYPE_TOPIC, qos,
+      ROBOT_MOVE_TYPE_TOPIC, latchQoS,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
