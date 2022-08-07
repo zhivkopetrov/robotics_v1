@@ -11,7 +11,8 @@
 //Forward declarations
 
 struct UrControlGuiLayoutOutInterface {
-  PublishURScript publishURScript;
+  PublishURScriptCb publishURScriptCb;
+  InvokeDashboardCb invokeDashboardCb;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUILAYOUTINTERFACES_H_ */

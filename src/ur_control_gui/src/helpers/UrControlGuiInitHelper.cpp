@@ -30,11 +30,17 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
     return ErrorCode::FAILURE;
   }
 
-  //allocate memory for the external bridge in order to attach it's callbacks
+  //allocate memory for the ROS nodes in order to attach it's callbacks
+  gui._dashboardProvider = std::make_shared<DashboardProvider>();
   gui._guiExternalBridge = std::make_shared<UrControlGuiExternalBridge>();
 
   if (ErrorCode::SUCCESS != initLayout(parsedCfg.layoutCfg, gui)) {
     LOGERR("Error, initLayout() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initDashboardHelper(gui)) {
+    LOGERR("initDashboardHelper() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -50,12 +56,25 @@ ErrorCode UrControlGuiInitHelper::initLayout(
     const UrControlGuiLayoutConfig &cfg, UrControlGui &gui) {
   UrControlGuiLayoutOutInterface layoutOutInterface;
   const auto guiExternalBridgeRawPointer = gui._guiExternalBridge.get();
-  layoutOutInterface.publishURScript = std::bind(
+  layoutOutInterface.publishURScriptCb = std::bind(
       &UrControlGuiExternalBridge::publishURScript, guiExternalBridgeRawPointer,
       _1);
 
+  const auto dashboardProviderRawPointer = gui._dashboardProvider.get();
+  layoutOutInterface.invokeDashboardCb = std::bind(
+      &DashboardProvider::invokeDashboard, dashboardProviderRawPointer, _1);
+
   if (ErrorCode::SUCCESS != gui._layout.init(cfg, layoutOutInterface)) {
     LOGERR("Error in _layout.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode UrControlGuiInitHelper::initDashboardHelper(UrControlGui &gui) {
+  if (ErrorCode::SUCCESS != gui._dashboardProvider->init()) {
+    LOGERR("Error in _dashboardProvider.init()");
     return ErrorCode::FAILURE;
   }
 

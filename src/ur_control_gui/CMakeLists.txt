@@ -13,6 +13,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -25,25 +26,38 @@ add_executable(
         ${_INC_DIR}/UrControlGui.h
         ${_INC_DIR}/config/UrControlGuiConfig.h
         ${_INC_DIR}/config/UrControlGuiConfigGenerator.h
+        ${_INC_DIR}/defines/UrControlGuiDefines.h
+        ${_INC_DIR}/defines/UrControlGuiTopics.h
         ${_INC_DIR}/defines/UrControlGuiFunctionalDefines.h
         ${_INC_DIR}/external_api/UrControlGuiExternalBridge.h
         ${_INC_DIR}/external_api/UrControlGuiRos2ParamProvider.h
+        ${_INC_DIR}/external_api/DashboardProvider.h
         ${_INC_DIR}/helpers/UrControlGuiBuilder.h
         ${_INC_DIR}/helpers/UrControlGuiInitHelper.h
         ${_INC_DIR}/layout/UrControlGuiLayout.h
         ${_INC_DIR}/layout/config/UrControlGuiLayoutConfig.h
         ${_INC_DIR}/layout/helpers/UrControlGuiLayoutInitHelper.h
         ${_INC_DIR}/layout/helpers/UrControlGuiLayoutInterfaces.h
+        ${_INC_DIR}/layout/entities/buttons/ButtonHandler.h
+        ${_INC_DIR}/layout/entities/buttons/CommandButton.h
+        ${_INC_DIR}/layout/entities/buttons/UrScriptButton.h
+        ${_INC_DIR}/layout/entities/buttons/DashboardButton.h
+        ${_INC_DIR}/layout/entities/buttons/config/ButtonHandlerConfig.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/UrControlGui.cpp
         ${_SRC_DIR}/config/UrControlGuiConfigGenerator.cpp
         ${_SRC_DIR}/external_api/UrControlGuiExternalBridge.cpp
         ${_SRC_DIR}/external_api/UrControlGuiRos2ParamProvider.cpp
+        ${_SRC_DIR}/external_api/DashboardProvider.cpp
         ${_SRC_DIR}/helpers/UrControlGuiBuilder.cpp
         ${_SRC_DIR}/helpers/UrControlGuiInitHelper.cpp
         ${_SRC_DIR}/layout/UrControlGuiLayout.cpp
         ${_SRC_DIR}/layout/helpers/UrControlGuiLayoutInitHelper.cpp
+        ${_SRC_DIR}/layout/entities/buttons/ButtonHandler.cpp
+        ${_SRC_DIR}/layout/entities/buttons/CommandButton.cpp
+        ${_SRC_DIR}/layout/entities/buttons/UrScriptButton.cpp
+        ${_SRC_DIR}/layout/entities/buttons/DashboardButton.cpp
 )
 
 target_include_directories(
@@ -71,6 +85,7 @@ ament_target_dependencies(
         rclcpp
         ament_index_cpp
         std_msgs
+        std_srvs
 )
 
 if(NOT DISABLE_ROS_TOOLING)

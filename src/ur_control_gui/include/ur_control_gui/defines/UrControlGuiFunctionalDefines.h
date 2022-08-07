@@ -8,9 +8,11 @@
 //Other libraries headers
 
 //Own components headers
+#include "ur_control_gui/defines/UrControlGuiDefines.h"
 
 //Forward declarations
 
-using PublishURScript = std::function<void(const std::string& scriptData)>;
+using PublishURScriptCb = std::function<void(const std::string& scriptData)>;
+using InvokeDashboardCb = std::function<void(DashboardCommand command)>;
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIFUNCTIONALDEFINES_H_ */

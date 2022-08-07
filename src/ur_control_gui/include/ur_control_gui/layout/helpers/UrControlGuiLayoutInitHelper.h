@@ -14,6 +14,7 @@
 class UrControlGuiLayout;
 struct UrControlGuiLayoutConfig;
 struct UrControlGuiLayoutOutInterface;
+struct ButtonHandlerConfig;
 
 class UrControlGuiLayoutInitHelper {
 public:
@@ -24,8 +25,11 @@ public:
                         UrControlGuiLayout &layout);
 
 private:
+  static ErrorCode initStandaloneImages(const UrControlGuiLayoutConfig &cfg,
+                                        UrControlGuiLayout &layout);
+
   static ErrorCode initButtonHandler(
-      const UrControlGuiLayoutConfig &cfg,
+      const ButtonHandlerConfig &cfg,
       const UrControlGuiLayoutOutInterface &outInterface,
       UrControlGuiLayout &layout);
 };

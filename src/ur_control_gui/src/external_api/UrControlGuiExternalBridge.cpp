@@ -7,14 +7,14 @@
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
+//Own components headers
+#include "ur_control_gui/defines/UrControlGuiTopics.h"
+
 namespace {
-constexpr auto URSCRIPT_TOPIC = "urscript";
+constexpr auto NODE_NAME = "UrControlGuiExternalBridge";
 }
 
-//Own components headers
-
-UrControlGuiExternalBridge::UrControlGuiExternalBridge()
-    : Node("UrControlGuiExternalBridge") {
+UrControlGuiExternalBridge::UrControlGuiExternalBridge() : Node(NODE_NAME) {
 
 }
 

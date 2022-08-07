@@ -22,17 +22,14 @@ enum TimerIds {
 
 };
 
-//UrControlGuiButtonHandlerConfig generateButtonHandlerConfig() {
-//  UrControlGuiButtonHandlerConfig cfg;
-//
-//  cfg.moveButtonsRsrcIds = { UrControlGuiResources::UP_BUTTON,
-//      UrControlGuiResources::LEFT_BUTTON, UrControlGuiResources::RIGHT_BUTTON };
-//  cfg.moveButtonInfoTextFontId = UrControlGuiResources::VINQUE_RG_30;
-//  cfg.helpButtonRsrcId = UrControlGuiResources::HELP_BUTTON;
-//  cfg.settingsButtonRsrcId = UrControlGuiResources::SETTINGS_BUTTON;
-//
-//  return cfg;
-//}
+ButtonHandlerConfig generateButtonHandlerConfig() {
+  ButtonHandlerConfig cfg;
+
+  cfg.buttonRsrcId = UrControlGuiResources::UP_BUTTON;
+  cfg.buttonFontRsrcId = UrControlGuiResources::VINQUE_RG_30;
+
+  return cfg;
+}
 
 EngineConfig generateEngineConfig(const UrControlGuiRos2Params &rosParams) {
   const auto projectInstallPrefix =
@@ -61,7 +58,12 @@ UrControlGuiConfig generateGameConfig(const UrControlGuiRos2Params &rosParams) {
   cfg.robotInterfacePort = rosParams.robotInterfacePort;
 
   auto &layoutCfg = cfg.layoutCfg;
+  layoutCfg.buttonHandlerConfig = generateButtonHandlerConfig();
+
+  layoutCfg.screenBoundary.w = rosParams.guiWindow.w;
+  layoutCfg.screenBoundary.h = rosParams.guiWindow.h;
   layoutCfg.mapRsrcId = UrControlGuiResources::BACKGROUND;
+  layoutCfg.robotImgRrscId = UrControlGuiResources::UR_ROBOT;
 
   return cfg;
 }

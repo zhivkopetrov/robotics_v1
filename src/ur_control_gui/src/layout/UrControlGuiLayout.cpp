@@ -28,10 +28,12 @@ void UrControlGuiLayout::deinit() {
 
 void UrControlGuiLayout::draw() const {
   _map.draw();
+  _robot.draw();
 
+  _buttonHandler.draw();
 }
 
-void UrControlGuiLayout::handleEvent([[maybe_unused]]const InputEvent &e) {
-
+void UrControlGuiLayout::handleEvent(const InputEvent &e) {
+  _buttonHandler.handleEvent(e);
 }
 

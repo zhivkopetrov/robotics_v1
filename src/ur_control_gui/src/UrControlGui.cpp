@@ -21,12 +21,15 @@ ErrorCode UrControlGui::init(const std::any &cfg) {
     return ErrorCode::FAILURE;
   }
 
+  _communicatorInterface.registerNodeCb(_dashboardProvider);
   _communicatorInterface.registerNodeCb(_guiExternalBridge);
   return ErrorCode::SUCCESS;
 }
 
 void UrControlGui::deinit() {
+  _communicatorInterface.unregisterNodeCb(_dashboardProvider);
   _communicatorInterface.unregisterNodeCb(_guiExternalBridge);
+  _dashboardProvider->deinit();
   _layout.deinit();
 }
 

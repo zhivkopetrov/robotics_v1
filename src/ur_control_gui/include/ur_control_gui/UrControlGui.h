@@ -12,6 +12,7 @@
 //Own components headers
 #include "ur_control_gui/layout/UrControlGuiLayout.h"
 #include "ur_control_gui/external_api/UrControlGuiExternalBridge.h"
+#include "ur_control_gui/external_api/DashboardProvider.h"
 
 //Forward declarations
 class InputEvent;
@@ -33,6 +34,7 @@ public:
 private:
   UrControlGuiLayout _layout;
 
+  std::shared_ptr<DashboardProvider> _dashboardProvider;
   std::shared_ptr<UrControlGuiExternalBridge> _guiExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;
 };

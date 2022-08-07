@@ -9,6 +9,7 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
+#include "ur_control_gui/layout/entities/buttons/ButtonHandler.h"
 
 //Forward declarations
 class InputEvent;
@@ -26,7 +27,10 @@ public:
   void handleEvent(const InputEvent &e);
 
 private:
+  ButtonHandler _buttonHandler;
+
   Image _map;
+  Image _robot;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUILAYOUT_H_ */

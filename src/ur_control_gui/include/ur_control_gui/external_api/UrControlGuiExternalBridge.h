@@ -5,7 +5,7 @@
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
-#include "std_msgs/msg/string.hpp"
+#include <std_msgs/msg/string.hpp>
 #include "game_engine/defines/ActionEventDefines.h"
 #include "utils/ErrorCode.h"
 

@@ -24,6 +24,8 @@ private:
   static ErrorCode initLayout(const UrControlGuiLayoutConfig &cfg,
                               UrControlGui &gui);
 
+  static ErrorCode initDashboardHelper(UrControlGui &gui);
+
   static ErrorCode initUrControlGuiExternalBridge(UrControlGui &gui);
 };
 
