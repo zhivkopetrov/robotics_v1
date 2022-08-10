@@ -56,3 +56,9 @@ tag=[VINQUE_RG_30]
 type=font
 path=f/vinque_rg_30.ttf
 description=30
+
+##### FONTS
+tag=[VINQUE_RG_45]
+type=font
+path=f/vinque_rg_45.ttf
+description=45

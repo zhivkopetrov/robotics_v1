@@ -31,6 +31,7 @@ void UrControlGuiLayout::draw() const {
   _robot.draw();
 
   _buttonHandler.draw();
+  _safetyModeVisuals.draw();
 }
 
 void UrControlGuiLayout::handleEvent(const InputEvent &e) {

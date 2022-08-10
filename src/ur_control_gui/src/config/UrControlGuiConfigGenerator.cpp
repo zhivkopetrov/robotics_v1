@@ -81,6 +81,7 @@ UrControlGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
   layoutCfg.screenBoundary.h = rosParams.guiWindow.h;
   layoutCfg.mapRsrcId = UrControlGuiResources::BACKGROUND;
   layoutCfg.robotImgRrscId = UrControlGuiResources::UR_ROBOT;
+  layoutCfg.robotModeVisualsFontRsrcId = UrControlGuiResources::VINQUE_RG_45;
 
   return cfg;
 }

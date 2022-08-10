@@ -76,11 +76,6 @@ ErrorCode ButtonHandler::loadButtonScripts(
     return ErrorCode::FAILURE;
   }
 
-  int32_t idx = 0;
-  for (const auto& context : outScripts) {
-    LOGC("script[%d]: %s", idx++, context.c_str());
-  }
-
   return ErrorCode::SUCCESS;
 }
 

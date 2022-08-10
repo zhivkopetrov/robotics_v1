@@ -10,6 +10,7 @@
 
 //Own components headers
 #include "ur_control_gui/layout/entities/buttons/ButtonHandler.h"
+#include "ur_control_gui/layout/entities/robot/SafetyModeVisuals.h"
 
 //Forward declarations
 class InputEvent;
@@ -28,6 +29,7 @@ public:
 
 private:
   ButtonHandler _buttonHandler;
+  SafetyModeVisuals _safetyModeVisuals;
 
   Image _map;
   Image _robot;

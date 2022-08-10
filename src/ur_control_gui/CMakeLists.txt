@@ -40,6 +40,7 @@ add_executable(
         ${_INC_DIR}/layout/config/UrControlGuiLayoutConfig.h
         ${_INC_DIR}/layout/helpers/UrControlGuiLayoutInitHelper.h
         ${_INC_DIR}/layout/helpers/UrControlGuiLayoutInterfaces.h
+        ${_INC_DIR}/layout/entities/robot/SafetyModeVisuals.h
         ${_INC_DIR}/layout/entities/buttons/ButtonHandler.h
         ${_INC_DIR}/layout/entities/buttons/CommandButton.h
         ${_INC_DIR}/layout/entities/buttons/UrScriptButton.h
@@ -57,6 +58,7 @@ add_executable(
         ${_SRC_DIR}/helpers/ScriptParser.cpp
         ${_SRC_DIR}/layout/UrControlGuiLayout.cpp
         ${_SRC_DIR}/layout/helpers/UrControlGuiLayoutInitHelper.cpp
+        ${_SRC_DIR}/layout/entities/robot/SafetyModeVisuals.cpp
         ${_SRC_DIR}/layout/entities/buttons/ButtonHandler.cpp
         ${_SRC_DIR}/layout/entities/buttons/CommandButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/UrScriptButton.cpp

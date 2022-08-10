@@ -27,6 +27,12 @@ ErrorCode UrControlGuiLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
+  if (ErrorCode::SUCCESS != layout._safetyModeVisuals.init(cfg.screenBoundary,
+          cfg.robotModeVisualsFontRsrcId)) {
+    LOGERR("Error, _safetyModeVisuals.init() failed");
+    return ErrorCode::FAILURE;
+  }
+
   return ErrorCode::SUCCESS;
 }
 

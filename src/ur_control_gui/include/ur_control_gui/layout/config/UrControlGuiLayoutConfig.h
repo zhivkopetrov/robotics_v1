@@ -18,6 +18,7 @@ struct UrControlGuiLayoutConfig {
   Rectangle screenBoundary;
   uint64_t mapRsrcId = 0;
   uint64_t robotImgRrscId = 0;
+  uint64_t robotModeVisualsFontRsrcId = 0;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUILAYOUTCONFIG_H_ */
