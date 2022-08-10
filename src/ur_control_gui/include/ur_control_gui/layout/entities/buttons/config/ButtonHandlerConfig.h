@@ -3,6 +3,7 @@
 
 //System headers
 #include <cstdint>
+#include <string>
 
 //Other libraries headers
 
@@ -13,6 +14,7 @@
 struct ButtonHandlerConfig {
   uint64_t buttonRsrcId { };
   uint64_t buttonFontRsrcId { };
+  std::string scriptFolderLocation;
 };
 
 #endif /* UR_CONTROL_GUI_BUTTONHANDLERCONFIG_H_ */

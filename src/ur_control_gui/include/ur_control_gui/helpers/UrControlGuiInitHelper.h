@@ -13,6 +13,7 @@
 //Forward declarations
 class UrControlGui;
 struct UrControlGuiLayoutConfig;
+struct UrContolGuiExternalBridgeConfig;
 
 class UrControlGuiInitHelper {
 public:
@@ -26,7 +27,8 @@ private:
 
   static ErrorCode initDashboardHelper(UrControlGui &gui);
 
-  static ErrorCode initUrControlGuiExternalBridge(UrControlGui &gui);
+  static ErrorCode initUrControlGuiExternalBridge(
+      const UrContolGuiExternalBridgeConfig &cfg, UrControlGui &gui);
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIINITHELPER_H_ */

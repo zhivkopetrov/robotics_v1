@@ -20,13 +20,13 @@ constexpr auto ROBOT_IP_PARAM_NAME = "robot_ip";
 constexpr auto ROBOT_INTERFACE_PORT_PARAM_NAME = "robot_interface_port";
 
 //screen
-constexpr auto DEFAULT_WINDOW_X = 0;
-constexpr auto DEFAULT_WINDOW_Y = 0;
-constexpr auto DEFAULT_WINDOW_WIDTH = 1920;
-constexpr auto DEFAULT_WINDOW_HEIGHT = 1080;
+constexpr auto DEFAULT_WINDOW_X = 72;
+constexpr auto DEFAULT_WINDOW_Y = 27;
+constexpr auto DEFAULT_WINDOW_WIDTH = 1848;
+constexpr auto DEFAULT_WINDOW_HEIGHT = 1053;
 
 //robot
-constexpr auto DEFAULT_ROBOT_IP = "0.0.0.0";
+constexpr auto DEFAULT_ROBOT_IP = "192.168.1.102";
 constexpr uint16_t DEFAULT_ROBOT_INTERFACE_PORT = 30002;
 
 template <typename T>

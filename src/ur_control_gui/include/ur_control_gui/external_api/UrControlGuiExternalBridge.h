@@ -12,6 +12,7 @@
 //Own components headers
 
 //Forward declarations
+struct UrContolGuiExternalBridgeConfig;
 
 struct UrControlGuiExternalBridgeOutInterface {
   InvokeActionEventCb invokeActionEventCb;
@@ -22,7 +23,8 @@ class UrControlGuiExternalBridge: public rclcpp::Node {
 public:
   UrControlGuiExternalBridge();
 
-  ErrorCode init(const UrControlGuiExternalBridgeOutInterface &interface);
+  ErrorCode init(const UrContolGuiExternalBridgeConfig& cfg,
+                 const UrControlGuiExternalBridgeOutInterface &interface);
 
   void publishURScript(const std::string& data) const;
 
@@ -35,6 +37,8 @@ private:
 
   UrControlGuiExternalBridgeOutInterface _outInterface;
   rclcpp::Publisher<String>::SharedPtr _urscriptPublisher;
+
+  std::string _scriptPrefix;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIEXTERNALBRIDGE_H_ */

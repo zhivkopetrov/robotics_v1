@@ -55,9 +55,9 @@ ErrorCode DashboardProvider::initCommunication() {
   _brakeReleaseService = create_client<Trigger>(
       DASHBOARD_CLIENT_BRAKE_RELEASE_SERVICE);
 
-  waitForService(_powerOnService);
-  waitForService(_powerOffService);
-  waitForService(_brakeReleaseService);
+//  waitForService(_powerOnService);
+//  waitForService(_powerOffService);
+//  waitForService(_brakeReleaseService);
 
   return ErrorCode::SUCCESS;
 }

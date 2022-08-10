@@ -4,6 +4,8 @@
 //System headers
 #include <cstdint>
 #include <array>
+#include <vector>
+#include <string>
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -29,16 +31,16 @@ public:
   void handleEvent(const InputEvent &e);
 
 private:
-  ErrorCode initMotionButtons(const ButtonHandlerConfig &cfg,
-                              const PublishURScriptCb &publishURScriptCb);
+  ErrorCode loadButtonScripts(const std::string &folderLocation,
+                              std::vector<std::string> &outScripts);
 
-  ErrorCode initGripperButtons(const ButtonHandlerConfig &cfg,
-                               const PublishURScriptCb &publishURScriptCb);
+  ErrorCode initUrScriptButtons(const ButtonHandlerConfig &cfg,
+                                const PublishURScriptCb &publishURScriptCb);
 
   ErrorCode initDashboardButtons(const ButtonHandlerConfig &cfg,
                                  const InvokeDashboardCb &invokeDashboardCb);
 
-  enum MotionButtonDefines {
+  enum UrScriptButtonDefines {
     GREET_IDX,
     RETURN_HOME_JOINT_IDX,
     WAKE_UP_IDX,
@@ -47,14 +49,11 @@ private:
     LEAN_FORWARD_LINEAR_IDX,
     PICK_AND_PLACE_NON_BLENDED_IDX,
     PICK_AND_PLACE_BLENDED_IDX,
+    ACTIVATE_GRIPPER_IDX,
+    OPEN_GRIPPER_IDX,
+    CLOSE_GRIPPER_IDX,
 
-    MOTION_BUTTONS_COUNT
-  };
-
-  enum GripperButtonDefines {
-    OPEN_GRIPPER_IDX, CLOSE_GRIPPER_IDX,
-
-    GRIPPER_BUTTONS_COUNT
+    URSCRIPT_BUTTONS_COUNT
   };
 
   enum DashboardButtonDefines {
@@ -63,8 +62,7 @@ private:
     DASHBOARD_BUTTONS_COUNT
   };
 
-  std::array<UrScriptButton, MOTION_BUTTONS_COUNT> _motionButtons;
-  std::array<UrScriptButton, GRIPPER_BUTTONS_COUNT> _gripperButtons;
+  std::array<UrScriptButton, URSCRIPT_BUTTONS_COUNT> _urscriptButtons;
   std::array<DashboardButton, DASHBOARD_BUTTONS_COUNT> _dashboardButtons;
 };
 

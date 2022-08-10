@@ -16,35 +16,50 @@
 #include "generated/UrControlGuiResources.h"
 
 namespace {
-constexpr auto PROJECT_FOLDER_NAME = "ur_control_gui";
+constexpr auto PROJECT_NAME = "ur_control_gui";
+constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
 
 enum TimerIds {
 
 };
 
-ButtonHandlerConfig generateButtonHandlerConfig() {
+ButtonHandlerConfig generateButtonHandlerConfig(
+    const std::string &projectInstallPrefix) {
   ButtonHandlerConfig cfg;
 
   cfg.buttonRsrcId = UrControlGuiResources::UP_BUTTON;
   cfg.buttonFontRsrcId = UrControlGuiResources::VINQUE_RG_30;
+  cfg.scriptFolderLocation = projectInstallPrefix;
+  cfg.scriptFolderLocation.append("/").append(
+      ResourceFileHeader::getResourcesFolderName().append("/").append(
+          SCRIPTS_FOLDER_NAME));
 
   return cfg;
 }
 
-EngineConfig generateEngineConfig(const UrControlGuiRos2Params &rosParams) {
-  const auto projectInstallPrefix =
-      ament_index_cpp::get_package_share_directory(PROJECT_FOLDER_NAME);
+UrContolGuiExternalBridgeConfig generateUrContolGuiExternalBridgeConfig(
+    const UrControlGuiRos2Params &rosParams) {
+  UrContolGuiExternalBridgeConfig cfg;
+
+  cfg.robotIp = rosParams.robotIp;
+  cfg.robotInterfacePort = rosParams.robotInterfacePort;
+
+  return cfg;
+}
+
+EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
+                                  const UrControlGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
   auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
-  windowCfg.name = PROJECT_FOLDER_NAME;
+  windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
       "/p/icons/UR_logo.png");
   windowCfg.pos = Point(rosParams.guiWindow.x, rosParams.guiWindow.y);
   windowCfg.width = rosParams.guiWindow.w;
   windowCfg.height = rosParams.guiWindow.h;
-  windowCfg.displayMode = WindowDisplayMode::FULL_SCREEN;
+  windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
   cfg.debugConsoleConfig.fontRsrcId = UrControlGuiResources::VINQUE_RG_30;
@@ -52,13 +67,15 @@ EngineConfig generateEngineConfig(const UrControlGuiRos2Params &rosParams) {
   return cfg;
 }
 
-UrControlGuiConfig generateGameConfig(const UrControlGuiRos2Params &rosParams) {
+UrControlGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
+                                      const UrControlGuiRos2Params &rosParams) {
   UrControlGuiConfig cfg;
-  cfg.robotIp = rosParams.robotIp;
-  cfg.robotInterfacePort = rosParams.robotInterfacePort;
+  cfg.urContolGuiExternalBridgeCfg = generateUrContolGuiExternalBridgeConfig(
+      rosParams);
 
   auto &layoutCfg = cfg.layoutCfg;
-  layoutCfg.buttonHandlerConfig = generateButtonHandlerConfig();
+  layoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(
+      projectInstallPrefix);
 
   layoutCfg.screenBoundary.w = rosParams.guiWindow.w;
   layoutCfg.screenBoundary.h = rosParams.guiWindow.h;
@@ -98,12 +115,14 @@ std::vector<DependencyDescription> UrControlGuiConfigGenerator::generateDependen
 ApplicationConfig UrControlGuiConfigGenerator::generateConfig() {
   ApplicationConfig cfg;
 
+  const auto projectInstallPrefix =
+      ament_index_cpp::get_package_share_directory(PROJECT_NAME);
   auto paramProviderNode = std::make_shared<UrControlGuiRos2ParamProvider>();
   const auto rosParams = paramProviderNode->getParams();
   rosParams.print();
 
-  cfg.engineCfg = generateEngineConfig(rosParams);
-  cfg.gameCfg = generateGameConfig(rosParams);
+  cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
+  cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
   return cfg;
 }
 

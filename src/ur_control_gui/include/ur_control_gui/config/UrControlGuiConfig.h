@@ -9,13 +9,13 @@
 
 //Own components headers
 #include "ur_control_gui/layout/config/UrControlGuiLayoutConfig.h"
+#include "ur_control_gui/external_api/config/UrContolGuiExternalBridgeConfig.h"
 
 //Forward declarations
 
 struct UrControlGuiConfig {
   UrControlGuiLayoutConfig layoutCfg;
-  std::string robotIp;
-  uint16_t robotInterfacePort { };
+  UrContolGuiExternalBridgeConfig urContolGuiExternalBridgeCfg;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUICONFIG_H_ */

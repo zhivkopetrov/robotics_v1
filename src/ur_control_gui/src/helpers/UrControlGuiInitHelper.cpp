@@ -44,7 +44,8 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initUrControlGuiExternalBridge(gui)) {
+  if (ErrorCode::SUCCESS != initUrControlGuiExternalBridge(
+          parsedCfg.urContolGuiExternalBridgeCfg, gui)) {
     LOGERR("initControllerExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
@@ -82,12 +83,12 @@ ErrorCode UrControlGuiInitHelper::initDashboardHelper(UrControlGui &gui) {
 }
 
 ErrorCode UrControlGuiInitHelper::initUrControlGuiExternalBridge(
-    UrControlGui &gui) {
+    const UrContolGuiExternalBridgeConfig &cfg, UrControlGui &gui) {
   UrControlGuiExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.systemShutdownCb = gui._systemShutdownCb;
 
-  if (ErrorCode::SUCCESS != gui._guiExternalBridge->init(outInterface)) {
+  if (ErrorCode::SUCCESS != gui._guiExternalBridge->init(cfg, outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return ErrorCode::FAILURE;
   }

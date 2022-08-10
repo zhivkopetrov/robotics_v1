@@ -8,18 +8,21 @@
 #include "utils/Log.h"
 
 //Own components headers
+#include "ur_control_gui/helpers/ScriptParser.h"
 
 ErrorCode ButtonHandler::init(const ButtonHandlerConfig &cfg,
                               const ButtonHandlerOutInterface &outInterface) {
-  if (ErrorCode::SUCCESS != initMotionButtons(cfg,
-          outInterface.publishURScriptCb)) {
-    LOGERR("Error, initMotionButtons() failed");
+
+  std::vector<std::string> scripts;
+  if (ErrorCode::SUCCESS != loadButtonScripts(cfg.scriptFolderLocation,
+          scripts)) {
+    LOGERR("Error, loadButtonScripts() failed");
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initGripperButtons(cfg,
+  if (ErrorCode::SUCCESS != initUrScriptButtons(cfg,
           outInterface.publishURScriptCb)) {
-    LOGERR("Error, initGripperButtons() failed");
+    LOGERR("Error, initUrScriptButtons() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -33,11 +36,7 @@ ErrorCode ButtonHandler::init(const ButtonHandlerConfig &cfg,
 }
 
 void ButtonHandler::draw() const {
-  for (const auto &btn : _motionButtons) {
-    btn.draw();
-  }
-
-  for (const auto &btn : _gripperButtons) {
+  for (const auto &btn : _urscriptButtons) {
     btn.draw();
   }
 
@@ -47,14 +46,7 @@ void ButtonHandler::draw() const {
 }
 
 void ButtonHandler::handleEvent(const InputEvent &e) {
-  for (auto &btn : _motionButtons) {
-    if (btn.isInputUnlocked() && btn.containsEvent(e)) {
-      btn.handleEvent(e);
-      return;
-    }
-  }
-
-  for (auto &btn : _gripperButtons) {
+  for (auto &btn : _urscriptButtons) {
     if (btn.isInputUnlocked() && btn.containsEvent(e)) {
       btn.handleEvent(e);
       return;
@@ -69,13 +61,37 @@ void ButtonHandler::handleEvent(const InputEvent &e) {
   }
 }
 
-ErrorCode ButtonHandler::initMotionButtons(
+ErrorCode ButtonHandler::loadButtonScripts(
+    const std::string &folderLocation, std::vector<std::string> &outScripts) {
+  if (ErrorCode::SUCCESS != ScriptParser::parseScripts(folderLocation,
+          outScripts)) {
+    LOGERR("Error, ScriptParser::parseScripts() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  const int32_t count = static_cast<int32_t>(outScripts.size());
+  if (count != URSCRIPT_BUTTONS_COUNT) {
+    LOGERR("Error, Scripts count missmatch. Scripts parsed: %d vs "
+           "ScriptButtons: %d", count, URSCRIPT_BUTTONS_COUNT);
+    return ErrorCode::FAILURE;
+  }
+
+  int32_t idx = 0;
+  for (const auto& context : outScripts) {
+    LOGC("script[%d]: %s", idx++, context.c_str());
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode ButtonHandler::initUrScriptButtons(
     const ButtonHandlerConfig &cfg,
     const PublishURScriptCb &publishURScriptCb) {
   const Color lightBlue = Color(0x29B6F6FF);
 
   UrScriptButtonConfig buttonCfg;
-  buttonCfg.commandData = "test";
+  buttonCfg.commandData =
+      "movel(p[-0.49,-0.575,0.576,2.16,2.19,0],a=0.1,v=0.1,t=0,r=0)";
 
   CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
   baseCfg.rsrcId = cfg.buttonRsrcId;
@@ -83,49 +99,22 @@ ErrorCode ButtonHandler::initMotionButtons(
   baseCfg.descriptionOffsetY = 25;
   baseCfg.descriptionColor = lightBlue;
 
-  const std::array<Point, MOTION_BUTTONS_COUNT> buttonPositions { Point(140,
-      450), Point(140, 225), Point(300, 25), Point(700, 25), Point(1100, 25),
-      Point(1490, 25), Point(1650, 225), Point(1650, 450) };
-  const std::array<std::string, MOTION_BUTTONS_COUNT> buttonsDescriptions {
+  const std::array<Point, URSCRIPT_BUTTONS_COUNT> buttonPositions { Point(100,
+      450), Point(100, 225), Point(300, 25), Point(650, 25), Point(1000, 25),
+      Point(1370, 25), Point(1545, 225), Point(1545, 450), Point(1480, 700),
+      Point(1330, 880), Point(1630, 880) };
+  const std::array<std::string, URSCRIPT_BUTTONS_COUNT> buttonsDescriptions {
       "Greet", "Return home (joint)", "Wake up", "Lean forward (joint)",
       "Return home (linear)", "Lean forward (linear)",
-      "Pick and place (non blended)", "Pick and place (blended)", };
+      "Pick and place (non blended)", "Pick and place (blended)",
+      "Activate gripper", "Open gripper", "Close gripper" };
 
-  for (int32_t i = 0; i < MOTION_BUTTONS_COUNT; ++i) {
+  for (int32_t i = 0; i < URSCRIPT_BUTTONS_COUNT; ++i) {
     baseCfg.pos = buttonPositions[i];
     baseCfg.descriptionText = buttonsDescriptions[i];
-    if (ErrorCode::SUCCESS != _motionButtons[i].init(buttonCfg,
+    if (ErrorCode::SUCCESS != _urscriptButtons[i].init(buttonCfg,
             publishURScriptCb)) {
-      LOGERR("Error, _motionButtons[%d].init() failed", i);
-      return ErrorCode::FAILURE;
-    }
-  }
-
-  return ErrorCode::SUCCESS;
-}
-
-ErrorCode ButtonHandler::initGripperButtons(
-    const ButtonHandlerConfig &cfg,
-    const PublishURScriptCb &publishURScriptCb) {
-  UrScriptButtonConfig buttonCfg;
-  buttonCfg.commandData = "test";
-
-  CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
-  baseCfg.rsrcId = cfg.buttonRsrcId;
-  baseCfg.fontRsrcId = cfg.buttonFontRsrcId;
-  baseCfg.descriptionOffsetY = 25;
-
-  const std::array<Point, GRIPPER_BUTTONS_COUNT> buttonPositions { Point(1380,
-      900), Point(1680, 900) };
-  const std::array<std::string, GRIPPER_BUTTONS_COUNT> buttonsDescriptions {
-      "Open gripper", "Close gripper" };
-
-  for (int32_t i = 0; i < GRIPPER_BUTTONS_COUNT; ++i) {
-    baseCfg.pos = buttonPositions[i];
-    baseCfg.descriptionText = buttonsDescriptions[i];
-    if (ErrorCode::SUCCESS != _gripperButtons[i].init(buttonCfg,
-            publishURScriptCb)) {
-      LOGERR("Error, _gripperButtons[%d].init() failed", i);
+      LOGERR("Error, _urscriptButtons[%d].init() failed", i);
       return ErrorCode::FAILURE;
     }
   }
@@ -143,7 +132,7 @@ ErrorCode ButtonHandler::initDashboardButtons(
   baseCfg.descriptionOffsetY = 25;
 
   const std::array<Point, DASHBOARD_BUTTONS_COUNT> buttonPositions { Point(100,
-      900), Point(400, 900), Point(250, 720) };
+      880), Point(400, 880), Point(250, 700) };
   const std::array<std::string, DASHBOARD_BUTTONS_COUNT> buttonDescriptions {
       "Power on robot", "Power off robot", "Brake release" };
   constexpr std::array<DashboardCommand, DASHBOARD_BUTTONS_COUNT> buttonCommands {

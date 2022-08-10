@@ -29,11 +29,13 @@ add_executable(
         ${_INC_DIR}/defines/UrControlGuiDefines.h
         ${_INC_DIR}/defines/UrControlGuiTopics.h
         ${_INC_DIR}/defines/UrControlGuiFunctionalDefines.h
+        ${_INC_DIR}/external_api/config/UrContolGuiExternalBridgeConfig.h
         ${_INC_DIR}/external_api/UrControlGuiExternalBridge.h
         ${_INC_DIR}/external_api/UrControlGuiRos2ParamProvider.h
         ${_INC_DIR}/external_api/DashboardProvider.h
         ${_INC_DIR}/helpers/UrControlGuiBuilder.h
         ${_INC_DIR}/helpers/UrControlGuiInitHelper.h
+        ${_INC_DIR}/helpers/ScriptParser.h
         ${_INC_DIR}/layout/UrControlGuiLayout.h
         ${_INC_DIR}/layout/config/UrControlGuiLayoutConfig.h
         ${_INC_DIR}/layout/helpers/UrControlGuiLayoutInitHelper.h
@@ -52,6 +54,7 @@ add_executable(
         ${_SRC_DIR}/external_api/DashboardProvider.cpp
         ${_SRC_DIR}/helpers/UrControlGuiBuilder.cpp
         ${_SRC_DIR}/helpers/UrControlGuiInitHelper.cpp
+        ${_SRC_DIR}/helpers/ScriptParser.cpp
         ${_SRC_DIR}/layout/UrControlGuiLayout.cpp
         ${_SRC_DIR}/layout/helpers/UrControlGuiLayoutInitHelper.cpp
         ${_SRC_DIR}/layout/entities/buttons/ButtonHandler.cpp
