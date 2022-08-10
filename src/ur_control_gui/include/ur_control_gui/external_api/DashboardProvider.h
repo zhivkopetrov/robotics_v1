@@ -7,35 +7,49 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include <std_srvs/srv/trigger.hpp>
+#include <ur_dashboard_msgs/srv/get_robot_mode.hpp>
+#include <ur_dashboard_msgs/srv/get_safety_mode.hpp>
+#include "game_engine/defines/ActionEventDefines.h"
 #include "utils/concurrency/ThreadSafeQueue.h"
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "ur_control_gui/defines/UrControlGuiDefines.h"
+#include "ur_control_gui/defines/UrControlGuiFunctionalDefines.h"
 
 //Forward declarations
+
+struct DashboardProviderOutInterface {
+  InvokeActionEventCb invokeActionEventCb;
+  RobotModeChangeCb robotModeChangeCb;
+  SafetyModeChangeCb safetyModeChangeCb;
+};
 
 class DashboardProvider: public rclcpp::Node {
 public:
   DashboardProvider();
 
-  ErrorCode init();
+  ErrorCode init(const DashboardProviderOutInterface& outInterface);
   void deinit();
 
   void invokeDashboard(DashboardCommand command);
 
 private:
+  ErrorCode initOutInterface(
+      const DashboardProviderOutInterface &outInterface);
   ErrorCode initCommunication();
+
   using Trigger = std_srvs::srv::Trigger;
+  using GetRobotMode = ur_dashboard_msgs::srv::GetRobotMode;
+  using GetSafetyMode = ur_dashboard_msgs::srv::GetSafetyMode;
 
   void doRun();
   void invokeDashboardInternal(DashboardCommand command);
 
-  void powerOn();
-  void powerOff();
-  void brakeRelease();
+  void executeTriggerClient(const rclcpp::Client<Trigger>::SharedPtr& client);
   void getRobotMode();
   void getSafetyMode();
+
+  DashboardProviderOutInterface _outInterface;
 
   std::thread _thread;
   ThreadSafeQueue<DashboardCommand> _commandQueue;
@@ -43,6 +57,8 @@ private:
   rclcpp::Client<Trigger>::SharedPtr _powerOnService;
   rclcpp::Client<Trigger>::SharedPtr _powerOffService;
   rclcpp::Client<Trigger>::SharedPtr _brakeReleaseService;
+  rclcpp::Client<GetRobotMode>::SharedPtr _getRobotModeService;
+  rclcpp::Client<GetSafetyMode>::SharedPtr _getSafetyModeService;
 };
 
 #endif /* UR_CONTROL_GUI_DASHBOARDPROVIDER_H_ */

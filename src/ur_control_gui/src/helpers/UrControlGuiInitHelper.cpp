@@ -34,18 +34,20 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
   gui._dashboardProvider = std::make_shared<DashboardProvider>();
   gui._guiExternalBridge = std::make_shared<UrControlGuiExternalBridge>();
 
-  if (ErrorCode::SUCCESS != initLayout(parsedCfg.layoutCfg, gui)) {
+  UrControlGuiLayoutInterface layoutInterface;
+  if (ErrorCode::SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface,
+          gui)) {
     LOGERR("Error, initLayout() failed");
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initDashboardHelper(gui)) {
+  if (ErrorCode::SUCCESS != initDashboardHelper(layoutInterface, gui)) {
     LOGERR("initDashboardHelper() failed");
     return ErrorCode::FAILURE;
   }
 
   if (ErrorCode::SUCCESS != initUrControlGuiExternalBridge(
-          parsedCfg.urContolGuiExternalBridgeCfg, gui)) {
+          parsedCfg.urContolGuiExternalBridgeCfg, layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
@@ -54,7 +56,8 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
 }
 
 ErrorCode UrControlGuiInitHelper::initLayout(
-    const UrControlGuiLayoutConfig &cfg, UrControlGui &gui) {
+    const UrControlGuiLayoutConfig &cfg,
+    UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui) {
   UrControlGuiLayoutOutInterface layoutOutInterface;
   const auto guiExternalBridgeRawPointer = gui._guiExternalBridge.get();
   layoutOutInterface.publishURScriptCb = std::bind(
@@ -65,7 +68,8 @@ ErrorCode UrControlGuiInitHelper::initLayout(
   layoutOutInterface.invokeDashboardCb = std::bind(
       &DashboardProvider::invokeDashboard, dashboardProviderRawPointer, _1);
 
-  if (ErrorCode::SUCCESS != gui._layout.init(cfg, layoutOutInterface)) {
+  if (ErrorCode::SUCCESS != gui._layout.init(cfg, layoutOutInterface,
+          layoutInterface)) {
     LOGERR("Error in _layout.init()");
     return ErrorCode::FAILURE;
   }
@@ -73,8 +77,14 @@ ErrorCode UrControlGuiInitHelper::initLayout(
   return ErrorCode::SUCCESS;
 }
 
-ErrorCode UrControlGuiInitHelper::initDashboardHelper(UrControlGui &gui) {
-  if (ErrorCode::SUCCESS != gui._dashboardProvider->init()) {
+ErrorCode UrControlGuiInitHelper::initDashboardHelper(
+    const UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui) {
+  DashboardProviderOutInterface outInterface;
+  outInterface.invokeActionEventCb = gui._invokeActionEventCb;
+  outInterface.robotModeChangeCb = layoutInterface.robotModeChangeCb;
+  outInterface.safetyModeChangeCb = layoutInterface.safetyModeChangeCb;
+
+  if (ErrorCode::SUCCESS != gui._dashboardProvider->init(outInterface)) {
     LOGERR("Error in _dashboardProvider.init()");
     return ErrorCode::FAILURE;
   }
@@ -83,10 +93,12 @@ ErrorCode UrControlGuiInitHelper::initDashboardHelper(UrControlGui &gui) {
 }
 
 ErrorCode UrControlGuiInitHelper::initUrControlGuiExternalBridge(
-    const UrContolGuiExternalBridgeConfig &cfg, UrControlGui &gui) {
+    const UrContolGuiExternalBridgeConfig &cfg,
+    const UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui) {
   UrControlGuiExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
-  outInterface.systemShutdownCb = gui._systemShutdownCb;
+  outInterface.robotModeChangeCb = layoutInterface.robotModeChangeCb;
+  outInterface.safetyModeChangeCb = layoutInterface.safetyModeChangeCb;
 
   if (ErrorCode::SUCCESS != gui._guiExternalBridge->init(cfg, outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");

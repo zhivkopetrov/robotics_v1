@@ -14,6 +14,7 @@ find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(ur_dashboard_msgs REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -91,6 +92,7 @@ ament_target_dependencies(
         ament_index_cpp
         std_msgs
         std_srvs
+        ur_dashboard_msgs
 )
 
 if(NOT DISABLE_ROS_TOOLING)

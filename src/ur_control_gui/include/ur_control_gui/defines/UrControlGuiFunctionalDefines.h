@@ -14,5 +14,7 @@
 
 using PublishURScriptCb = std::function<void(const std::string& scriptData)>;
 using InvokeDashboardCb = std::function<void(DashboardCommand command)>;
+using RobotModeChangeCb = std::function<void(RobotMode mode)>;
+using SafetyModeChangeCb = std::function<void(SafetyMode mode)>;
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIFUNCTIONALDEFINES_H_ */

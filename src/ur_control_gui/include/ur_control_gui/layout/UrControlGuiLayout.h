@@ -16,18 +16,22 @@
 class InputEvent;
 struct UrControlGuiLayoutConfig;
 struct UrControlGuiLayoutOutInterface;
+struct UrControlGuiLayoutInterface;
 
 class UrControlGuiLayout {
 public:
   friend class UrControlGuiLayoutInitHelper;
 
   ErrorCode init(const UrControlGuiLayoutConfig &cfg,
-                 const UrControlGuiLayoutOutInterface& outInterface);
+                 const UrControlGuiLayoutOutInterface& outInterface,
+                 UrControlGuiLayoutInterface &interface);
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent &e);
 
 private:
+  void produceInterface(UrControlGuiLayoutInterface& interface);
+
   ButtonHandler _buttonHandler;
   SafetyModeVisuals _safetyModeVisuals;
 

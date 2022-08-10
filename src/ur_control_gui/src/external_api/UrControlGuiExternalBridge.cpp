@@ -69,8 +69,13 @@ ErrorCode UrControlGuiExternalBridge::initOutInterface(
     return ErrorCode::FAILURE;
   }
 
-  if (nullptr == _outInterface.systemShutdownCb) {
-    LOGERR("Error, nullptr provided for SystemShutdownCb");
+  if (nullptr == _outInterface.robotModeChangeCb) {
+    LOGERR("Error, nullptr provided for RobotModeChangeCb");
+    return ErrorCode::FAILURE;
+  }
+
+  if (nullptr == _outInterface.safetyModeChangeCb) {
+    LOGERR("Error, nullptr provided for SafetyModeChangeCb");
     return ErrorCode::FAILURE;
   }
 
@@ -78,11 +83,37 @@ ErrorCode UrControlGuiExternalBridge::initOutInterface(
 }
 
 ErrorCode UrControlGuiExternalBridge::initCommunication() {
+  using namespace std::placeholders;
+
   constexpr auto queueSize = 10;
   rclcpp::QoS qos(queueSize);
 
   _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos);
 
+  _robotModeSubscriber = create_subscription<RobotModeType>(ROBOT_MODE_TOPIC,
+      qos, std::bind(&UrControlGuiExternalBridge::onRobotModeMsg, this, _1));
+
+  _safetyModeSubscriber = create_subscription<SafetyModeType>(SAFETY_MODE_TOPIC,
+      qos, std::bind(&UrControlGuiExternalBridge::onSafetyModeMsg, this, _1));
+
   return ErrorCode::SUCCESS;
+}
+
+void UrControlGuiExternalBridge::onRobotModeMsg(
+    const RobotModeType::SharedPtr msg) {
+  const RobotMode mode = toEnum<RobotMode>(msg->mode);
+  const auto f = [this, mode](){
+    _outInterface.robotModeChangeCb(mode);
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+}
+
+void UrControlGuiExternalBridge::onSafetyModeMsg(
+    const SafetyModeType::SharedPtr msg) {
+  const SafetyMode mode = toEnum<SafetyMode>(msg->mode);
+  const auto f = [this, mode](){
+    _outInterface.safetyModeChangeCb(mode);
+  };
+  _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 

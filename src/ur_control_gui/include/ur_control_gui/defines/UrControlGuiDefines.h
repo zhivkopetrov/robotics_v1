@@ -6,7 +6,7 @@ enum class DashboardCommand {
   POWER_OFF_ROBOT,
   BRAKE_RELEASE,
   GET_ROBOT_MODE,
-  GET_ROBOT_SAFETY_MODE
+  GET_SAFETY_MODE
 };
 
 //1:1 UR msg mapping

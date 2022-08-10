@@ -15,4 +15,9 @@ struct UrControlGuiLayoutOutInterface {
   InvokeDashboardCb invokeDashboardCb;
 };
 
+struct UrControlGuiLayoutInterface {
+  RobotModeChangeCb robotModeChangeCb;
+  SafetyModeChangeCb safetyModeChangeCb;
+};
+
 #endif /* UR_CONTROL_GUI_URCONTROLGUILAYOUTINTERFACES_H_ */
