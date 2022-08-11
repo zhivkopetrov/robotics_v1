@@ -144,7 +144,8 @@ void DashboardProvider::executeTriggerClient(
   std::shared_ptr<Trigger::Response> response = result.get();
 
   if (!response->success) {
-    LOGERR("Service call to [%s] failed", client->get_service_name());
+    LOGERR("Service call to [%s] failed. Reason: [%s]",
+        client->get_service_name(), response->message.c_str());
     return;
   }
 }
