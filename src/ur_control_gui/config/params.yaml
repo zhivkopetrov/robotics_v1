@@ -6,4 +6,4 @@
     gui_window_width: 1848
     gui_window_height: 1053
     robot_ip: "192.168.1.102"
-    robot_interface_port: 30002
+    robot_interface_port: 30003
