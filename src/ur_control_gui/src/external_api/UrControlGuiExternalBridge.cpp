@@ -21,17 +21,8 @@ UrControlGuiExternalBridge::UrControlGuiExternalBridge()
 }
 
 ErrorCode UrControlGuiExternalBridge::init(
-    const UrContolGuiExternalBridgeConfig &cfg,
+    [[maybe_unused]]const UrContolGuiExternalBridgeConfig &cfg,
     const UrControlGuiExternalBridgeOutInterface &interface) {
-
-  constexpr auto tool = "netcat";
-  constexpr auto closeConnectionCommand = "-q 0";
-  constexpr auto toolCommand = "<<<";
-  _scriptPrefix = tool;
-  _scriptPrefix.append(" ").append(cfg.robotIp).append(" ").append(
-      std::to_string(cfg.robotInterfacePort)).append(" ").append(
-      closeConnectionCommand).append(" ").append(toolCommand).append(" ");
-
   if (ErrorCode::SUCCESS != initOutInterface(interface)) {
     LOGERR("Error, initOutInterface() failed");
     return ErrorCode::FAILURE;
@@ -45,20 +36,11 @@ ErrorCode UrControlGuiExternalBridge::init(
   return ErrorCode::SUCCESS;
 }
 
-//TODO remove me
-#include <cstdlib>
-
 void UrControlGuiExternalBridge::publishURScript(
     const std::string &data) const {
   String msg;
   msg.data = data;
   _urscriptPublisher->publish(msg);
-
-  //TODO remove me
-  const std::string systemString = _scriptPrefix + "\"" + data + "\"";
-  if (-1 == std::system(msg.data.c_str())) {
-    LOGERR("std::system() failed");
-  }
 }
 
 ErrorCode UrControlGuiExternalBridge::initOutInterface(

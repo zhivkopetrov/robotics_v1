@@ -35,6 +35,7 @@ private:
                               std::vector<std::string> &outScripts);
 
   ErrorCode initUrScriptButtons(const ButtonHandlerConfig &cfg,
+                                const std::vector<std::string>& scripts,
                                 const PublishURScriptCb &publishURScriptCb);
 
   ErrorCode initDashboardButtons(const ButtonHandlerConfig &cfg,

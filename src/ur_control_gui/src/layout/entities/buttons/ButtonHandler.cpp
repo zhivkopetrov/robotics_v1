@@ -20,7 +20,7 @@ ErrorCode ButtonHandler::init(const ButtonHandlerConfig &cfg,
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initUrScriptButtons(cfg,
+  if (ErrorCode::SUCCESS != initUrScriptButtons(cfg, scripts,
           outInterface.publishURScriptCb)) {
     LOGERR("Error, initUrScriptButtons() failed");
     return ErrorCode::FAILURE;
@@ -81,13 +81,11 @@ ErrorCode ButtonHandler::loadButtonScripts(
 
 ErrorCode ButtonHandler::initUrScriptButtons(
     const ButtonHandlerConfig &cfg,
+    const std::vector<std::string>& scripts,
     const PublishURScriptCb &publishURScriptCb) {
   const Color lightBlue = Color(0x29B6F6FF);
 
   UrScriptButtonConfig buttonCfg;
-  buttonCfg.commandData =
-      "movel(p[-0.49,-0.575,0.576,2.16,2.19,0],a=0.1,v=0.1,t=0,r=0)";
-
   CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
   baseCfg.rsrcId = cfg.buttonRsrcId;
   baseCfg.fontRsrcId = cfg.buttonFontRsrcId;
@@ -105,6 +103,7 @@ ErrorCode ButtonHandler::initUrScriptButtons(
       "Activate gripper", "Open gripper", "Close gripper" };
 
   for (int32_t i = 0; i < URSCRIPT_BUTTONS_COUNT; ++i) {
+    buttonCfg.commandData = scripts[i];
     baseCfg.pos = buttonPositions[i];
     baseCfg.descriptionText = buttonsDescriptions[i];
     if (ErrorCode::SUCCESS != _urscriptButtons[i].init(buttonCfg,

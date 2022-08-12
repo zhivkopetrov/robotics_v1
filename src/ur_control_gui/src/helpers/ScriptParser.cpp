@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cstring>
 #include <cerrno>
+#include <algorithm>
 
 //Other libraries headers
 #include "utils/file_system/FileSystemUtils.h"
@@ -49,6 +50,9 @@ ErrorCode ScriptParser::getDirectoryFiles(const std::string &folderLocation,
     return ErrorCode::FAILURE;
   }
 
+  //files are in random order. Sort them lexicographically
+  std::sort(outFiles.begin(), outFiles.end());
+
   return ErrorCode::SUCCESS;
 }
 
@@ -88,6 +92,10 @@ ErrorCode ScriptParser::parseSingleFile(const std::string &file,
     outScript.append(line).append("\n");
     line.clear();
   }
+
+//  if (!outScript.empty()) {
+//    outScript.pop_back(); //pop back last newline
+//  }
 
   return ErrorCode::SUCCESS;
 }

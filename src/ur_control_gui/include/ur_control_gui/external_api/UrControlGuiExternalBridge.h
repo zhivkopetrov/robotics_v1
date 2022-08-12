@@ -49,8 +49,6 @@ private:
 
   rclcpp::Subscription<RobotModeType>::SharedPtr _robotModeSubscriber;
   rclcpp::Subscription<SafetyModeType>::SharedPtr _safetyModeSubscriber;
-
-  std::string _scriptPrefix;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIEXTERNALBRIDGE_H_ */
