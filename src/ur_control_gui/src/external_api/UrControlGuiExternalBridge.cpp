@@ -43,6 +43,20 @@ void UrControlGuiExternalBridge::publishURScript(
   _urscriptPublisher->publish(msg);
 }
 
+void UrControlGuiExternalBridge::invokeURScriptService(
+    const std::string &data) const {
+  auto request = std::make_shared<UrScript::Request>();
+  request->data = data;
+  auto result = _urscriptPublisherService->async_send_request(request);
+  std::shared_ptr<UrScript::Response> response = result.get();
+
+  if (!response->ok) {
+    LOGERR("Service call to [%s] failed",
+        _urscriptPublisherService->get_service_name());
+    return;
+  }
+}
+
 ErrorCode UrControlGuiExternalBridge::initOutInterface(
     const UrControlGuiExternalBridgeOutInterface &outInterface) {
   _outInterface = outInterface;
@@ -71,6 +85,7 @@ ErrorCode UrControlGuiExternalBridge::initCommunication() {
   rclcpp::QoS qos(queueSize);
 
   _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos);
+  _urscriptPublisherService = create_client<UrScript>("urscript_service");
 
   _robotModeSubscriber = create_subscription<RobotModeType>(ROBOT_MODE_TOPIC,
       qos, std::bind(&UrControlGuiExternalBridge::onRobotModeMsg, this, _1));
@@ -84,7 +99,7 @@ ErrorCode UrControlGuiExternalBridge::initCommunication() {
 void UrControlGuiExternalBridge::onRobotModeMsg(
     const RobotModeType::SharedPtr msg) {
   const RobotMode mode = toEnum<RobotMode>(msg->mode);
-  const auto f = [this, mode](){
+  const auto f = [this, mode]() {
     _outInterface.robotModeChangeCb(mode);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
@@ -93,7 +108,7 @@ void UrControlGuiExternalBridge::onRobotModeMsg(
 void UrControlGuiExternalBridge::onSafetyModeMsg(
     const SafetyModeType::SharedPtr msg) {
   const SafetyMode mode = toEnum<SafetyMode>(msg->mode);
-  const auto f = [this, mode](){
+  const auto f = [this, mode]() {
     _outInterface.safetyModeChangeCb(mode);
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);

@@ -1,0 +1,8 @@
+/urscript_bridge:
+  ros__parameters:
+    use_sim_time: false
+    script_topic: "urscript"
+    script_service: "urscript_service"
+    robot_ip: "0.0.0.0"
+    robot_port: 30003
+    robot_pin: 4

@@ -8,6 +8,7 @@
 #include <std_msgs/msg/string.hpp>
 #include <ur_dashboard_msgs/msg/robot_mode.hpp>
 #include <ur_dashboard_msgs/msg/safety_mode.hpp>
+#include <urscript_interfaces/srv/ur_script.hpp>
 #include "game_engine/defines/ActionEventDefines.h"
 #include "utils/ErrorCode.h"
 
@@ -32,8 +33,11 @@ public:
 
   void publishURScript(const std::string& data) const;
 
+  void invokeURScriptService(const std::string& data) const;
+
 private:
   using String = std_msgs::msg::String;
+  using UrScript = urscript_interfaces::srv::UrScript;
   using RobotModeType = ur_dashboard_msgs::msg::RobotMode;
   using SafetyModeType = ur_dashboard_msgs::msg::SafetyMode;
 
@@ -46,6 +50,7 @@ private:
 
   UrControlGuiExternalBridgeOutInterface _outInterface;
   rclcpp::Publisher<String>::SharedPtr _urscriptPublisher;
+  rclcpp::Client<UrScript>::SharedPtr _urscriptPublisherService;
 
   rclcpp::Subscription<RobotModeType>::SharedPtr _robotModeSubscriber;
   rclcpp::Subscription<SafetyModeType>::SharedPtr _safetyModeSubscriber;

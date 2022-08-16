@@ -15,6 +15,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(ur_dashboard_msgs REQUIRED)
+find_package(urscript_interfaces REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -93,6 +94,7 @@ ament_target_dependencies(
         std_msgs
         std_srvs
         ur_dashboard_msgs
+        urscript_interfaces
 )
 
 if(NOT DISABLE_ROS_TOOLING)
