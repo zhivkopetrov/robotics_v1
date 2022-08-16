@@ -2342,8 +2342,8 @@ def Gripper():
 #######################################  
 ##### Here are the vacuum commands#####
 #######################################
-
-
+  
+  
  #####Used as is, the following command will use default value
 #  rq_vacuum_grip ()
 #####Following command allows the Vacuum Gripper to pick an object. The default values are :advanced_mode=False, maximum_vacuum=60, minimum_vacuum=40, timeout_ms=3000, wait_for_object_detected=True, gripper_socket=" 1"
@@ -2352,11 +2352,11 @@ def Gripper():
 #####Following command allows the Vacuum Gripper to grip an object. The default values are : advanced_mode=False, shutoff_distance_cm=5, wait_for_object_released=True, gripper_socket=" 1"
 #  rq_vacuum_release (  False  ,5,  True  ,1)
 #  rq_is_vacuum_obj_detected ()
-
+  
 ##########################################
 #####  Here are the Grippers commands#####
 ##########################################
-
+  
 #  rq_reset ()
 #  rq_activate_and_wait ()
 #  rq_set_speed_norm (100)
@@ -2372,9 +2372,9 @@ def Gripper():
 #  rq_current_pos_inches ()
 #  rq_move_and_wait_mm (25)
 #  rq_current_pos_inches (1)
-
+  
   rq_activate_and_wait ()
-
+  
   rq_set_speed_norm (100)
   
   # go home
@@ -2387,47 +2387,47 @@ def Gripper():
   
   # inner table grasp position 
   movel([0.3096214093,-1.940806128,-2.138900998,-0.634601716,1.569574596,0.3155555288],a=3.0,v=0.8)
-
+  
   # grasp item 
   rq_close_and_wait ()
-
+  
   # move to pre grasp inner table point
   movel([0.3108431398,-1.553343034,-1.644274688,-1.51669112,1.570796327,0.3131120678], a=3.0, v=0.8,r=0.4)
   
   # go home
   movel([-1.570796327,-1.570796327,-1.570796327,-1.570796327,1.570796327,0],a=3.0,v=0.8,r=0.4)
-
+  
   # go at outer table drop position
   movel([-1.577428578,-1.948485577,-2.093173372,-0.6707300315,1.569400063,-0.001047197551],a=3.0,v=0.8)
-
+  
   # drop
   rq_open_and_wait ()
-
+  
   # go home
   movel([-1.570796327,-1.570796327,-1.570796327,-1.570796327,1.570796327,0],a=3.0,v=0.8)
   
   # go to where we dropped the item
   movel([-1.577428578,-1.948485577,-2.093173372,-0.6707300315,1.569400063,-0.001047197551],a=3.0,v=0.8)
-
+  
   # grasp it
   rq_close_and_wait ()
-
+  
   # home
   movel([-1.570796327,-1.570796327,-1.570796327,-1.570796327,1.570796327,0],a=3.0,v=0.8,r=0.4)
-
+  
   # pre-grasp inner table
   movel([0.3108431398,-1.553343034,-1.644274688,-1.51669112,1.570796327,0.3131120678], a=3.0, v=0.8,r=0.4)
-
+  
   # inner table grasp position 
   movel([0.3096214093,-1.940806128,-2.138900998,-0.634601716,1.569574596,0.3155555288],a=3.0,v=0.8)
-
+  
   # open gripper
   rq_open_and_wait ()
-
+  
   # move 20cm up
   movel(pose_trans(get_forward_kin(), p[0.0,0.0,-0.20,0.0,0.0,0.0]),a=3.0,v=0.8)
-
+  
   # home
   movel([-1.570796327,-1.570796327,-1.570796327,-1.570796327,1.570796327,0],a=3.0,v=0.8)
-
+  
 end
