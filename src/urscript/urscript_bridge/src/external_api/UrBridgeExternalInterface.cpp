@@ -1,18 +1,21 @@
-#include "urscript_bridge/UrScriptInterface.h"
+//Corresponding header
+#include "urscript_bridge/external_api/UrBridgeExternalInterface.h"
 
-#include <rclcpp/rclcpp.hpp>
-
-#include <functional>
+//System headers
 #include <sstream>
 #include <string>
+
+//Other libraries headers
+
+//Own components headers
 
 namespace {
 constexpr auto NODE_NAME = "urscript_bridge";
 }
 
-UrScriptInterface::UrScriptInterface(const rclcpp::NodeOptions &options)
-    : rclcpp::Node(NODE_NAME, options), mRobotPin(0), mTcpClient(*this),
-      mLogger(get_logger()) {
+UrBridgeExternalInterface::UrBridgeExternalInterface(
+    const rclcpp::NodeOptions &options)
+    : rclcpp::Node(NODE_NAME, options), mTcpClient(*this) {
   std::string scriptTopic;
   std::string scriptService;
   std::string robotIp;
@@ -32,30 +35,33 @@ UrScriptInterface::UrScriptInterface(const rclcpp::NodeOptions &options)
 
   mIoStatesSubscribtion = create_subscription<IOStates>(
       "io_and_status_controller/io_states", 10,
-      std::bind(&UrScriptInterface::handleIOState, this, std::placeholders::_1),
-      subsriptionOptions);
+      std::bind(&UrBridgeExternalInterface::handleIOState, this,
+          std::placeholders::_1), subsriptionOptions);
 
   mUrScriptSubscribtion = create_subscription<String>(scriptTopic, 10,
-      std::bind(&UrScriptInterface::handleUrScript, this,
+      std::bind(&UrBridgeExternalInterface::handleUrScript, this,
           std::placeholders::_1), subsriptionOptions);
 
   mUrScriptService = create_service<UrScriptSrv>(scriptService,
-      std::bind(&UrScriptInterface::handleUrScriptService, this,
+      std::bind(&UrBridgeExternalInterface::handleUrScriptService, this,
           std::placeholders::_1, std::placeholders::_2), { }, callbackGroup);
 
   mTcpClient.start(robotIp, robotPort);
 }
 
-void UrScriptInterface::handleIOState(const IOStates::SharedPtr ioStates) {
+void UrBridgeExternalInterface::handleIOState(
+    const IOStates::SharedPtr ioStates) {
   std::lock_guard<Mutex> lock(mMutex);
-  mIoStates = ioStates;
+  mlatestIoStates = *ioStates;
 }
 
-void UrScriptInterface::handleUrScript(const String::SharedPtr urScript) {
+void UrBridgeExternalInterface::handleUrScript(
+    const String::SharedPtr urScript) {
+  std::cout << "Sending data to robot:\n" << urScript->data << std::endl;
   mTcpClient.send(urScript->data);
 }
 
-void UrScriptInterface::handleUrScriptService(
+void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
   std::cout << "Received data:\n" << request->data << std::endl;
@@ -85,7 +91,7 @@ void UrScriptInterface::handleUrScriptService(
   for (;;) {
     {
       std::lock_guard<Mutex> lock(mMutex);
-      if (mIoStates->digital_out_states[mRobotPin].state == true) {
+      if (mlatestIoStates.digital_out_states[mRobotPin].state == true) {
         break;
       }
     }
@@ -111,7 +117,7 @@ void UrScriptInterface::handleUrScriptService(
   for (;;) {
     {
       std::lock_guard<Mutex> lock(mMutex);
-      if (mIoStates->digital_out_states[mRobotPin].state == false) {
+      if (mlatestIoStates.digital_out_states[mRobotPin].state == false) {
         break;
       }
     }

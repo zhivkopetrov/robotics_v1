@@ -9,9 +9,9 @@ project(
 )
 
 find_package(cmake_helpers REQUIRED)
+find_package(utils REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(Boost COMPONENTS date_time system thread REQUIRED)
 find_package(Threads REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(ur_msgs REQUIRED)
@@ -23,11 +23,15 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(
     ${PROJECT_NAME}
-        ${_INC_DIR}/TcpClient.h
-        ${_INC_DIR}/UrScriptInterface.h
+        ${_INC_DIR}/core/UrBridgeCommunicator.h
+		${_INC_DIR}/core/UrBridgeAppilcation.h
+        ${_INC_DIR}/external_api/UrBridgeExternalInterface.h
+        ${_INC_DIR}/utils/TcpClient.h
      
-	    ${_SRC_DIR}/TcpClient.cpp
-		${_SRC_DIR}/UrScriptInterface.cpp
+		${_SRC_DIR}/core/UrBridgeCommunicator.cpp
+		${_SRC_DIR}/core/UrBridgeAppilcation.cpp
+		${_SRC_DIR}/external_api/UrBridgeExternalInterface.cpp
+	    ${_SRC_DIR}/utils/TcpClient.cpp
         ${_SRC_DIR}/main.cpp
 )
 
@@ -45,8 +49,9 @@ target_include_directories(
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
+        utils::utils
         ${Boost_LIBRARIES}
-        Threads::Threads
+        boost_thread #boosts linker flag for -lpthread
 )
 
 ament_target_dependencies(
@@ -77,5 +82,5 @@ endif()
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
 set_target_visibility(${PROJECT_NAME})
-# enable_target_sanitizer(${PROJECT_NAME} "address")
+enable_target_sanitizer(${PROJECT_NAME} "thread")
 

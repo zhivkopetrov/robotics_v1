@@ -1,6 +1,12 @@
-#include "urscript_bridge/TcpClient.h"
+//Corresponding header
+#include "urscript_bridge/utils/TcpClient.h"
 
-#include <functional>
+//System headers
+
+//Other libraries headers
+#include <rclcpp/node.hpp>
+
+//Own components headers
 
 using namespace boost::asio::ip;
 
@@ -9,9 +15,12 @@ static void invokeCallback() {
 
 TcpClient::TcpClient(rclcpp::Node &node)
     : mNode(node), mLogger(node.get_logger()),
-      mState(TcpClient::State::Disconnected), mPort(0), mRunning(false),
-      mWorkGuard(boost::asio::make_work_guard(mIOService)),
+      mWork(mIOService),
       mConnectTimer(mIOService) {
+}
+
+TcpClient::~TcpClient() noexcept {
+  stop();
 }
 
 void TcpClient::start(const std::string &address, uint16_t port) {
@@ -42,7 +51,7 @@ void TcpClient::send(const std::string &data) {
 
   {
     boost::lock_guard<boost::mutex> lock(mMutex);
-    mQueue.push_back(data);
+    mQueue.push(data);
   }
 
   mIOService.post(invokeCallback);
@@ -57,17 +66,10 @@ void TcpClient::run() {
     } catch (const boost::exception&) {
     }
 
-    {
-      boost::lock_guard<boost::mutex> lock(mMutex);
-      mQueue.swap(mInternalQueue);
+    boost::lock_guard<boost::mutex> lock(mMutex);
+    if (!mQueue.empty()) {
+      doWrite(mQueue.front());
     }
-
-    if (mState == TcpClient::State::Connected) {
-      for (const auto &d : mInternalQueue) {
-        doWrite(d);
-      }
-    }
-    mInternalQueue.clear();
   }
 
   doClose();
@@ -98,7 +100,7 @@ void TcpClient::doClose() {
     return;
   }
 
-  RCLCPP_INFO_THROTTLE(mLogger, *mNode.get_clock(), 1000, "Clocsing socket...");
+  RCLCPP_INFO_THROTTLE(mLogger, *mNode.get_clock(), 1000, "Closing socket...");
 
   mConnectTimer.expires_at(boost::posix_time::pos_infin);
   try {
@@ -108,6 +110,8 @@ void TcpClient::doClose() {
   mSocket->close();
   mSocket.reset();
   mState = TcpClient::State::Disconnected;
+
+  mQueue = std::queue<std::string>{};
 }
 
 void TcpClient::doWrite(const std::string &data) {
@@ -119,8 +123,9 @@ void TcpClient::doWrite(const std::string &data) {
           boost::asio::placeholders::bytes_transferred));
 }
 
-void TcpClient::connectHandler(const boost::shared_ptr<tcp::socket>&,
-                               const boost::system::error_code &error) {
+void TcpClient::connectHandler(
+    [[maybe_unused]]const boost::shared_ptr<tcp::socket> &socket,
+    const boost::system::error_code &error) {
   if (error) {
     RCLCPP_INFO_THROTTLE(mLogger, *mNode.get_clock(), 1000, "Connect error!");
 
@@ -140,10 +145,16 @@ void TcpClient::connectTimeoutHandler(const boost::system::error_code &error) {
 }
 
 void TcpClient::writeHandler(const boost::system::error_code &error,
-                             std::size_t) {
+                             [[maybe_unused]]size_t bytesWritten) {
   if (error) {
     RCLCPP_INFO(mLogger, "Write error!");
     doClose();
+  }
+
+  boost::lock_guard<boost::mutex> lock(mMutex);
+  mQueue.pop();
+  if (!mQueue.empty()) {
+    doWrite(mQueue.front());
   }
 }
 
