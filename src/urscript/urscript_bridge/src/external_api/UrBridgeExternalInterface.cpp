@@ -8,6 +8,7 @@
 //Other libraries headers
 
 //Own components headers
+#include "utils/Log.h"
 
 namespace {
 constexpr auto NODE_NAME = "urscript_bridge";
@@ -57,19 +58,16 @@ void UrBridgeExternalInterface::handleIOState(
 
 void UrBridgeExternalInterface::handleUrScript(
     const String::SharedPtr urScript) {
-  std::cout << "Sending data to robot:\n" << urScript->data << std::endl;
   mTcpClient.send(urScript->data);
 }
 
 void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
-  std::cout << "Received data:\n" << request->data << std::endl;
   constexpr const char *endDelimiter = "end";
   const size_t endDelimiterStartIdx = request->data.rfind(endDelimiter);
   if (std::string::npos == endDelimiterStartIdx) {
-    std::cout << "Error, [" << endDelimiter << "] delimiter not found"
-              << std::endl;
+    LOGERR("Error, [%s] delimiter not found", endDelimiter);
     response->ok = false;
     return;
   }
@@ -80,13 +78,9 @@ void UrBridgeExternalInterface::handleUrScriptService(
      << "\tset_standard_digital_out(" << static_cast<uint32_t>(mRobotPin)
      << ", " << "True" << ")\n" << "end\n";
 
-  std::cout << "Sending to robot: " << ss.str() << std::endl;
-
   using namespace std::literals;
 
   mTcpClient.send(ss.str());
-
-  std::cout << "Waiting for flipped bit: " << std::endl;
 
   for (;;) {
     {
@@ -108,11 +102,7 @@ void UrBridgeExternalInterface::handleUrScriptService(
 
   data.insert(endDelimiterStartIdx, pinPostfix);
 
-  std::cout << "Sending to robot:\n" << data << std::endl;
-
   mTcpClient.send(data);
-
-  std::cout << "Waiting for UNflipped bit: " << std::endl;
 
   for (;;) {
     {
@@ -124,8 +114,6 @@ void UrBridgeExternalInterface::handleUrScriptService(
 
     std::this_thread::sleep_for(10ms);
   }
-
-  std::cout << "Bit was UNflipped: " << std::endl;
 
   response->ok = true;
 }

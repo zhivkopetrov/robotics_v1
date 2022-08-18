@@ -67,7 +67,7 @@ void TcpClient::run() {
     }
 
     boost::lock_guard<boost::mutex> lock(mMutex);
-    if (!mQueue.empty()) {
+    if (mQueue.size() == 1) {
       doWrite(mQueue.front());
     }
   }
