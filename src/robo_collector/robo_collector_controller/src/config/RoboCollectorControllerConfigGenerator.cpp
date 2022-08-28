@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
@@ -71,6 +72,12 @@ EngineConfig generateEngineConfig(
   return cfg;
 }
 
+Ros2CommunicatorConfig generateRos2CommunicatorConfig(
+    const RoboCollectorControllerRos2Params &rosParams) {
+  const Ros2CommunicatorConfig cfg = rosParams.ros2CommunicatorConfig;
+  return cfg;
+}
+
 RoboCollectorControllerConfig generateGameConfig(
     const RoboCollectorControllerRos2Params& rosParams) {
   RoboCollectorControllerConfig cfg;
@@ -123,6 +130,7 @@ ApplicationConfig RoboCollectorControllerConfigGenerator::generateConfig() {
 
   cfg.engineCfg = generateEngineConfig(rosParams);
   cfg.gameCfg = generateGameConfig(rosParams);
+  cfg.communicatorCfg = generateRos2CommunicatorConfig(rosParams);
   return cfg;
 }
 

@@ -46,6 +46,7 @@ public:
   ~MinerControllerExternalBridge() noexcept;
 
   ErrorCode init(const MinerControllerExternalBridgeOutInterface &interface);
+  void deinit();
 
   void publishShutdownController();
 

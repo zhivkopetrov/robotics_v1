@@ -39,6 +39,10 @@ ErrorCode MinerControllerExternalBridge::init(
   return ErrorCode::SUCCESS;
 }
 
+void MinerControllerExternalBridge::deinit() {
+  _outInterface.movementWatcher->terminateAction();
+}
+
 //called from the main thread
 void MinerControllerExternalBridge::publishShutdownController() {
   _controllerStatus = ControllerStatus::SHUTTING_DOWN;
@@ -127,54 +131,70 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   constexpr size_t queueSize = 10;
   const rclcpp::QoS qos(queueSize);
 
+  const rmw_qos_profile_t deafultQosProfile{};
+
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  rclcpp::SubscriptionOptions subsriptionOptions;
+  subsriptionOptions.callback_group = subscriberCallbackGroup;
+
+  const rclcpp::CallbackGroup::SharedPtr publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  rclcpp::PublisherOptions publisherOptions;
+  publisherOptions.callback_group = publishersCallbackGroup;
+
   _shutdownControllerPublisher = create_publisher<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, qos);
+      SHUTDOWN_CONTROLLER_TOPIC, qos, publisherOptions);
 
   _fieldMapReveleadedPublisher = create_publisher<Empty>(
-      FIELD_MAP_REVEALED_TOPIC, qos);
+      FIELD_MAP_REVEALED_TOPIC, qos, publisherOptions);
 
   _initialRobotPosService = create_service<QueryInitialRobotPosition>(
       QUERY_INITIAL_ROBOT_POSITION_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleInitialRobotPosService,
-          this, _1, _2));
+          this, _1, _2), deafultQosProfile);
 
   _robotMoveService = create_service<RobotMove>(ROBOT_MOVE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleRobotMoveService, this,
-          _1, _2));
+          _1, _2), deafultQosProfile, subscriberCallbackGroup);
 
   _fieldMapValidateService = create_service<FieldMapValidate>(
       FIELD_MAP_VALIDATE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleFieldMapValidateService,
-          this, _1, _2));
+          this, _1, _2), deafultQosProfile, subscriberCallbackGroup);
 
   _longestSequenceValidateService = create_service<LongestSequenceValidate>(
       LONGEST_SEQUENCE_VALIDATE_SERVICE,
       std::bind(
           &MinerControllerExternalBridge::handleLongestSequenceValidateService,
-          this, _1, _2));
+          this, _1, _2), deafultQosProfile, subscriberCallbackGroup);
 
   _activateMiningValidateService = create_service<ActivateMiningValidate>(
       ACTIVATE_MINING_VALIDATE_SERVICE,
       std::bind(
           &MinerControllerExternalBridge::handleActivateMiningValidateService,
-          this, _1, _2));
+          this, _1, _2), deafultQosProfile, subscriberCallbackGroup);
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, qos,
       std::bind(&MinerControllerExternalBridge::onUserAuthenticateMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
       qos,
-      std::bind(&MinerControllerExternalBridge::onToggleHelpPageMsg, this, _1));
+      std::bind(&MinerControllerExternalBridge::onToggleHelpPageMsg, this, _1),
+      subsriptionOptions);
 
   _toggleDebugInfoSubscriber = create_subscription<Empty>(
       TOGGLE_DEBUG_INFO_TOPIC, qos,
       std::bind(&MinerControllerExternalBridge::onToggleDebugInfoMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
   _setDebugMsgSubscriber = create_subscription<String>(DEBUG_MSG_TOPIC, qos,
-      std::bind(&MinerControllerExternalBridge::onDebugMsg, this, _1));
+      std::bind(&MinerControllerExternalBridge::onDebugMsg, this, _1),
+      subsriptionOptions);
 
   return ErrorCode::SUCCESS;
 }
@@ -217,18 +237,22 @@ void MinerControllerExternalBridge::handleRobotMoveService(
     return;
   }
 
-  const auto f = [this, &response]() {
+  const auto f = [this, &response, moveType]() {
     if (ControllerStatus::ACTIVE == _controllerStatus) {
       response->robot_position_response.success = false;
-      response->robot_position_response.error_reason =
-          "Rejecting Move Service because another one is already active";
+      auto& str = response->robot_position_response.error_reason;
+      str = "Rejecting Move Service with type: [";
+      str.append(std::to_string(getEnumValue(moveType))).
+          append("], because another one is already active");
       LOGR("%s", response->robot_position_response.error_reason.c_str());
       return;
     }
     if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
       response->robot_position_response.success = false;
-      response->robot_position_response.error_reason =
-          "Rejecting Move Service because controller is shutting down";
+      auto& str = response->robot_position_response.error_reason;
+      str = "Rejecting Move Service with type: [";
+      str.append(std::to_string(getEnumValue(moveType))).
+          append("], because controller is shutting down");
       LOGR("%s", response->robot_position_response.error_reason.c_str());
       return;
     }
@@ -248,9 +272,17 @@ void MinerControllerExternalBridge::handleRobotMoveService(
   MovementWatchOutcome outcome;
   const auto success = _outInterface.movementWatcher->waitForChange(5000ms,
       outcome);
+
+  if (outcome.actionTerminated) {
+    LOGY("Move action terminated. Controller is shutting down, no further "
+         "actions will be taken");
+    return;
+  }
+
   response->robot_position_response.robot_dir = getRobotDirectionField(
       outcome.robotDir);
 
+  //reset controller before timing out
   const auto f3 = [this]() {
     _controllerStatus = ControllerStatus::IDLE;
   };

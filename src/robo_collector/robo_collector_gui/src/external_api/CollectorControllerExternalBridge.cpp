@@ -86,37 +86,52 @@ ErrorCode CollectorControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr size_t queueSize = 10;
   const rclcpp::QoS qos(queueSize);
+
   rclcpp::QoS latchQoS = qos;
+  //enable message latching for late joining subscribers
   latchQoS.transient_local();
+
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  rclcpp::SubscriptionOptions subsriptionOptions;
+  subsriptionOptions.callback_group = subscriberCallbackGroup;
+
+  const rclcpp::CallbackGroup::SharedPtr publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  rclcpp::PublisherOptions publisherOptions;
+  publisherOptions.callback_group = publishersCallbackGroup;
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, qos,
       std::bind(&CollectorControllerExternalBridge::onUserAuthenticateMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
   _playerActSubscriber = create_subscription<RobotMoveType>(
       ROBOT_MOVE_TYPE_TOPIC, latchQoS,
-      std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1));
+      std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1),
+      subsriptionOptions);
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
       qos,
       std::bind(&CollectorControllerExternalBridge::onToggleHelpPageMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
   _toggleDebugInfoSubscriber = create_subscription<Empty>(
       TOGGLE_DEBUG_INFO_TOPIC, qos,
       std::bind(&CollectorControllerExternalBridge::onToggleDebugInfoMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
-  _setDebugMsgSubscriber = create_subscription<String>(
-      DEBUG_MSG_TOPIC, qos,
-      std::bind(&CollectorControllerExternalBridge::onDebugMsg, this, _1));
+  _setDebugMsgSubscriber = create_subscription<String>(DEBUG_MSG_TOPIC, qos,
+      std::bind(&CollectorControllerExternalBridge::onDebugMsg, this, _1),
+      subsriptionOptions);
 
   _playerEnableInputPublisher = create_publisher<Empty>(
-      ENABLE_ROBOT_INPUT_TOPIC, qos);
+      ENABLE_ROBOT_INPUT_TOPIC, qos, publisherOptions);
 
   _shutdownControllerPublisher = create_publisher<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, qos);
+      SHUTDOWN_CONTROLLER_TOPIC, qos, publisherOptions);
 
   return ErrorCode::SUCCESS;
 }
@@ -141,15 +156,17 @@ void CollectorControllerExternalBridge::onMoveMsg(
   }
 
   bool success = true;
-  const auto f = [this, &success]() {
+  const auto f = [this, &success, moveType]() {
     if (ControllerStatus::ACTIVE == _controllerStatus) {
       success = false;
-      LOGERR("Rejecting Move Request because another one is already active");
+      LOGERR("Rejecting Move Request with type: [%d], because another one is "
+             "already active", getEnumValue(moveType));
       return;
     }
     if (ControllerStatus::SHUTTING_DOWN == _controllerStatus) {
       success = false;
-      LOGERR("Rejecting Move Request because controller is shutting down");
+      LOGERR("Rejecting Move Request with type: [%d], because controller is "
+             "shutting down", getEnumValue(moveType));
       return;
     }
 

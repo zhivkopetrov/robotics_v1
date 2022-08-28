@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_common/helpers/LevelFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
@@ -257,6 +258,12 @@ DebugFieldConfig generateDebugFieldConfig() {
   return cfg;
 }
 
+Ros2CommunicatorConfig generateRos2CommunicatorConfig(
+    const RoboCollectorGuiRos2Params &rosParams) {
+  const Ros2CommunicatorConfig cfg = rosParams.ros2CommunicatorConfig;
+  return cfg;
+}
+
 EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
                                   const RoboCollectorGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -281,6 +288,7 @@ RoboCollectorGuiConfig generateGameConfig(
     const std::string &projectInstallPrefix,
     const RoboCollectorGuiRos2Params &rosParams) {
   RoboCollectorGuiConfig cfg;
+
   const auto [fieldDescr, initialRobotState] = LevelFileLoader::readLevelData(
       projectInstallPrefix, LEVEL_ID);
 
@@ -349,6 +357,7 @@ ApplicationConfig RoboCollectorGuiConfigGenerator::generateConfig() {
 
   cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
   cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
+  cfg.communicatorCfg = generateRos2CommunicatorConfig(rosParams);
 
   return cfg;
 }

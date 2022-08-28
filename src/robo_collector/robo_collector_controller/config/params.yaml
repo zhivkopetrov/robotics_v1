@@ -5,6 +5,17 @@
     gui_window_y: 527
     gui_window_width: 648
     gui_window_height: 553
+    
+   #supported executor types:
+      #SINGLE_THREADED(0)
+      #STATIC_SINGLE_THREADED(1)
+      #MULTI_THREADED(2)
+    ros2_executor_type: 2
+    
+    #default value of 0 will use number of cpu threads
+    #used only for MULTI_THREADED executor
+    ros2_executor_threads_num: 4
+    
     use_local_controller_mode: True
     user: not_set
     repository: not_set

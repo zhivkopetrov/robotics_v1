@@ -14,7 +14,7 @@
 using namespace std::placeholders;
 
 ErrorCode RoboCollectorGuiInitHelper::init(const std::any &cfg,
-                                         RoboCollectorGui &gui) {
+                                           RoboCollectorGui &gui) {
   auto err = ErrorCode::SUCCESS;
   const auto parsedCfg = [&cfg, &err]() {
     RoboCollectorGuiConfig localCfg;

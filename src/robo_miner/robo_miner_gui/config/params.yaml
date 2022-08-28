@@ -5,6 +5,17 @@
     gui_window_y: 27
     gui_window_width: 1848
     gui_window_height: 1053
+    
+    #supported executor types:
+      #SINGLE_THREADED(0)
+      #STATIC_SINGLE_THREADED(1)
+      #MULTI_THREADED(2)
+    ros2_executor_type: 2
+    
+    #default value of 0 will use number of cpu threads
+    #used only for MULTI_THREADED executor
+    ros2_executor_threads_num: 6
+    
     # suppported levelIds - 1, 2, 3
-    level_id: 3
+    level_id: 1
     use_fog_of_war: True

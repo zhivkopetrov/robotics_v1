@@ -27,6 +27,7 @@ ErrorCode RoboMinerGui::init(const std::any &cfg) {
 }
 
 void RoboMinerGui::deinit() {
+  _controllerExternalBridge->deinit();
   _communicatorInterface.unregisterNodeCb(_controllerExternalBridge);
   _layout.deinit();
 }

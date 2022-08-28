@@ -7,6 +7,7 @@
 #include <rclcpp/node.hpp>
 #include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_collector_common/layout/controller/config/RoboCollectorUiControllerBaseConfig.h"
+#include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "utils/drawing/Rectangle.h"
 
 //Own components headers
@@ -15,6 +16,7 @@
 
 struct RoboCollectorControllerRos2Params {
   Rectangle guiWindow;
+  Ros2CommunicatorConfig ros2CommunicatorConfig;
   LocalControllerMode localControrllerMode = LocalControllerMode::DISABLED;
   UserData userData;
 

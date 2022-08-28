@@ -3,8 +3,10 @@
 
 //System headers
 #include <sstream>
+#include <thread>
 
 //Other libraries headers
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -16,6 +18,8 @@ constexpr auto GUI_WINDOW_X_PARAM_NAME = "gui_window_x";
 constexpr auto GUI_WINDOW_Y_PARAM_NAME = "gui_window_y";
 constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
+constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
+constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = "ros2_executor_threads_num";
 constexpr auto USE_LOCAL_CONTROLLER_MODE_PARAM_NAME =
     "use_local_controller_mode";
 constexpr auto USER_PARAM_NAME = "user";
@@ -27,6 +31,10 @@ constexpr auto DEFAULT_WINDOW_X = 1272;
 constexpr auto DEFAULT_WINDOW_Y = 527;
 constexpr auto DEFAULT_WINDOW_WIDTH = 648;
 constexpr auto DEFAULT_WINDOW_HEIGHT = 553;
+
+//ROS2 executor
+constexpr auto DEFAULT_EXECUTOR_TYPE = 0;
+constexpr auto DEFAULT_EXECUTOR_THREADS_NUM = 2;
 
 //misc
 constexpr auto DEFAULT_USE_LOCAL_CONTROLLER_MODE = true;
@@ -55,6 +63,10 @@ void RoboCollectorControllerRos2Params::print() const {
        << GUI_WINDOW_Y_PARAM_NAME << ": " << guiWindow.y << '\n'
        << GUI_WINDOW_WIDTH_PARAM_NAME << ": " << guiWindow.w << '\n'
        << GUI_WINDOW_HEIGHT_PARAM_NAME << ": " << guiWindow.h << '\n'
+       << ROS2_EXECUTOR_TYPE_PARAM_NAME << ": " <<
+         getExecutorName(ros2CommunicatorConfig.executorType) << '\n'
+       << ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME << ": "
+         << ros2CommunicatorConfig.numberOfThreads << '\n'
        << USE_LOCAL_CONTROLLER_MODE_PARAM_NAME << ": "
            << ((LocalControllerMode::ENABLED == localControrllerMode) ?
                "true" : "false") << '\n'
@@ -75,6 +87,11 @@ void RoboCollectorControllerRos2Params::validate() {
     handleParamError(GUI_WINDOW_HEIGHT_PARAM_NAME, guiWindow.h,
         DEFAULT_WINDOW_HEIGHT);
   }
+  const size_t maxHardwareThreads = std::thread::hardware_concurrency();
+  if (ros2CommunicatorConfig.numberOfThreads > maxHardwareThreads) {
+    handleParamError(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
+        ros2CommunicatorConfig.numberOfThreads, maxHardwareThreads);
+  }
 }
 
 RoboCollectorControllerRos2ParamProvider::RoboCollectorControllerRos2ParamProvider()
@@ -84,6 +101,12 @@ RoboCollectorControllerRos2ParamProvider::RoboCollectorControllerRos2ParamProvid
   declare_parameter<int32_t>(GUI_WINDOW_WIDTH_PARAM_NAME, DEFAULT_WINDOW_WIDTH);
   declare_parameter<int32_t>(GUI_WINDOW_HEIGHT_PARAM_NAME,
       DEFAULT_WINDOW_HEIGHT);
+
+  declare_parameter<int32_t>(ROS2_EXECUTOR_TYPE_PARAM_NAME,
+      DEFAULT_EXECUTOR_TYPE);
+  declare_parameter<int32_t>(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
+      DEFAULT_EXECUTOR_THREADS_NUM);
+
   declare_parameter<bool>(USE_LOCAL_CONTROLLER_MODE_PARAM_NAME,
       DEFAULT_USE_LOCAL_CONTROLLER_MODE);
   declare_parameter<std::string>(USER_PARAM_NAME, DEFAULT_USER);
@@ -96,6 +119,13 @@ RoboCollectorControllerRos2Params RoboCollectorControllerRos2ParamProvider::getP
   get_parameter(GUI_WINDOW_Y_PARAM_NAME, _params.guiWindow.y);
   get_parameter(GUI_WINDOW_WIDTH_PARAM_NAME, _params.guiWindow.w);
   get_parameter(GUI_WINDOW_HEIGHT_PARAM_NAME, _params.guiWindow.h);
+
+  int32_t executorTypeInt{};
+  get_parameter(ROS2_EXECUTOR_TYPE_PARAM_NAME, executorTypeInt);
+  _params.ros2CommunicatorConfig.executorType =
+      toEnum<ExecutorType>(executorTypeInt);
+  get_parameter(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
+                _params.ros2CommunicatorConfig.numberOfThreads);
 
   bool useLocalControllerMode{};
   get_parameter(USE_LOCAL_CONTROLLER_MODE_PARAM_NAME, useLocalControllerMode);

@@ -40,11 +40,23 @@ bool MovementWatcher::waitForChange(const std::chrono::milliseconds &timeout,
 
 void MovementWatcher::changeState(const RobotState &state,
                                   MoveOutcome outcome) {
-  std::lock_guard<std::mutex> lockGuard(_mutex);
+  std::unique_lock<std::mutex> lock(_mutex);
   _ready = true;
   _lastOutcome.moveOutcome = outcome;
   _lastOutcome.robotPos = state.fieldPos;
   _lastOutcome.robotDir = state.dir;
   _lastOutcome.surroundingTiles = _getPlayerSurroundingTilesCb();
+  _lastOutcome.actionTerminated = false;
+
+  lock.unlock();
+  _condVar.notify_one();
+}
+
+void MovementWatcher::terminateAction() {
+  std::unique_lock<std::mutex> lock(_mutex);
+  _ready = true;
+  _lastOutcome.actionTerminated = true;
+
+  lock.unlock();
   _condVar.notify_one();
 }

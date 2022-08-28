@@ -7,6 +7,7 @@
 //Other libraries headers
 #include <rclcpp/utilities.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "robo_common/defines/RoboCommonDefines.h"
 #include "robo_common/helpers/LevelFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
@@ -309,6 +310,12 @@ RoboMinerGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
   return cfg;
 }
 
+Ros2CommunicatorConfig generateRos2CommunicatorConfig(
+    const RoboMinerGuiRos2Params &rosParams) {
+  const Ros2CommunicatorConfig cfg = rosParams.ros2CommunicatorConfig;
+  return cfg;
+}
+
 } //end anonymous namespace
 
 std::vector<DependencyDescription> RoboMinerGuiConfigGenerator::generateDependencies(
@@ -347,6 +354,8 @@ ApplicationConfig RoboMinerGuiConfigGenerator::generateConfig() {
 
   cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
   cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
+  cfg.communicatorCfg = generateRos2CommunicatorConfig(rosParams);
+
   return cfg;
 }
 

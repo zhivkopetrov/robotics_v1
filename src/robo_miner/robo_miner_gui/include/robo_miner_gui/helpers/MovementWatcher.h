@@ -21,6 +21,7 @@ struct MovementWatchOutcome {
   FieldPos robotPos;
   Direction robotDir = Direction::UP;
   MoveOutcome moveOutcome = MoveOutcome::SUCCESS;
+  bool actionTerminated = false;
 };
 
 class MovementWatcher: public NonCopyable, public NonMoveable {
@@ -33,6 +34,8 @@ public:
                      MovementWatchOutcome &outcome);
 
   void changeState(const RobotState& state, MoveOutcome outcome);
+
+  void terminateAction();
 
 private:
   std::mutex _mutex;

@@ -50,7 +50,7 @@ void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) const {
   _robotActPublisher->publish(msg);
 }
 
-void CollectorGuiExternalBridge::publishUserAuthenticate(const UserData& data) {
+void CollectorGuiExternalBridge::publishUserAuthenticate(const UserData &data) {
   UserAuthenticate msg;
   msg.user = data.user;
   msg.commit_sha = data.commitSha;
@@ -88,23 +88,36 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
   rclcpp::QoS qos(queueSize);
   qos.transient_local(); //enable message latching for late joining subscribers
 
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  rclcpp::SubscriptionOptions subsriptionOptions;
+  subsriptionOptions.callback_group = subscriberCallbackGroup;
+
+  const rclcpp::CallbackGroup::SharedPtr publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  rclcpp::PublisherOptions publisherOptions;
+  publisherOptions.callback_group = publishersCallbackGroup;
+
   _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,
-      qos);
+      qos, publisherOptions);
 
   _toggleHelpPagePublisher = create_publisher<Empty>(TOGGLE_HELP_PAGE_TOPIC,
-      queueSize);
+      queueSize, publisherOptions);
 
   _toggleDebugInfoPublisher = create_publisher<Empty>(TOGGLE_DEBUG_INFO_TOPIC,
-      queueSize);
+      queueSize, publisherOptions);
 
   _enableRobotTurnSubscription = create_subscription<Empty>(
       ENABLE_ROBOT_INPUT_TOPIC, queueSize,
-      std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1));
+      std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1),
+      subsriptionOptions);
 
   _shutdownControllerSubscription = create_subscription<Empty>(
       SHUTDOWN_CONTROLLER_TOPIC, queueSize,
-      std::bind(&CollectorGuiExternalBridge::onControllerShutdownMsg, this,
-          _1));
+      std::bind(&CollectorGuiExternalBridge::onControllerShutdownMsg, this, _1),
+      subsriptionOptions);
 
   return ErrorCode::SUCCESS;
 }
