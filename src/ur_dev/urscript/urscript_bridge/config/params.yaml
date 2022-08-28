@@ -3,6 +3,6 @@
     use_sim_time: false
     script_topic: "urscript"
     script_service: "urscript_service"
-    robot_ip: "192.168.1.102"
+    robot_ip: "0.0.0.0"
     robot_port: 30003
     robot_pin: 4
