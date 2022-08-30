@@ -28,9 +28,3 @@
 [submodule "src/ur_driver/Universal_Robots_Client_Library"]
 	path = src/ur_driver/Universal_Robots_Client_Library
 	url = https://github.com/zhivkopetrov/Universal_Robots_Client_Library.git
-[submodule "src/ur_driver/ur_msgs"]
-	path = src/ur_driver/ur_msgs
-	url = https://github.com/zhivkopetrov/ur_msgs.git
-[submodule "src/ur_driver/control_msgs"]
-	path = src/ur_driver/control_msgs
-	url = https://github.com/zhivkopetrov/control_msgs.git
