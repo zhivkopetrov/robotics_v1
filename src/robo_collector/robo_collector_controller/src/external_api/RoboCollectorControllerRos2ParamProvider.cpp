@@ -19,7 +19,8 @@ constexpr auto GUI_WINDOW_Y_PARAM_NAME = "gui_window_y";
 constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
 constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
-constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = "ros2_executor_threads_num";
+constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME =
+    "ros2_executor_threads_num";
 constexpr auto USE_LOCAL_CONTROLLER_MODE_PARAM_NAME =
     "use_local_controller_mode";
 constexpr auto USER_PARAM_NAME = "user";

@@ -101,7 +101,12 @@ std::vector<DependencyDescription> UrControlGuiConfigGenerator::generateDependen
       argc, args);
 
   const LoadDependencyCb ros2Loader = [argc, args]() {
-    rclcpp::init(argc, args);
+    rclcpp::InitOptions initOptions;
+    //leave the shutdown for user-side.
+    //this will enable proper cleanup
+    initOptions.shutdown_on_sigint = false;
+
+    rclcpp::init(argc, args, initOptions);
     return ErrorCode::SUCCESS;
   };
   const UnloadDependencyCb ros2Unloader = []() {

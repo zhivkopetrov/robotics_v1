@@ -131,8 +131,6 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   constexpr size_t queueSize = 10;
   const rclcpp::QoS qos(queueSize);
 
-  //Create different callbacks groups for publishers and subscribers
-  //so they can be executed in parallel
   rclcpp::SubscriptionOptions subsriptionOptions;
   subsriptionOptions.callback_group = _subscriberCallbackGroup;
 
