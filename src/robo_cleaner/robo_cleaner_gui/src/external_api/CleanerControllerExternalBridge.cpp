@@ -144,56 +144,65 @@ ErrorCode CleanerControllerExternalBridge::initOutInterface(
 ErrorCode CleanerControllerExternalBridge::initCommunication() {
   constexpr size_t queueSize = 10;
   const rclcpp::QoS qos(queueSize);
+
+  rclcpp::SubscriptionOptions subsriptionOptions;
+  subsriptionOptions.callback_group = _subscriberCallbackGroup;
+
+  rclcpp::PublisherOptions publisherOptions;
+  publisherOptions.callback_group = _publishersCallbackGroup;
+
   _shutdownControllerPublisher = create_publisher<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, qos);
+      SHUTDOWN_CONTROLLER_TOPIC, qos, publisherOptions);
 
   _fieldMapReveleadedPublisher = create_publisher<Empty>(
-      FIELD_MAP_REVEALED_TOPIC, qos);
+      FIELD_MAP_REVEALED_TOPIC, qos, publisherOptions);
 
   _fieldMapCleanedPublisher = create_publisher<Empty>(FIELD_MAP_CLEANED_TOPIC,
-      qos);
+      qos, publisherOptions);
 
   _batteryStatusService = create_service<QueryBatteryStatus>(
       QUERY_BATTERY_STATUS_SERVICE,
       std::bind(&CleanerControllerExternalBridge::handleBatteryStatusService,
-          this, _1, _2));
+          this, _1, _2), rmw_qos_profile_services_default,
+      _subscriberCallbackGroup);
 
   _initialRobotStateService = create_service<QueryInitialRobotState>(
       QUERY_INITIAL_ROBOT_STATE_SERVICE,
       std::bind(
           &CleanerControllerExternalBridge::handleInitialRobotStateService,
-          this, _1, _2));
+          this, _1, _2), rmw_qos_profile_services_default,
+      _subscriberCallbackGroup);
 
-  _chargeBatteryService = create_service<ChargeBattery>(
-      CHARGE_BATTERY_SERVICE,
+  _chargeBatteryService = create_service<ChargeBattery>(CHARGE_BATTERY_SERVICE,
       std::bind(&CleanerControllerExternalBridge::handleChargeBatteryService,
-          this, _1, _2));
+          this, _1, _2), rmw_qos_profile_services_default,
+      _subscriberCallbackGroup);
 
   _moveActionServer = rclcpp_action::create_server<RobotMove>(this,
       ROBOT_MOVE_ACTION,
       std::bind(&CleanerControllerExternalBridge::handleMoveGoal, this, _1, _2),
       std::bind(&CleanerControllerExternalBridge::handleMoveCancel, this, _1),
-      std::bind(&CleanerControllerExternalBridge::handleMoveAccepted, this,
-          _1));
+      std::bind(&CleanerControllerExternalBridge::handleMoveAccepted, this, _1),
+      rcl_action_server_get_default_options(), _actionsCallbackGroup);
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, qos,
       std::bind(&CleanerControllerExternalBridge::onUserAuthenticateMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
   _toggleHelpPageSubscriber = create_subscription<Empty>(TOGGLE_HELP_PAGE_TOPIC,
       qos,
       std::bind(&CleanerControllerExternalBridge::onToggleHelpPageMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
   _toggleDebugInfoSubscriber = create_subscription<Empty>(
       TOGGLE_DEBUG_INFO_TOPIC, qos,
       std::bind(&CleanerControllerExternalBridge::onToggleDebugInfoMsg, this,
-          _1));
+          _1), subsriptionOptions);
 
-  _setDebugMsgSubscriber = create_subscription<String>(
-      DEBUG_MSG_TOPIC, qos,
-      std::bind(&CleanerControllerExternalBridge::onDebugMsg, this, _1));
+  _setDebugMsgSubscriber = create_subscription<String>(DEBUG_MSG_TOPIC, qos,
+      std::bind(&CleanerControllerExternalBridge::onDebugMsg, this, _1),
+      subsriptionOptions);
 
   return ErrorCode::SUCCESS;
 }
@@ -399,8 +408,7 @@ void CleanerControllerExternalBridge::onToggleDebugInfoMsg(
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
-void CleanerControllerExternalBridge::onDebugMsg(
-    const String::SharedPtr msg) {
+void CleanerControllerExternalBridge::onDebugMsg(const String::SharedPtr msg) {
   const auto f = [this, msg]() {
     _outInterface.setDebugMsgCb(msg->data);
   };

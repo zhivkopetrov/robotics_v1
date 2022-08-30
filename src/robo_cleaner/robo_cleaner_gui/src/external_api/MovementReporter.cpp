@@ -80,6 +80,14 @@ void MovementReporter::reportProgressLoop(
       return;
     }
 
+    if (!goalHandle->is_active()) {
+      LOGG("Goal with uuid: %s finished, but a result will not be published "
+           "since the action server is no longer active. This is probably due"
+           " to initiated shutdown",
+           rclcpp_action::to_string(goalHandle->get_goal_id()).c_str());
+      return;
+    }
+
     if (moveProgress.hasMoveFinished) {
       if (MoveOutcome::SUCCESS == moveProgress.outcome) {
         result->success = true;

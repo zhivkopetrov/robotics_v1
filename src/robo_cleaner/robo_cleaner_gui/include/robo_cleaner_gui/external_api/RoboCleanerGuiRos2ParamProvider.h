@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include "robo_common/layout/field/config/FogOfWarConfig.h"
+#include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "utils/drawing/Rectangle.h"
 
 //Own components headers
@@ -14,6 +15,7 @@
 
 struct RoboCleanerGuiRos2Params {
   Rectangle guiWindow;
+  Ros2CommunicatorConfig ros2CommunicatorConfig;
   int32_t levelId { };
   FogOfWarStatus fogOfWarStatus = FogOfWarStatus::ENABLED;
 

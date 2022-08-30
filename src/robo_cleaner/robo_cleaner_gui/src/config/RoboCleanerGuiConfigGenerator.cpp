@@ -352,6 +352,12 @@ RoboCleanerGuiConfig generateGameConfig(
   return cfg;
 }
 
+Ros2CommunicatorConfig generateRos2CommunicatorConfig(
+    const RoboCleanerGuiRos2Params &rosParams) {
+  const Ros2CommunicatorConfig cfg = rosParams.ros2CommunicatorConfig;
+  return cfg;
+}
+
 } //end anonymous namespace
 
 std::vector<DependencyDescription> RoboCleanerGuiConfigGenerator::generateDependencies(
@@ -360,7 +366,12 @@ std::vector<DependencyDescription> RoboCleanerGuiConfigGenerator::generateDepend
       argc, args);
 
   const LoadDependencyCb ros2Loader = [argc, args]() {
-    rclcpp::init(argc, args);
+    rclcpp::InitOptions initOptions;
+    //leave the shutdown for user-side.
+    //this will enable proper cleanup
+    initOptions.shutdown_on_sigint = false;
+
+    rclcpp::init(argc, args, initOptions);
     return ErrorCode::SUCCESS;
   };
   const UnloadDependencyCb ros2Unloader = []() {
@@ -390,6 +401,7 @@ ApplicationConfig RoboCleanerGuiConfigGenerator::generateConfig() {
 
   cfg.engineCfg = generateEngineConfig(projectInstallPrefix, rosParams);
   cfg.gameCfg = generateGameConfig(projectInstallPrefix, rosParams);
+  cfg.communicatorCfg = generateRos2CommunicatorConfig(rosParams);
   return cfg;
 }
 
