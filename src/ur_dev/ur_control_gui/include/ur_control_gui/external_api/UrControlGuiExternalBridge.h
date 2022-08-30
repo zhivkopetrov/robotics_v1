@@ -54,6 +54,13 @@ private:
 
   rclcpp::Subscription<RobotModeType>::SharedPtr _robotModeSubscriber;
   rclcpp::Subscription<SafetyModeType>::SharedPtr _safetyModeSubscriber;
+
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr _subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  const rclcpp::CallbackGroup::SharedPtr _publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIEXTERNALBRIDGE_H_ */

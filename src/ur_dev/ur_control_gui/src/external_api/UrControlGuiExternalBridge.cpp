@@ -84,14 +84,25 @@ ErrorCode UrControlGuiExternalBridge::initCommunication() {
   constexpr auto queueSize = 10;
   rclcpp::QoS qos(queueSize);
 
-  _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos);
-  _urscriptPublisherService = create_client<UrScript>("urscript_service");
+  rclcpp::SubscriptionOptions subsriptionOptions;
+  subsriptionOptions.callback_group = _subscriberCallbackGroup;
+
+  rclcpp::PublisherOptions publisherOptions;
+  publisherOptions.callback_group = _publishersCallbackGroup;
+
+  _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos,
+      publisherOptions);
+
+  _urscriptPublisherService = create_client<UrScript>(URSCRIPT_SERVICE,
+      rmw_qos_profile_services_default, _publishersCallbackGroup);
 
   _robotModeSubscriber = create_subscription<RobotModeType>(ROBOT_MODE_TOPIC,
-      qos, std::bind(&UrControlGuiExternalBridge::onRobotModeMsg, this, _1));
+      qos, std::bind(&UrControlGuiExternalBridge::onRobotModeMsg, this, _1),
+      subsriptionOptions);
 
   _safetyModeSubscriber = create_subscription<SafetyModeType>(SAFETY_MODE_TOPIC,
-      qos, std::bind(&UrControlGuiExternalBridge::onSafetyModeMsg, this, _1));
+      qos, std::bind(&UrControlGuiExternalBridge::onSafetyModeMsg, this, _1),
+      subsriptionOptions);
 
   return ErrorCode::SUCCESS;
 }
@@ -113,4 +124,3 @@ void UrControlGuiExternalBridge::onSafetyModeMsg(
   };
   _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
-

@@ -59,6 +59,11 @@ private:
   rclcpp::Client<Trigger>::SharedPtr _brakeReleaseService;
   rclcpp::Client<GetRobotMode>::SharedPtr _getRobotModeService;
   rclcpp::Client<GetSafetyMode>::SharedPtr _getSafetyModeService;
+
+  //Create reentrant callbacks groups so service calls
+  //can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr _callbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 };
 
 #endif /* UR_CONTROL_GUI_DASHBOARDPROVIDER_H_ */
