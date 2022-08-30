@@ -68,6 +68,13 @@ private:
   rclcpp::Publisher<Empty>::SharedPtr _playerEnableInputPublisher;
   rclcpp::Publisher<Empty>::SharedPtr _shutdownControllerPublisher;
 
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr _subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  const rclcpp::CallbackGroup::SharedPtr _publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
   ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };
 

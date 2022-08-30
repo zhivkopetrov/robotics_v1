@@ -53,6 +53,13 @@ private:
 
   rclcpp::Subscription<Empty>::SharedPtr _enableRobotTurnSubscription;
   rclcpp::Subscription<Empty>::SharedPtr _shutdownControllerSubscription;
+
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr _subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  const rclcpp::CallbackGroup::SharedPtr _publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 };
 
 #endif /* ROBO_COLLECTOR_CONTROLLER_COLLECTORGUIEXTERNALBRIDGE_H_ */

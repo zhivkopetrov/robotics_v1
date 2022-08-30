@@ -53,7 +53,7 @@ void handleParamError(const char* paramName, T& value, const T& defaultValue) {
 void RoboMinerGuiRos2Params::print() const {
   std::ostringstream ostr;
   ostr << "==================================================================\n"
-      << "Printing node(" << NODE_NAME << ") params:\n"
+       << "Printing node(" << NODE_NAME << ") params:\n"
        << GUI_WINDOW_X_PARAM_NAME << ": " << guiWindow.x << '\n'
        << GUI_WINDOW_Y_PARAM_NAME << ": " << guiWindow.y << '\n'
        << GUI_WINDOW_WIDTH_PARAM_NAME << ": " << guiWindow.w << '\n'

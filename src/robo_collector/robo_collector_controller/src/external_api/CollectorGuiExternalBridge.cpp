@@ -88,17 +88,11 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
   rclcpp::QoS qos(queueSize);
   qos.transient_local(); //enable message latching for late joining subscribers
 
-  //Create different callbacks groups for publishers and subscribers
-  //so they can be executed in parallel
-  const rclcpp::CallbackGroup::SharedPtr subscriberCallbackGroup =
-      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   rclcpp::SubscriptionOptions subsriptionOptions;
-  subsriptionOptions.callback_group = subscriberCallbackGroup;
+  subsriptionOptions.callback_group = _subscriberCallbackGroup;
 
-  const rclcpp::CallbackGroup::SharedPtr publishersCallbackGroup =
-      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   rclcpp::PublisherOptions publisherOptions;
-  publisherOptions.callback_group = publishersCallbackGroup;
+  publisherOptions.callback_group = _publishersCallbackGroup;
 
   _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,
       qos, publisherOptions);

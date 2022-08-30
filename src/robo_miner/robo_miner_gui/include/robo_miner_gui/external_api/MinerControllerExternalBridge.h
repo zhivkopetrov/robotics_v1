@@ -116,6 +116,13 @@ private:
   rclcpp::Subscription<Empty>::SharedPtr _toggleDebugInfoSubscriber;
   rclcpp::Subscription<String>::SharedPtr _setDebugMsgSubscriber;
 
+  //Create different callbacks groups for publishers and subscribers
+  //so they can be executed in parallel
+  const rclcpp::CallbackGroup::SharedPtr _subscriberCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  const rclcpp::CallbackGroup::SharedPtr _publishersCallbackGroup =
+      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
   ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };
 

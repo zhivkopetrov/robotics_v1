@@ -131,19 +131,13 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   constexpr size_t queueSize = 10;
   const rclcpp::QoS qos(queueSize);
 
-  const rmw_qos_profile_t deafultQosProfile{};
-
   //Create different callbacks groups for publishers and subscribers
   //so they can be executed in parallel
-  const rclcpp::CallbackGroup::SharedPtr subscriberCallbackGroup =
-      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   rclcpp::SubscriptionOptions subsriptionOptions;
-  subsriptionOptions.callback_group = subscriberCallbackGroup;
+  subsriptionOptions.callback_group = _subscriberCallbackGroup;
 
-  const rclcpp::CallbackGroup::SharedPtr publishersCallbackGroup =
-      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   rclcpp::PublisherOptions publisherOptions;
-  publisherOptions.callback_group = publishersCallbackGroup;
+  publisherOptions.callback_group = _publishersCallbackGroup;
 
   _shutdownControllerPublisher = create_publisher<Empty>(
       SHUTDOWN_CONTROLLER_TOPIC, qos, publisherOptions);
@@ -154,28 +148,31 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   _initialRobotPosService = create_service<QueryInitialRobotPosition>(
       QUERY_INITIAL_ROBOT_POSITION_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleInitialRobotPosService,
-          this, _1, _2), deafultQosProfile);
+          this, _1, _2), rmw_qos_profile_services_default);
 
   _robotMoveService = create_service<RobotMove>(ROBOT_MOVE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleRobotMoveService, this,
-          _1, _2), deafultQosProfile, subscriberCallbackGroup);
+          _1, _2), rmw_qos_profile_services_default, _subscriberCallbackGroup);
 
   _fieldMapValidateService = create_service<FieldMapValidate>(
       FIELD_MAP_VALIDATE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleFieldMapValidateService,
-          this, _1, _2), deafultQosProfile, subscriberCallbackGroup);
+          this, _1, _2), rmw_qos_profile_services_default,
+          _subscriberCallbackGroup);
 
   _longestSequenceValidateService = create_service<LongestSequenceValidate>(
       LONGEST_SEQUENCE_VALIDATE_SERVICE,
       std::bind(
           &MinerControllerExternalBridge::handleLongestSequenceValidateService,
-          this, _1, _2), deafultQosProfile, subscriberCallbackGroup);
+          this, _1, _2), rmw_qos_profile_services_default,
+          _subscriberCallbackGroup);
 
   _activateMiningValidateService = create_service<ActivateMiningValidate>(
       ACTIVATE_MINING_VALIDATE_SERVICE,
       std::bind(
           &MinerControllerExternalBridge::handleActivateMiningValidateService,
-          this, _1, _2), deafultQosProfile, subscriberCallbackGroup);
+          this, _1, _2), rmw_qos_profile_services_default,
+          _subscriberCallbackGroup);
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, qos,
