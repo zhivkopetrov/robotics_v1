@@ -16,6 +16,7 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(ur_dashboard_msgs REQUIRED)
 find_package(urscript_interfaces REQUIRED)
+find_package(urscript_common REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -84,6 +85,7 @@ target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC
         ros2_game_engine::ros2_game_engine
+        urscript_common::urscript_common
 )
 
 ament_target_dependencies(

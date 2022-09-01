@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "urscript_common/defines/UrScriptTopics.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
@@ -50,9 +51,10 @@ void UrControlGuiExternalBridge::invokeURScriptService(
   auto result = _urscriptPublisherService->async_send_request(request);
   std::shared_ptr<UrScript::Response> response = result.get();
 
-  if (!response->ok) {
-    LOGERR("Service call to [%s] failed",
-        _urscriptPublisherService->get_service_name());
+  if (!response->success) {
+    LOGERR("Service call to [%s] failed with error_reason: [%s]",
+        _urscriptPublisherService->get_service_name(),
+        response->error_reason.c_str());
     return;
   }
 }
@@ -82,7 +84,7 @@ ErrorCode UrControlGuiExternalBridge::initCommunication() {
   using namespace std::placeholders;
 
   constexpr auto queueSize = 10;
-  rclcpp::QoS qos(queueSize);
+  const rclcpp::QoS qos(queueSize);
 
   rclcpp::SubscriptionOptions subsriptionOptions;
   subsriptionOptions.callback_group = _subscriberCallbackGroup;
