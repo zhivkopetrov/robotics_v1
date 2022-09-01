@@ -16,6 +16,7 @@
 //Own components headers
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
+#include "utils/ErrorCode.h"
 
 //Forward declarations
 namespace rclcpp {
@@ -27,7 +28,9 @@ public:
   TcpClient(rclcpp::Node &node);
   ~TcpClient() noexcept;
 
-  void start(const std::string &address, uint16_t port);
+  ErrorCode init(const std::string &address, uint16_t port);
+
+  void start();
   void stop();
 
   void send(const std::string &data);

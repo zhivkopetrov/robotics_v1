@@ -4,7 +4,7 @@
   <name>urscript_bridge</name>
   <version>1.0.0</version>
   <description>ROS2 node which provides urscript bridge to ur ROS2 driver</description>
-  <maintainer email="zhivko.petrov@ocado.com">Zhivko Petrov</maintainer>
+  <maintainer email="zhivkopetrov90@gmail.com">Zhivko Petrov</maintainer>
   <license file="LICENSE_apache_2_0">Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -15,16 +15,18 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>ur_msgs</build_depend>
   <build_depend>cmake_helpers</build_depend>
-  <build_depend>utils</build_depend>
+  <build_depend>ros2_game_engine</build_depend>
   <build_depend>urscript_interfaces</build_depend>
+  <build_depend>urscript_common</build_depend>
 
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
   <exec_depend>boost</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>ur_msgs</exec_depend>
-  <exec_depend>utils</exec_depend>
+  <exec_depend>ros2_game_engine</exec_depend>
   <exec_depend>urscript_interfaces</exec_depend>
+  <exec_depend>urscript_common</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

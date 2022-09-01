@@ -9,13 +9,14 @@ project(
 )
 
 find_package(cmake_helpers REQUIRED)
-find_package(utils REQUIRED)
+find_package(ros2_game_engine REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(Threads REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(ur_msgs REQUIRED)
 find_package(urscript_interfaces REQUIRED)
+find_package(urscript_common REQUIRED)
 
 set(_INC_FOLDER_NAME include)
 set(_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${_INC_FOLDER_NAME}/${PROJECT_NAME})
@@ -23,14 +24,18 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(
     ${PROJECT_NAME}
-        ${_INC_DIR}/core/UrBridgeCommunicator.h
-		${_INC_DIR}/core/UrBridgeAppilcation.h
+        ${_INC_DIR}/config/UrBridgeConfig.h
+        ${_INC_DIR}/config/UrBridgeConfigGenerator.h
+		${_INC_DIR}/core/UrBridgeApplication.h
         ${_INC_DIR}/external_api/UrBridgeExternalInterface.h
+        ${_INC_DIR}/external_api/UrBridgeRos2ParamProvider.h
+        ${_INC_DIR}/external_api/config/UrBridgeExternalInterfaceConfig.h
         ${_INC_DIR}/utils/TcpClient.h
      
-		${_SRC_DIR}/core/UrBridgeCommunicator.cpp
-		${_SRC_DIR}/core/UrBridgeAppilcation.cpp
+     	${_SRC_DIR}/config/UrBridgeConfigGenerator.cpp
+		${_SRC_DIR}/core/UrBridgeApplication.cpp
 		${_SRC_DIR}/external_api/UrBridgeExternalInterface.cpp
+		${_SRC_DIR}/external_api/UrBridgeRos2ParamProvider.cpp
 	    ${_SRC_DIR}/utils/TcpClient.cpp
         ${_SRC_DIR}/main.cpp
 )
@@ -49,7 +54,8 @@ target_include_directories(
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
-        utils::utils
+        ros2_game_engine::ros2_game_engine
+        urscript_common::urscript_common
         ${Boost_LIBRARIES}
         boost_thread #boosts linker flag for -lpthread
 )
@@ -82,5 +88,5 @@ endif()
 set_target_cpp_standard(${PROJECT_NAME} 20)
 enable_target_warnings(${PROJECT_NAME})
 set_target_visibility(${PROJECT_NAME})
-enable_target_sanitizer(${PROJECT_NAME} "thread")
+# enable_target_sanitizer(${PROJECT_NAME} "thread")
 

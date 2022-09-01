@@ -23,13 +23,18 @@ TcpClient::~TcpClient() noexcept {
   stop();
 }
 
-void TcpClient::start(const std::string &address, uint16_t port) {
+ErrorCode TcpClient::init(const std::string &address, uint16_t port) {
+  mPort = port;
+  mAddress = address;
+
+  return ErrorCode::SUCCESS;
+}
+
+void TcpClient::start() {
   if (mRunning) {
     return;
   }
 
-  mPort = port;
-  mAddress = address;
   mState = TcpClient::State::Disconnected;
   mRunning = true;
   mThread = boost::thread(&TcpClient::run, this);
@@ -80,7 +85,9 @@ void TcpClient::doConnect() {
     return;
   }
 
-  RCLCPP_INFO_THROTTLE(mLogger, *mNode.get_clock(), 1000, "Connecting...");
+  RCLCPP_INFO_STREAM_THROTTLE(mLogger, *mNode.get_clock(), 1000,
+                              "Connecting on IP: [" << mAddress <<
+                              "], port: [" << mPort << "] ...");
 
   mState = TcpClient::State::Connecting;
   mSocket.reset(new tcp::socket(mIOService));

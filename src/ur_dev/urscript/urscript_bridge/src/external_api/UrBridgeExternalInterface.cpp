@@ -6,48 +6,81 @@
 #include <string>
 
 //Other libraries headers
+#include "urscript_common/message_helpers/UrScriptMessageHelpers.h"
+#include "urscript_common/defines/UrScriptTopics.h"
 
 //Own components headers
 #include "utils/Log.h"
 
 namespace {
 constexpr auto NODE_NAME = "urscript_bridge";
+constexpr auto DRIVER_IO_STATES_TOPIC_NAME =
+    "io_and_status_controller/io_states";
 }
 
-UrBridgeExternalInterface::UrBridgeExternalInterface(
-    const rclcpp::NodeOptions &options)
-    : rclcpp::Node(NODE_NAME, options), mTcpClient(*this) {
-  std::string scriptTopic;
-  std::string scriptService;
-  std::string robotIp;
-  uint16_t robotPort;
+UrBridgeExternalInterface::UrBridgeExternalInterface()
+    : rclcpp::Node(NODE_NAME), mTcpClient(*this) {
 
-  get_parameter("script_topic", scriptTopic);
-  get_parameter("script_service", scriptService);
-  get_parameter("robot_ip", robotIp);
-  get_parameter("robot_port", robotPort);
-  get_parameter("robot_pin", mRobotPin);
+}
 
-  const rclcpp::CallbackGroup::SharedPtr callbackGroup = create_callback_group(
-      rclcpp::CallbackGroupType::Reentrant);
+ErrorCode UrBridgeExternalInterface::init(
+    const UrBridgeExternalInterfaceConfig &cfg) {
+  initTogglePinMessagesPayload(cfg.urScriptServiceReadyPin);
+
+  if (ErrorCode::SUCCESS != mTcpClient.init(cfg.robotIp,
+          cfg.robotInterfacePort)) {
+    LOGERR("Error, mTcpClient.init() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initCommunication()) {
+    LOGERR("Error, initCommunication() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  mTcpClient.start();
+
+  return ErrorCode::SUCCESS;
+}
+
+void UrBridgeExternalInterface::initTogglePinMessagesPayload(uint32_t pin) {
+  mUrScriptServiceReadyPin = pin;
+
+  std::ostringstream ss;
+  ss << std::setprecision(3);
+  ss << "def prepare():\n" << "\tposition_deviation_warning(True, 0.6)\n"
+     << "\tset_standard_digital_out(" << mUrScriptServiceReadyPin << ", "
+     << "True" << ")\n" << "end\n";
+  mTogglePinMsgPayload = ss.str();
+
+  constexpr const char *TAB = "  ";
+  mUntogglePinMsgPayload = TAB;
+  mUntogglePinMsgPayload.append("set_standard_digital_out(").append(
+      std::to_string(mUrScriptServiceReadyPin)).append(", False)\n");
+}
+
+ErrorCode UrBridgeExternalInterface::initCommunication() {
+  constexpr auto queueSize = 10;
+  const rclcpp::QoS qos(queueSize);
 
   rclcpp::SubscriptionOptions subsriptionOptions;
-  subsriptionOptions.callback_group = callbackGroup;
+  subsriptionOptions.callback_group = mCallbackGroup;
 
   mIoStatesSubscribtion = create_subscription<IOStates>(
-      "io_and_status_controller/io_states", 10,
+      DRIVER_IO_STATES_TOPIC_NAME, qos,
       std::bind(&UrBridgeExternalInterface::handleIOState, this,
           std::placeholders::_1), subsriptionOptions);
 
-  mUrScriptSubscribtion = create_subscription<String>(scriptTopic, 10,
+  mUrScriptSubscribtion = create_subscription<String>(URSCRIPT_TOPIC, qos,
       std::bind(&UrBridgeExternalInterface::handleUrScript, this,
           std::placeholders::_1), subsriptionOptions);
 
-  mUrScriptService = create_service<UrScriptSrv>(scriptService,
+  mUrScriptService = create_service<UrScriptSrv>(URSCRIPT_SERVICE,
       std::bind(&UrBridgeExternalInterface::handleUrScriptService, this,
-          std::placeholders::_1, std::placeholders::_2), { }, callbackGroup);
+          std::placeholders::_1, std::placeholders::_2),
+      rmw_qos_profile_services_default, mCallbackGroup);
 
-  mTcpClient.start(robotIp, robotPort);
+  return ErrorCode::SUCCESS;
 }
 
 void UrBridgeExternalInterface::handleIOState(
@@ -64,57 +97,40 @@ void UrBridgeExternalInterface::handleUrScript(
 void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
-  constexpr const char *endDelimiter = "end";
-  const size_t endDelimiterStartIdx = request->data.rfind(endDelimiter);
-  if (std::string::npos == endDelimiterStartIdx) {
-    LOGERR("Error, [%s] delimiter not found", endDelimiter);
-    response->ok = false;
+  size_t endDelimiterFindIdx {};
+  const bool success = validateUrscriptServiceRequest(
+      request, response->error_reason, endDelimiterFindIdx);
+  if (!success) {
+    response->success = false;
+    LOGERR("%s", response->error_reason.c_str());
     return;
   }
 
-  std::ostringstream ss;
-  ss << std::setprecision(3);
-  ss << "def prepare():\n" << "\tposition_deviation_warning(True, 0.6)\n"
-     << "\tset_standard_digital_out(" << static_cast<uint32_t>(mRobotPin)
-     << ", " << "True" << ")\n" << "end\n";
-
-  using namespace std::literals;
-
-  mTcpClient.send(ss.str());
-
-  for (;;) {
-    {
-      std::lock_guard<Mutex> lock(mMutex);
-      if (mlatestIoStates.digital_out_states[mRobotPin].state == true) {
-        break;
-      }
-    }
-
-    std::this_thread::sleep_for(10ms);
-  }
-
-  constexpr const char *TAB = "  ";
+  mTcpClient.send(mTogglePinMsgPayload);
+  waitForPinState(PinState::TOGGLED);
 
   std::string data = request->data;
-  std::string pinPostfix = TAB;
-  pinPostfix.append("set_standard_digital_out(").append(
-      std::to_string(static_cast<uint32_t>(mRobotPin))).append(", False)\n");
-
-  data.insert(endDelimiterStartIdx, pinPostfix);
+  data.insert(endDelimiterFindIdx, mUntogglePinMsgPayload);
 
   mTcpClient.send(data);
+  waitForPinState(PinState::UNTOGGLED);
+  response->success = true;
+}
 
-  for (;;) {
+void UrBridgeExternalInterface::waitForPinState(PinState state) {
+  using namespace std::literals;
+
+  const bool waitCondidition = PinState::TOGGLED == state ? true : false;
+  while (true) {
     {
       std::lock_guard<Mutex> lock(mMutex);
-      if (mlatestIoStates.digital_out_states[mRobotPin].state == false) {
+      if (waitCondidition ==
+          mlatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
         break;
       }
     }
 
     std::this_thread::sleep_for(10ms);
   }
-
-  response->ok = true;
 }
 

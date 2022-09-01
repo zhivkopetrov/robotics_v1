@@ -1,19 +1,33 @@
-#include "urscript_bridge/external_api/UrBridgeExternalInterface.h"
+//System headers
+#include <cstdint>
 
-#include <rclcpp/executors/multi_threaded_executor.hpp>
+//Other libraries headers
+#include "utils/Log.h"
 
-int main(int argc, char **argv) {
-  rclcpp::init(argc, argv);
+//Own components headers
+#include "urscript_bridge/core/UrBridgeApplication.h"
+#include "urscript_bridge/config/UrBridgeConfigGenerator.h"
 
-  // Allow undeclared node parameters.
-  rclcpp::NodeOptions nodeOptions;
-  nodeOptions.allow_undeclared_parameters(true);
-  nodeOptions.automatically_declare_parameters_from_overrides(true);
+int32_t main(int32_t argc, char **args) {
+  UrBridgeApplication app;
 
-  auto node = std::make_shared<UrBridgeExternalInterface>(nodeOptions);
-  rclcpp::executors::MultiThreadedExecutor e;
-  e.add_node(node);
-  e.spin();
+  const auto dependencies = UrBridgeConfigGenerator::generateDependencies(
+      argc, args);
+  if (ErrorCode::SUCCESS != app.loadDependencies(dependencies)) {
+    LOGERR("app.loadDependencies() failed");
+    return EXIT_FAILURE;
+  }
+
+  const auto cfg = UrBridgeConfigGenerator::generateConfig();
+  if (ErrorCode::SUCCESS != app.init(cfg)) {
+    LOGERR("app.init() failed");
+    return EXIT_FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != app.run()) {
+    LOGERR("app.run() failed");
+    return EXIT_FAILURE;
+  }
 
   return EXIT_SUCCESS;
 }

@@ -11,8 +11,10 @@
 #include <urscript_interfaces/srv/ur_script.hpp>
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
+#include "utils/ErrorCode.h"
 
 //Own components headers
+#include "urscript_bridge/external_api/config/UrBridgeExternalInterfaceConfig.h"
 #include "urscript_bridge/utils/TcpClient.h"
 
 //Forward declarations
@@ -21,7 +23,9 @@ class UrBridgeExternalInterface: public rclcpp::Node,
     public NonCopyable,
     public NonMoveable {
 public:
-  UrBridgeExternalInterface(const rclcpp::NodeOptions &options);
+  UrBridgeExternalInterface();
+
+  ErrorCode init(const UrBridgeExternalInterfaceConfig& cfg);
 
 private:
   using String = std_msgs::msg::String;
@@ -29,20 +33,35 @@ private:
   using UrScriptSrv = urscript_interfaces::srv::UrScript;
   using Mutex = std::shared_mutex;
 
+  enum class PinState {
+    UNTOGGLED, TOGGLED
+  };
+
+  void initTogglePinMessagesPayload(uint32_t pin);
+  ErrorCode initCommunication();
+
   void handleIOState(const IOStates::SharedPtr ioStates);
   void handleUrScript(const String::SharedPtr urScript);
   void handleUrScriptService(
       const std::shared_ptr<UrScriptSrv::Request> request,
       std::shared_ptr<UrScriptSrv::Response> response);
 
+  void waitForPinState(PinState state);
+
   Mutex mMutex;
   TcpClient mTcpClient;
-  uint8_t mRobotPin { };
+  uint32_t mUrScriptServiceReadyPin { };
 
   IOStates mlatestIoStates;
+  std::string mTogglePinMsgPayload;
+  std::string mUntogglePinMsgPayload;
+
   rclcpp::Subscription<IOStates>::SharedPtr mIoStatesSubscribtion;
   rclcpp::Subscription<String>::SharedPtr mUrScriptSubscribtion;
   rclcpp::Service<UrScriptSrv>::SharedPtr mUrScriptService;
+
+  const rclcpp::CallbackGroup::SharedPtr mCallbackGroup = create_callback_group(
+      rclcpp::CallbackGroupType::Reentrant);
 };
 
 #endif /* URSCRIPT_BRIDGE_URBRIDGEEXTERNALINTERFACE_H */
