@@ -1,19 +1,16 @@
 # run project from the workspace folder
 
-colcon build --packages-up-to resource_builder --event-handlers console_direct+ --event-handlers console_cohesion+
+# setup
 . install/setup.bash
-ros2 run resource_builder resource_builder src/robo_miner/robo_miner_gui
-#if ROS2 is unable to find the package run the command from the install folder:
-./install/resource_builder/lib/resource_builder/resource_builder src/robo_miner/robo_miner_gui
-colcon build --packages-up-to resource_builder --event-handlers console_direct+ --event-handlers console_cohesion+
-. install/setup.bash
-ros2 run robo_miner_gui robo_miner_gui
 
+# run
+ros2 launch robo_miner_gui launch.py
 
-# how to call nested services
-# arguments must be in a valid YML format
-# add curcly braces around the nested messages
+# How to call nested services:
+# Arguments must be in a valid YML format.
+# Add curcly braces around the nested messages
 
+# API
 ros2 service call /query_initial_robot_position robo_miner_interfaces/srv/QueryInitialRobotPosition {}\
 
 ros2 service call /move_robot robo_miner_interfaces/srv/RobotMove "{ robot_move_type: { move_type: 0} }"
