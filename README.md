@@ -20,5 +20,23 @@ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin
 #for full information check `colcon build --help
 ```
 
+**Automatic asset information generation**
+The first time the project is build it will fail compilation, because you are missing some auto-generated headers.
+To resolve this follow the instructios:
+```
+# build the resource builder tool
+colcon build --symlink-install --packages-up-to resource_builder --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin/clang++
+
+# auto generate C++ headers and asset information for the GUI projects:
+./install/resource_builder/lib/resource_builder/resource_builder src/robo_collector/robo_collector_gui
+./install/resource_builder/lib/resource_builder/resource_builder src/robo_collector/robo_collector_controller
+./install/resource_builder/lib/resource_builder/resource_builder src/robo_miner/robo_miner_gui
+./install/resource_builder/lib/resource_builder/resource_builder src/robo_cleaner/robo_cleaner_gui
+./install/resource_builder/lib/resource_builder/resource_builder src/ur_dev/ur_control_gui
+
+# build the whole workspace
+colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin/clang++
+```
+
 **Dependency hierarchy diagram**
 ![](doc/hierarchy_diagram.svg)
