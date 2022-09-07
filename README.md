@@ -7,6 +7,14 @@ The workspace contains several interesting visual mini-games with their respecti
 - Robo Miner - focused on learning ROS2 services
 - Robo Cleaner - focused on learning ROS2 actions
 
+**Git submodules**
+This repository has it's dependencies configured as git submodules.
+To clone them, step inside the repository and run the following instructions
+```
+git submodule init
+git submodule update
+```
+
 **Ament CMake (Colcon) meta build system usage**
 ```
 colcon build #build all packages with default settings
