@@ -67,7 +67,7 @@ void UrBridgeRos2Params::validate() {
   }
 
   constexpr uint32_t maxPinIdx = 17;
-  if ((0 > urScriptServiceReadyPin) || (urScriptServiceReadyPin > maxPinIdx)) {
+  if (urScriptServiceReadyPin > maxPinIdx) {
     handleParamError(URSCRIPT_SERVICE_READY_PIN_PARAM_NAME,
         urScriptServiceReadyPin, DEFAULT_URSCRIPT_SERVICE_READY_PIN);
   }
