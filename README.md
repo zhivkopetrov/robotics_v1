@@ -6,6 +6,8 @@ The workspace contains several interesting visual mini-games with their respecti
 - Robo Collector - focused on learning ROS2 topics
 - Robo Miner - focused on learning ROS2 services
 - Robo Cleaner - focused on learning ROS2 actions
+- UR Dev - focused on learning UR robotics movements through URScript
+- UR Driver - forked repositories of Universal Robots Client Library and Universal Robots ROS2 driver
 
 **Git submodules**
 This repository has it's dependencies configured as git submodules.
