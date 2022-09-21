@@ -12,7 +12,7 @@
 //Own components headers
 
 namespace {
-constexpr auto NODE_NAME = "RoboCollectorGuiRos2Params";
+constexpr auto NODE_NAME = "RoboCollectorGuiRos2ParamProvider";
 
 constexpr auto GUI_WINDOW_X_PARAM_NAME = "gui_window_x";
 constexpr auto GUI_WINDOW_Y_PARAM_NAME = "gui_window_y";
@@ -98,7 +98,7 @@ void RoboCollectorGuiRos2Params::validate() {
 }
 
 RoboCollectorGuiRos2ParamProvider::RoboCollectorGuiRos2ParamProvider()
-    : rclcpp::Node("RoboCollectorGuiRos2ParamProvider") {
+    : rclcpp::Node(NODE_NAME) {
   declare_parameter<int32_t>(GUI_WINDOW_X_PARAM_NAME, DEFAULT_WINDOW_X);
   declare_parameter<int32_t>(GUI_WINDOW_Y_PARAM_NAME, DEFAULT_WINDOW_Y);
   declare_parameter<int32_t>(GUI_WINDOW_WIDTH_PARAM_NAME, DEFAULT_WINDOW_WIDTH);
