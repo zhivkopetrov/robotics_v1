@@ -39,15 +39,10 @@ void CollectorGuiExternalBridge::publishToggleHelpPage() const {
   _toggleHelpPagePublisher->publish(Empty());
 }
 
-void CollectorGuiExternalBridge::publishRobotAct(MoveType moveType) const {
-  if (MoveType::UNKNOWN == moveType) {
-    LOGERR("Error, received unsupported MoveType: %d", getEnumValue(moveType));
-    return;
-  }
-
-  RobotMoveType msg;
-  msg.move_type = getMoveTypeField(moveType);
-  _robotActPublisher->publish(msg);
+void CollectorGuiExternalBridge::publishRobotAct(
+    [[maybe_unused]]MoveType moveType) const {
+  LOGR("Oh no ... nothing happened ... and the buttons remained locked. "
+       "Maybe something will unlock them externally?");
 }
 
 void CollectorGuiExternalBridge::publishUserAuthenticate(const UserData &data) {
@@ -93,9 +88,6 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
 
   rclcpp::PublisherOptions publisherOptions;
   publisherOptions.callback_group = _publishersCallbackGroup;
-
-  _robotActPublisher = create_publisher<RobotMoveType>(ROBOT_MOVE_TYPE_TOPIC,
-      qos, publisherOptions);
 
   _toggleHelpPagePublisher = create_publisher<Empty>(TOGGLE_HELP_PAGE_TOPIC,
       queueSize, publisherOptions);
