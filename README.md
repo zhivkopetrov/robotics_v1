@@ -26,7 +26,7 @@ colcon build --packages-select <package_name> #build only package_name without i
 colcon build --event-handlers console_direct+ --event-handlers console_cohesion+ #show build and install process logs
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin/clang++ #provide any list of CMake args
 
-#all of the colconn build command can be combined
+#all of the colcon build command can be combined
 #for full information check `colcon build --help
 ```
 
@@ -50,3 +50,11 @@ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX
 
 **Dependency hierarchy diagram**
 ![](doc/hierarchy_diagram.svg)
+
+
+**Previews**
+******ur_control_gui + Rviz2 + UR ros driver 2******
+![](doc/previews/ur_control_gui.png)
+
+******robo_collector_gui + robo_collector_controller******
+![](doc/previews/robo_collector.png)
