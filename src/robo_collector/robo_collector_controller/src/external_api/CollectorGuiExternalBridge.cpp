@@ -77,11 +77,12 @@ ErrorCode CollectorGuiExternalBridge::initOutInterface(
 ErrorCode CollectorGuiExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr auto queueSize = 10;
-  _userAuthenticatePublisher = create_publisher<UserAuthenticate>(
-      USER_AUTHENTICATE_TOPIC, queueSize);
 
   rclcpp::QoS qos(queueSize);
-  qos.transient_local(); //enable message latching for late joining subscribers
+  rclcpp::QoS latchQos = qos;
+
+  //enable message latching for late joining subscribers
+  latchQos.transient_local();
 
   rclcpp::SubscriptionOptions subsriptionOptions;
   subsriptionOptions.callback_group = _subscriberCallbackGroup;
@@ -89,19 +90,25 @@ ErrorCode CollectorGuiExternalBridge::initCommunication() {
   rclcpp::PublisherOptions publisherOptions;
   publisherOptions.callback_group = _publishersCallbackGroup;
 
+  //only _userAuthenticatePublisherr should use the 'latchQoS' object
+  //this will allow independent start order of the
+  //client(robo_collector_controler) and the server(robo_collector_gui)
+  _userAuthenticatePublisher = create_publisher<UserAuthenticate>(
+      USER_AUTHENTICATE_TOPIC, latchQos);
+
   _toggleHelpPagePublisher = create_publisher<Empty>(TOGGLE_HELP_PAGE_TOPIC,
-      queueSize, publisherOptions);
+      qos, publisherOptions);
 
   _toggleDebugInfoPublisher = create_publisher<Empty>(TOGGLE_DEBUG_INFO_TOPIC,
-      queueSize, publisherOptions);
+      qos, publisherOptions);
 
   _enableRobotTurnSubscription = create_subscription<Empty>(
-      ENABLE_ROBOT_INPUT_TOPIC, queueSize,
+      ENABLE_ROBOT_INPUT_TOPIC, qos,
       std::bind(&CollectorGuiExternalBridge::onEnableRobotTurnMsg, this, _1),
       subsriptionOptions);
 
   _shutdownControllerSubscription = create_subscription<Empty>(
-      SHUTDOWN_CONTROLLER_TOPIC, queueSize,
+      SHUTDOWN_CONTROLLER_TOPIC, qos,
       std::bind(&CollectorGuiExternalBridge::onControllerShutdownMsg, this, _1),
       subsriptionOptions);
 

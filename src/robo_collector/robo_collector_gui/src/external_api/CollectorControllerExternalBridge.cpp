@@ -85,9 +85,10 @@ ErrorCode CollectorControllerExternalBridge::initOutInterface(
 ErrorCode CollectorControllerExternalBridge::initCommunication() {
   using namespace std::placeholders;
   constexpr size_t queueSize = 10;
-  const rclcpp::QoS qos(queueSize);
 
+  const rclcpp::QoS qos(queueSize);
   rclcpp::QoS latchQoS = qos;
+
   //enable message latching for late joining subscribers
   latchQoS.transient_local();
 
@@ -97,13 +98,16 @@ ErrorCode CollectorControllerExternalBridge::initCommunication() {
   rclcpp::PublisherOptions publisherOptions;
   publisherOptions.callback_group = _publishersCallbackGroup;
 
+  //only _userAuthenticateSubscriber should use the 'latchQoS' object
+  //this will allow independent start order of the
+  //client(robo_collector_controler) and the server(robo_collector_gui)
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
-      USER_AUTHENTICATE_TOPIC, qos,
+      USER_AUTHENTICATE_TOPIC, latchQoS,
       std::bind(&CollectorControllerExternalBridge::onUserAuthenticateMsg, this,
           _1), subsriptionOptions);
 
   _playerActSubscriber = create_subscription<RobotMoveType>(
-      ROBOT_MOVE_TYPE_TOPIC, latchQoS,
+      ROBOT_MOVE_TYPE_TOPIC, qos,
       std::bind(&CollectorControllerExternalBridge::onMoveMsg, this, _1),
       subsriptionOptions);
 
