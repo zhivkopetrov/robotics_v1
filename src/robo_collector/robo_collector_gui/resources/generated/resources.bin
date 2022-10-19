@@ -1,0 +1,235 @@
+# This file is auto-generated. Do not modify it. 
+
+# Resource Builder Tool version 1.0 
+# Author: Zhivko Petrov
+
+# All static widgets count:
+25                  
+
+# All dynamic widgets count:
+0                   
+
+# Size of all files in kBytes:
+1273                
+
+0x50F97991CE94C9BC
+p/background/map.png
+126
+0
+0 0 1848 1053
+1
+0 0 1848 1053
+
+0xE311B3D838C81E71
+p/background/tile.png
+3
+0
+0 0 160 160
+1
+0 0 160 160
+
+0x4A322D3E51258265
+p/background/obstacle.png
+6
+0
+0 0 120 120
+1
+0 0 120 120
+
+0x79318CA9C3556C10
+p/entities/player_robot.png
+34
+0
+0 0 160 160
+1
+0 0 160 160
+
+0xCEBDC4CACDE35E2B
+p/entities/enemy_robots.png
+40
+0
+0 0 480 160
+3
+0 0 160 160
+160 0 160 160
+320 0 160 160
+
+0x86518DED92E03EBE
+p/stars/star_single.png
+8
+0
+0 0 670 318
+2
+0 0 335 318
+335 0 335 318
+
+0xB6F146314B2A08D4
+p/stars/stars.png
+16
+0
+0 0 358 660
+4
+0 0 358 165
+0 165 358 165
+0 330 358 165
+0 495 358 165
+
+0x8DF7ACDAA833451F
+p/panels/health_panel.png
+15
+0
+0 0 495 74
+1
+0 0 495 74
+
+0x47A8FA33A2F9F010
+p/panels/health_indicator.png
+7
+0
+0 0 400 47
+1
+0 0 400 47
+
+0x861DBFC99AF7A483
+p/entities/damage_marker.png
+4
+0
+0 0 38 62
+1
+0 0 38 62
+
+0xA3C786C1A68E56AA
+p/panels/coin_panel.png
+15
+0
+0 0 500 150
+1
+0 0 500 150
+
+0x6C8D337F6DA83B2F
+p/panels/time_panel.png
+15
+0
+0 0 500 150
+1
+0 0 500 150
+
+0x646E835630C3A191
+p/panels/hor_delimiter.png
+10
+0
+0 0 404 96
+2
+0 0 404 48
+0 48 404 48
+
+0xB1A38BE38D6E5889
+p/panels/vert_delimiter.png
+15
+0
+0 0 96 404
+2
+0 0 48 404
+48 0 48 404
+
+0x0740EBC7940E0C63
+p/coin_animations/gold/coin_anim_gold.png
+73
+0
+0 0 1000 100
+10
+0 0 100 100
+100 0 100 100
+200 0 100 100
+300 0 100 100
+400 0 100 100
+500 0 100 100
+600 0 100 100
+700 0 100 100
+800 0 100 100
+900 0 100 100
+
+0xF1675AE05BA0AD98
+p/coin_animations/silver/coin_anim_silver.png
+90
+0
+0 0 1000 100
+10
+0 0 100 100
+100 0 100 100
+200 0 100 100
+300 0 100 100
+400 0 100 100
+500 0 100 100
+600 0 100 100
+700 0 100 100
+800 0 100 100
+900 0 100 100
+
+0x959E30F9B2273F3B
+p/coin_animations/bronze/coin_anim_bronze.png
+80
+0
+0 0 1000 100
+10
+0 0 100 100
+100 0 100 100
+200 0 100 100
+300 0 100 100
+400 0 100 100
+500 0 100 100
+600 0 100 100
+700 0 100 100
+800 0 100 100
+900 0 100 100
+
+0x3AF5F81ADB12A357
+p/buttons/up_button.png
+45
+0
+0 0 420 140
+3
+0 0 140 140
+140 0 140 140
+280 0 140 140
+
+0xAF98C264A4F2075C
+p/buttons/left_button.png
+42
+0
+0 0 420 140
+3
+0 0 140 140
+140 0 140 140
+280 0 140 140
+
+0x1217DF32ED9C6FF0
+p/buttons/right_button.png
+42
+0
+0 0 420 140
+3
+0 0 140 140
+140 0 140 140
+280 0 140 140
+
+0xAC17DF8F1580E886
+p/buttons/help_button.png
+18
+0
+0 0 210 70
+3
+0 0 70 70
+70 0 70 70
+140 0 70 70
+
+0x6021C2965A2F26C3
+p/buttons/settings_button.png
+20
+0
+0 0 210 70
+3
+0 0 70 70
+70 0 70 70
+140 0 70 70
+

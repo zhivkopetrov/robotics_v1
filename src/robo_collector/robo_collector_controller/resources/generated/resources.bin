@@ -1,0 +1,90 @@
+# This file is auto-generated. Do not modify it. 
+
+# Resource Builder Tool version 1.0 
+# Author: Zhivko Petrov
+
+# All static widgets count:
+9                   
+
+# All dynamic widgets count:
+0                   
+
+# Size of all files in kBytes:
+397                 
+
+0x50F97991CE94C9BC
+p/background/map.png
+22
+0
+0 0 648 553
+1
+0 0 648 553
+
+0x646E835630C3A191
+p/panels/hor_delimiter.png
+10
+0
+0 0 404 96
+2
+0 0 404 48
+0 48 404 48
+
+0xB1A38BE38D6E5889
+p/panels/vert_delimiter.png
+15
+0
+0 0 96 404
+2
+0 0 48 404
+48 0 48 404
+
+0x3AF5F81ADB12A357
+p/buttons/up_button.png
+45
+0
+0 0 420 140
+3
+0 0 140 140
+140 0 140 140
+280 0 140 140
+
+0xAF98C264A4F2075C
+p/buttons/left_button.png
+42
+0
+0 0 420 140
+3
+0 0 140 140
+140 0 140 140
+280 0 140 140
+
+0x1217DF32ED9C6FF0
+p/buttons/right_button.png
+42
+0
+0 0 420 140
+3
+0 0 140 140
+140 0 140 140
+280 0 140 140
+
+0xAC17DF8F1580E886
+p/buttons/help_button.png
+18
+0
+0 0 210 70
+3
+0 0 70 70
+70 0 70 70
+140 0 70 70
+
+0x6021C2965A2F26C3
+p/buttons/settings_button.png
+20
+0
+0 0 210 70
+3
+0 0 70 70
+70 0 70 70
+140 0 70 70
+
