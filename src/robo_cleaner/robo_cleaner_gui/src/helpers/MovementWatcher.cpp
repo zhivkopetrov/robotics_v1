@@ -276,7 +276,6 @@ void MovementWatcher::processRotationMovement() {
 
 void MovementWatcher::reset() {
   _currProgress.reset();
-  _currMoveType = MoveType::UNKNOWN;
   _targetAbsolutePos = Points::UNDEFINED;
   _isFeedbackReportActive = false;
   _targetRotation = 0.0;
