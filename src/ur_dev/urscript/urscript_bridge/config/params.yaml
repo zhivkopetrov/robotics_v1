@@ -10,7 +10,7 @@
     
     #default value of 0 will use number of cpu threads
     #used only for MULTI_THREADED executor
-    ros2_executor_threads_num: 3
+    ros2_executor_threads_num: 4
     
     robot_ip: "0.0.0.0"
     robot_port: 30003

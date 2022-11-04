@@ -10,10 +10,13 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   
   <build_depend>rclcpp</build_depend>
-  <build_depend>rosidl_default_generators</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
   <build_depend>boost</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>ur_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
   <build_depend>cmake_helpers</build_depend>
   <build_depend>ros2_game_engine</build_depend>
   <build_depend>urscript_interfaces</build_depend>
@@ -21,8 +24,12 @@
 
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
   <exec_depend>boost</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
   <exec_depend>ur_msgs</exec_depend>
   <exec_depend>ros2_game_engine</exec_depend>
   <exec_depend>urscript_interfaces</exec_depend>

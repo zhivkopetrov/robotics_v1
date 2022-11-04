@@ -12,8 +12,12 @@ find_package(cmake_helpers REQUIRED)
 find_package(ros2_game_engine REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(ur_msgs REQUIRED)
 find_package(urscript_interfaces REQUIRED)
 find_package(urscript_common REQUIRED)
@@ -31,12 +35,15 @@ add_executable(
         ${_INC_DIR}/external_api/UrBridgeRos2ParamProvider.h
         ${_INC_DIR}/external_api/config/UrBridgeExternalInterfaceConfig.h
         ${_INC_DIR}/utils/TcpClient.h
+        ${_INC_DIR}/utils/Tf2Utils.h
+        ${_INC_DIR}/defines/RobotDefines.h
      
      	${_SRC_DIR}/config/UrBridgeConfigGenerator.cpp
 		${_SRC_DIR}/core/UrBridgeApplication.cpp
 		${_SRC_DIR}/external_api/UrBridgeExternalInterface.cpp
 		${_SRC_DIR}/external_api/UrBridgeRos2ParamProvider.cpp
 	    ${_SRC_DIR}/utils/TcpClient.cpp
+	    ${_SRC_DIR}/utils/Tf2Utils.cpp
         ${_SRC_DIR}/main.cpp
 )
 
@@ -65,7 +72,11 @@ ament_target_dependencies(
     PUBLIC
 		rclcpp
 		std_msgs
+		geometry_msgs
 		ur_msgs
+		tf2
+		tf2_ros
+		tf2_geometry_msgs
 		urscript_interfaces
 )
 

@@ -8,14 +8,15 @@
 //Other libraries headers
 #include "urscript_common/message_helpers/UrScriptMessageHelpers.h"
 #include "urscript_common/defines/UrScriptTopics.h"
+#include "utils/Log.h"
 
 //Own components headers
-#include "utils/Log.h"
+#include "urscript_bridge/defines/RobotDefines.h"
+#include "urscript_bridge/utils/Tf2Utils.h"
 
 namespace {
 constexpr auto NODE_NAME = "urscript_bridge";
-constexpr auto DRIVER_IO_STATES_TOPIC_NAME =
-    "io_and_status_controller/io_states";
+
 }
 
 UrBridgeExternalInterface::UrBridgeExternalInterface()
@@ -67,8 +68,12 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
   subsriptionOptions.callback_group = mCallbackGroup;
 
   mIoStatesSubscribtion = create_subscription<IOStates>(
-      DRIVER_IO_STATES_TOPIC_NAME, qos,
+      UR_DRIVER_IO_STATES_TOPIC_NAME, qos,
       std::bind(&UrBridgeExternalInterface::handleIOState, this,
+          std::placeholders::_1), subsriptionOptions);
+
+  mTfSubscribtion = create_subscription<TFMessage>(UR_DRIVER_TF_TOPIC_NAME, qos,
+      std::bind(&UrBridgeExternalInterface::handleTfMessage, this,
           std::placeholders::_1), subsriptionOptions);
 
   mUrScriptSubscribtion = create_subscription<String>(URSCRIPT_TOPIC, qos,
@@ -85,8 +90,23 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
 
 void UrBridgeExternalInterface::handleIOState(
     const IOStates::SharedPtr ioStates) {
-  std::lock_guard<Mutex> lock(mMutex);
-  mlatestIoStates = *ioStates;
+  std::lock_guard<Mutex> lock(mIoMutex);
+  mLatestIoStates = *ioStates;
+}
+
+#include <iostream>
+#include <iomanip>
+
+void UrBridgeExternalInterface::handleTfMessage(const TFMessage::SharedPtr tf) {
+  std::lock_guard<Mutex> lock(mTfMutex);
+  mLatestTfMsg = *tf;
+
+  geometry_msgs::msg::Vector3 angleAxis;
+  std::string errorReason;
+  const bool success = getAngleAxisRepresentationForLink(mLatestTfMsg,
+      ur_links::UPPER_ARM_LINK_NAME, angleAxis, errorReason);
+  std::cout << "success: " << std::boolalpha << success << ", errorReason: " << errorReason << std::endl;
+  std::cout << "Rx: " << angleAxis.x << ", Ry: " << angleAxis.y << ", Rz: " << angleAxis.z << std::endl;
 }
 
 void UrBridgeExternalInterface::handleUrScript(
@@ -97,9 +117,9 @@ void UrBridgeExternalInterface::handleUrScript(
 void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
-  size_t endDelimiterFindIdx {};
-  const bool success = validateUrscriptServiceRequest(
-      request, response->error_reason, endDelimiterFindIdx);
+  size_t endDelimiterFindIdx { };
+  const bool success = validateUrscriptServiceRequest(request,
+      response->error_reason, endDelimiterFindIdx);
   if (!success) {
     response->success = false;
     LOGERR("%s", response->error_reason.c_str());
@@ -123,9 +143,8 @@ void UrBridgeExternalInterface::waitForPinState(PinState state) {
   const bool waitCondidition = PinState::TOGGLED == state ? true : false;
   while (true) {
     {
-      std::lock_guard<Mutex> lock(mMutex);
-      if (waitCondidition ==
-          mlatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
+      std::lock_guard<Mutex> lock(mIoMutex);
+      if (waitCondidition == mLatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
         break;
       }
     }

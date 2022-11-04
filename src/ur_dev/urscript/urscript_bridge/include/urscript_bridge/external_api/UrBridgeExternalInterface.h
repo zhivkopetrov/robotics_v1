@@ -8,6 +8,7 @@
 #include <std_msgs/msg/string.hpp>
 #include <std_srvs/srv/trigger.hpp>
 #include <ur_msgs/msg/io_states.hpp>
+#include <tf2_msgs/msg/tf_message.hpp>
 #include <urscript_interfaces/srv/ur_script.hpp>
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
@@ -31,6 +32,7 @@ private:
   using String = std_msgs::msg::String;
   using IOStates = ur_msgs::msg::IOStates;
   using UrScriptSrv = urscript_interfaces::srv::UrScript;
+  using TFMessage = tf2_msgs::msg::TFMessage;
   using Mutex = std::shared_mutex;
 
   enum class PinState {
@@ -41,6 +43,7 @@ private:
   ErrorCode initCommunication();
 
   void handleIOState(const IOStates::SharedPtr ioStates);
+  void handleTfMessage(const TFMessage::SharedPtr tf);
   void handleUrScript(const String::SharedPtr urScript);
   void handleUrScriptService(
       const std::shared_ptr<UrScriptSrv::Request> request,
@@ -48,15 +51,20 @@ private:
 
   void waitForPinState(PinState state);
 
-  Mutex mMutex;
   TcpClient mTcpClient;
   uint32_t mUrScriptServiceReadyPin { };
 
-  IOStates mlatestIoStates;
   std::string mTogglePinMsgPayload;
   std::string mUntogglePinMsgPayload;
 
+  Mutex mIoMutex;
+  IOStates mLatestIoStates;
+
+  Mutex mTfMutex;
+  TFMessage mLatestTfMsg;
+
   rclcpp::Subscription<IOStates>::SharedPtr mIoStatesSubscribtion;
+  rclcpp::Subscription<TFMessage>::SharedPtr mTfSubscribtion;
   rclcpp::Subscription<String>::SharedPtr mUrScriptSubscribtion;
   rclcpp::Service<UrScriptSrv>::SharedPtr mUrScriptService;
 
