@@ -6,6 +6,9 @@
 #include <string>
 
 //Other libraries headers
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include "urscript_common/message_helpers/UrScriptMessageHelpers.h"
 #include "urscript_common/defines/UrScriptTopics.h"
 #include "utils/Log.h"
@@ -72,10 +75,6 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
       std::bind(&UrBridgeExternalInterface::handleIOState, this,
           std::placeholders::_1), subsriptionOptions);
 
-  mTfSubscribtion = create_subscription<TFMessage>(UR_DRIVER_TF_TOPIC_NAME, qos,
-      std::bind(&UrBridgeExternalInterface::handleTfMessage, this,
-          std::placeholders::_1), subsriptionOptions);
-
   mUrScriptSubscribtion = create_subscription<String>(URSCRIPT_TOPIC, qos,
       std::bind(&UrBridgeExternalInterface::handleUrScript, this,
           std::placeholders::_1), subsriptionOptions);
@@ -85,6 +84,15 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
           std::placeholders::_1, std::placeholders::_2),
       rmw_qos_profile_services_default, mCallbackGroup);
 
+  mGetEefAngleAxisService = create_service<GetEefAngleAxis>(
+      GET_EEF_ANGLE_AXIS_SERVICE,
+      std::bind(&UrBridgeExternalInterface::handleGetEefAngleAxisService, this,
+          std::placeholders::_1, std::placeholders::_2),
+      rmw_qos_profile_services_default, mCallbackGroup);
+
+  mTfBuffer = std::make_unique<tf2_ros::Buffer>(get_clock());
+  mTfListener = std::make_unique<tf2_ros::TransformListener>(*mTfBuffer);
+
   return ErrorCode::SUCCESS;
 }
 
@@ -92,21 +100,6 @@ void UrBridgeExternalInterface::handleIOState(
     const IOStates::SharedPtr ioStates) {
   std::lock_guard<Mutex> lock(mIoMutex);
   mLatestIoStates = *ioStates;
-}
-
-#include <iostream>
-#include <iomanip>
-
-void UrBridgeExternalInterface::handleTfMessage(const TFMessage::SharedPtr tf) {
-  std::lock_guard<Mutex> lock(mTfMutex);
-  mLatestTfMsg = *tf;
-
-  geometry_msgs::msg::Vector3 angleAxis;
-  std::string errorReason;
-  const bool success = getAngleAxisRepresentationForLink(mLatestTfMsg,
-      ur_links::UPPER_ARM_LINK_NAME, angleAxis, errorReason);
-  std::cout << "success: " << std::boolalpha << success << ", errorReason: " << errorReason << std::endl;
-  std::cout << "Rx: " << angleAxis.x << ", Ry: " << angleAxis.y << ", Rz: " << angleAxis.z << std::endl;
 }
 
 void UrBridgeExternalInterface::handleUrScript(
@@ -135,6 +128,26 @@ void UrBridgeExternalInterface::handleUrScriptService(
   mTcpClient.send(data);
   waitForPinState(PinState::UNTOGGLED);
   response->success = true;
+}
+
+void UrBridgeExternalInterface::handleGetEefAngleAxisService(
+    [[maybe_unused]]const std::shared_ptr<GetEefAngleAxis::Request> request,
+    std::shared_ptr<GetEefAngleAxis::Response> response) {
+  std::lock_guard<Mutex> lock(mTfMutex);
+  try {
+    const geometry_msgs::msg::TransformStamped trasnformStamped =
+        mTfBuffer->lookupTransform(ur_links::BASE_NAME, ur_links::TOOL0_NAME,
+            tf2::TimePointZero);
+    response->success = true;
+    getAngleAxisRepresentation(trasnformStamped.transform.rotation,
+        response->angle_axis);
+  } catch (const tf2::TransformException &ex) {
+    response->success = false;
+    response->error_reason = "Could not transform ";
+    response->error_reason.append(ur_links::BASE_NAME).append(" to ").append(
+        ur_links::TOOL0_NAME).append(", because: ").append(ex.what());
+    LOGERR("%s", response->error_reason.c_str());
+  }
 }
 
 void UrBridgeExternalInterface::waitForPinState(PinState state) {

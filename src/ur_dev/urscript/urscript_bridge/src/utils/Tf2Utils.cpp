@@ -2,7 +2,6 @@
 #include "urscript_bridge/utils/Tf2Utils.h"
 
 //System headers
-#include <algorithm>
 
 //Other libraries headers
 #include <tf2/LinearMath/Quaternion.h>
@@ -10,30 +9,24 @@
 
 //Own components headers
 
-bool getAngleAxisRepresentationForLink(
-    const tf2_msgs::msg::TFMessage &state, std::string_view linkName,
-    geometry_msgs::msg::Vector3 &outAngleAxis, std::string &outErrorCode) {
-
-  auto it = std::find_if(state.transforms.begin(), state.transforms.end(),
-      [&](const geometry_msgs::msg::TransformStamped &transform) {
-        return transform.header.frame_id == linkName;
-      });
-
-  if (it == state.transforms.end()) {
-    outErrorCode = "Link [";
-    outErrorCode.append(linkName).append("] could not be found");
-    return false;
-  }
+void getAngleAxisRepresentation(
+    const geometry_msgs::msg::Quaternion &quaternion,
+    geometry_msgs::msg::Vector3 &outAngleAxis) {
 
   tf2::Quaternion linkQuaternionTf;
-  tf2::convert(it->transform.rotation, linkQuaternionTf);
-  const tf2::Vector3 linkAngleAxisTf = linkQuaternionTf.getAxis()
+  tf2::convert(quaternion, linkQuaternionTf);
+  tf2::Vector3 linkAngleAxisTf = linkQuaternionTf.getAxis()
       * linkQuaternionTf.getAngle();
+
+  constexpr tf2Scalar epsilon = 0.00001;
+  for (auto &value : linkAngleAxisTf.m_floats) {
+    if (epsilon > std::fabs(value)) {
+      value = 0.0;
+    }
+  }
 
   //convert back to geometry_msg format
   outAngleAxis.x = linkAngleAxisTf.m_floats[0]; //Rx
   outAngleAxis.y = linkAngleAxisTf.m_floats[1]; //Ry
   outAngleAxis.z = linkAngleAxisTf.m_floats[2]; //Rz
-
-  return true;
 }

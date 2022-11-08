@@ -8,8 +8,10 @@
 #include <std_msgs/msg/string.hpp>
 #include <std_srvs/srv/trigger.hpp>
 #include <ur_msgs/msg/io_states.hpp>
-#include <tf2_msgs/msg/tf_message.hpp>
-#include <urscript_interfaces/srv/ur_script.hpp>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_ros/buffer.h>
+#include "urscript_interfaces/srv/ur_script.hpp"
+#include "urscript_interfaces/srv/get_eef_angle_axis.hpp"
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
 #include "utils/ErrorCode.h"
@@ -32,7 +34,7 @@ private:
   using String = std_msgs::msg::String;
   using IOStates = ur_msgs::msg::IOStates;
   using UrScriptSrv = urscript_interfaces::srv::UrScript;
-  using TFMessage = tf2_msgs::msg::TFMessage;
+  using GetEefAngleAxis = urscript_interfaces::srv::GetEefAngleAxis;
   using Mutex = std::shared_mutex;
 
   enum class PinState {
@@ -43,11 +45,16 @@ private:
   ErrorCode initCommunication();
 
   void handleIOState(const IOStates::SharedPtr ioStates);
-  void handleTfMessage(const TFMessage::SharedPtr tf);
+
   void handleUrScript(const String::SharedPtr urScript);
+
   void handleUrScriptService(
       const std::shared_ptr<UrScriptSrv::Request> request,
       std::shared_ptr<UrScriptSrv::Response> response);
+
+  void handleGetEefAngleAxisService(
+      const std::shared_ptr<GetEefAngleAxis::Request> request,
+      std::shared_ptr<GetEefAngleAxis::Response> response);
 
   void waitForPinState(PinState state);
 
@@ -60,13 +67,14 @@ private:
   Mutex mIoMutex;
   IOStates mLatestIoStates;
 
+  std::unique_ptr<tf2_ros::Buffer> mTfBuffer;
+  std::unique_ptr<tf2_ros::TransformListener> mTfListener;
   Mutex mTfMutex;
-  TFMessage mLatestTfMsg;
 
   rclcpp::Subscription<IOStates>::SharedPtr mIoStatesSubscribtion;
-  rclcpp::Subscription<TFMessage>::SharedPtr mTfSubscribtion;
   rclcpp::Subscription<String>::SharedPtr mUrScriptSubscribtion;
   rclcpp::Service<UrScriptSrv>::SharedPtr mUrScriptService;
+  rclcpp::Service<GetEefAngleAxis>::SharedPtr mGetEefAngleAxisService;
 
   const rclcpp::CallbackGroup::SharedPtr mCallbackGroup = create_callback_group(
       rclcpp::CallbackGroupType::Reentrant);

@@ -15,6 +15,7 @@ constexpr auto UR_DRIVER_IO_STATES_TOPIC_NAME =
 constexpr auto UR_DRIVER_TF_TOPIC_NAME = "tf";
 
 constexpr auto URSCRIPT_SERVICE = "urscript_service";
+constexpr auto GET_EEF_ANGLE_AXIS_SERVICE = "get_eef_angle_axis";
 
 
 #endif /* URSCRIPT_COMMON_URSCRIPTTOPICS_H_ */
