@@ -125,8 +125,8 @@ RoboCleanerSolutionValidatorConfig generateSolutionValidatorConfig(
 EnergyHandlerConfig generateEnergyHandlerConfig(int32_t levelId) {
   EnergyHandlerConfig cfg;
 
-  constexpr auto baseEnergyMoves = 20;
-  constexpr auto additionalEnergyPerLevel = 20;
+  constexpr auto baseEnergyMoves = 30;
+  constexpr auto additionalEnergyPerLevel = 30;
   cfg.maxMovesOnFullEnergy = baseEnergyMoves
       + (levelId * additionalEnergyPerLevel);
 
