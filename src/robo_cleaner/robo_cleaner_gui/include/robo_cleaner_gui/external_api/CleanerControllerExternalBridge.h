@@ -127,8 +127,13 @@ private:
       create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   const rclcpp::CallbackGroup::SharedPtr _publishersCallbackGroup =
       create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+  //temporary change Reentrant callback group to MutuallyExclusive
+  //in order to resolve internal ROS2 implementation crash
+  //TODO: figure out why crash is happening only inside the VM
+  //and not on the host OS
   const rclcpp::CallbackGroup::SharedPtr _actionsCallbackGroup =
-      create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+      create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
 
   ControllerStatus _controllerStatus = ControllerStatus::IDLE;
 };

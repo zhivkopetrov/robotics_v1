@@ -351,7 +351,7 @@ void CleanerControllerExternalBridge::handleChargeBatteryService(
     const std::shared_ptr<ChargeBattery::Request> request,
     std::shared_ptr<ChargeBattery::Response> response) {
   //TODO add another state to controller status - CHARGING
-  //reject charing if controller is active
+  //reject charging if controller is active
   //reject movement if controller is charging
 
   //TODO-2 add a callback to panelHandler anim modification end
