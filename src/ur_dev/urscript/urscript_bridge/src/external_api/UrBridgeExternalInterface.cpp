@@ -4,6 +4,7 @@
 //System headers
 #include <sstream>
 #include <string>
+#include <thread>
 
 //Other libraries headers
 #include <tf2/LinearMath/Quaternion.h>
@@ -19,6 +20,17 @@
 
 namespace {
 constexpr auto NODE_NAME = "urscript_bridge";
+
+template<typename T>
+void waitForPublishers(const T& subscription) {
+  while (0 == subscription->get_publisher_count()) {
+    LOG("Topic [%s] publishers not available. Waiting 1s ...",
+        subscription->get_topic_name());
+
+    using namespace std::literals;
+    std::this_thread::sleep_for(1s);
+  }
+}
 
 }
 
@@ -57,10 +69,9 @@ void UrBridgeExternalInterface::initTogglePinMessagesPayload(uint32_t pin) {
      << "True" << ")\n" << "end\n";
   mTogglePinMsgPayload = ss.str();
 
-  constexpr const char *TAB = "  ";
-  mUntogglePinMsgPayload = TAB;
-  mUntogglePinMsgPayload.append("set_standard_digital_out(").append(
-      std::to_string(mUrScriptServiceReadyPin)).append(", False)\n");
+  mUntogglePinMsgPayload = "\tset_standard_digital_out(";
+  mUntogglePinMsgPayload.append(std::to_string(mUrScriptServiceReadyPin)).
+      append(", False)\n");
 }
 
 ErrorCode UrBridgeExternalInterface::initCommunication() {
@@ -92,6 +103,8 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
 
   mTfBuffer = std::make_unique<tf2_ros::Buffer>(get_clock());
   mTfListener = std::make_unique<tf2_ros::TransformListener>(*mTfBuffer);
+
+  waitForPublishers(mIoStatesSubscribtion);
 
   return ErrorCode::SUCCESS;
 }
