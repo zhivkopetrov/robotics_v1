@@ -32,7 +32,7 @@ ErrorCode Field::init(const FieldConfig &cfg,
 
   const auto fieldWidth = cfg.description.cols * cfg.description.tileWidth;
   const auto fieldHeight = cfg.description.rows * cfg.description.tileHeight;
-  const auto fieldDimensios = Rectangle(RoboCommonDefines::FIRST_TILE_X_POS,
+  const auto fieldDimensions = Rectangle(RoboCommonDefines::FIRST_TILE_X_POS,
       RoboCommonDefines::FIRST_TILE_Y_POS, fieldWidth, fieldHeight);
 
 #if DEBUG_VISUAL_OVERLAY
@@ -43,7 +43,7 @@ ErrorCode Field::init(const FieldConfig &cfg,
   visualOverlayDimensions.h += (2 * cfg.description.tileHeight);
   _fieldFbo.create(visualOverlayDimensions);
 #else
-  _fieldFbo.create(fieldDimensios);
+  _fieldFbo.create(fieldDimensions);
 #endif //DEBUG_VISUAL_OVERLAY
   _fieldFbo.activateAlphaModulation();
   _fieldFbo.setResetColor(Colors::FULL_TRANSPARENT);

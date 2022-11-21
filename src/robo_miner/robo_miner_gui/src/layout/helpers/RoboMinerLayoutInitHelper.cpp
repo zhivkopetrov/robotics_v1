@@ -78,8 +78,6 @@ ErrorCode RoboMinerLayoutInitHelper::initCrystalHandler(
     const RoboCommonLayoutInterface &commonInterface, RoboMinerLayout &layout) {
   CrystalHandlerConfig cfg;
   cfg.crystalRsrcId = layoutCfg.crystalRsrcId;
-  cfg.tileWidth = layoutCfg.commonLayoutCfg.fieldCfg.description.tileWidth;
-  cfg.tileHeight = layoutCfg.commonLayoutCfg.fieldCfg.description.tileHeight;
   cfg.getFieldDescriptionCb = commonInterface.getFieldDescriptionCb;
 
   if (ErrorCode::SUCCESS != layout._crystalHandler.init(cfg)) {

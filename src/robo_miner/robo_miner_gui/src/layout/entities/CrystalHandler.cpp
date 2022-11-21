@@ -25,13 +25,13 @@ ErrorCode CrystalHandler::init(const CrystalHandlerConfig &cfg) {
     return ErrorCode::FAILURE;
   }
 
+  createFbo();
+
   return ErrorCode::SUCCESS;
 }
 
 void CrystalHandler::draw() const {
-  for (const auto &crystal : _crystals) {
-    crystal.draw();
-  }
+  _allCrystalsFbo.draw();
 }
 
 void CrystalHandler::handleEvent(const InputEvent &e) {
@@ -66,6 +66,8 @@ void CrystalHandler::onCrystalClicked(const FieldPos &fieldPos) {
     const auto crystalId = it->second;
     _crystals[crystalId].setOpacity(FULL_OPACITY / 2);
   }
+
+  updateFbo();
 }
 
 ErrorCode CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
@@ -83,12 +85,14 @@ ErrorCode CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
 
   constexpr auto crystalToTileRatio = 0.62;
   constexpr auto offBegin = (1.0 - crystalToTileRatio) / 2.0;
-  const auto offsetFromTileX = static_cast<int32_t>(offBegin * cfg.tileWidth);
-  const auto offsetFromTileY = static_cast<int32_t>(offBegin * cfg.tileHeight);
+  const auto offsetFromTileX = static_cast<int32_t>(offBegin
+      * fieldDescr.tileWidth);
+  const auto offsetFromTileY = static_cast<int32_t>(offBegin
+      * fieldDescr.tileHeight);
   CrystalConfig crystalCfg;
   crystalCfg.rsrcId = cfg.crystalRsrcId;
-  crystalCfg.width = crystalToTileRatio * cfg.tileWidth;
-  crystalCfg.height = crystalToTileRatio * cfg.tileHeight;
+  crystalCfg.width = crystalToTileRatio * fieldDescr.tileWidth;
+  crystalCfg.height = crystalToTileRatio * fieldDescr.tileHeight;
   crystalCfg.tileOffset = Point(offsetFromTileX, offsetFromTileY);
   crystalCfg.getFieldDescriptionCb = cfg.getFieldDescriptionCb;
   crystalCfg.crystalClickCb = std::bind(&CrystalHandler::onCrystalClicked, this,
@@ -117,5 +121,30 @@ ErrorCode CrystalHandler::initCrystals(const CrystalHandlerConfig &cfg) {
   }
 
   return ErrorCode::SUCCESS;
+}
+
+void CrystalHandler::createFbo() {
+  const auto &fieldDescr = _getFieldDescriptionCb();
+  const auto fieldWidth = fieldDescr.cols * fieldDescr.tileWidth;
+  const auto fieldHeight = fieldDescr.rows * fieldDescr.tileHeight;
+  const auto fieldDimensions = Rectangle(RoboCommonDefines::FIRST_TILE_X_POS,
+      RoboCommonDefines::FIRST_TILE_Y_POS, fieldWidth, fieldHeight);
+
+  _allCrystalsFbo.create(fieldDimensions);
+  _allCrystalsFbo.activateAlphaModulation();
+  _allCrystalsFbo.setResetColor(Colors::FULL_TRANSPARENT);
+  updateFbo();
+}
+
+void CrystalHandler::updateFbo() {
+  _allCrystalsFbo.unlock();
+  _allCrystalsFbo.reset();
+
+  for (const auto &crystal : _crystals) {
+    _allCrystalsFbo.addWidget(crystal.getButtonTexture());
+  }
+
+  _allCrystalsFbo.update();
+  _allCrystalsFbo.lock();
 }
 
