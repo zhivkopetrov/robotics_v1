@@ -105,7 +105,7 @@ FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
 
-  cfg.fboOptimization = FboOptimization::ENABLED;
+  cfg.fboOptimization = FboOptimization::DISABLED;
 
   return cfg;
 }

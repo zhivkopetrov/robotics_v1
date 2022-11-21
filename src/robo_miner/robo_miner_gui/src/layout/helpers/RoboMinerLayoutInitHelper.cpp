@@ -79,6 +79,7 @@ ErrorCode RoboMinerLayoutInitHelper::initCrystalHandler(
   CrystalHandlerConfig cfg;
   cfg.crystalRsrcId = layoutCfg.crystalRsrcId;
   cfg.getFieldDescriptionCb = commonInterface.getFieldDescriptionCb;
+  cfg.fboOptimization = layoutCfg.commonLayoutCfg.fieldCfg.fboOptimization;
 
   if (ErrorCode::SUCCESS != layout._crystalHandler.init(cfg)) {
     LOGERR("Error in _crystalHandler.init()");

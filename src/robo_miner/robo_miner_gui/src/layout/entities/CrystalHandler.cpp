@@ -26,12 +26,19 @@ ErrorCode CrystalHandler::init(const CrystalHandlerConfig &cfg) {
   }
 
   createFbo();
+  _fboOptimization = cfg.fboOptimization;
 
   return ErrorCode::SUCCESS;
 }
 
 void CrystalHandler::draw() const {
-  _allCrystalsFbo.draw();
+  if (FboOptimization::ENABLED == _fboOptimization) {
+    _allCrystalsFbo.draw();
+  } else {
+    for (const auto &crystal : _crystals) {
+      crystal.draw();
+    }
+  }
 }
 
 void CrystalHandler::handleEvent(const InputEvent &e) {
