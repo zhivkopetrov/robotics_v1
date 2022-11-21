@@ -49,6 +49,7 @@ private:
   std::vector<Tile> _tiles; //2D matrix tile layout as 1D representation
   FieldDescription _description;
   ObstacleHandler _obstacleHandler;
+  FboOptimization _fboOptimization = FboOptimization::ENABLED;
 };
 
 #endif /* ROBO_COMMON_FIELD_H_ */

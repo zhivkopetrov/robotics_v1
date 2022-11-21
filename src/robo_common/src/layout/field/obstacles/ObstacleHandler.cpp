@@ -38,6 +38,16 @@ ErrorCode ObstacleHandler::init(
   return ErrorCode::SUCCESS;
 }
 
+void ObstacleHandler::draw() const {
+  for (const auto &obstacle : _innerObstacles) {
+    obstacle.draw();
+  }
+
+  for (const auto &obstacle : _outerObstacles) {
+    obstacle.draw();
+  }
+}
+
 void ObstacleHandler::drawOnFbo(Fbo &fbo) const {
   for (const auto &obstacle : _innerObstacles) {
     obstacle.drawOnFbo(fbo);

@@ -48,6 +48,8 @@ public:
       const ObstacleConfig &cfg, const FieldDescription &fieldDescr,
       const ObstacleOutInterface& interface);
 
+  void draw() const;
+
   void drawOnFbo(Fbo &fbo) const;
 
 private:

@@ -281,6 +281,9 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
 
   cfg.debugConsoleConfig.fontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
+  cfg.maxFrameRate = 500;
+  cfg.debugConsoleConfig.maxFrameRate = 500;
+
   return cfg;
 }
 

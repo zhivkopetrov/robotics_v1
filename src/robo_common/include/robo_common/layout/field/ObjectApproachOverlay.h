@@ -42,6 +42,8 @@ public:
   void changeBoundary(const Rectangle &preScaledBoundary);
 
 #if DEBUG_VISUAL_OVERLAY
+  void draw() const;
+
   void drawOnFbo(Fbo &fbo) const;
 #endif //DEBUG_VISUAL_OVERLAY
 

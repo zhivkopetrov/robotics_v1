@@ -18,4 +18,4 @@
     
     total_game_seconds: 180
     target_win_coins: 30
-    use_local_controller_mode: False
+    use_local_controller_mode: True

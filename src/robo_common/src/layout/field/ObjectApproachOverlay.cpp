@@ -51,6 +51,10 @@ void ObjectApproachOverlay::changeBoundary(const Rectangle &preScaledBoundary) {
 }
 
 #if DEBUG_VISUAL_OVERLAY
+void ObjectApproachOverlay::draw() const {
+  _visualFbo.draw();
+}
+
 void ObjectApproachOverlay::drawOnFbo(Fbo &fbo) const {
   fbo.addWidget(_visualFbo);
 }

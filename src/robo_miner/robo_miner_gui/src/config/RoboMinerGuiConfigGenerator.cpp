@@ -105,6 +105,8 @@ FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
 
+  cfg.fboOptimization = FboOptimization::ENABLED;
+
   return cfg;
 }
 
@@ -271,6 +273,9 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
   cfg.debugConsoleConfig.fontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
+
+  cfg.maxFrameRate = 500;
+  cfg.debugConsoleConfig.maxFrameRate = 500;
 
   return cfg;
 }

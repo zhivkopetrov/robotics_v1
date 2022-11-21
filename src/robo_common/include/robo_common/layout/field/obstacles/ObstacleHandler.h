@@ -28,6 +28,8 @@ public:
                  const std::vector<FieldPos> &innerObstaclePositions,
                  const ObstacleHandlerOutInterface &interface);
 
+  void draw() const;
+
   void drawOnFbo(Fbo &fbo) const;
 
 private:

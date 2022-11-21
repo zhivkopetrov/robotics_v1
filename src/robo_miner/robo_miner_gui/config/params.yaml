@@ -17,5 +17,5 @@
     ros2_executor_threads_num: 6
     
     # suppported levelIds - 1, 2, 3
-    level_id: 1
-    use_fog_of_war: True
+    level_id: 3
+    use_fog_of_war: False
