@@ -8,14 +8,13 @@
 
 //Other libraries headers
 #include "robo_common/defines/RoboCommonFunctionalDefines.h"
+#include "manager_utils/drawing/Fbo.h"
 
 //Own components headers
 #include "robo_miner_gui/layout/entities/Crystal.h"
 
 struct CrystalHandlerConfig {
   uint64_t crystalRsrcId = 0;
-  int32_t tileWidth = 0;
-  int32_t tileHeight = 0;
   GetFieldDescriptionCb getFieldDescriptionCb;
 };
 
@@ -31,11 +30,16 @@ public:
 private:
   ErrorCode initCrystals(const CrystalHandlerConfig& cfg);
 
+  void createFbo();
+  void updateFbo();
+
   std::vector<Crystal> _crystals;
 
   //key = (currRow * maxCols) + currCol
   //value = relative crystal id
   std::unordered_map<int32_t, int32_t> _fieldPosToCrystalIdMapping;
+
+  Fbo _allCrystalsFbo;
 
   GetFieldDescriptionCb _getFieldDescriptionCb;
 };
