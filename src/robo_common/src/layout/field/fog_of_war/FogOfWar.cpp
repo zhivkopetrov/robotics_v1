@@ -49,6 +49,11 @@ void FogOfWar::draw() const {
 }
 
 void FogOfWar::revealAllFogTiles() {
+  if (_isRevealAllFogTilesRequested) {
+    return;
+  }
+  _isRevealAllFogTilesRequested = true;
+
   for (auto &[_, fogTile] : _fogTiles) {
     fogTile.startAnimation();
   }

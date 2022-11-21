@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "sdl_utils/input/InputEvent.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"
 
@@ -32,6 +33,14 @@ void RoboCommonLayout::draw() const {
   _map.draw();
   _field.draw();
   _playerRobot.draw();
+}
+
+void RoboCommonLayout::handleEvent(const InputEvent &e) {
+  if (TouchEvent::KEYBOARD_RELEASE == e.type) {
+    if (Keyboard::KEY_F == e.key) {
+      _fogOfWar.revealAllFogTiles();
+    }
+  }
 }
 
 void RoboCommonLayout::drawSecondLayer() const {

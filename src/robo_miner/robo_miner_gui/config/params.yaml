@@ -18,4 +18,4 @@
     
     # suppported levelIds - 1, 2, 3
     level_id: 3
-    use_fog_of_war: False
+    use_fog_of_war: True
