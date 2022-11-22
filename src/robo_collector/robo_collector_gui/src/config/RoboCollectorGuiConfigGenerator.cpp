@@ -168,6 +168,8 @@ FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
+  cfg.fboOptimization = FboOptimization::DISABLED;
+
   return cfg;
 }
 
