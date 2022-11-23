@@ -113,6 +113,19 @@ void RoboCollectorGuiRos2Params::validate() {
     handleParamError(ENGINE_TARGET_FPS_PARAM_NAME, engineTargetFps,
         DEFAULT_ENGINE_TARGET_FPS);
   }
+  if (0 >= engineTargetFps) {
+    handleParamError(ENGINE_TARGET_FPS_PARAM_NAME, engineTargetFps,
+        DEFAULT_ENGINE_TARGET_FPS);
+  }
+  constexpr auto maxRendererFlagsMaskValue =
+      getEnumValue(RendererFlag::SOFTARE_RENDERER) |
+      getEnumValue(RendererFlag::HARDWARE_RENDERER) |
+      getEnumValue(RendererFlag::VSYNC_ENABLE) |
+      getEnumValue(RendererFlag::FBO_ENABLE);
+  if (maxRendererFlagsMaskValue < rendererFlagsMask) {
+    handleParamError(RENDERER_FLAGS_MASK_PARAM_NAME, rendererFlagsMask,
+        DEFAULT_RENDERER_FLAGS_MASK);
+  }
   const size_t maxHardwareThreads = std::thread::hardware_concurrency();
   if (ros2CommunicatorConfig.numberOfThreads > maxHardwareThreads) {
     handleParamError(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
