@@ -18,8 +18,15 @@ constexpr auto GUI_WINDOW_X_PARAM_NAME = "gui_window_x";
 constexpr auto GUI_WINDOW_Y_PARAM_NAME = "gui_window_y";
 constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
+
+constexpr auto ENGINE_TARGET_FPS_PARAM_NAME = "engine_target_fps";
+constexpr auto RENDERER_FLAGS_MASK_PARAM_NAME = "renderer_flags_mask";
+constexpr auto FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME =
+    "fbo_optimizations_enabled";
+
 constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
 constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = "ros2_executor_threads_num";
+
 constexpr auto TOTAL_GAME_SECONDS_PARAM_NAME = "total_game_seconds";
 constexpr auto TARGET_WIN_COINS_PARAM_NAME = "target_win_coins";
 constexpr auto USE_LOCAL_CONTROLLER_MODE_PARAM_NAME =
@@ -30,6 +37,13 @@ constexpr auto DEFAULT_WINDOW_X = 72;
 constexpr auto DEFAULT_WINDOW_Y = 27;
 constexpr auto DEFAULT_WINDOW_WIDTH = 1848;
 constexpr auto DEFAULT_WINDOW_HEIGHT = 1053;
+
+//Renderer
+constexpr auto DEFAULT_RENDERER_FLAGS_MASK =
+    getEnumValue(RendererFlag::HARDWARE_RENDERER) |
+    getEnumValue(RendererFlag::FBO_ENABLE);
+constexpr auto DEFAULT_ENGINE_TARGET_FPS = 60u;
+constexpr auto DEFAULT_FBO_OPTIMIZATIONS_ENABLED = true;
 
 //ROS2 executor
 constexpr auto DEFAULT_EXECUTOR_TYPE = 0;
@@ -59,6 +73,11 @@ void RoboCollectorGuiRos2Params::print() const {
        << GUI_WINDOW_Y_PARAM_NAME << ": " << guiWindow.y << '\n'
        << GUI_WINDOW_WIDTH_PARAM_NAME << ": " << guiWindow.w << '\n'
        << GUI_WINDOW_HEIGHT_PARAM_NAME << ": " << guiWindow.h << '\n'
+       << ENGINE_TARGET_FPS_PARAM_NAME << ": " << engineTargetFps << '\n'
+       << RENDERER_FLAGS_MASK_PARAM_NAME << ": " << rendererFlagsMask << '\n'
+       << FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME << ": "
+           << ((FboOptimization::ENABLED == fboOptimization) ?
+               "true" : "false") << '\n'
        << ROS2_EXECUTOR_TYPE_PARAM_NAME << ": " <<
          getExecutorName(ros2CommunicatorConfig.executorType) << '\n'
        << ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME << ": "
@@ -90,6 +109,10 @@ void RoboCollectorGuiRos2Params::validate() {
     handleParamError(TARGET_WIN_COINS_PARAM_NAME, targetWinCoins,
         DEFAULT_TARGET_WIN_COINS);
   }
+  if (0 >= engineTargetFps) {
+    handleParamError(ENGINE_TARGET_FPS_PARAM_NAME, engineTargetFps,
+        DEFAULT_ENGINE_TARGET_FPS);
+  }
   const size_t maxHardwareThreads = std::thread::hardware_concurrency();
   if (ros2CommunicatorConfig.numberOfThreads > maxHardwareThreads) {
     handleParamError(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
@@ -104,6 +127,13 @@ RoboCollectorGuiRos2ParamProvider::RoboCollectorGuiRos2ParamProvider()
   declare_parameter<int32_t>(GUI_WINDOW_WIDTH_PARAM_NAME, DEFAULT_WINDOW_WIDTH);
   declare_parameter<int32_t>(GUI_WINDOW_HEIGHT_PARAM_NAME,
       DEFAULT_WINDOW_HEIGHT);
+
+  declare_parameter<int32_t>(ENGINE_TARGET_FPS_PARAM_NAME,
+      DEFAULT_ENGINE_TARGET_FPS);
+  declare_parameter<int32_t>(RENDERER_FLAGS_MASK_PARAM_NAME,
+      DEFAULT_RENDERER_FLAGS_MASK);
+  declare_parameter<bool>(FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME,
+      DEFAULT_FBO_OPTIMIZATIONS_ENABLED);
 
   declare_parameter<int32_t>(ROS2_EXECUTOR_TYPE_PARAM_NAME,
       DEFAULT_EXECUTOR_TYPE);
@@ -123,6 +153,13 @@ RoboCollectorGuiRos2Params RoboCollectorGuiRos2ParamProvider::getParams() {
   get_parameter(GUI_WINDOW_Y_PARAM_NAME, _params.guiWindow.y);
   get_parameter(GUI_WINDOW_WIDTH_PARAM_NAME, _params.guiWindow.w);
   get_parameter(GUI_WINDOW_HEIGHT_PARAM_NAME, _params.guiWindow.h);
+
+  get_parameter(ENGINE_TARGET_FPS_PARAM_NAME, _params.engineTargetFps);
+  get_parameter(RENDERER_FLAGS_MASK_PARAM_NAME, _params.rendererFlagsMask);
+  bool fboOptimizations{};
+  get_parameter(FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME, fboOptimizations);
+  _params.fboOptimization = fboOptimizations ?
+      FboOptimization::ENABLED : FboOptimization::DISABLED;
 
   int32_t executorTypeInt{};
   get_parameter(ROS2_EXECUTOR_TYPE_PARAM_NAME, executorTypeInt);
