@@ -113,10 +113,6 @@ void RoboCollectorGuiRos2Params::validate() {
     handleParamError(ENGINE_TARGET_FPS_PARAM_NAME, engineTargetFps,
         DEFAULT_ENGINE_TARGET_FPS);
   }
-  if (0 >= engineTargetFps) {
-    handleParamError(ENGINE_TARGET_FPS_PARAM_NAME, engineTargetFps,
-        DEFAULT_ENGINE_TARGET_FPS);
-  }
   constexpr auto maxRendererFlagsMaskValue =
       getEnumValue(RendererFlag::SOFTARE_RENDERER) |
       getEnumValue(RendererFlag::HARDWARE_RENDERER) |

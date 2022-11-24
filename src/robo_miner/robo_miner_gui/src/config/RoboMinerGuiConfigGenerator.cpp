@@ -105,7 +105,6 @@ FieldConfig generateFieldConfig(const FieldDescription &fieldDescr,
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
-
   cfg.fboOptimization = fboOptimization;
 
   return cfg;

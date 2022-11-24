@@ -168,7 +168,6 @@ FieldConfig generateFieldConfig(const FieldDescription &fieldDescr,
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
-
   cfg.fboOptimization = fboOptimization;
 
   return cfg;
