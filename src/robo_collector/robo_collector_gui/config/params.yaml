@@ -17,6 +17,11 @@
        #FBO_SUPPORT_ENABLE(8)
     renderer_flags_mask: 10 #HARDWARE_RENDERER | FBO_SUPPORT_ENABLE
     
+    #renderer thread model execution policy
+       #SINGLE_THREADED(0)
+       #MULTI_THREADED(1)
+    renderer_execution_policy: 1
+    
     # Frame Buffer Object caching
     fbo_optimizations_enabled: True
     

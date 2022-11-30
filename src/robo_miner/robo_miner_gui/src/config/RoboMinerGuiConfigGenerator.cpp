@@ -264,6 +264,7 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
   auto& drawMgrCfg = cfg.managerHandlerCfg.drawMgrCfg;
   auto& rendererCfg = drawMgrCfg.rendererConfig;
   rendererCfg.flagsMask = rosParams.rendererFlagsMask;
+  rendererCfg.executionPolicy = rosParams.rendererExecutionPolicy;
 
   auto &windowCfg = drawMgrCfg.monitorWindowConfig;
   windowCfg.name = PROJECT_NAME;

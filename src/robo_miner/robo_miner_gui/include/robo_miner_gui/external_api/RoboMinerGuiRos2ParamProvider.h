@@ -18,6 +18,7 @@
 struct RoboMinerGuiRos2Params {
   Rectangle guiWindow;
   uint32_t engineTargetFps { };
+  RendererPolicy rendererExecutionPolicy;
   RendererFlagsMask rendererFlagsMask;
   FboOptimization fboOptimization = FboOptimization::ENABLED;
   Ros2CommunicatorConfig ros2CommunicatorConfig;

@@ -6,8 +6,8 @@
     gui_window_width: 1848
     gui_window_height: 1053
     
-    # target frame rate for all sub-systems
-    # (graphics, gameplay, animation, audio, timers, networking)
+    #target frame rate for all sub-systems
+    #(graphics, gameplay, animation, audio, timers, networking)
     engine_target_fps: 60
     
     #supported renderer flags:
@@ -16,6 +16,11 @@
        #VSYNC_ENABLE(4)
        #FBO_SUPPORT_ENABLE(8)
     renderer_flags_mask: 10 #HARDWARE_RENDERER | FBO_SUPPORT_ENABLE
+    
+    #renderer thread model execution policy
+       #SINGLE_THREADED(0)
+       #MULTI_THREADED(1)
+    renderer_execution_policy: 1
     
     # Frame Buffer Object caching
     fbo_optimizations_enabled: True

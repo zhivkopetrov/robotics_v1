@@ -6,6 +6,7 @@
 #include <thread>
 
 //Other libraries headers
+#include "sdl_utils/drawing/defines/RendererDefines.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
@@ -21,6 +22,8 @@ constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
 
 constexpr auto ENGINE_TARGET_FPS_PARAM_NAME = "engine_target_fps";
 constexpr auto RENDERER_FLAGS_MASK_PARAM_NAME = "renderer_flags_mask";
+constexpr auto RENDERER_EXECUTION_POLICY_PARAM_NAME =
+    "renderer_execution_policy";
 constexpr auto FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME =
     "fbo_optimizations_enabled";
 
@@ -42,6 +45,8 @@ constexpr auto DEFAULT_WINDOW_HEIGHT = 1053;
 constexpr auto DEFAULT_RENDERER_FLAGS_MASK =
     getEnumValue(RendererFlag::HARDWARE_RENDERER) |
     getEnumValue(RendererFlag::FBO_ENABLE);
+constexpr auto DEFAULT_RENDERER_EXECUTION_POLICY =
+    getEnumValue(RendererPolicy::MULTI_THREADED);
 constexpr auto DEFAULT_ENGINE_TARGET_FPS = 60u;
 constexpr auto DEFAULT_FBO_OPTIMIZATIONS_ENABLED = true;
 
@@ -75,6 +80,8 @@ void RoboCollectorGuiRos2Params::print() const {
        << GUI_WINDOW_HEIGHT_PARAM_NAME << ": " << guiWindow.h << '\n'
        << ENGINE_TARGET_FPS_PARAM_NAME << ": " << engineTargetFps << '\n'
        << RENDERER_FLAGS_MASK_PARAM_NAME << ": " << rendererFlagsMask << '\n'
+       << RENDERER_EXECUTION_POLICY_PARAM_NAME << ": "
+           << getRendererPolicyName(rendererExecutionPolicy) << '\n'
        << FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME << ": "
            << ((FboOptimization::ENABLED == fboOptimization) ?
                "true" : "false") << '\n'
@@ -113,15 +120,9 @@ void RoboCollectorGuiRos2Params::validate() {
     handleParamError(ENGINE_TARGET_FPS_PARAM_NAME, engineTargetFps,
         DEFAULT_ENGINE_TARGET_FPS);
   }
-  constexpr auto maxRendererFlagsMaskValue =
-      getEnumValue(RendererFlag::SOFTARE_RENDERER) |
-      getEnumValue(RendererFlag::HARDWARE_RENDERER) |
-      getEnumValue(RendererFlag::VSYNC_ENABLE) |
-      getEnumValue(RendererFlag::FBO_ENABLE);
-  if (maxRendererFlagsMaskValue < rendererFlagsMask) {
-    handleParamError(RENDERER_FLAGS_MASK_PARAM_NAME, rendererFlagsMask,
-        DEFAULT_RENDERER_FLAGS_MASK);
-  }
+  rendererExecutionPolicy =
+      valiteRendererExecutionPolicy(rendererExecutionPolicy);
+  rendererFlagsMask = valiteRendererFlagsMask(rendererFlagsMask);
   const size_t maxHardwareThreads = std::thread::hardware_concurrency();
   if (ros2CommunicatorConfig.numberOfThreads > maxHardwareThreads) {
     handleParamError(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
@@ -141,6 +142,8 @@ RoboCollectorGuiRos2ParamProvider::RoboCollectorGuiRos2ParamProvider()
       DEFAULT_ENGINE_TARGET_FPS);
   declare_parameter<int32_t>(RENDERER_FLAGS_MASK_PARAM_NAME,
       DEFAULT_RENDERER_FLAGS_MASK);
+  declare_parameter<int32_t>(RENDERER_EXECUTION_POLICY_PARAM_NAME,
+      DEFAULT_RENDERER_EXECUTION_POLICY);
   declare_parameter<bool>(FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME,
       DEFAULT_FBO_OPTIMIZATIONS_ENABLED);
 
@@ -165,6 +168,10 @@ RoboCollectorGuiRos2Params RoboCollectorGuiRos2ParamProvider::getParams() {
 
   get_parameter(ENGINE_TARGET_FPS_PARAM_NAME, _params.engineTargetFps);
   get_parameter(RENDERER_FLAGS_MASK_PARAM_NAME, _params.rendererFlagsMask);
+  int32_t rendererExecutionTypeInt{};
+  get_parameter(RENDERER_EXECUTION_POLICY_PARAM_NAME, rendererExecutionTypeInt);
+  _params.rendererExecutionPolicy =
+      toEnum<RendererPolicy>(rendererExecutionTypeInt);
   bool fboOptimizations{};
   get_parameter(FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME, fboOptimizations);
   _params.fboOptimization = fboOptimizations ?
