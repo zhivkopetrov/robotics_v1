@@ -309,6 +309,9 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
   rendererCfg.flagsMask = rosParams.rendererFlagsMask;
   rendererCfg.executionPolicy = rosParams.rendererExecutionPolicy;
 
+  auto &sdlContainersCfg = cfg.managerHandlerCfg.sdlContainersCfg;
+  sdlContainersCfg.maxResourceLoadingThreads = rosParams.resLoadingThreadsNum;
+
   auto &windowCfg = drawMgrCfg.monitorWindowConfig;
   windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(

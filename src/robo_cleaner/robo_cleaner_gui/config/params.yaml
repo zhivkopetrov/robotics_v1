@@ -22,6 +22,11 @@
        #MULTI_THREADED(1)
     renderer_execution_policy: 1
     
+    #responsible for async CPU primitive ssurfaces loading from hard drive.
+    #value of 0 will fallback to single core resource loading,
+    #effectively dispatching CPU surface loading to rendering thread
+    resource_loading_threads_num: 2
+    
     # Frame Buffer Object caching
     fbo_optimizations_enabled: True
     

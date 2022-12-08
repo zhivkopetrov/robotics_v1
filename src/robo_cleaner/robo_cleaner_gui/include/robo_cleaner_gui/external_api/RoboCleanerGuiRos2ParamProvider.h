@@ -18,8 +18,9 @@
 struct RoboCleanerGuiRos2Params {
   Rectangle guiWindow;
   uint32_t engineTargetFps { };
-  RendererFlagsMask rendererFlagsMask;
   RendererPolicy rendererExecutionPolicy;
+  RendererFlagsMask rendererFlagsMask;
+  uint32_t resLoadingThreadsNum { };
   FboOptimization fboOptimization = FboOptimization::ENABLED;
   Ros2CommunicatorConfig ros2CommunicatorConfig;
   int32_t levelId { };
