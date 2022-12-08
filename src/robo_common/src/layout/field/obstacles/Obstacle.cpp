@@ -36,6 +36,18 @@ ErrorCode Obstacle::init(
   return ErrorCode::SUCCESS;
 }
 
+void Obstacle::draw() const {
+  if (ObstacleVisibility::DEFAULT == _obstacleVisibility) {
+    _img.draw();
+  }
+
+#if DEBUG_VISUAL_OVERLAY
+  if (ObstacleHandlerApproachOverlayStatus::ENABLED == _overlayStatus) {
+    _objApproachOverlay.draw();
+  }
+#endif //DEBUG_VISUAL_OVERLAY
+}
+
 void Obstacle::drawOnFbo(Fbo &fbo) const {
   if (ObstacleVisibility::DEFAULT == _obstacleVisibility) {
     fbo.addWidget(_img);

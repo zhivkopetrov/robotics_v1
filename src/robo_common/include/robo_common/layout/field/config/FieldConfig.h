@@ -17,6 +17,7 @@ struct FieldConfig {
   ObstacleHandlerConfig obstacleHandlerConfig;
   uint64_t tileRsrcId = 0;
   uint64_t debugFontRsrcId = 0;
+  FboOptimization fboOptimization = FboOptimization::ENABLED;
 };
 
 #endif /* ROBO_COMMON_FIELDCONFIG_H_ */

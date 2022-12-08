@@ -17,6 +17,7 @@
 #include "robo_common/layout/debug/DebugField.h"
 
 //Forward declarations
+class InputEvent;
 class RoboCommonLayoutInitHelper;
 struct RoboCommonLayoutConfig;
 
@@ -29,6 +30,8 @@ public:
                  RoboCommonLayoutInterface &interface);
   void deinit();
   void draw() const;
+
+  void handleEvent(const InputEvent &e);
 
   //contains FogOfWar
   void drawSecondLayer() const;

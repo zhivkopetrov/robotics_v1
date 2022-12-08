@@ -57,6 +57,10 @@ Rectangle FogCollisionObject::getBoundary() const {
 }
 
 void FogCollisionObject::startAnimation() {
+  if (isActiveTimerId(_timerId)) {
+    return;
+  }
+
   //unregister the handle not to receive subsequent collisions
   _collisionWatcher->unregisterObject(_collisionObjHandle);
   _collisionObjHandle = INVALID_COLLISION_OBJ_HANDLE;

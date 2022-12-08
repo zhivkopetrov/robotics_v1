@@ -160,13 +160,15 @@ ObstacleHandlerConfig generateObstacleHandlerConfig() {
   return cfg;
 }
 
-FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
+FieldConfig generateFieldConfig(const FieldDescription &fieldDescr,
+                                FboOptimization fboOptimization) {
   FieldConfig cfg;
 
   cfg.description = fieldDescr;
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
   cfg.tileRsrcId = RoboCollectorGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
+  cfg.fboOptimization = fboOptimization;
 
   return cfg;
 }
@@ -267,8 +269,17 @@ Ros2CommunicatorConfig generateRos2CommunicatorConfig(
 EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
                                   const RoboCollectorGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
+  cfg.maxFrameRate = rosParams.engineTargetFps;
 
-  auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
+  auto& drawMgrCfg = cfg.managerHandlerCfg.drawMgrCfg;
+  auto& rendererCfg = drawMgrCfg.rendererConfig;
+  rendererCfg.flagsMask = rosParams.rendererFlagsMask;
+  rendererCfg.executionPolicy = rosParams.rendererExecutionPolicy;
+
+  auto &sdlContainersCfg = cfg.managerHandlerCfg.sdlContainersCfg;
+  sdlContainersCfg.maxResourceLoadingThreads = rosParams.resLoadingThreadsNum;
+
+  auto &windowCfg = drawMgrCfg.monitorWindowConfig;
   windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
@@ -279,6 +290,7 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
+  cfg.debugConsoleConfig.maxFrameRate = rosParams.engineTargetFps;
   cfg.debugConsoleConfig.fontRsrcId = RoboCollectorGuiResources::VINQUE_RG_30;
 
   return cfg;
@@ -301,7 +313,8 @@ RoboCollectorGuiConfig generateGameConfig(
       rosParams.localControrllerMode);
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
+  commonLayoutCfg.fieldCfg =
+      generateFieldConfig(fieldDescr, rosParams.fboOptimization);
   commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.gameEndAnimatorConfig = generateGameEndAnimatorConfig(

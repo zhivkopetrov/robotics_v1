@@ -43,6 +43,7 @@ private:
   std::unordered_map<int32_t, FogCollisionObject> _fogTiles;
   FogOfWarOutInterface _outInterface;
   FogOfWarStatus _status = FogOfWarStatus::DISABLED;
+  bool _isRevealAllFogTilesRequested = false;
 };
 
 #endif /* ROBO_COMMON_FOGOFWAR_H_ */

@@ -24,6 +24,7 @@ ErrorCode Field::init(const FieldConfig &cfg,
     return ErrorCode::FAILURE;
   }
   _description = cfg.description;
+  _fboOptimization = cfg.fboOptimization;
 
   if (ErrorCode::SUCCESS != initTiles(cfg, interface)) {
     LOGERR("Error, initTiles() failed");
@@ -53,7 +54,15 @@ ErrorCode Field::init(const FieldConfig &cfg,
 }
 
 void Field::draw() const {
-  _fieldFbo.draw();
+  if (FboOptimization::ENABLED == _fboOptimization) {
+    _fieldFbo.draw();
+  } else {
+    for (const auto &tile : _tiles) {
+      tile.draw();
+    }
+
+    _obstacleHandler.draw();
+  }
 }
 
 void Field::updateFieldFbo() {

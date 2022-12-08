@@ -97,13 +97,15 @@ PanelHandlerConfig generatePanelHandlerConfig(int32_t emptyTilesCount,
   return cfg;
 }
 
-FieldConfig generateFieldConfig(const FieldDescription &fieldDescr) {
+FieldConfig generateFieldConfig(const FieldDescription &fieldDescr,
+                                FboOptimization fboOptimization) {
   FieldConfig cfg;
 
   cfg.description = fieldDescr;
   cfg.obstacleHandlerConfig = generateObstacleHandlerConfig();
   cfg.tileRsrcId = RoboMinerGuiResources::MAP_TILE;
   cfg.debugFontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
+  cfg.fboOptimization = fboOptimization;
 
   return cfg;
 }
@@ -259,7 +261,15 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
                                   const RoboMinerGuiRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
 
-  auto &windowCfg = cfg.managerHandlerCfg.drawMgrCfg.monitorWindowConfig;
+  auto& drawMgrCfg = cfg.managerHandlerCfg.drawMgrCfg;
+  auto& rendererCfg = drawMgrCfg.rendererConfig;
+  rendererCfg.flagsMask = rosParams.rendererFlagsMask;
+  rendererCfg.executionPolicy = rosParams.rendererExecutionPolicy;
+
+  auto &sdlContainersCfg = cfg.managerHandlerCfg.sdlContainersCfg;
+  sdlContainersCfg.maxResourceLoadingThreads = rosParams.resLoadingThreadsNum;
+
+  auto &windowCfg = drawMgrCfg.monitorWindowConfig;
   windowCfg.name = PROJECT_NAME;
   windowCfg.iconPath.append(projectInstallPrefix).append("/").append(
       ResourceFileHeader::getResourcesFolderName()).append(
@@ -270,6 +280,7 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
   windowCfg.displayMode = WindowDisplayMode::WINDOWED;
   windowCfg.borderMode = WindowBorderMode::BORDERLESS;
 
+  cfg.debugConsoleConfig.maxFrameRate = rosParams.engineTargetFps;
   cfg.debugConsoleConfig.fontRsrcId = RoboMinerGuiResources::VINQUE_RG_30;
 
   return cfg;
@@ -292,7 +303,8 @@ RoboMinerGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
   layoutCfg.crystalRsrcId = RoboMinerGuiResources::CRYSTALS;
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.fieldCfg = generateFieldConfig(fieldDescr);
+  commonLayoutCfg.fieldCfg =
+      generateFieldConfig(fieldDescr, rosParams.fboOptimization);
   commonLayoutCfg.robotInitialState = initialRobotState;
   commonLayoutCfg.robotBaseCfg = generateRobotBaseConfig();
   commonLayoutCfg.fogOfWarConfig = generateFogOfWarConfig(

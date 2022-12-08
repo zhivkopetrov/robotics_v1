@@ -6,6 +6,30 @@
     gui_window_width: 1848
     gui_window_height: 1053
     
+    #target frame rate for all sub-systems
+    #(graphics, gameplay, animation, audio, timers, networking)
+    engine_target_fps: 60
+    
+    #supported renderer flags:
+       #SOFTWARE_RENDERER(1)
+       #HARDWARE_RENDERER(2)
+       #VSYNC_ENABLE(4)
+       #FBO_SUPPORT_ENABLE(8)
+    renderer_flags_mask: 10 #HARDWARE_RENDERER | FBO_SUPPORT_ENABLE
+    
+    #renderer thread model execution policy
+       #SINGLE_THREADED(0)
+       #MULTI_THREADED(1)
+    renderer_execution_policy: 1
+    
+    #responsible for async CPU primitive surfaces loading from hard drive.
+    #value of 0 will fallback to single core resource loading,
+    #effectively dispatching CPU surface loading to rendering thread
+    resource_loading_threads_num: 2
+    
+    # Frame Buffer Object caching
+    fbo_optimizations_enabled: True
+    
     #supported executor types:
       #SINGLE_THREADED(0)
       #STATIC_SINGLE_THREADED(1)
@@ -17,5 +41,5 @@
     ros2_executor_threads_num: 6
     
     # suppported levelIds - 1, 2, 3
-    level_id: 1
+    level_id: 3
     use_fog_of_war: True

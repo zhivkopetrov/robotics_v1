@@ -16,6 +16,7 @@
 struct CrystalHandlerConfig {
   uint64_t crystalRsrcId = 0;
   GetFieldDescriptionCb getFieldDescriptionCb;
+  FboOptimization fboOptimization = FboOptimization::ENABLED;
 };
 
 class CrystalHandler {
@@ -40,6 +41,7 @@ private:
   std::unordered_map<int32_t, int32_t> _fieldPosToCrystalIdMapping;
 
   Fbo _allCrystalsFbo;
+  FboOptimization _fboOptimization = FboOptimization::ENABLED;
 
   GetFieldDescriptionCb _getFieldDescriptionCb;
 };
