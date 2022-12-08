@@ -24,6 +24,8 @@ constexpr auto ENGINE_TARGET_FPS_PARAM_NAME = "engine_target_fps";
 constexpr auto RENDERER_FLAGS_MASK_PARAM_NAME = "renderer_flags_mask";
 constexpr auto RENDERER_EXECUTION_POLICY_PARAM_NAME =
     "renderer_execution_policy";
+constexpr auto RESOURCE_LOADING_THREADS_NUM_PARAM_NAME =
+    "resource_loading_threads_num";
 constexpr auto FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME =
     "fbo_optimizations_enabled";
 
@@ -47,6 +49,7 @@ constexpr auto DEFAULT_RENDERER_FLAGS_MASK =
     getEnumValue(RendererFlag::FBO_ENABLE);
 constexpr auto DEFAULT_RENDERER_EXECUTION_POLICY =
     getEnumValue(RendererPolicy::MULTI_THREADED);
+constexpr auto DEFAULT_RESOURCE_LOADING_THREADS_NUM = 2u;
 constexpr auto DEFAULT_ENGINE_TARGET_FPS = 60u;
 constexpr auto DEFAULT_FBO_OPTIMIZATIONS_ENABLED = true;
 
@@ -82,6 +85,8 @@ void RoboCollectorGuiRos2Params::print() const {
        << RENDERER_FLAGS_MASK_PARAM_NAME << ": " << rendererFlagsMask << '\n'
        << RENDERER_EXECUTION_POLICY_PARAM_NAME << ": "
            << getRendererPolicyName(rendererExecutionPolicy) << '\n'
+       << RESOURCE_LOADING_THREADS_NUM_PARAM_NAME << ": "
+           << resLoadingThreadsNum << '\n'
        << FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME << ": "
            << ((FboOptimization::ENABLED == fboOptimization) ?
                "true" : "false") << '\n'
@@ -144,6 +149,8 @@ RoboCollectorGuiRos2ParamProvider::RoboCollectorGuiRos2ParamProvider()
       DEFAULT_RENDERER_FLAGS_MASK);
   declare_parameter<int32_t>(RENDERER_EXECUTION_POLICY_PARAM_NAME,
       DEFAULT_RENDERER_EXECUTION_POLICY);
+  declare_parameter<int32_t>(RESOURCE_LOADING_THREADS_NUM_PARAM_NAME,
+      DEFAULT_RESOURCE_LOADING_THREADS_NUM);
   declare_parameter<bool>(FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME,
       DEFAULT_FBO_OPTIMIZATIONS_ENABLED);
 
@@ -172,6 +179,8 @@ RoboCollectorGuiRos2Params RoboCollectorGuiRos2ParamProvider::getParams() {
   get_parameter(RENDERER_EXECUTION_POLICY_PARAM_NAME, rendererExecutionTypeInt);
   _params.rendererExecutionPolicy =
       toEnum<RendererPolicy>(rendererExecutionTypeInt);
+  get_parameter(RESOURCE_LOADING_THREADS_NUM_PARAM_NAME,
+                _params.resLoadingThreadsNum);
   bool fboOptimizations{};
   get_parameter(FBO_OPTIMIZATIONS_ENABLED_PARAM_NAME, fboOptimizations);
   _params.fboOptimization = fboOptimizations ?

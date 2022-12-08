@@ -19,6 +19,7 @@ struct RoboCollectorGuiRos2Params {
   Rectangle guiWindow;
   uint32_t engineTargetFps { };
   RendererPolicy rendererExecutionPolicy;
+  uint32_t resLoadingThreadsNum { };
   RendererFlagsMask rendererFlagsMask;
   FboOptimization fboOptimization = FboOptimization::ENABLED;
   Ros2CommunicatorConfig ros2CommunicatorConfig;
