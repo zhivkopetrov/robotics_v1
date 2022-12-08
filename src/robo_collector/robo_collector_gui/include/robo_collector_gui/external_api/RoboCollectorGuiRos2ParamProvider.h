@@ -19,8 +19,8 @@ struct RoboCollectorGuiRos2Params {
   Rectangle guiWindow;
   uint32_t engineTargetFps { };
   RendererPolicy rendererExecutionPolicy;
-  uint32_t resLoadingThreadsNum { };
   RendererFlagsMask rendererFlagsMask;
+  uint32_t resLoadingThreadsNum { };
   FboOptimization fboOptimization = FboOptimization::ENABLED;
   Ros2CommunicatorConfig ros2CommunicatorConfig;
   int32_t totalGameSeconds { };
