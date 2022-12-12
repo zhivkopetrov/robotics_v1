@@ -1,6 +1,6 @@
 # robotics_v1
 
-**A mostly C++ ROS2 workspace**
+**A C++20 ROS2 Foxy Fitzroy workspace**
 
 The workspace contains several interesting visual mini-games with their respective ROS2 interfaces
 - Robo Collector - focused on learning ROS2 topics
@@ -9,13 +9,24 @@ The workspace contains several interesting visual mini-games with their respecti
 - UR Dev - focused on learning UR robotics movements through URScript
 - UR Driver - forked repositories of Universal Robots Client Library and Universal Robots ROS2 driver
 
+
+**ROS2 disribution**
+
+This repository operates under Foxy Fitzroy ROS2 disribution.
+This is the official distro for Ubuntu 20.04 LTS.
+In early 2023 this repo will be migrated to the latest (as of this moment) ROS2 distro - Humble Hawksbill.
+ROS2 Foxy Fitzroy would still be accessible from a 'foxy' branch
+
+
 **Git submodules**
+
 This repository has it's dependencies configured as git submodules.
 To clone them, step inside the repository and run the following instructions
 ```
 git submodule init
 git submodule update
 ```
+
 
 **Ament CMake (Colcon) meta build system usage**
 ```
@@ -30,7 +41,9 @@ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin
 #for full information check `colcon build --help
 ```
 
+
 **Automatic asset information generation**
+
 The first time the project is build it will fail compilation, because you are missing some auto-generated headers.
 To resolve this follow the instructios:
 ```
