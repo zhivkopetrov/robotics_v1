@@ -12,7 +12,7 @@
     #used only for MULTI_THREADED executor
     ros2_executor_threads_num: 4
     
-    robot_ip: "0.0.0.0"
+    robot_ip: "192.168.56.101"
     robot_port: 30003
     
     #supported values: [0-17]

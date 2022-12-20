@@ -104,7 +104,7 @@ std::vector<DependencyDescription> UrControlGuiConfigGenerator::generateDependen
     rclcpp::InitOptions initOptions;
     //leave the shutdown for user-side.
     //this will enable proper cleanup
-    initOptions.shutdown_on_sigint = false;
+    initOptions.shutdown_on_signal = false;
 
     rclcpp::init(argc, args, initOptions);
     return ErrorCode::SUCCESS;

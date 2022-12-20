@@ -1,6 +1,6 @@
 # robotics_v1
 
-**A C++20 ROS2 Foxy Fitzroy workspace**
+**A C++20 ROS2 Humble Hawksbill workspace**
 
 The workspace contains several interesting visual mini-games with their respective ROS2 interfaces
 - Robo Collector - focused on learning ROS2 topics
@@ -12,10 +12,9 @@ The workspace contains several interesting visual mini-games with their respecti
 
 **ROS2 disribution**
 
-This repository operates under Foxy Fitzroy ROS2 disribution.
-This is the official distro for Ubuntu 20.04 LTS.
-In early 2023 this repo will be migrated to the latest (as of this moment) ROS2 distro - Humble Hawksbill.
-ROS2 Foxy Fitzroy would still be accessible from a 'foxy' branch
+This repository operates under Humble Hawksbill ROS2 disribution.
+This is the official distro for Ubuntu 22.04 LTS.
+ROS2 Foxy Fitzroy (oficial Ubuntu 20.04 LTS) implementation is still be accessible under the 'foxy' branch
 
 
 **Git submodules**

@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.10)
 project(
     urscript_bridge
     LANGUAGES CXX
-    VERSION 1.0.0
+    VERSION 2.0.0
 )
 
 find_package(cmake_helpers REQUIRED)
@@ -17,6 +17,7 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(ur_msgs REQUIRED)
 find_package(urscript_interfaces REQUIRED)
@@ -28,23 +29,23 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(
     ${PROJECT_NAME}
-        ${_INC_DIR}/config/UrBridgeConfig.h
-        ${_INC_DIR}/config/UrBridgeConfigGenerator.h
+		${_INC_DIR}/config/UrBridgeConfig.h
+		${_INC_DIR}/config/UrBridgeConfigGenerator.h
 		${_INC_DIR}/core/UrBridgeApplication.h
-        ${_INC_DIR}/external_api/UrBridgeExternalInterface.h
-        ${_INC_DIR}/external_api/UrBridgeRos2ParamProvider.h
-        ${_INC_DIR}/external_api/config/UrBridgeExternalInterfaceConfig.h
-        ${_INC_DIR}/utils/TcpClient.h
-        ${_INC_DIR}/utils/Tf2Utils.h
-        ${_INC_DIR}/defines/RobotDefines.h
+		${_INC_DIR}/external_api/UrBridgeExternalInterface.h
+		${_INC_DIR}/external_api/UrBridgeRos2ParamProvider.h
+		${_INC_DIR}/external_api/config/UrBridgeExternalInterfaceConfig.h
+		${_INC_DIR}/utils/TcpClient.h
+		${_INC_DIR}/utils/Tf2Utils.h
+		${_INC_DIR}/defines/RobotDefines.h
      
-     	${_SRC_DIR}/config/UrBridgeConfigGenerator.cpp
+		${_SRC_DIR}/config/UrBridgeConfigGenerator.cpp
 		${_SRC_DIR}/core/UrBridgeApplication.cpp
 		${_SRC_DIR}/external_api/UrBridgeExternalInterface.cpp
 		${_SRC_DIR}/external_api/UrBridgeRos2ParamProvider.cpp
-	    ${_SRC_DIR}/utils/TcpClient.cpp
-	    ${_SRC_DIR}/utils/Tf2Utils.cpp
-        ${_SRC_DIR}/main.cpp
+		${_SRC_DIR}/utils/TcpClient.cpp
+		${_SRC_DIR}/utils/Tf2Utils.cpp
+		${_SRC_DIR}/main.cpp
 )
 
 target_include_directories(
@@ -69,15 +70,16 @@ target_link_libraries(
 
 ament_target_dependencies(
     ${PROJECT_NAME}
-    PUBLIC
-		rclcpp
-		std_msgs
-		geometry_msgs
-		ur_msgs
-		tf2
-		tf2_ros
-		tf2_geometry_msgs
-		urscript_interfaces
+		PUBLIC
+			rclcpp
+			std_msgs
+			std_srvs
+			geometry_msgs
+			ur_msgs
+			tf2
+			tf2_ros
+			tf2_geometry_msgs
+			urscript_interfaces
 )
 
 ament_export_dependencies(rosidl_default_runtime)
