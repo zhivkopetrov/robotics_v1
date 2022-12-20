@@ -14,7 +14,8 @@ The workspace contains several interesting visual mini-games with their respecti
 
 This repository operates under Foxy Fitzroy ROS2 disribution.
 This is the official distro for Ubuntu 20.04 LTS.
-In early 2023 this repo will be migrated to the latest (as of this moment) ROS2 distro - Humble Hawksbill.
+In early 2023 this repo will be migrated to the latest 
+(as of this moment) ROS2 distro - Humble Hawksbill under Ubunttu 22.04 LTS.
 ROS2 Foxy Fitzroy would still be accessible from a 'foxy' branch
 
 
