@@ -147,6 +147,7 @@ Those commands will clone the following repositories:
 - sdl_utils - https://github.com/zhivkopetrov/sdl_utils
 - manager_utils - https://github.com/zhivkopetrov/manager_utils
 - game_engine - https://github.com/zhivkopetrov/game_engine
+- ros2_game_engine - https://github.com/zhivkopetrov/ros2_game_engine
 - tools - https://github.com/zhivkopetrov/tools
 
 ## Third party libs, which are not shipped with this repository
