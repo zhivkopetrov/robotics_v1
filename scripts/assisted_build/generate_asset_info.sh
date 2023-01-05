@@ -18,23 +18,9 @@ else
 fi
 
 if [ -z "$2" ]; then
-    echo "No argument supplied for SRC_DIR. Assuming '$SRC_DIR'"
-else
-    SRC_DIR=$2
-    echo "Using SRC_DIR=$SRC_DIR"
-fi
-
-if [ -z "$3" ]; then
-    echo "No argument supplied for INSTALL_DIR. Assuming '$INSTALL_DIR'"
-else
-    INSTALL_DIR=$3
-    echo "Using INSTALL_DIR=$INSTALL_DIR"
-fi
-
-if [ -z "$4" ]; then
     echo "No argument supplied for VERBOSE_BUILD. Assuming '$VERBOSE_BUILD'"
 else
-    VERBOSE_BUILD=$4
+    VERBOSE_BUILD=$2
     if [[ "$VERBOSE_BUILD" == "true" || 
           "$VERBOSE_BUILD" == "True" || 
           "$VERBOSE_BUILD" == "1" ]] ; then
@@ -48,10 +34,10 @@ else
     echo "Using VERBOSE_BUILD=$VERBOSE_BUILD"
 fi
 
-if [ -z "$5" ]; then
+if [ -z "$3" ]; then
     echo "No ADDITIONAL_COLCON_OPTIONS provided"
 else
-    ADDITIONAL_COLCON_OPTIONS+="$5"
+    ADDITIONAL_COLCON_OPTIONS+="$3"
     echo "Using ADDITIONAL_COLCON_OPTIONS=$ADDITIONAL_COLCON_OPTIONS"
 fi
 

@@ -2,8 +2,6 @@
 
 SCRIPT_NAME=`basename "$0"`
 BUILD_TYPE=Debug
-SRC_DIR=src
-INSTALL_DIR=install
 VERBOSE_BUILD=False
 ADDITIONAL_COLCON_OPTIONS=" --executor sequential"
 
@@ -25,7 +23,7 @@ fi
 
 #build auto generated asset info
 bash ./scripts/assisted_build/generate_asset_info.sh \
-    $BUILD_TYPE $SRC_DIR $INSTALL_DIR $VERBOSE_BUILD "$ADDITIONAL_COLCON_OPTIONS" 2>&1
+    $BUILD_TYPE $VERBOSE_BUILD "$ADDITIONAL_COLCON_OPTIONS" 2>&1
 
 #build and install artifacts
 bash ./scripts/assisted_build/partial_build.sh \
