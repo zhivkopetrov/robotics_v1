@@ -30,4 +30,4 @@
 	url = https://github.com/zhivkopetrov/Universal_Robots_Client_Library.git
 [submodule "src/ur_driver/Universal_Robots_ROS2_Description"]
 	path = src/ur_driver/Universal_Robots_ROS2_Description
-	url = git@github.com:zhivkopetrov/Universal_Robots_ROS2_Description.git
+	url = https://github.com/zhivkopetrov/Universal_Robots_ROS2_Description.git
