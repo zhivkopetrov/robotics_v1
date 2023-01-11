@@ -18,5 +18,3 @@ export TZ=Etc/UTC
 
 # own dependencies (personal open-source libraries and tools)
 ./scripts/assisted_install/clone_dependencies.sh $ROS2_DISTRO
-
-./scripts/assisted_install/clean_up.sh

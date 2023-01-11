@@ -29,9 +29,6 @@ RUN .${INSTALL_SCRIPTS_DIR}/ros2_install.sh $ROS2_DISTRO
 # own dependencies (personal open-source libraries and tools)
 RUN .${INSTALL_SCRIPTS_DIR}/clone_dependencies.sh $ROS2_DISTRO
 
-# own dependencies (personal open-source libraries and tools)
-RUN .${INSTALL_SCRIPTS_DIR}/clean_up.sh
-
 # build and install artifacts
 RUN .${BUILD_SCRIPTS_DIR}/full_build.sh
 
