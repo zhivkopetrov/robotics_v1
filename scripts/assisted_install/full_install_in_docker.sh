@@ -9,4 +9,4 @@ else
     echo "Using ROS2_DISTRO=$ROS2_DISTRO"
 fi
 
-DOCKER_BUILDKIT=1 docker build --file docker/Dockerfile --tag robotics_v1:$ROS2_DISTRO --no-cache .
+DOCKER_BUILDKIT=1 docker build --file docker/Dockerfile --tag robotics_v1:$ROS2_DISTRO .
