@@ -22,6 +22,12 @@ find_package(geometry_msgs REQUIRED)
 find_package(ur_msgs REQUIRED)
 find_package(urscript_interfaces REQUIRED)
 find_package(urscript_common REQUIRED)
+find_package(
+    Boost
+        REQUIRED COMPONENTS
+            system
+            thread
+)
 
 set(_INC_FOLDER_NAME include)
 set(_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${_INC_FOLDER_NAME}/${PROJECT_NAME})
@@ -65,7 +71,7 @@ target_link_libraries(
         ros2_game_engine::ros2_game_engine
         urscript_common::urscript_common
         ${Boost_LIBRARIES}
-        boost_thread #boosts linker flag for -lpthread
+        boost_thread #boost linker flag for -lpthread
 )
 
 ament_target_dependencies(

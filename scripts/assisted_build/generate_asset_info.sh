@@ -7,6 +7,7 @@ INSTALL_DIR=install
 VERBOSE_BUILD=False
 ADDITIONAL_COLCON_OPTIONS=""
 TOOL_NAME=resource_builder
+ROS2_DISTRO=humble
 
 echo "Processing $SCRIPT_NAME"
 
@@ -41,7 +42,7 @@ else
     echo "Using ADDITIONAL_COLCON_OPTIONS=$ADDITIONAL_COLCON_OPTIONS"
 fi
 
-source /opt/ros/humble/setup.bash
+source /opt/ros/$ROS2_DISTRO/setup.bash
 
 colcon build \
     --symlink-install \

@@ -15,9 +15,25 @@ else
 fi
 
 if [ -z "$2" ]; then
-    echo "No ADDITIONAL_COLCON_OPTIONS provided. Assuming ADDITIONAL_COLCON_OPTIONS='$ADDITIONAL_COLCON_OPTIONS'"
+    echo "No argument supplied for VERBOSE_BUILD. Assuming '$VERBOSE_BUILD'"
 else
-    ADDITIONAL_COLCON_OPTIONS+="$2"
+    VERBOSE_BUILD=$2
+    if [[ "$VERBOSE_BUILD" == "true" || 
+          "$VERBOSE_BUILD" == "True" || 
+          "$VERBOSE_BUILD" == "1" ]] ; then
+        VERBOSE_BUILD=True
+    else
+        VERBOSE_BUILD=False
+    fi
+
+    echo "Using VERBOSE_BUILD=$VERBOSE_BUILD"
+fi
+
+if [ -z "$3" ]; then
+    echo "No ADDITIONAL_COLCON_OPTIONS provided. \
+    Assuming ADDITIONAL_COLCON_OPTIONS='$ADDITIONAL_COLCON_OPTIONS'"
+else
+    ADDITIONAL_COLCON_OPTIONS+="$3"
     echo "Using ADDITIONAL_COLCON_OPTIONS=$ADDITIONAL_COLCON_OPTIONS"
 fi
 

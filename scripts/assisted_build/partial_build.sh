@@ -4,6 +4,7 @@ SCRIPT_NAME=`basename "$0"`
 BUILD_TYPE=Debug
 VERBOSE_BUILD=False
 ADDITIONAL_COLCON_OPTIONS=""
+ROS2_DISTRO=humble
 
 echo "Processing $SCRIPT_NAME"
 
@@ -38,7 +39,7 @@ else
     echo "Using ADDITIONAL_COLCON_OPTIONS=$ADDITIONAL_COLCON_OPTIONS"
 fi
 
-source /opt/ros/humble/setup.bash
+source /opt/ros/$ROS2_DISTRO/setup.bash
 
 #build and install artifacts
 colcon build \

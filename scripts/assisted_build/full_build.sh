@@ -24,8 +24,6 @@ else
           "$VERBOSE_BUILD" == "True" || 
           "$VERBOSE_BUILD" == "1" ]] ; then
         VERBOSE_BUILD=True
-        ADDITIONAL_COLCON_OPTIONS+=" --event-handlers console_direct+"
-        ADDITIONAL_COLCON_OPTIONS+=" --event-handlers console_cohesion+"
     else
         VERBOSE_BUILD=False
     fi
