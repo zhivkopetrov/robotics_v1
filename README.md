@@ -25,7 +25,7 @@ The workspace contains several interesting, competitive, visual games with their
 This repository operates under ROS2 Humble Hawksbill distribution.
   - [ROS2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html) is the official ROS2 distribution for Ubuntu 22.04 LTS
   
-ROS2 Foxy Fitzroy implementation is still be accessible under the 'foxy' branch
+ROS2 Foxy Fitzroy implementation is still accessible under the 'foxy' branch
   - [ROS2 Foxy Fitzroy](https://docs.ros.org/en/foxy/index.html) is the oficial ROS2 distribution for Ubuntu 20.04 LTS
 
 ## Supported Platforms & Compilers
@@ -130,13 +130,13 @@ source install/setup.bash
 
 # run via normal colcon commands (ros2 run/launch)
 # Note the 'ros2 launch' will load config files, while 'ros2 run' will use the default ones 
-ros2 launch <package_name> <node_name> launch.py
+ros2 launch <node_name> launch.py
 
 ## Robo games
-ros2 launch robo_collector robo_collector_gui launch.py
-ros2 launch robo_collector robo_collector_controller launch.py
-ros2 launch robo_miner robo_miner_gui launch.py
-ros2 launch robo_cleaner robo_cleaner_gui launch.py
+ros2 launch robo_collector_gui launch.py
+ros2 launch robo_collector_controller launch.py
+ros2 launch robo_miner_gui launch.py
+ros2 launch robo_cleaner_gui launch.py
 
 ## Universal Robots Application suite setup
 # If real hardware robot is used, the application suite will pick it ut automatically.
