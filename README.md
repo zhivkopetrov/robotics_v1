@@ -49,7 +49,7 @@ All dependencies in the project could be conveniently installed via preset insta
 For manual installation refer to 'Dependencies' and 'Third party libs' sections below.
 
 Please note that ROS2 installation could be quite bulky.
-For reference, a fresh Ubuntu 22.04 docker image with all compilers, tools, libs and ROS2 installed is close to 7GB.
+For reference, a fresh Ubuntu 20.04 docker image with all compilers, tools, libs and ROS2 installed is close to 7GB.
 That number could be reduced, but it's not a focus for this repository.
 ### Host usage
 ```
@@ -168,15 +168,12 @@ ros2 launch robo_cleaner_gui launch.py
 ## Universal Robots Application suite setup
 # If real hardware robot is used, the application suite will pick it up automatically.
 # If instead a Universal Robots Simulator (URSim) is used, start it with:
-ros2 run ur_robot_driver start_ursim.sh -m <ur_type>
+./scripts/run/run_ursim_ur_driver_rviz.sh
 
-# Supported ur_types: ur3/ur3e/ur5/ur5e/ur10/ur10e
-# ur16/ur16e are supported as parameters, but their URDFs are not present
-
-# Staring the Universal Robots ROS2 driver:
-# ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
-# Example usage with ur10e robot configured to connect with URSim
-ros2 launch ur_robot_driver ur_control.launch.py ur_type:=ur10e robot_ip:=192.168.56.101 launch_rviz:=true
+# This will start a docker container which will contain:
+# - Universal Robots ROS2 driver
+# - Universal Robots Simulator (URSim) - utilising a ur5 robot
+# - Rviz2
 
 # Helper utility node, exposing beginner-friendly API from the robot
 ros2 launch urscript_bridge launch.py
