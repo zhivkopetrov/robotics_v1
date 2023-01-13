@@ -41,7 +41,7 @@ ROS2 Foxy Fitzroy implementation is still accessible under the 'foxy' branch
     - Note: enable Linux Bash Shell support under Windows to utilise the preset build scripts
     - Note2: although the game-engine is fully MSVC++ compatible, I haven't tested actual ROS2 functionalities on Windows
 
-## Project installation 
+## Project automated installation 
 All dependencies in the project could be conveniently installed via preset install scripts. 
 For manual installation refer to 'Dependencies' and 'Third party libs' sections below.
 
@@ -52,6 +52,13 @@ That number could be reduced, but it's not a focus for this repository.
 ```
 # Warning, the script will install dependencies directly on your host
 sudo ./scripts/assisted_install/full_install_on_host.sh
+```
+Once the installation phase finishes, for convinience, you can add manual steps to your bashrc.
+This way each time you open a NEW terminal session, they will be populated for you.
+```
+echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
 ```
 ### Docker support (work-in-progress)
 ```
@@ -68,7 +75,7 @@ docker run --privileged --rm -it --entrypoint bash robotics_v1:humble
 ```
 
 ## Colcon configuration. Building the project
-Use plain Colcon commands to configure and build the project or use some of the existing preset build scripts
+Use plain Colcon commands to configure and build the project or use some of the existing preset build scripts.
 ### Basic usage
 ```
 ./scripts/assisted_build/full_build.sh
@@ -123,7 +130,9 @@ Or everytime you modify some of the assets or resource files (asset information 
   - More on resource files - check the [resource_builder tool documentation](https://github.com/zhivkopetrov/tools)
 
 ## Running the project
-The project is composed of multiple ros2 packages, most of which contain a GUI.
+The project is composed of multiple ros2 packages, most of which contain a GUI.  
+**Important:** as per colcon documentation - don't run ROS2 packages from the same terminal session used for building.
+Instead run them from a separate terminal session.
 ```
 # once the project is build - source its installed artifacts
 source install/setup.bash
@@ -139,7 +148,7 @@ ros2 launch robo_miner_gui launch.py
 ros2 launch robo_cleaner_gui launch.py
 
 ## Universal Robots Application suite setup
-# If real hardware robot is used, the application suite will pick it ut automatically.
+# If real hardware robot is used, the application suite will pick it up automatically.
 # If instead a Universal Robots Simulator (URSim) is used, start it with:
 ros2 run ur_robot_driver start_ursim.sh -m <ur_type>
 
@@ -197,7 +206,7 @@ To relief the hardware usage spike for initial builds:
 ```
 
 ## Dependencies (personal open-source libraries and tools)
-This step decribes the manual installation of dependencies. For automated/assisted install refer to the 'Project installation' section.
+This step decribes the manual installation of dependencies. For automated/assisted install refer to the 'Project automated installation' section.
 Dependencies are integrated as git submodules. 
 - To clone them, step inside the repository and run the following instructions
 ```
@@ -215,7 +224,7 @@ Those commands will clone the following repositories:
 - [tools](https://github.com/zhivkopetrov/tools)
 
 ## Third party libs, which are not shipped with this repository
-This step decribes the manual installation of third party libs. For automated/assisted install refer to the 'Project installation' section.
+This step decribes the manual installation of third party libs. For automated/assisted install refer to the 'Project automated installation' section.
 - ROS2 Humble Hawksbill
   - For installation, please refer to the official [ROS2 Humble Hawksbill installation documentation](https://docs.ros.org/en/humble/Installation.html)
 
