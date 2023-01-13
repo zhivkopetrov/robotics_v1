@@ -42,7 +42,8 @@ ErrorCode ScriptParser::getDirectoryFiles(const std::string &folderLocation,
 
   const std::vector<std::string> blackListFolders { };
   const ErrorCode err = FileSystemUtils::getAllFilesInDirectoryRecursively(
-      folderLocation, blackListFolders, outFiles);
+      folderLocation, blackListFolders, 
+      FileSystemUtils::SymLinkAcceptance::ALLOWED, outFiles);
   if (ErrorCode::SUCCESS != err) {
     LOGERR(
         "Error, getAllFilesInDirectoryRecursively() failed for directory [%s]",
