@@ -170,10 +170,21 @@ ros2 launch robo_cleaner_gui launch.py
 # If instead a Universal Robots Simulator (URSim) is used, start it with:
 ./scripts/run/run_ursim_ur_driver_rviz.sh
 
-# This will start a docker container which will contain:
+# This will start two docker VNC server containers, which will contain:
 # - Universal Robots ROS2 driver
 # - Universal Robots Simulator (URSim) - utilising a ur5 robot
 # - Rviz2
+
+# To access the VNC Servers use a VNC Client of your choice
+# For example VNC Viewer - https://www.realvnc.com/en/connect/download/viewer/
+
+Access the Universal Robots Simulator (URSim) VNC Server:
+Address: 0.0.0.0:5900
+Password: ursim
+
+Access the Rviz2 + Universal Robots ROS2 driver VNC Server:
+Address: 0.0.0.0:5566
+No password is needed
 
 # Helper utility node, exposing beginner-friendly API from the robot
 ros2 launch urscript_bridge launch.py
