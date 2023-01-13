@@ -60,18 +60,33 @@ echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
 ```
-### Docker support (work-in-progress)
+### Docker support
 ```
+# All parameters are optional
+
 # Clone dependencies on fresh Ubuntu 22.04 image, build and install artifacts
-./scripts/assisted_install/full_install_in_docker.sh
+./scripts/assisted_install/full_install_in_docker.sh <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
+
+# By default ros2_distro=humble, enable_vnc_server=False, enable_docker_in_docker=False
 
 # Start the image
-# the '--privileged' flag is optional, but needed to support docker into docker
-docker run --privileged --rm -it --entrypoint bash robotics_v1:humble
+./scripts/run/run_docker_file.sh <ros2_distro> <enable_privileged_mode>
 
-# Note: Currenly there is no video driver in the container
-#       Running most of the projects requires a video driver,
-#       so docker support is still work-in-progres
+# By default ros2_distro=humble, enable_privileged_mode=False
+# Privileged mode is required if you want to enable docker in docker support.
+# For example starting the Universal Robots Simulator docker image inside robotics_v1 docker image (Docker in Docker)
+
+# To access the VNC Server use a VNC Client of your choice
+# For example VNC Viewer - https://www.realvnc.com/en/connect/download/viewer/
+
+Access the VNC Server using local host and port 5920
+Address: 127.0.0.1:5920
+Password: robotics_v1
+
+Doing so will lead you to Fluxbox.
+Fluxbox is an extemely basic and lightweight stacking window manager for the X Window System.
+All you need is probably a terminal session.
+Right click -> Applications -> Shells -> Bash
 ```
 
 ## Colcon configuration. Building the project
@@ -163,7 +178,7 @@ ros2 launch ur_robot_driver ur_control.launch.py ur_type:=ur10e robot_ip:=192.16
 # Helper utility node, exposing beginner-friendly API from the robot
 ros2 launch urscript_bridge launch.py
 
-# Helper GUI node, which can control real hardware or simulated robot
+# Helper GUI node, which can control real hardware or a simulated robot
 # The node is utilising the robot API exposed from the 'urscript_bridge' node
 ros2 launch ur_control_gui launch.py
 ```
