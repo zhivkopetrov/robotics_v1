@@ -71,6 +71,7 @@ echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.b
 ./scripts/assisted_install/full_install_in_docker.sh <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
 
 # By default ros2_distro=foxy, enable_vnc_server=False, enable_docker_in_docker=False
+# enable_docker_in_docker=True is needed if Universal Robots Simulator (URSim) will be used
 
 # Start the image
 ./scripts/run/run_docker_file.sh <ros2_distro> <enable_privileged_mode>
@@ -90,6 +91,9 @@ Doing so will lead you to Fluxbox.
 Fluxbox is an extemely basic and lightweight stacking window manager for the X Window System.
 All you need is probably a terminal session.
 Right click -> Applications -> Shells -> Bash
+
+# (Optional) Pull UR_ROS2_Driver/Rviz/URSim docker images:
+./scripts/assisted_install/pull_ursim_ur_driver_rviz_images.sh
 ```
 
 ## Colcon configuration. Building the project
@@ -149,48 +153,71 @@ Or everytime you modify some of the assets or resource files (asset information 
 
 ## Running the project
 The project is composed of multiple ros2 packages, most of which contain a GUI.  
-**Important:** as per colcon documentation - don't run ROS2 packages from the same terminal session used for building.
+**Important:** as per colcon documentation - don't run ROS2 packages from the same terminal session used for building.  
 Instead run them from a separate terminal session.
+
+### General guidance
+Once the project is build - source its installed artifacts.  
+This should be done for each NEW terminal session
 ```
-# once the project is build - source its installed artifacts
 source install/setup.bash
+```
+Run nodes via normal colcon commands (ros2 run/launch).  
 
-# run via normal colcon commands (ros2 run/launch)
-# Note the 'ros2 launch' will load config files, while 'ros2 run' will use the default ones 
-ros2 launch <node_name> launch.py
-
-## Robo games
+### Robo games
+```
+source install/setup.bash
 ros2 launch robo_collector_gui launch.py
 ros2 launch robo_collector_controller launch.py
 ros2 launch robo_miner_gui launch.py
 ros2 launch robo_cleaner_gui launch.py
 
-## Universal Robots Application suite setup
-# If real hardware robot is used, the application suite will pick it up automatically.
-# If instead a Universal Robots Simulator (URSim) is used, start it with:
+# Note that 'ros2 launch' will load config files, while 'ros2 run' will use the default ones 
+```
+
+### Universal Robots Application suite setup
+If real hardware robot is used, the application suite will pick it up automatically. 
+To start the Universal Robots ROS2 driver:
+```
+ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
+```
+
+Or refer to the official driver documentation.  
+https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/foxy   
+
+If instead a Universal Robots Simulator (URSim) is used, start it with:
+```
 ./scripts/run/run_ursim_ur_driver_rviz.sh
+```
+This will start two docker VNC server containers, which will contain:  
+  - Universal Robots ROS2 driver + Rviz2
+  - Universal Robots Simulator (URSim) - utilising a ur5 robot
 
-# This will start two docker VNC server containers, which will contain:
-# - Universal Robots ROS2 driver
-# - Universal Robots Simulator (URSim) - utilising a ur5 robot
-# - Rviz2
+This step requires UR_ROS2_Driver/Rviz/URSim docker images to be present on your host/docker.   
+```
+./scripts/assisted_install/pull_ursim_ur_driver_rviz_images.sh
+```
+Note that URSim does not support ARM based CPUs.  
 
-# To access the VNC Servers use a VNC Client of your choice
-# For example VNC Viewer - https://www.realvnc.com/en/connect/download/viewer/
+To access the VNC Servers use a VNC Client of your choice.  
+For example, VNC Viewer - https://www.realvnc.com/en/connect/download/viewer/  
 
-Access the Universal Robots Simulator (URSim) VNC Server:
-Address: 0.0.0.0:5900
-Password: ursim
+Access the Universal Robots Simulator (URSim) VNC Server:  
+  - Address: 0.0.0.0:5900  
+  - Password: ursim  
+  
+Access the Rviz2 + Universal Robots ROS2 driver VNC Server:  
+  - Address: 0.0.0.0:5566  
+  - No password is needed  
 
-Access the Rviz2 + Universal Robots ROS2 driver VNC Server:
-Address: 0.0.0.0:5566
-No password is needed
-
-# Helper utility node, exposing beginner-friendly API from the robot
+Helper utility node, exposing beginner-friendly API from the robot.  
+```
 ros2 launch urscript_bridge launch.py
-
-# Helper GUI node, which can control real hardware or a simulated robot
-# The node is utilising the robot API exposed from the 'urscript_bridge' node
+```
+  
+Helper GUI node, which can control real hardware or a simulated robot.  
+The node is utilising the robot API exposed from the 'urscript_bridge' node  
+```
 ros2 launch ur_control_gui launch.py
 ```
 
