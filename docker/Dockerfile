@@ -26,6 +26,7 @@ ENV VNC_PASSWORD=${VNC_PASSWORD}
 RUN apt update && apt install git -y
 RUN git clone https://github.com/zhivkopetrov/${REPO_NAME}.git
 WORKDIR ${REPO_NAME}
+RUN git checkout ${ROS2_DISTRO}
 
 # Split into multiple steps to use docker cache layering
 
