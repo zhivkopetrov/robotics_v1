@@ -146,40 +146,53 @@ Or everytime you modify some of the assets or resource files (asset information 
 
 ## Running the project
 The project is composed of multiple ros2 packages, most of which contain a GUI.  
-**Important:** as per colcon documentation - don't run ROS2 packages from the same terminal session used for building.
+**Important:** as per colcon documentation - don't run ROS2 packages from the same terminal session used for building.  
 Instead run them from a separate terminal session.
+
+### General guidance
+Once the project is build - source its installed artifacts.  
+This should be done for each NEW terminal session
 ```
-# once the project is build - source its installed artifacts
 source install/setup.bash
+```
+Run nodes via normal colcon commands (ros2 run/launch).  
 
-# run via normal colcon commands (ros2 run/launch)
-# Note the 'ros2 launch' will load config files, while 'ros2 run' will use the default ones 
-ros2 launch <node_name> launch.py
-
-## Robo games
+### Robo games
+```
 ros2 launch robo_collector_gui launch.py
 ros2 launch robo_collector_controller launch.py
 ros2 launch robo_miner_gui launch.py
 ros2 launch robo_cleaner_gui launch.py
+# Note that 'ros2 launch' will load config files, while 'ros2 run' will use the default ones
+```
 
-## Universal Robots Application suite setup
-# If real hardware robot is used, the application suite will pick it up automatically.
-# If instead a Universal Robots Simulator (URSim) is used, start it with:
+### Universal Robots Application suite setup
+If real hardware robot is used, the application suite will pick it up automatically.  
+If instead a Universal Robots Simulator (URSim) is used, start it with:  
+```
 ros2 run ur_robot_driver start_ursim.sh -m <ur_type>
+```
+Supported ur_types: ur3/ur3e/ur5/ur5e/ur10/ur10e.  
+ur16/ur16e are supported as parameters, but their URDFs are not present.  
+Note that URSim does not support ARM based CPUs.  
 
-# Supported ur_types: ur3/ur3e/ur5/ur5e/ur10/ur10e
-# ur16/ur16e are supported as parameters, but their URDFs are not present
-
-# Staring the Universal Robots ROS2 driver:
+Staring the Universal Robots ROS2 driver:
+```
 # ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
-# Example usage with ur10e robot configured to connect with URSim
+```
+Example usage with ur10e robot configured to connect with URSim
+```
 ros2 launch ur_robot_driver ur_control.launch.py ur_type:=ur10e robot_ip:=192.168.56.101 launch_rviz:=true
+```
 
-# Helper utility node, exposing beginner-friendly API from the robot
+Helper utility node, exposing beginner-friendly API from the robot.  
+```
 ros2 launch urscript_bridge launch.py
+```
 
-# Helper GUI node, which can control real hardware or a simulated robot
-# The node is utilising the robot API exposed from the 'urscript_bridge' node
+Helper GUI node, which can control real hardware or a simulated robot.  
+The node is utilising the robot API exposed from the 'urscript_bridge' node  
+```
 ros2 launch ur_control_gui launch.py
 ```
 
