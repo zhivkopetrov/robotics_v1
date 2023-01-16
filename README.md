@@ -121,9 +121,11 @@ Right click -> Applications -> Shells -> Bash
 ## Colcon configuration. Building the project
 Use plain Colcon commands to configure and build the project or use some of the existing preset build scripts.
 ### Basic usage
+Automatic asset generation + build + install steps
 ```
 ./scripts/assisted_build/full_build.sh
 ```
+Build + install steps
 ```
 ./scripts/assisted_build/partial_build.sh
 ```
@@ -131,12 +133,10 @@ Use plain Colcon commands to configure and build the project or use some of the 
 ```
 # all parameters listed in the scripts are optional
 
-# full build - automatic asset generation + build + install steps
 # A full build is required only once in the beginning.
 # For more information refer to the 'Automatic asset information generation' section
 ./scripts/assisted_build/full_build.sh <build_type> <verbose_build> <additional_colcon_options>
 
-# partial build - build + install steps
 # A partial build is the prefered, fast, with minimal compilation (build + install) procedure
 ./scripts/assisted_build/partial_build.sh <build_type> <verbose_build> <additional_colcon_options>
 
