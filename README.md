@@ -30,13 +30,13 @@ ROS2 Foxy Fitzroy implementation is still accessible under the 'foxy' branch
 
 ## Supported Platforms & Compilers
 - Linux
-  - g++ (>= 9.3)
-    - Tested up to g++ 12
-  - clang++ (>= 10)
-    - Tested up to clang++ 14
+  - g++ (9.3 and above)
+    - Tested up to g++ 12.1
+  - clang++ (10 and above)
+    - Tested up to clang++ 14.0
 
 - Windows
-  - MSVC++ (>= 14.20) Visual Studio 2019
+  - MSVC++ (14.20 and above) Visual Studio 2019
     - Tested up to 17.30 Visual Studio 2022
     - Note: enable Linux Bash Shell support under Windows to utilise the preset build scripts
     - Note2: although the game-engine is fully MSVC++ compatible, I haven't tested actual ROS2 functionalities on Windows
