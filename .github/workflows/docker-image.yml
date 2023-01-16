@@ -1,8 +1,27 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "master", "foxy", "ci_cd" ]
+  workflow_dispatch:
+    inputs:
+      cmake_build_type:
+        description: 'CMake build type'
+        required: true
+        default: 'Debug'
+        type: choice
+        options:
+        - Debug
+        - Release
+        - RelWithDebInfo
+        - MinSizeRel
+      verbose_build:
+        description: 'Verbose build/install logs'
+        required: false
+        type: boolean
+      additional_colcon_options:
+        description: 'Additional colcon options'
+        default: ''
+        required: false
+        type: string
 
 jobs:
 
@@ -14,3 +33,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: ./scripts/assisted_install/full_install_in_docker.sh
+      env:
+        CMAKE_BUILD_TYPE: ${{ inputs.cmake_build_type }}
+        VERBOSE_BUILD: ${{ inputs.verbose_build }}
+        ADDITIONAL_COLCON_OPTIONS: ${{ inputs.additional_colcon_options }}
