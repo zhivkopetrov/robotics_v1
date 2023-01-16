@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Humble Build
 
 on:
   workflow_dispatch:
