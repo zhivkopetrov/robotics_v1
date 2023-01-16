@@ -1,8 +1,11 @@
 # robotics_v1
 
 ## A C++20 Robot Operating System 2 (ROS2) Foxy Fitzroy workspace
+*You're reading the documentation for an older, but still supported, version of ROS 2.  
+For information on the latest version, please look at the [master](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/master") branch.*
+
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
-  - More on the training - refer to the [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022)
+  - More on the training - [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022) / [Official Video](https://www.youtube.com/watch?v=wgNpRyYdaUs)
 
 The project utilizes a personal 2D game_engine set of libraries and highly configurable thread-per-component module  architecture.
   - More on the game_engine - refer to its [documentation](https://github.com/zhivkopetrov/game_engine)
@@ -14,22 +17,45 @@ The workspace contains several interesting, competitive, visual games with their
 - [UR Dev](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_dev) - focused on learning UR robotics movements through URScripts
 - [UR Driver](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_driver) - forked helper repositories for Universal Robots Client Library and Universal Robots ROS2 driver + description
 
+## Build Status
+<table width="100%">
+  <tr>
+    <th>ROS2 Distro</th>
+    <th>Humble Hawksbill</th>
+    <th>Foxy Fitzroy</th>
+  </tr>
+  <tr>
+    <th>Branch</th>
+    <td><div align="center"><a href="https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/master">master</a></div></td>
+    <td><div align="center"><a href="https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/foxy">foxy</a></div></td>
+  </tr>
+  <tr>
+    <th>Build Status</th>
+      <th><a href="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/humble_docker_image.yml">
+         <img src="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/humble_docker_image.yml/badge.svg"
+              alt="Humble Build"/></a></th>
+      <th><a href="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/foxy_docker_image.yml">
+         <img src="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/foxy_docker_image.yml/badge.svg"
+              alt="Foxy Build"/></a></th>
+  </tr>
+  <tr>
+    <th>OS version</th>
+    <th>Ubuntu 22.04 LTS</th>
+    <th>Ubuntu 20.04 LTS</th>
+  </tr>
+  <tr>
+    <th>Documentation</th>
+    <td><div align="center"><a href="https://docs.ros.org/en/humble/index.html">ROS2 Humble Hawksbill</a></div></td>
+    <td><div align="center"><a href="https://docs.ros.org/en/foxy/index.html">ROS2 Foxy Fitzroy</a></div></td>
+  </tr>
+</table>
+
 ## Previews
 ### ur_control_gui + Rviz2 + UR ros driver 2
 ![](doc/previews/ur_control_gui.png)
 
 ### robo_collector_gui + robo_collector_controller
 ![](doc/previews/robo_collector.png)
-
-## ROS2 distribution
-You're reading the documentation for an older, but still supported, version of ROS 2.  
-For information on the latest version, please have at the 'master' branch.  
-
-This repository operates under ROS2 Foxy Fitzroy distribution.
-  - [ROS2 Foxy Fitzroy](https://docs.ros.org/en/foxy/index.html) is the official ROS2 distribution for Ubuntu 20.04 LTS
-  
-ROS2 Humble Hawksbill (newer) implementation is available under the 'master' branch
-  - [ROS2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html) is the oficial ROS2 distribution for Ubuntu 22.04 LTS
 
 ## Supported Platforms & Compilers
 - Linux
