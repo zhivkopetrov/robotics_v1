@@ -8,7 +8,6 @@ ENABLE_DOCKER_IN_DOCKER=False
 # Environment variables
 CMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE:-Debug"
 VERBOSE_BUILD="$VERBOSE_BUILD:-False"
-ADDITIONAL_COLCON_OPTIONS="$ADDITIONAL_COLCON_OPTIONS:-"
 
 if [ -z "$1" ]; then
     echo "No argument supplied for ROS2_DISTRO. Assuming '$ROS2_DISTRO'"
