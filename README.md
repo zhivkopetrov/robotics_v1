@@ -1,6 +1,6 @@
 # robotics_v1
 
-## A C++20 ROS2 Foxy Fitzroy workspace
+## A C++20 Robot Operating System 2 (ROS2) Foxy Fitzroy workspace
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - refer to the [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022)
 
@@ -33,13 +33,13 @@ ROS2 Humble Hawksbill (newer) implementation is available under the 'master' bra
 
 ## Supported Platforms & Compilers
 - Linux
-  - g++ (>= 9.3)
-    - Tested up to g++ 12
-  - clang++ (>= 10)
-    - Tested up to clang++ 14
+  - g++ (9.3 and above)
+    - Tested up to g++ 12.1
+  - clang++ (10 and above)
+    - Tested up to clang++ 14.0
 
 - Windows
-  - MSVC++ (>= 14.20) Visual Studio 2019
+  - MSVC++ (14.20 and above) Visual Studio 2019
     - Tested up to 17.30 Visual Studio 2022
     - Note: enable Linux Bash Shell support under Windows to utilise the preset build scripts
     - Note2: although the game-engine is fully MSVC++ compatible, I haven't tested actual ROS2 functionalities on Windows
