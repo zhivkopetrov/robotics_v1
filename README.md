@@ -1,6 +1,6 @@
 # robotics_v1
 
-## A C++20 ROS2 Humble Hawksbill workspace
+## A C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - refer to the [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022)
 
