@@ -8,15 +8,13 @@ project(
     VERSION 1.0.0
 )
 
+find_package(ament_cmake REQUIRED)
 find_package(cmake_helpers REQUIRED)
 find_package(ros2_game_engine REQUIRED)
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
+find_package(urscript_common REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(ur_dashboard_msgs REQUIRED)
-find_package(urscript_interfaces REQUIRED)
-find_package(urscript_common REQUIRED)
 
 set(_INC_FOLDER_NAME include)
 set(_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${_INC_FOLDER_NAME}/${PROJECT_NAME})       
@@ -71,25 +69,25 @@ target_link_libraries(
         urscript_common::urscript_common
 )
 
+ament_export_targets(
+    ${PROJECT_NAME}Targets
+        HAS_LIBRARY_TARGET
+)
+
 ament_target_dependencies(
     ${PROJECT_NAME}
     PUBLIC
-        rclcpp
         std_msgs
         std_srvs
         ur_dashboard_msgs
-        urscript_interfaces
 )
 
 ament_export_dependencies(
-    ros2_game_engine
-    ament_cmake
-    rclcpp
-    std_msgs
-    std_srvs
-    ur_dashboard_msgs
-    urscript_interfaces
-    urscript_common
+    ${PROJECT_NAME}
+    PUBLIC
+        std_msgs
+        std_srvs
+        ur_dashboard_msgs
 )
 
 if(NOT DISABLE_ROS_TOOLING)

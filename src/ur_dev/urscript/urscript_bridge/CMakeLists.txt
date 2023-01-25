@@ -10,7 +10,6 @@ project(
 
 find_package(cmake_helpers REQUIRED)
 find_package(ros2_game_engine REQUIRED)
-find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -20,7 +19,6 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(ur_msgs REQUIRED)
-find_package(urscript_interfaces REQUIRED)
 find_package(urscript_common REQUIRED)
 find_package(
     Boost
@@ -77,7 +75,6 @@ target_link_libraries(
 ament_target_dependencies(
     ${PROJECT_NAME}
 		PUBLIC
-			rclcpp
 			std_msgs
 			std_srvs
 			geometry_msgs
@@ -85,10 +82,7 @@ ament_target_dependencies(
 			tf2
 			tf2_ros
 			tf2_geometry_msgs
-			urscript_interfaces
 )
-
-ament_export_dependencies(rosidl_default_runtime)
 
 if(NOT DISABLE_ROS_TOOLING)
     # Ament uses non-monolith build (separate build and install steps).

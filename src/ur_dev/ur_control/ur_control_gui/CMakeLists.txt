@@ -8,6 +8,7 @@ project(
     VERSION 2.0.0
 )
 
+find_package(ament_cmake REQUIRED)
 find_package(cmake_helpers REQUIRED)
 find_package(ur_control_common)
 find_package(ament_index_cpp REQUIRED)

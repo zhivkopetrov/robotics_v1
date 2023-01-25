@@ -4,6 +4,7 @@ include(CMakeFindDependencyMacro)
 #find_package is only for internal use
 find_dependency(cmake_helpers REQUIRED)
 find_dependency(robo_common REQUIRED)
+find_dependency(robo_cleaner_interfaces REQUIRED)
 
 if(NOT TARGET robo_cleaner_common::robo_cleaner_common)
   include(${CMAKE_CURRENT_LIST_DIR}/robo_cleaner_commonTargets.cmake)

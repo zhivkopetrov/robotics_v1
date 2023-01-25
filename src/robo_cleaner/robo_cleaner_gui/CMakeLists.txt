@@ -9,13 +9,12 @@ project(
 )
 
 find_package(cmake_helpers REQUIRED)
-find_package(ament_cmake REQUIRED)
-find_package(ament_index_cpp REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_action REQUIRED)
-find_package(robo_cleaner_interfaces REQUIRED)
 find_package(robo_cleaner_common REQUIRED)
 find_package(ros2_game_engine REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(ament_index_cpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(std_msgs REQUIRED)
 
 set(_INC_FOLDER_NAME include)
 set(_RESOURCE_FOLDER_NAME resources)
@@ -88,10 +87,9 @@ target_link_libraries(
 ament_target_dependencies(
     ${PROJECT_NAME}
     PUBLIC
-        robo_cleaner_interfaces
-        rclcpp
-        rclcpp_action
         ament_index_cpp
+        rclcpp_action
+        std_msgs
 )
 
 if(NOT DISABLE_ROS_TOOLING)

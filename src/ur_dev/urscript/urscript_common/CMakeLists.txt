@@ -8,6 +8,7 @@ project(
     VERSION 1.0.0
 )
 
+find_package(ament_cmake REQUIRED)
 find_package(cmake_helpers REQUIRED)
 find_package(utils REQUIRED)
 find_package(urscript_interfaces REQUIRED)
@@ -38,7 +39,18 @@ target_link_libraries(
         utils::utils
 )
 
+ament_export_targets(
+    ${PROJECT_NAME}Targets 
+        HAS_LIBRARY_TARGET
+)
+
 ament_target_dependencies(
+    ${PROJECT_NAME}
+    PUBLIC
+        urscript_interfaces
+)
+
+ament_export_dependencies(
     ${PROJECT_NAME}
     PUBLIC
         urscript_interfaces

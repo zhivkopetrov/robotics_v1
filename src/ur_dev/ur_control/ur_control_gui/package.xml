@@ -9,6 +9,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   
+  <build_depend>cmake_helpers</build_depend>
   <build_depend>ament_index_cpp</build_depend>
   <build_depend>ur_control_common</build_depend>
 
