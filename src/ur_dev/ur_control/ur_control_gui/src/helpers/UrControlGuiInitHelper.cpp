@@ -4,14 +4,18 @@
 //System headers
 
 //Other libraries headers
+#include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "ur_control_gui/UrControlGui.h"
 #include "ur_control_gui/config/UrControlGuiConfig.h"
-#include "ur_control_gui/layout/helpers/UrControlGuiLayoutInterfaces.h"
 
 using namespace std::placeholders;
+
+namespace {
+  constexpr auto NODE_NAME = "UrControlGuiExternalBridge";
+}
 
 ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
   auto err = ErrorCode::SUCCESS;
@@ -32,11 +36,12 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
 
   //allocate memory for the ROS nodes in order to attach it's callbacks
   gui._dashboardProvider = std::make_shared<DashboardProvider>();
-  gui._guiExternalBridge = std::make_shared<UrControlGuiExternalBridge>();
+  gui._guiExternalBridge = 
+    std::make_shared<UrControlCommonExternalBridge>(NODE_NAME);
 
-  UrControlGuiLayoutInterface layoutInterface;
-  if (ErrorCode::SUCCESS != initLayout(parsedCfg.layoutCfg, layoutInterface,
-          gui)) {
+  UrControlCommonLayoutInterface layoutInterface;
+  if (ErrorCode::SUCCESS != initLayout(parsedCfg.commonLayoutCfg, 
+      layoutInterface, gui)) {
     LOGERR("Error, initLayout() failed");
     return ErrorCode::FAILURE;
   }
@@ -47,7 +52,7 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
   }
 
   if (ErrorCode::SUCCESS != initUrControlGuiExternalBridge(
-          parsedCfg.urContolGuiExternalBridgeCfg, layoutInterface, gui)) {
+          parsedCfg.externalBridgeCfg, layoutInterface, gui)) {
     LOGERR("initControllerExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
@@ -56,13 +61,13 @@ ErrorCode UrControlGuiInitHelper::init(const std::any &cfg, UrControlGui &gui) {
 }
 
 ErrorCode UrControlGuiInitHelper::initLayout(
-    const UrControlGuiLayoutConfig &cfg,
-    UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui) {
-  UrControlGuiLayoutOutInterface layoutOutInterface;
+    const UrControlCommonLayoutConfig &cfg,
+    UrControlCommonLayoutInterface &layoutInterface, UrControlGui &gui) {
+  UrControlCommonLayoutOutInterface layoutOutInterface;
   const auto guiExternalBridgeRawPointer = gui._guiExternalBridge.get();
   layoutOutInterface.publishURScriptCb = std::bind(
-      &UrControlGuiExternalBridge::publishURScript, guiExternalBridgeRawPointer,
-      _1);
+      &UrControlCommonExternalBridge::publishURScript, 
+      guiExternalBridgeRawPointer, _1);
 
   const auto dashboardProviderRawPointer = gui._dashboardProvider.get();
   layoutOutInterface.invokeDashboardCb = std::bind(
@@ -78,7 +83,7 @@ ErrorCode UrControlGuiInitHelper::initLayout(
 }
 
 ErrorCode UrControlGuiInitHelper::initDashboardHelper(
-    const UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui) {
+    const UrControlCommonLayoutInterface &layoutInterface, UrControlGui &gui) {
   DashboardProviderOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotModeChangeCb = layoutInterface.robotModeChangeCb;
@@ -94,13 +99,14 @@ ErrorCode UrControlGuiInitHelper::initDashboardHelper(
 
 ErrorCode UrControlGuiInitHelper::initUrControlGuiExternalBridge(
     const UrContolGuiExternalBridgeConfig &cfg,
-    const UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui) {
-  UrControlGuiExternalBridgeOutInterface outInterface;
+    const UrControlCommonLayoutInterface &layoutInterface, UrControlGui &gui) {
+  UrControlCommonExternalBridgeOutInterface outInterface;
   outInterface.invokeActionEventCb = gui._invokeActionEventCb;
   outInterface.robotModeChangeCb = layoutInterface.robotModeChangeCb;
   outInterface.safetyModeChangeCb = layoutInterface.safetyModeChangeCb;
 
-  if (ErrorCode::SUCCESS != gui._guiExternalBridge->init(cfg, outInterface)) {
+  if (ErrorCode::SUCCESS != 
+        gui._guiExternalBridge->init(cfg.commonConfig, outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
     return ErrorCode::FAILURE;
   }

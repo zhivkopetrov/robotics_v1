@@ -6,14 +6,14 @@
 #include <string>
 
 //Other libraries headers
+#include "ur_control_common/external_api/config/UrContolCommonExternalBridgeConfig.h"
 
 //Own components headers
 
 //Forward declarations
 
 struct UrContolGuiExternalBridgeConfig {
-  std::string robotIp;
-  uint16_t robotInterfacePort { };
+  UrContolCommonExternalBridgeConfig commonConfig;
 };
 
 #endif /* UR_CONTROL_GUI_URCONTOLGUIEXTERNALBRIDGECONFIG_H_ */

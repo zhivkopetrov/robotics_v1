@@ -5,14 +5,14 @@
 #include <cstdint>
 
 //Other libraries headers
+#include "ur_control_common/layout/UrControlCommonLayout.h"
+#include "ur_control_common/external_api/UrControlCommonExternalBridge.h"
+#include "ur_control_common/external_api/DashboardProvider.h"
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
 #include "game_engine/Game.h"
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "ur_control_gui/layout/UrControlGuiLayout.h"
-#include "ur_control_gui/external_api/UrControlGuiExternalBridge.h"
-#include "ur_control_gui/external_api/DashboardProvider.h"
 
 //Forward declarations
 class InputEvent;
@@ -32,10 +32,10 @@ public:
   void process() override;
 
 private:
-  UrControlGuiLayout _layout;
+  UrControlCommonLayout _layout;
 
   std::shared_ptr<DashboardProvider> _dashboardProvider;
-  std::shared_ptr<UrControlGuiExternalBridge> _guiExternalBridge;
+  std::shared_ptr<UrControlCommonExternalBridge> _guiExternalBridge;
   Ros2CommunicatorInterface _communicatorInterface;
 };
 

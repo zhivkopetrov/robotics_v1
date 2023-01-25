@@ -12,9 +12,9 @@
 
 //Forward declarations
 class UrControlGui;
-struct UrControlGuiLayoutConfig;
+struct UrControlCommonLayoutConfig;
 struct UrContolGuiExternalBridgeConfig;
-struct UrControlGuiLayoutInterface;
+struct UrControlCommonLayoutInterface;
 
 class UrControlGuiInitHelper {
 public:
@@ -23,16 +23,17 @@ public:
   static ErrorCode init(const std::any &cfg, UrControlGui &gui);
 
 private:
-  static ErrorCode initLayout(const UrControlGuiLayoutConfig &cfg,
-                              UrControlGuiLayoutInterface &layoutInterface, //out param
-                              UrControlGui &gui);
+  static ErrorCode initLayout(
+      const UrControlCommonLayoutConfig &cfg,
+      UrControlCommonLayoutInterface &layoutInterface, //out param
+      UrControlGui &gui);
 
   static ErrorCode initDashboardHelper(
-      const UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui);
+      const UrControlCommonLayoutInterface &layoutInterface, UrControlGui &gui);
 
   static ErrorCode initUrControlGuiExternalBridge(
       const UrContolGuiExternalBridgeConfig &cfg,
-      const UrControlGuiLayoutInterface &layoutInterface, UrControlGui &gui);
+      const UrControlCommonLayoutInterface &layoutInterface, UrControlGui &gui);
 };
 
 #endif /* UR_CONTROL_GUI_URCONTROLGUIINITHELPER_H_ */

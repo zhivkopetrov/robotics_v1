@@ -41,9 +41,10 @@ ButtonHandlerConfig generateButtonHandlerConfig(
 UrContolGuiExternalBridgeConfig generateUrContolGuiExternalBridgeConfig(
     const UrControlGuiRos2Params &rosParams) {
   UrContolGuiExternalBridgeConfig cfg;
+  auto& commonCfg = cfg.commonConfig;
 
-  cfg.robotIp = rosParams.robotIp;
-  cfg.robotInterfacePort = rosParams.robotInterfacePort;
+  commonCfg.robotIp = rosParams.robotIp;
+  commonCfg.robotInterfacePort = rosParams.robotInterfacePort;
 
   return cfg;
 }
@@ -71,10 +72,9 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
 UrControlGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
                                       const UrControlGuiRos2Params &rosParams) {
   UrControlGuiConfig cfg;
-  cfg.urContolGuiExternalBridgeCfg = generateUrContolGuiExternalBridgeConfig(
-      rosParams);
+  cfg.externalBridgeCfg = generateUrContolGuiExternalBridgeConfig(rosParams);
 
-  auto &layoutCfg = cfg.layoutCfg;
+  auto &layoutCfg = cfg.commonLayoutCfg;
   layoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(
       projectInstallPrefix);
 
@@ -95,8 +95,8 @@ Ros2CommunicatorConfig generateRos2CommunicatorConfig(
 
 } //end anonymous namespace
 
-std::vector<DependencyDescription> UrControlGuiConfigGenerator::generateDependencies(
-    int32_t argc, char **args) {
+std::vector<DependencyDescription> 
+UrControlGuiConfigGenerator::generateDependencies(int32_t argc, char **args) {
   std::vector<DependencyDescription> dependecies = getDefaultEngineDependencies(
       argc, args);
 
