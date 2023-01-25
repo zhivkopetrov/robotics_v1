@@ -4,7 +4,6 @@
 //System headers
 
 //Other libraries headers
-#include <rclcpp/utilities.hpp>
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
@@ -19,7 +18,7 @@ constexpr auto NODE_NAME = "UrDashboardProvider";
 template <typename T>
 void waitForService(T &client) {
   const char *serviceName = client->get_service_name();
-  while (rclcpp::ok() && !client->wait_for_service(1s)) {
+  while (!client->wait_for_service(1s)) {
     LOG("Service [%s] not available. Waiting 1s ...", serviceName);
   }
 }

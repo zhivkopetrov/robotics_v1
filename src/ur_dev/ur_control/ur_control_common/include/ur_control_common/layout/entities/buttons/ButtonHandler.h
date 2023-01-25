@@ -31,40 +31,36 @@ public:
   void handleEvent(const InputEvent &e);
 
 private:
+  ErrorCode initDashboardButtons(const ButtonHandlerConfig &cfg,
+                                 const InvokeDashboardCb &invokeDashboardCb);               
+
+  ErrorCode initGripperButtons(const ButtonHandlerConfig &cfg,
+                               const PublishURScriptCb &publishURScriptCb);
+
+  ErrorCode initCommandButtons(const ButtonHandlerConfig &cfg,
+                               const PublishURScriptCb &publishURScriptCb);
+
   ErrorCode loadButtonScripts(const std::string &folderLocation,
+                              size_t expectedParsedScriptsCount,
                               std::vector<std::string> &outScripts);
 
-  ErrorCode initUrScriptButtons(const ButtonHandlerConfig &cfg,
-                                const std::vector<std::string>& scripts,
-                                const PublishURScriptCb &publishURScriptCb);
-
-  ErrorCode initDashboardButtons(const ButtonHandlerConfig &cfg,
-                                 const InvokeDashboardCb &invokeDashboardCb);
-
-  enum UrScriptButtonDefines {
-    GREET_IDX,
-    RETURN_HOME_JOINT_IDX,
-    WAKE_UP_IDX,
-    LEAN_FORWARD_JOINT_IDX,
-    RETURN_HOME_LINEAR_IDX,
-    LEAN_FORWARD_LINEAR_IDX,
-    PICK_AND_PLACE_NON_BLENDED_IDX,
-    PICK_AND_PLACE_BLENDED_IDX,
-    ACTIVATE_GRIPPER_IDX,
-    OPEN_GRIPPER_IDX,
+  enum GripperButtonDefines {
+    ACTIVATE_GRIPPER_IDX, 
+    OPEN_GRIPPER_IDX, 
     CLOSE_GRIPPER_IDX,
-
-    URSCRIPT_BUTTONS_COUNT
+    GRIPPER_BUTTONS_COUNT
   };
 
   enum DashboardButtonDefines {
-    POWER_ON_IDX, POWER_OFF_IDX, BRAKE_RELEASE_IDX,
-
+    POWER_ON_IDX, 
+    POWER_OFF_IDX, 
+    BRAKE_RELEASE_IDX,
     DASHBOARD_BUTTONS_COUNT
   };
 
-  std::array<UrScriptButton, URSCRIPT_BUTTONS_COUNT> _urscriptButtons;
   std::array<DashboardButton, DASHBOARD_BUTTONS_COUNT> _dashboardButtons;
+  std::array<UrScriptButton, GRIPPER_BUTTONS_COUNT> _gripperButtons;
+  std::vector<UrScriptButton> _commandButtons;
 };
 
 #endif /* UR_CONTROL_COMMON_BUTTONHANDLER_H_ */

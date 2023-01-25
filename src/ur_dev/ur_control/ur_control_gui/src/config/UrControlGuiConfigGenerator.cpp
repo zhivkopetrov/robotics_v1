@@ -19,6 +19,8 @@
 namespace {
 constexpr auto PROJECT_NAME = "ur_control_gui";
 constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
+constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
+constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
 
 enum TimerIds {
 
@@ -30,10 +32,27 @@ ButtonHandlerConfig generateButtonHandlerConfig(
 
   cfg.buttonRsrcId = UrControlGuiResources::UP_BUTTON;
   cfg.buttonFontRsrcId = UrControlGuiResources::VINQUE_RG_30;
-  cfg.scriptFolderLocation = projectInstallPrefix;
-  cfg.scriptFolderLocation.append("/").append(
+  
+  std::string scriptsFolderLocation = projectInstallPrefix;
+  scriptsFolderLocation.append("/").append(
       ResourceFileHeader::getResourcesFolderName().append("/").append(
-          SCRIPTS_FOLDER_NAME));
+          SCRIPTS_FOLDER_NAME)).append("/");
+
+  cfg.gripperScriptFolderLocation = 
+    scriptsFolderLocation + GRIPPER_SCRIPTS_FOLDER_NAME;
+  cfg.commandScriptsFolderLocation = 
+    scriptsFolderLocation + COMMAND_SCRIPTS_FOLDER_NAME;
+
+  cfg.commandButtonsDescription = {
+    { Point(100,  450), "Greet" },
+    { Point(100,  225), "Return home (joint)" },
+    { Point(300,   25), "Wake up" },
+    { Point(650,   25), "Lean forward (joint)" },
+    { Point(1000,  25), "Return home (linear)" },
+    { Point(1370,  25), "Lean forward (linear)" },
+    { Point(1545, 225), "Pick and place (non blended)" },
+    { Point(1545, 450), "Pick and place (blended)" }
+  };
 
   return cfg;
 }

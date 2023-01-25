@@ -25,7 +25,6 @@ add_executable(
         ${_INC_DIR}/external_api/UrControlGuiRos2ParamProvider.h
         ${_INC_DIR}/helpers/UrControlGuiBuilder.h
         ${_INC_DIR}/helpers/UrControlGuiInitHelper.h
-        # ${_INC_DIR}/layout/UrControlGuiLayout.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/UrControlGui.cpp
@@ -33,7 +32,6 @@ add_executable(
         ${_SRC_DIR}/external_api/UrControlGuiRos2ParamProvider.cpp
         ${_SRC_DIR}/helpers/UrControlGuiBuilder.cpp
         ${_SRC_DIR}/helpers/UrControlGuiInitHelper.cpp
-        # ${_SRC_DIR}/layout/UrControlGuiLayout.cpp
 )
 
 target_include_directories(
