@@ -90,6 +90,8 @@ echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
 ```
 ### Docker support
+  - Requires Docker Engine (18.09.1 and above)
+    - Tested up to Docker Engine 20.10.23
 ```
 # All parameters are optional
 
@@ -304,5 +306,9 @@ This step decribes the manual installation of third party libs. For automated/as
     - Download SDL2 packages from the official [SDL2 repository](https://github.com/libsdl-org/SDL/releases/latest)
     - Extract under "C:/SDL2" or alongside the project binary 
 
-## Dependency hierarchy diagram
-![](doc/hierarchy_diagram.svg)
+## Dependency hierarchy diagrams
+### Robo Games
+![](doc/hierarchy_diagrams/robo_games_hierarchy_diagram.svg)
+
+### UR Dev
+![](doc/hierarchy_diagrams/ur_dev_hierarchy_diagram.svg)
