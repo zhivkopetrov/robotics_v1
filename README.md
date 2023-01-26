@@ -26,8 +26,8 @@ The workspace contains several interesting, competitive, visual games with their
   </tr>
   <tr>
     <th>Branch</th>
-    <td><div align="center"><a href="https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/master">master</a></div></td>
-    <td><div align="center"><a href="https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/foxy">foxy</a></div></td>
+    <td><div align="center"><a href="https://github.com/zhivkopetrov/robotics_v1/tree/master">master</a></div></td>
+    <td><div align="center"><a href="https://github.com/zhivkopetrov/robotics_v1/tree/foxy">foxy</a></div></td>
   </tr>
   <tr>
     <th>Build Status</th>
