@@ -52,6 +52,7 @@ package "ur_script" {
 package "ur_control" {
   [ur_control_common]
   [ur_control_gui]
+  [ur_control_bloom]
 }
 
 ' START libs & tools
@@ -96,6 +97,7 @@ ros2_game_engine -d--> urscript_bridge
 ros2_game_engine -d--> ur_control_common
 
 ur_control_common --> ur_control_gui
+ur_control_common --> ur_control_bloom
 ' END UR Control
 
 @enduml
