@@ -1,4 +1,8 @@
 @startuml
+
+skinparam linetype polyline
+skinparam linetype ortho
+
 package "static C++ libs layer 1" {
   [cmake_helpers]
   [utils]
@@ -13,6 +17,7 @@ package "static C++ libs layer 2" {
 
 package "static C++ libs layer 3" {
   [ros2_game_engine]
+  [robo_common]
 }
 
 package "tools" {
@@ -33,8 +38,6 @@ package "sdl_dynamic_libs" {
 
 [SDL2_dynamic_libs]
 
-[robo_common]
-
 package "robo_collector" {
   [robo_collector_gui]
   [robo_collector_controller]
@@ -52,20 +55,6 @@ package "robo_cleaner" {
   [robo_cleaner_gui]
   [robo_cleaner_common]
   [robo_cleaner_interfaces]
-}
-
-package "ur_driver" {
-  [universal_robots_client_library]
-  [universal_robots_ros2_driver]
-  [ur_msgs]
-  [ur_dashboard_msgs]
-}
-
-package "ur_dev" {
-  [urscript_interface]
-  [urscript_common]
-  [urscript_bridge]
-  [ur_control_gui]
 }
 
 ' START libs & tools
@@ -94,41 +83,25 @@ manager_utils --> robo_common
 
 ' START Robo Collector
 robo_collector_interfaces --> robo_collector_common
-robo_common --> robo_collector_common
+robo_common -d--> robo_collector_common
 robo_collector_common --> robo_collector_gui
 robo_collector_common --> robo_collector_controller
-ros2_game_engine --> robo_collector_gui
-ros2_game_engine --> robo_collector_controller
+ros2_game_engine -d--> robo_collector_gui
+ros2_game_engine -d--> robo_collector_controller
 ' END Robo Collector
 
 ' START Robo Miner
 robo_miner_interfaces --> robo_miner_common
-robo_common --> robo_miner_common
+robo_common -d--> robo_miner_common
 robo_miner_common --> robo_miner_gui
-ros2_game_engine --> robo_miner_gui
+ros2_game_engine -d--> robo_miner_gui
 ' END Robo Miner
 
 ' START Robo Cleaner
 robo_cleaner_interfaces --> robo_cleaner_common
-robo_common --> robo_cleaner_common
+robo_common -d--> robo_cleaner_common
 robo_cleaner_common --> robo_cleaner_gui
-ros2_game_engine --> robo_cleaner_gui
+ros2_game_engine -d--> robo_cleaner_gui
 ' END Robo Cleaner
-
-' START UR Driver
-universal_robots_client_library --> universal_robots_ros2_driver
-universal_robots_ros2_driver --> ur_msgs
-universal_robots_ros2_driver --> ur_dashboard_msgs
-' END UR Driver
-
-' START UR Dev
-urscript_interface --> urscript_common
-urscript_common --> urscript_bridge
-ur_msgs --> urscript_bridge
-ros2_game_engine --> urscript_bridge
-ros2_game_engine --> ur_control_gui
-ur_dashboard_msgs --> ur_control_gui
-urscript_common -u-> ur_control_gui
-' END UR Dev
 
 @enduml
