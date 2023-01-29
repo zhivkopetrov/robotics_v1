@@ -20,22 +20,24 @@ class UrControlBloomInitHelper {
 public:
   UrControlBloomInitHelper() = delete;
 
-  static ErrorCode init(const std::any &cfg, UrControlBloom &Bloom);
+  static ErrorCode init(const std::any &cfg, UrControlBloom &bloom);
 
 private:
   static ErrorCode initLayout(
       const UrControlCommonLayoutConfig &cfg,
       UrControlCommonLayoutInterface &layoutInterface, //out param
-      UrControlBloom &gui);
+      UrControlBloom &bloom);
 
   static ErrorCode initDashboardHelper(
       const UrControlCommonLayoutInterface &layoutInterface, 
-      UrControlBloom &gui);
+      UrControlBloom &bloom);
 
   static ErrorCode initUrControlBloomExternalBridge(
       const UrContolBloomExternalBridgeConfig &cfg,
       const UrControlCommonLayoutInterface &layoutInterface, 
-      UrControlBloom &gui);
+      UrControlBloom &bloom);
+      
+  static ErrorCode initStateMachine(UrControlBloom &bloom);
 };
 
 #endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMINITHELPER_H_ */

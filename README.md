@@ -1,6 +1,6 @@
 # robotics_v1
 
-## A C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
+## An Educational C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022) / [Official Video](https://www.youtube.com/watch?v=wgNpRyYdaUs)
 
@@ -221,10 +221,11 @@ Helper utility node, exposing beginner-friendly API from the robot.
 ros2 launch urscript_bridge launch.py
 ```
 
-Helper GUI node, which can control real hardware or a simulated robot.  
+Helper GUI nodes, which can control real hardware or a simulated robot.  
 The node is utilising the robot API exposed from the 'urscript_bridge' node  
 ```
 ros2 launch ur_control_gui launch.py
+ros2 launch ur_control_bloom launch.py
 ```
 
 ## Hardware requirements

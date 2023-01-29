@@ -10,6 +10,7 @@
 #include "ur_control_common/external_api/DashboardProvider.h"
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
 #include "game_engine/Game.h"
+#include "utils/design_pattern/StateMachine.h"
 #include "utils/ErrorCode.h"
 
 //Own components headers
@@ -33,6 +34,7 @@ public:
 
 private:
   UrControlCommonLayout _layout;
+  StateMachine _stateMachine;
 
   std::shared_ptr<DashboardProvider> _dashboardProvider;
   std::shared_ptr<UrControlCommonExternalBridge> _externalBridge;

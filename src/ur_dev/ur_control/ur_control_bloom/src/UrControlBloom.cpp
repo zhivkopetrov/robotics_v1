@@ -30,6 +30,7 @@ void UrControlBloom::deinit() {
   _communicatorInterface.unregisterNodeCb(_dashboardProvider);
   _communicatorInterface.unregisterNodeCb(_externalBridge);
   _dashboardProvider->deinit();
+  _stateMachine.shutdown();
   _layout.deinit();
 }
 
