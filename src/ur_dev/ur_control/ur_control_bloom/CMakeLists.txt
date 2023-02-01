@@ -20,13 +20,13 @@ set(_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_executable(
     ${PROJECT_NAME} 
         ${_INC_DIR}/UrControlBloom.h
+        ${_INC_DIR}/defines/UrControlBloomDefines.h
         ${_INC_DIR}/config/UrControlBloomConfig.h
         ${_INC_DIR}/config/UrControlBloomConfigGenerator.h
         ${_INC_DIR}/external_api/UrControlBloomRos2ParamProvider.h
         ${_INC_DIR}/helpers/UrControlBloomBuilder.h
         ${_INC_DIR}/helpers/UrControlBloomInitHelper.h
         ${_INC_DIR}/layout/config/UrControlBloomLayoutConfig.h
-        ${_INC_DIR}/layout/helpers/UrControlBloomLayoutInitHelper.h
         ${_INC_DIR}/layout/UrControlBloomLayout.h
      
         ${_SRC_DIR}/main.cpp
@@ -35,7 +35,6 @@ add_executable(
         ${_SRC_DIR}/external_api/UrControlBloomRos2ParamProvider.cpp
         ${_SRC_DIR}/helpers/UrControlBloomBuilder.cpp
         ${_SRC_DIR}/helpers/UrControlBloomInitHelper.cpp
-        ${_SRC_DIR}/layout/helpers/UrControlBloomLayoutInitHelper.cpp
         ${_SRC_DIR}/layout/UrControlBloomLayout.cpp
 )
 

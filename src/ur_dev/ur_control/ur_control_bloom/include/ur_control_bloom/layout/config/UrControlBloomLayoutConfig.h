@@ -16,6 +16,7 @@ struct UrControlBloomLayoutConfig {
 
   uint64_t roseRsrcId = 0;
   uint64_t jengaRsrcId = 0;
+  uint64_t stateVisualsFontRsrcId = 0;
 };
 
 #endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMLAYOUTCONFIG_H_ */

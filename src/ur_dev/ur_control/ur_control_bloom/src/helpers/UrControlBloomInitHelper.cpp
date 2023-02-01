@@ -10,11 +10,12 @@
 //Own components headers
 #include "ur_control_bloom/UrControlBloom.h"
 #include "ur_control_bloom/config/UrControlBloomConfig.h"
+#include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 using namespace std::placeholders;
 
 namespace {
-  constexpr auto NODE_NAME = "UrControlBloomExternalBridge";
+constexpr auto NODE_NAME = "UrControlBloomExternalBridge";
 }
 
 ErrorCode UrControlBloomInitHelper::init(
@@ -123,67 +124,88 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
 }
 
 ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
-  StateMachine &stateMachine = bloom._stateMachine;
+  StateMachine &sm = bloom._stateMachine;
 
   std::vector<StateDescription> stateDescriptions;
+  stateDescriptions.reserve(BloomState::STATES_COUNT);
+
   StateDescription state;
-  state.name = "Recovery";
-  state.onEnter = [](){
-    LOG("Hello from Recovery state");
-  };
-  state.onExit = [](){
-    LOG("Bye from Recovery state");
-  };
+  state.name = BloomState::INIT;
+  state.onEnter = std::bind(&UrControlBloom::enterInitState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitInitState, &bloom);
   stateDescriptions.push_back(state);
 
-  state.name = "Bloom1";
-  state.onEnter = [](){
-    LOG("Hello from Bloom1 state");
-  };
-  state.onExit = [](){
-    LOG("Bye from Bloom1 state");
-  };
+  state.name = BloomState::IDLE;
+  state.onEnter = std::bind(&UrControlBloom::enterIdleState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitIdleState, &bloom);
   stateDescriptions.push_back(state);
 
-  state.name = "SideQuest";
-  state.onEnter = [](){
-    LOG("Hello from SideQuest state");
-  };
-  state.onExit = [](){
-    LOG("Bye from SideQuest state");
-  };
+  state.name = BloomState::BLOOM;
+  state.onEnter = std::bind(&UrControlBloom::enterBloomState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitBloomState, &bloom);
+  stateDescriptions.push_back(state);
+
+  state.name = BloomState::BLOOM_RECOVERY;
+  state.onEnter = std::bind(&UrControlBloom::enterBloomRecoveryState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitBloomRecoveryState, &bloom);
+  stateDescriptions.push_back(state);
+
+  state.name = BloomState::JENGA;
+  state.onEnter = std::bind(&UrControlBloom::enterJengaState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitJengaState, &bloom);
+  stateDescriptions.push_back(state);
+
+  state.name = BloomState::JENGA_RECOVERY;
+  state.onEnter = std::bind(&UrControlBloom::enterJengaRecoveryState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitJengaRecoveryState, &bloom);
   stateDescriptions.push_back(state);
 
   std::vector<StateTransitions> stateTransitions;
   StateTransitions transition;
-  transition.stateName = "Recovery";
-  transition.transitions.insert("Bloom1");
+  transition.stateName = BloomState::INIT;
+  transition.transitions.insert(BloomState::BLOOM_RECOVERY);
+  transition.transitions.insert(BloomState::JENGA_RECOVERY);
   stateTransitions.push_back(transition);
+  transition.transitions.clear();
 
-  transition.stateName = "Bloom1";
-  transition.transitions.insert("SideQuest");
+  transition.stateName = BloomState::BLOOM_RECOVERY;
+  transition.transitions.insert(BloomState::IDLE);
   stateTransitions.push_back(transition);
+  transition.transitions.clear();
 
-  if (ErrorCode::SUCCESS != stateMachine.init(
+  transition.stateName = BloomState::JENGA_RECOVERY;
+  transition.transitions.insert(BloomState::IDLE);
+  stateTransitions.push_back(transition);
+  transition.transitions.clear();
+
+  transition.stateName = BloomState::IDLE;
+  transition.transitions.insert(BloomState::BLOOM);
+  transition.transitions.insert(BloomState::JENGA);
+  stateTransitions.push_back(transition);
+  transition.transitions.clear();
+
+  transition.stateName = BloomState::BLOOM;
+  transition.transitions.insert(BloomState::JENGA);
+  transition.transitions.insert(BloomState::IDLE);
+  stateTransitions.push_back(transition);
+  transition.transitions.clear();
+
+  transition.stateName = BloomState::JENGA;
+  transition.transitions.insert(BloomState::BLOOM);
+  transition.transitions.insert(BloomState::IDLE);
+  stateTransitions.push_back(transition);
+  transition.transitions.clear();
+
+  if (ErrorCode::SUCCESS != sm.init(
     StateLogging::ENABLED, stateDescriptions, stateTransitions)) {
-    LOGERR("Error stateMachine.init()");
+    LOGERR("Error in stateMachine.init()");
     return ErrorCode::FAILURE;
   }
 
-  //test correct transition
-  stateMachine.changeState("Recovery");
-
-  //test bad transition
-  stateMachine.changeState("SideQuest");
-
-  //test correct transition
-  stateMachine.changeState("Bloom1");
-
-  //test bad transition
-  stateMachine.changeState("Recovery");
-
-  //test correct transition
-  stateMachine.changeState("SideQuest");
+  if (ErrorCode::SUCCESS != sm.start(BloomState::INIT)) {
+    LOGERR("Error in stateMachine.start()");
+    return ErrorCode::FAILURE;
+  }
 
   return ErrorCode::SUCCESS;
 }

@@ -21,6 +21,8 @@ public:
   void changeRobotMode(RobotMode mode);
   void changeSafetyMode(SafetyMode mode);
 
+  Point getUpperLeftBoundaryPos() const;
+
 private:
   RobotMode _robotMode = RobotMode::Unknown;
   Text _robotModeHeaderText;

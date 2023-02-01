@@ -27,9 +27,9 @@ ErrorCode UrControlCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != layout._safetyModeVisuals.init(cfg.screenBoundary,
+  if (ErrorCode::SUCCESS != layout.safetyModeVisuals.init(cfg.screenBoundary,
           cfg.robotModeVisualsFontRsrcId)) {
-    LOGERR("Error, _safetyModeVisuals.init() failed");
+    LOGERR("Error, safetyModeVisuals.init() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -59,7 +59,7 @@ ErrorCode UrControlCommonLayoutInitHelper::initButtonHandler(
   btnOutInterface.publishURScriptCb = outInterface.publishURScriptCb;
   btnOutInterface.invokeDashboardCb = outInterface.invokeDashboardCb;
 
-  if (ErrorCode::SUCCESS != layout._buttonHandler.init(cfg, btnOutInterface)) {
+  if (ErrorCode::SUCCESS != layout.buttonHandler.init(cfg, btnOutInterface)) {
     LOGERR("Error in _buttonHandler.init()");
     return ErrorCode::FAILURE;
   }

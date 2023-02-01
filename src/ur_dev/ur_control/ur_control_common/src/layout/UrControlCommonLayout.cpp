@@ -33,12 +33,12 @@ void UrControlCommonLayout::draw() const {
   _map.draw();
   _robot.draw();
 
-  _buttonHandler.draw();
-  _safetyModeVisuals.draw();
+  buttonHandler.draw();
+  safetyModeVisuals.draw();
 }
 
 void UrControlCommonLayout::handleEvent(const InputEvent &e) {
-  _buttonHandler.handleEvent(e);
+  buttonHandler.handleEvent(e);
 }
 
 void UrControlCommonLayout::produceInterface(
@@ -46,8 +46,8 @@ void UrControlCommonLayout::produceInterface(
   using namespace std::placeholders;
 
   interface.robotModeChangeCb = std::bind(&SafetyModeVisuals::changeRobotMode,
-      &_safetyModeVisuals, _1);
+      &safetyModeVisuals, _1);
   interface.safetyModeChangeCb = std::bind(&SafetyModeVisuals::changeSafetyMode,
-      &_safetyModeVisuals, _1);
+      &safetyModeVisuals, _1);
 }
 

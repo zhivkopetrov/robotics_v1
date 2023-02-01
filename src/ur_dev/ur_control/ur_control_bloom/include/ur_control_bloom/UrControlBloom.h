@@ -33,6 +33,19 @@ public:
   void process() override;
 
 private:
+  void enterInitState();
+  void exitInitState();
+  void enterIdleState();
+  void exitIdleState();
+  void enterBloomState();
+  void exitBloomState();
+  void enterBloomRecoveryState();
+  void exitBloomRecoveryState();
+  void enterJengaState();
+  void exitJengaState();
+  void enterJengaRecoveryState();
+  void exitJengaRecoveryState();
+
   UrControlBloomLayout _layout;
   StateMachine _stateMachine;
 

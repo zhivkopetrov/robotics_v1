@@ -29,11 +29,12 @@ public:
   void draw() const;
   void handleEvent(const InputEvent &e);
 
+protected:
+  ButtonHandler buttonHandler;
+  SafetyModeVisuals safetyModeVisuals;
+
 private:
   void produceInterface(UrControlCommonLayoutInterface& interface);
-
-  ButtonHandler _buttonHandler;
-  SafetyModeVisuals _safetyModeVisuals;
 
   Image _map;
   Image _robot;

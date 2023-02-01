@@ -127,7 +127,7 @@ Color getSafetyModeColor(SafetyMode safetyMode) {
 ErrorCode SafetyModeVisuals::init(const Rectangle &screenBoundary,
                                   uint64_t fontRsrcId) {
   _robotModeHeaderText.create(fontRsrcId, "Robot Mode: ", Colors::BLACK);
-  Rectangle robotModeRect = _robotModeText.getImageRect();
+  const Rectangle robotModeRect = _robotModeText.getImageRect();
   Point pos = WidgetAligner::getPosition(robotModeRect.w, robotModeRect.h,
       screenBoundary, WidgetAlignment::CENTER_CENTER);
 
@@ -139,8 +139,7 @@ ErrorCode SafetyModeVisuals::init(const Rectangle &screenBoundary,
   _robotModeText.create(fontRsrcId, " ", Colors::BLACK);
   changeRobotMode(RobotMode::Unknown);
 
-  constexpr int32_t yOffset = 70;
-  pos.y += (robotModeRect.h + yOffset);
+  pos.y += (robotModeRect.h + STATUS_VISUALS_TEXTS_Y_OFFSET);
 
   _safetyModeHeaderText.create(fontRsrcId, "Safety Mode: ", Colors::BLACK);
   _safetyModeHeaderText.setPosition(pos);
@@ -184,4 +183,8 @@ void SafetyModeVisuals::changeSafetyMode(SafetyMode mode) {
       safetyModeHeaderRect.x + safetyModeHeaderRect.w + xOffset,
       safetyModeHeaderRect.y);
   _safetyModeText.setPosition(safetyModePos);
+}
+
+Point SafetyModeVisuals::getUpperLeftBoundaryPos() const {
+  return _robotModeHeaderText.getPosition();
 }

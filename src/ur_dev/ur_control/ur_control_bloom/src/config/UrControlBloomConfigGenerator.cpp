@@ -97,6 +97,7 @@ UrControlBloomConfig generateGameConfig(
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.roseRsrcId = UrControlBloomResources::ROSE;
   layoutCfg.jengaRsrcId = UrControlBloomResources::JENGA;
+  layoutCfg.stateVisualsFontRsrcId = UrControlBloomResources::VINQUE_RG_45;
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(

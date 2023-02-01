@@ -1,6 +1,16 @@
 #ifndef UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_
 #define UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_
 
+//System headers
+
+//Other libraries headers
+
+//Own components headers
+
+//Forward declarations
+
+constexpr auto STATUS_VISUALS_TEXTS_Y_OFFSET = 70;
+
 enum class DashboardCommand {
   POWER_ON_ROBOT,
   POWER_OFF_ROBOT,
