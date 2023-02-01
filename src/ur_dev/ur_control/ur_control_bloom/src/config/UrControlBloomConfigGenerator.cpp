@@ -94,15 +94,19 @@ UrControlBloomConfig generateGameConfig(
   UrControlBloomConfig cfg;
   cfg.externalBridgeCfg = generateUrContolBloomExternalBridgeConfig(rosParams);
 
-  auto &layoutCfg = cfg.commonLayoutCfg;
-  layoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(
+  auto &layoutCfg = cfg.layoutCfg;
+  //TODO fill rose and jenga rsrcIds
+
+  auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
+  commonLayoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(
       projectInstallPrefix);
 
-  layoutCfg.screenBoundary.w = rosParams.guiWindow.w;
-  layoutCfg.screenBoundary.h = rosParams.guiWindow.h;
-  layoutCfg.mapRsrcId = UrControlBloomResources::BACKGROUND;
-  layoutCfg.robotImgRrscId = UrControlBloomResources::UR_ROBOT;
-  layoutCfg.robotModeVisualsFontRsrcId = UrControlBloomResources::VINQUE_RG_45;
+  commonLayoutCfg.screenBoundary.w = rosParams.guiWindow.w;
+  commonLayoutCfg.screenBoundary.h = rosParams.guiWindow.h;
+  commonLayoutCfg.mapRsrcId = UrControlBloomResources::BACKGROUND;
+  commonLayoutCfg.robotImgRrscId = UrControlBloomResources::UR_ROBOT;
+  commonLayoutCfg.robotModeVisualsFontRsrcId = 
+    UrControlBloomResources::VINQUE_RG_45;
 
   return cfg;
 }

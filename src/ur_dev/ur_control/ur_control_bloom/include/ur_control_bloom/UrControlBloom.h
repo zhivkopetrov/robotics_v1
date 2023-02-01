@@ -5,7 +5,6 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "ur_control_common/layout/UrControlCommonLayout.h"
 #include "ur_control_common/external_api/UrControlCommonExternalBridge.h"
 #include "ur_control_common/external_api/DashboardProvider.h"
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
@@ -14,6 +13,7 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
+#include "ur_control_bloom/layout/UrControlBloomLayout.h"
 
 //Forward declarations
 class InputEvent;
@@ -33,7 +33,7 @@ public:
   void process() override;
 
 private:
-  UrControlCommonLayout _layout;
+  UrControlBloomLayout _layout;
   StateMachine _stateMachine;
 
   std::shared_ptr<DashboardProvider> _dashboardProvider;

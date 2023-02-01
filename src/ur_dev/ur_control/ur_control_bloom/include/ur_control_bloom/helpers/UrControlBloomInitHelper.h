@@ -12,7 +12,7 @@
 
 //Forward declarations
 class UrControlBloom;
-struct UrControlCommonLayoutConfig;
+struct UrControlBloomLayoutConfig;
 struct UrContolBloomExternalBridgeConfig;
 struct UrControlCommonLayoutInterface;
 
@@ -24,7 +24,7 @@ public:
 
 private:
   static ErrorCode initLayout(
-      const UrControlCommonLayoutConfig &cfg,
+      const UrControlBloomLayoutConfig &cfg,
       UrControlCommonLayoutInterface &layoutInterface, //out param
       UrControlBloom &bloom);
 

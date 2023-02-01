@@ -6,15 +6,15 @@
 #include <string>
 
 //Other libraries headers
-#include "ur_control_common/layout/config/UrControlCommonLayoutConfig.h"
 
 //Own components headers
+#include "ur_control_bloom/layout/config/UrControlBloomLayoutConfig.h"
 #include "ur_control_bloom/external_api/config/UrContolBloomExternalBridgeConfig.h"
 
 //Forward declarations
 
 struct UrControlBloomConfig {
-  UrControlCommonLayoutConfig commonLayoutCfg;
+  UrControlBloomLayoutConfig layoutCfg;
   UrContolBloomExternalBridgeConfig externalBridgeCfg;
 };
 

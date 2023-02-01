@@ -41,8 +41,8 @@ ErrorCode UrControlBloomInitHelper::init(
     std::make_shared<UrControlCommonExternalBridge>(NODE_NAME);
 
   UrControlCommonLayoutInterface layoutInterface;
-  if (ErrorCode::SUCCESS != initLayout(parsedCfg.commonLayoutCfg, 
-      layoutInterface, bloom)) {
+  if (ErrorCode::SUCCESS != 
+      initLayout(parsedCfg.layoutCfg, layoutInterface, bloom)) {
     LOGERR("Error, initLayout() failed");
     return ErrorCode::FAILURE;
   }
@@ -67,7 +67,7 @@ ErrorCode UrControlBloomInitHelper::init(
 }
 
 ErrorCode UrControlBloomInitHelper::initLayout(
-    const UrControlCommonLayoutConfig &cfg,
+    const UrControlBloomLayoutConfig &cfg,
     UrControlCommonLayoutInterface &layoutInterface, UrControlBloom &bloom) {
   UrControlCommonLayoutOutInterface layoutOutInterface;
   const auto externalBridgeRawPointer = bloom._externalBridge.get();
