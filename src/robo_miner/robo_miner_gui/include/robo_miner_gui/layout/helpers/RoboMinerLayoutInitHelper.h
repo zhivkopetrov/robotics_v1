@@ -24,7 +24,7 @@ public:
   static ErrorCode init(const RoboMinerLayoutConfig &cfg,
                         const RoboMinerLayoutOutInterface &outInterface,
                         RoboCommonLayoutInterface &commonInterface, //out param
-      RoboMinerLayout &layout);
+                        RoboMinerLayout &layout);
 
 private:
   static ErrorCode initPanelHandler(
