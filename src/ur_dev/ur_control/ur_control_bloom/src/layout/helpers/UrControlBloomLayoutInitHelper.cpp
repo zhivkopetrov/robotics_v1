@@ -35,9 +35,9 @@ ErrorCode UrControlBloomLayoutInitHelper::init(
 }
 
 ErrorCode UrControlBloomLayoutInitHelper::initStandaloneImages(
-  [[maybe_unused]]const UrControlBloomLayoutConfig &cfg,
-  [[maybe_unused]]UrControlBloomLayout &layout) {
-
+  const UrControlBloomLayoutConfig &cfg, UrControlBloomLayout &layout) {
+  layout._rose.create(cfg.roseRsrcId);
+  layout._jenga.create(cfg.jengaRsrcId);
 
   return ErrorCode::SUCCESS;                                    
 }

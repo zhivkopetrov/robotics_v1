@@ -14,6 +14,20 @@ description=empty
 position=0,0
 load=on_init
 
+tag=[ROSE]
+type=image
+path=p/entities/rose.png
+description=empty
+position=1025,820
+load=on_init
+
+tag=[JENGA]
+type=image
+path=p/entities/jenga.png
+description=empty
+position=1005,865
+load=on_init
+
 ##### BUTTONS
 
 tag=[UP_BUTTON]

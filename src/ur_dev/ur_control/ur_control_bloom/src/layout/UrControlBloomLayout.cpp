@@ -20,6 +20,9 @@ ErrorCode UrControlBloomLayout::init(
     return ErrorCode::FAILURE;
   }
 
+  _jenga.hide();
+  _rose.hide();
+
   return ErrorCode::SUCCESS;
 }
 
@@ -29,6 +32,8 @@ void UrControlBloomLayout::deinit() {
 
 void UrControlBloomLayout::draw() const {
   _commonLayout.draw();
+  _rose.draw();
+  _jenga.draw();
 }
 
 void UrControlBloomLayout::handleEvent(const InputEvent &e) {

@@ -95,7 +95,8 @@ UrControlBloomConfig generateGameConfig(
   cfg.externalBridgeCfg = generateUrContolBloomExternalBridgeConfig(rosParams);
 
   auto &layoutCfg = cfg.layoutCfg;
-  //TODO fill rose and jenga rsrcIds
+  layoutCfg.roseRsrcId = UrControlBloomResources::ROSE;
+  layoutCfg.jengaRsrcId = UrControlBloomResources::JENGA;
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
   commonLayoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(

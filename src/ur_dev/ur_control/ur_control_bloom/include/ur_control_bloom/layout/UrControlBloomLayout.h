@@ -8,6 +8,7 @@
 #include "ur_control_common/layout/UrControlCommonLayout.h"
 
 //Own components headers
+#include "manager_utils/drawing/Image.h"
 
 //Forward declarations
 class InputEvent;
@@ -20,14 +21,16 @@ public:
 
   ErrorCode init(const UrControlBloomLayoutConfig& cfg,
                  const UrControlCommonLayoutOutInterface& commonOutInterface,
-                 UrControlCommonLayoutInterface &commonInterface);
+                 UrControlCommonLayoutInterface& commonInterface);
   void deinit();
   void draw() const;
-  void handleEvent(const InputEvent &e);
+  void handleEvent(const InputEvent& e);
   void process();
 
 private:
   UrControlCommonLayout _commonLayout;
+  Image _rose;
+  Image _jenga;
 };
 
 #endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMLAYOUT_H_ */
