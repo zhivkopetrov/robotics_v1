@@ -11,10 +11,6 @@
 #include "ur_control_bloom/layout/config/UrControlBloomLayoutConfig.h"
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
-namespace {
-const std::string STATE_MACHINE_VISUALS_TEXT_PREFIX = "State Name:   ";
-}
-
 ErrorCode UrControlBloomLayout::init(
   const UrControlBloomLayoutConfig& cfg,
   const UrControlCommonLayoutOutInterface& commonOutInterface,
@@ -42,6 +38,7 @@ void UrControlBloomLayout::draw() const {
   UrControlCommonLayout::draw();
   _rose.draw();
   _jenga.draw();
+  _stateTextHeader.draw();
   _stateText.draw();
 }
 
@@ -56,8 +53,7 @@ void UrControlBloomLayout::process() {
 void UrControlBloomLayout::enterInitState() {
   _jenga.hide();
   _rose.hide();
-  _stateText.setText(
-    (STATE_MACHINE_VISUALS_TEXT_PREFIX + BloomState::INIT).c_str());
+  _stateText.setTextAndColor(BloomState::INIT, Colors::BLACK);
 }
 
 void UrControlBloomLayout::exitInitState() {
@@ -65,8 +61,7 @@ void UrControlBloomLayout::exitInitState() {
 }
 
 void UrControlBloomLayout::enterIdleState() {
-  _stateText.setText(
-    (STATE_MACHINE_VISUALS_TEXT_PREFIX + BloomState::IDLE).c_str());
+  _stateText.setTextAndColor(BloomState::IDLE, Colors::GREEN);
 }
 
 void UrControlBloomLayout::exitIdleState() {
@@ -75,8 +70,7 @@ void UrControlBloomLayout::exitIdleState() {
 
 void UrControlBloomLayout::enterBloomState() {
   _rose.show();
-  _stateText.setText(
-    (STATE_MACHINE_VISUALS_TEXT_PREFIX + BloomState::BLOOM).c_str());
+  _stateText.setTextAndColor(BloomState::BLOOM, Colors::GREEN);
 }
 
 void UrControlBloomLayout::exitBloomState() {
@@ -84,8 +78,7 @@ void UrControlBloomLayout::exitBloomState() {
 }
 
 void UrControlBloomLayout::enterBloomRecoveryState() {
-  _stateText.setText(
-    (STATE_MACHINE_VISUALS_TEXT_PREFIX + BloomState::BLOOM_RECOVERY).c_str());
+  _stateText.setTextAndColor(BloomState::BLOOM_RECOVERY, Colors::ORANGE);
 }
 
 void UrControlBloomLayout::exitBloomRecoveryState() {
@@ -94,8 +87,7 @@ void UrControlBloomLayout::exitBloomRecoveryState() {
 
 void UrControlBloomLayout::enterJengaState() {
   _jenga.show();
-  _stateText.setText(
-    (STATE_MACHINE_VISUALS_TEXT_PREFIX + BloomState::JENGA).c_str());
+  _stateText.setTextAndColor(BloomState::JENGA, Colors::GREEN);
 }
 
 void UrControlBloomLayout::exitJengaState() {
@@ -103,8 +95,7 @@ void UrControlBloomLayout::exitJengaState() {
 }
 
 void UrControlBloomLayout::enterJengaRecoveryState() {
-  _stateText.setText(
-    (STATE_MACHINE_VISUALS_TEXT_PREFIX + BloomState::JENGA_RECOVERY).c_str());
+  _stateText.setTextAndColor(BloomState::JENGA_RECOVERY, Colors::ORANGE);
 }
 
 void UrControlBloomLayout::exitJengaRecoveryState() {
@@ -116,15 +107,21 @@ ErrorCode UrControlBloomLayout::initStandaloneEntities(
   _rose.create(cfg.roseRsrcId);
   _jenga.create(cfg.jengaRsrcId);
 
-  _stateText.create(cfg.stateVisualsFontRsrcId, 
-    STATE_MACHINE_VISUALS_TEXT_PREFIX.c_str(), Colors::BLACK);
+  _stateTextHeader.create(
+    cfg.stateVisualsFontRsrcId, "State Name:   ", Colors::BLACK);
 
   //get position of text positioned below
-  Point stateTextPos = safetyModeVisuals.getUpperLeftBoundaryPos();
+  Point stateTextHeaderPos = safetyModeVisuals.getUpperLeftBoundaryPos();
 
   //translate the text above
-  stateTextPos.y -= STATUS_VISUALS_TEXTS_Y_OFFSET;
-  _stateText.setPosition(stateTextPos);
+  stateTextHeaderPos.y -= STATUS_VISUALS_TEXTS_Y_OFFSET;
+  _stateTextHeader.setPosition(stateTextHeaderPos);
+
+  const Point stateTextPos = 
+  Point(stateTextHeaderPos.x + _stateTextHeader.getImageWidth(), 
+        stateTextHeaderPos.y);
+  _stateText.create(
+    cfg.stateVisualsFontRsrcId, " ", Colors::BLACK, stateTextPos);
 
   return ErrorCode::SUCCESS;                                    
 }

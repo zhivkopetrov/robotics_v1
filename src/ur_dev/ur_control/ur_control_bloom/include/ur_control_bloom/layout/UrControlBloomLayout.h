@@ -44,6 +44,7 @@ private:
 
   Image _rose;
   Image _jenga;
+  Text _stateTextHeader;
   Text _stateText;
 };
 

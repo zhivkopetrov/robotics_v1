@@ -44,14 +44,14 @@ ButtonHandlerConfig generateButtonHandlerConfig(
     scriptsFolderLocation + COMMAND_SCRIPTS_FOLDER_NAME;
 
   cfg.commandButtonsDescription = {
-    { Point(100,  450), "Bloom recovery" },
+    { Point(100,  450), "Jenga" },
     { Point(100,  225), "Bloom randomized" },
     { Point(300,   25), "Bloom 1st" },
     { Point(650,   25), "Bloom 2nd" },
     { Point(1000,  25), "Bloom 3rd" },
     { Point(1370,  25), "Bloom 4th" },
-    { Point(1545, 225), "Side quest sequence" },
-    { Point(1545, 450), "Side quest recovery" }
+    { Point(1545, 225), "Preempt motion" },
+    { Point(1545, 450), "Return home" }
   };
 
   return cfg;
