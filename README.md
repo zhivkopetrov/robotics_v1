@@ -1,6 +1,6 @@
 # robotics_v1
 
-## An Educational C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
+## An educational C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022) / [Official Video](https://www.youtube.com/watch?v=wgNpRyYdaUs)
 
@@ -209,7 +209,7 @@ Note that URSim does not support ARM based CPUs.
 
 Staring the Universal Robots ROS2 driver:
 ```
-# ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
+ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
 ```
 Example usage with ur10e robot configured to connect with URSim
 ```
