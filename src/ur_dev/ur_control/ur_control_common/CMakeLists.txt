@@ -40,6 +40,8 @@ add_library(
         ${_INC_DIR}/layout/entities/buttons/UrScriptButton.h
         ${_INC_DIR}/layout/entities/buttons/DashboardButton.h
         ${_INC_DIR}/layout/entities/buttons/config/ButtonHandlerConfig.h
+        ${_INC_DIR}/motion/MotionSequence.h
+        ${_INC_DIR}/motion/MotionExecutor.h
         
         ${_SRC_DIR}/external_api/UrControlCommonExternalBridge.cpp
         ${_SRC_DIR}/external_api/DashboardProvider.cpp
@@ -51,6 +53,8 @@ add_library(
         ${_SRC_DIR}/layout/entities/buttons/CommandButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/UrScriptButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/DashboardButton.cpp
+        ${_SRC_DIR}/motion/MotionSequence.cpp
+        ${_SRC_DIR}/motion/MotionExecutor.cpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

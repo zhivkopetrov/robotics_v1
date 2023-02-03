@@ -207,7 +207,7 @@ Supported ur_types: ur3/ur3e/ur5/ur5e/ur10/ur10e.
 ur16/ur16e are supported as parameters, but their URDFs are not present.  
 Note that URSim does not support ARM based CPUs.  
 
-Staring the Universal Robots ROS2 driver:
+Starting the Universal Robots ROS2 driver:
 ```
 ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
 ```
