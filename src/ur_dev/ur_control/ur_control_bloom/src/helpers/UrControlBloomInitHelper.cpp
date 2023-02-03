@@ -11,6 +11,7 @@
 #include "ur_control_bloom/UrControlBloom.h"
 #include "ur_control_bloom/config/UrControlBloomConfig.h"
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
+#include "ur_control_bloom/motion/BloomMotionSequence.h"
 
 using namespace std::placeholders;
 
@@ -56,6 +57,12 @@ ErrorCode UrControlBloomInitHelper::init(
   if (ErrorCode::SUCCESS != initUrControlBloomExternalBridge(
           parsedCfg.externalBridgeCfg, layoutInterface, bloom)) {
     LOGERR("initControllerExternalBridge() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initMotionExecutor(
+      parsedCfg.bloomMotionSequenceCfg, bloom)) {
+    LOGERR("initMotionExecutor() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -117,6 +124,31 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
   if (ErrorCode::SUCCESS != 
         bloom._externalBridge->init(cfg.commonConfig, outInterface)) {
     LOGERR("Error in _controllerExternalBridge.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode UrControlBloomInitHelper::initMotionExecutor(
+  const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
+  UrScriptHeaders headers;
+  headers[Motion::Bloom::GRASP_NAME] = "testPayload1";
+  headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = "testPayload2";
+  headers[Motion::Bloom::RETURN_HOME_NAME] = "testPayload2";
+
+  auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
+    Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 
+    std::move(headers));
+
+  if (ErrorCode::SUCCESS != bloomMotionSequence->init(cfg)) {
+    LOGERR("Error in bloomMotionSequence->init()");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != 
+    bloom._motionExecutor.addSequence(std::move(bloomMotionSequence))) {
+    LOGERR("Error in motionExecutor.addSequence()");
     return ErrorCode::FAILURE;
   }
 

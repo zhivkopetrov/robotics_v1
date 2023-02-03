@@ -15,6 +15,7 @@ class UrControlBloom;
 struct UrControlBloomLayoutConfig;
 struct UrContolBloomExternalBridgeConfig;
 struct UrControlCommonLayoutInterface;
+struct BloomMotionSequenceConfig;
 
 class UrControlBloomInitHelper {
 public:
@@ -37,6 +38,10 @@ private:
       const UrControlCommonLayoutInterface &layoutInterface, 
       UrControlBloom &bloom);
       
+
+  static ErrorCode initMotionExecutor(
+    const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom);
+  
   static ErrorCode initStateMachine(UrControlBloom &bloom);
 };
 

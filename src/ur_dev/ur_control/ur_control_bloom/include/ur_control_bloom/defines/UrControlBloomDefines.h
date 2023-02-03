@@ -1,5 +1,5 @@
-#ifndef UR_CONTROL_BLOOM_URCONTROLBLOOMTOPICS_H_
-#define UR_CONTROL_BLOOM_URCONTROLBLOOMTOPICS_H_
+#ifndef UR_CONTROL_BLOOM_URCONTROLBLOOMDEFINES_H_
+#define UR_CONTROL_BLOOM_URCONTROLBLOOMDEFINES_H_
 
 //System headers
 
@@ -22,4 +22,24 @@ constexpr auto JENGA_RECOVERY = "Jenga Recovery";
 
 } //namespace BloomState
 
-#endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMTOPICS_H_ */
+namespace Motion {
+
+enum MotionId {
+  BLOOM_MOTION_ID,
+  JENGA_MOTION_ID
+};
+
+constexpr auto BLOOM_MOTION_SEQUENCE_NAME = "BloomMotionSequence";
+constexpr auto JENGA_MOTION_SEQUENCE_NAME = "JengaMotionSequence";
+
+namespace Bloom {
+
+constexpr auto GRASP_NAME = "BloomGrasp";
+constexpr auto TRANSPORT_AND_PLACE_NAME = "BloomTransportAndPlace";
+constexpr auto RETURN_HOME_NAME = "BloomReturnHome";
+
+} //namespace Bloom
+
+} //namespace Motions
+
+#endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMDEFINES_H_ */

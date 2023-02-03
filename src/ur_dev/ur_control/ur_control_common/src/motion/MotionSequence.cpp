@@ -9,9 +9,8 @@
 //Own components headers
 
 MotionSequence::MotionSequence(
-  const std::string& name, int32_t id, 
-  std::queue<MotionCommand> &&motionCommands) : 
-  _motionCommands(std::move(motionCommands)), _name(name), _id(id) {
+  const std::string& name, int32_t id, UrScriptHeaders&& headers) : 
+  urScriptHeaders(std::move(headers)), _name(name), _id(id) {
 
 }
 
