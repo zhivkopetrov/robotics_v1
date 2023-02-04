@@ -35,14 +35,16 @@ void MotionSequenceExecutor::shutdown() {
 void MotionSequenceExecutor::dispatchAsync(
   const std::vector<MotionCommand>& commands, 
   const MotionActionDoneCb& actionDoneCb) {
+  //_actionDoneMutex and _commandQueue must be in sync
+  //otherwise a data race (not data corruption) might occur
+  std::lock_guard<std::mutex> lock(_actionDoneMutex);
+
   if (!_commandQueue.isEmpty()) {
-    LOG("MotionSequenceExecutor: overriding active motion commands");
+    LOGR("MotionSequenceExecutor: overriding active motion commands");
     _commandQueue.clear();
   }
 
-  _actionDoneMutex.lock();
   _actionDoneCb = actionDoneCb;
-  _actionDoneMutex.unlock();
 
   //after the batch is inserted in the queue, a notification signal will
   //wake the internal _thread waiting on the conditional variable
@@ -50,8 +52,9 @@ void MotionSequenceExecutor::dispatchAsync(
 }
 
 void MotionSequenceExecutor::runInternalThread() {
+  MotionCommand command;
+
   while (true) {
-    MotionCommand command;
     const auto [isShutdowned, hasTimedOut] = 
       _commandQueue.waitAndPop(command);
     if (isShutdowned) {
@@ -63,11 +66,12 @@ void MotionSequenceExecutor::runInternalThread() {
 
     invokeSingleCommand(command);
 
+    //_actionDoneMutex and _commandQueue must be in sync
+    //otherwise a data race (not data corruption) might occur
+    std::lock_guard<std::mutex> lock(_actionDoneMutex);
     if (_commandQueue.isEmpty()) {
       //last command was popped -> invoke the done callback
-      _actionDoneMutex.lock();
       _actionDoneCb();
-      _actionDoneMutex.unlock();
     }
   }
 }
@@ -82,11 +86,15 @@ void MotionSequenceExecutor::invokeSingleCommand(const MotionCommand& cmd) {
   const auto f = [this, &cmd](){
     _outInterface.invokeURScriptServiceCb(cmd.data);
   };
-  std::future future = std::async(std::launch::async, f);
 
-  //wait for future completion while keeping rensposivness
+  //use std::packaged_task instead of std::async, because 
+  //std::async will block waiting on its destructor
+  std::packaged_task task(f);
+  std::future future = task.get_future();
+
+  //wait for future completion while keeping resposivness
   while (true) {
-    if (!_commandQueue.isShutDowned()) {
+    if (_commandQueue.isShutDowned()) {
       break;
     }
 
