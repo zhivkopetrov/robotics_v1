@@ -25,7 +25,7 @@ public:
   ErrorCode addSequence(std::unique_ptr<MotionSequence> sequence);
   ErrorCode loadSequence(int32_t id);
   ErrorCode performAction(
-    MotionAction action, const MotionSequenceActionDoneCb& doneCb);
+    MotionAction action, const MotionActionDoneCb& doneCb);
 
 private:
   enum InternalDefines {

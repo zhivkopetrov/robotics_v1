@@ -34,14 +34,14 @@ ErrorCode UrControlCommonExternalBridge::init(
 }
 
 void UrControlCommonExternalBridge::publishURScript(
-    const std::string &data) const {
+    const UrScriptPayload &data) const {
   String msg;
   msg.data = data;
   _urscriptPublisher->publish(msg);
 }
 
 void UrControlCommonExternalBridge::invokeURScriptService(
-    const std::string &data) const {
+    const UrScriptPayload &data) const {
   auto request = std::make_shared<UrScript::Request>();
   request->data = data;
   auto result = _urscriptPublisherService->async_send_request(request);

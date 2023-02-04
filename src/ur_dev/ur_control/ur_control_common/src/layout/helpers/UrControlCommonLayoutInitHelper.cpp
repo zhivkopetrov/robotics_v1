@@ -57,7 +57,8 @@ ErrorCode UrControlCommonLayoutInitHelper::initButtonHandler(
 
   ButtonHandlerOutInterface btnOutInterface;
   btnOutInterface.publishURScriptCb = outInterface.publishURScriptCb;
-  btnOutInterface.invokeDashboardCb = outInterface.invokeDashboardCb;
+  btnOutInterface.invokeDashboardServiceCb = 
+    outInterface.invokeDashboardServiceCb;
 
   if (ErrorCode::SUCCESS != layout.buttonHandler.init(cfg, btnOutInterface)) {
     LOGERR("Error in _buttonHandler.init()");

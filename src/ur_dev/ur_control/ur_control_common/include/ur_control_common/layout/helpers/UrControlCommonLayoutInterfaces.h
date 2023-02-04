@@ -12,7 +12,7 @@
 
 struct UrControlCommonLayoutOutInterface {
   PublishURScriptCb publishURScriptCb;
-  InvokeDashboardCb invokeDashboardCb;
+  InvokeDashboardServiceCb invokeDashboardServiceCb;
 };
 
 struct UrControlCommonLayoutInterface {

@@ -20,7 +20,7 @@ class InputEvent;
 
 struct ButtonHandlerOutInterface {
   PublishURScriptCb publishURScriptCb;
-  InvokeDashboardCb invokeDashboardCb;
+  InvokeDashboardServiceCb invokeDashboardServiceCb;
 };
 
 class ButtonHandler {
@@ -31,8 +31,9 @@ public:
   void handleEvent(const InputEvent &e);
 
 private:
-  ErrorCode initDashboardButtons(const ButtonHandlerConfig &cfg,
-                                 const InvokeDashboardCb &invokeDashboardCb);               
+  ErrorCode initDashboardButtons(
+    const ButtonHandlerConfig &cfg,
+    const InvokeDashboardServiceCb &invokeDashboardServiceCb);               
 
   ErrorCode initGripperButtons(const ButtonHandlerConfig &cfg,
                                const PublishURScriptCb &publishURScriptCb);

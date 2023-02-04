@@ -70,7 +70,7 @@ ErrorCode UrControlGuiInitHelper::initLayout(
       guiExternalBridgeRawPointer, _1);
 
   const auto dashboardProviderRawPointer = gui._dashboardProvider.get();
-  layoutOutInterface.invokeDashboardCb = std::bind(
+  layoutOutInterface.invokeDashboardServiceCb = std::bind(
       &DashboardProvider::invokeDashboard, dashboardProviderRawPointer, _1);
 
   if (ErrorCode::SUCCESS != gui._layout.init(cfg, layoutOutInterface,

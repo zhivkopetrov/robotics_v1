@@ -9,13 +9,14 @@
 
 //Own components headers
 
-ErrorCode DashboardButton::init(const DashboardButtonConfig &cfg,
-                                const InvokeDashboardCb &invokeDashboardCb) {
-  if (nullptr == invokeDashboardCb) {
-    LOGERR("Error, nullptr provided for InvokeDashboardCb");
+ErrorCode DashboardButton::init(
+  const DashboardButtonConfig &cfg,
+  const InvokeDashboardServiceCb &invokeDashboardServiceCb) {
+  if (nullptr == invokeDashboardServiceCb) {
+    LOGERR("Error, nullptr provided for InvokeDashboardServiceCb");
     return ErrorCode::FAILURE;
   }
-  _invokeDashboardCb = invokeDashboardCb;
+  _invokeDashboardServiceCb = invokeDashboardServiceCb;
   _command = cfg.command;
 
   if (ErrorCode::SUCCESS != CommandButton::init(cfg.baseCfg)) {
@@ -31,6 +32,6 @@ void DashboardButton::handleEvent(const InputEvent &e) {
     setFrame(CLICKED);
   } else if (TouchEvent::TOUCH_RELEASE == e.type) {
     setFrame(UNCLICKED);
-    _invokeDashboardCb(_command);
+    _invokeDashboardServiceCb(_command);
   }
 }

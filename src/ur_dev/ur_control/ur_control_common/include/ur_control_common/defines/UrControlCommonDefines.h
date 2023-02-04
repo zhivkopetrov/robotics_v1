@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "urscript_common/defines/UrScriptDefines.h"
 
 //Own components headers
 
@@ -50,6 +51,16 @@ enum class SafetyMode {
     UndefinedSafetyMode,
     AutomaticModeSafeguardStop,
     SystemThreePositionEnablingStop
+};
+
+enum class MotionExecutionPolicy {
+  BLOCKING,
+  NON_BLOCKING
+};
+
+struct MotionCommand {
+  UrScriptPayload data;
+  MotionExecutionPolicy policy = MotionExecutionPolicy::NON_BLOCKING;
 };
 
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_ */

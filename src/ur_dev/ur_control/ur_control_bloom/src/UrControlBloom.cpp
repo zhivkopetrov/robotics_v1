@@ -32,6 +32,7 @@ void UrControlBloom::deinit() {
   _communicatorInterface.unregisterNodeCb(_dashboardProvider);
   _communicatorInterface.unregisterNodeCb(_externalBridge);
   _dashboardProvider->deinit();
+  _motionSequenceExecutor.shutdown();
   _stateMachine.shutdown();
   _layout.deinit();
 }
@@ -81,6 +82,18 @@ void UrControlBloom::exitIdleState() {
 
 void UrControlBloom::enterBloomState() {
   _layout.enterBloomState();
+  _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
+
+  const auto doneCb = [this](){
+    //The state will be changed from another thread
+    //Utilise the ActionEvent system
+    const auto f = [this](){
+      _stateMachine.changeState(BloomState::IDLE);
+    };
+    _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+  };
+
+  _motionExecutor.performAction(MotionAction::START, doneCb);
 }
 
 void UrControlBloom::exitBloomState() {

@@ -37,6 +37,7 @@ namespace Bloom {
 constexpr auto GRASP_NAME = "BloomGrasp";
 constexpr auto TRANSPORT_AND_PLACE_NAME = "BloomTransportAndPlace";
 constexpr auto RETURN_HOME_NAME = "BloomReturnHome";
+constexpr auto ABORT_NAME = "BloomAbort";
 
 } //namespace Bloom
 

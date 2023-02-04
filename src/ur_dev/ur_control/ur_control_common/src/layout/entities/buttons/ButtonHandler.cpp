@@ -13,7 +13,7 @@
 ErrorCode ButtonHandler::init(const ButtonHandlerConfig &cfg,
                               const ButtonHandlerOutInterface &outInterface) {
   if (ErrorCode::SUCCESS != initDashboardButtons(cfg,
-          outInterface.invokeDashboardCb)) {
+          outInterface.invokeDashboardServiceCb)) {
     LOGERR("Error, initDashboardButtons() failed");
     return ErrorCode::FAILURE;
   }
@@ -72,7 +72,7 @@ void ButtonHandler::handleEvent(const InputEvent &e) {
 
 ErrorCode ButtonHandler::initDashboardButtons(
     const ButtonHandlerConfig &cfg,
-    const InvokeDashboardCb &invokeDashboardCb) {
+    const InvokeDashboardServiceCb &invokeDashboardServiceCb) {
   DashboardButtonConfig buttonCfg;
   CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
   baseCfg.rsrcId = cfg.buttonRsrcId;
@@ -92,7 +92,7 @@ ErrorCode ButtonHandler::initDashboardButtons(
     baseCfg.descriptionText = buttonDescriptions[i];
     buttonCfg.command = buttonCommands[i];
     if (ErrorCode::SUCCESS != _dashboardButtons[i].init(buttonCfg,
-            invokeDashboardCb)) {
+            invokeDashboardServiceCb)) {
       LOGERR("Error, _dashboardButtons[%d].init() failed", i);
       return ErrorCode::FAILURE;
     }

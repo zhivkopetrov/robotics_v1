@@ -35,8 +35,8 @@ ErrorCode MotionExecutor::loadSequence(int32_t id) {
 }
 
 ErrorCode MotionExecutor::performAction(
-  MotionAction action, const MotionSequenceActionDoneCb& doneCb) {
-  if (!_currSequenceId) {
+  MotionAction action, const MotionActionDoneCb& doneCb) {
+  if (EMPTY_SEQUENCE_ID == _currSequenceId) {
     LOGERR("No current MotionSequence loaded");
     return ErrorCode::FAILURE;
   }

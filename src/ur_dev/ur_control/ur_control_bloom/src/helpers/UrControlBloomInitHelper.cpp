@@ -84,7 +84,7 @@ ErrorCode UrControlBloomInitHelper::initLayout(
       externalBridgeRawPointer, _1);
 
   const auto dashboardProviderRawPointer = bloom._dashboardProvider.get();
-  layoutOutInterface.invokeDashboardCb = std::bind(
+  layoutOutInterface.invokeDashboardServiceCb = std::bind(
       &DashboardProvider::invokeDashboard, dashboardProviderRawPointer, _1);
 
   if (ErrorCode::SUCCESS != bloom._layout.init(cfg, layoutOutInterface,
@@ -132,14 +132,47 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
 
 ErrorCode UrControlBloomInitHelper::initMotionExecutor(
   const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
-  UrScriptHeaders headers;
-  headers[Motion::Bloom::GRASP_NAME] = "testPayload1";
-  headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = "testPayload2";
-  headers[Motion::Bloom::RETURN_HOME_NAME] = "testPayload2";
+  if (ErrorCode::SUCCESS != initBloomMotionSequence(cfg, bloom)) {
+    LOGERR("Error in initBloomMotionSequence()");
+    return ErrorCode::FAILURE;
+  }
+
+  MotionSequenceExecutorOutInterface outInterface;
+  const auto externalBridgeRawPointer = bloom._externalBridge.get();
+  outInterface.publishURScriptCb = std::bind(
+    &UrControlCommonExternalBridge::publishURScript, 
+    externalBridgeRawPointer, _1);
+
+  outInterface.invokeURScriptServiceCb = std::bind(
+    &UrControlCommonExternalBridge::invokeURScriptService, 
+    externalBridgeRawPointer, _1);
+
+  if (ErrorCode::SUCCESS != bloom._motionSequenceExecutor.init(outInterface)) {
+    LOGERR("Error in _motionSequenceExecutor.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
+    const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
+    UrScriptHeaders headers;
+  headers[Motion::Bloom::GRASP_NAME] = 
+    "def BloomGrasp():\n\tmovel(p[-0.5,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
+  headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = 
+    "def BloomTransportAndPlace():\n\tmovel(p[0.0,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
+  headers[Motion::Bloom::RETURN_HOME_NAME] = 
+    "def BloomReturnHome():\n\tmovel(p[0.5,-0.4,0.6,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
+  headers[Motion::Bloom::ABORT_NAME] = "def BloomAbort():\n\tstopl()\nend\n";
+
+  const DispatchMotionsAsyncCb dispatchMotionsAsyncCb = 
+    std::bind(&MotionSequenceExecutor::dispatchAsync, 
+              &bloom._motionSequenceExecutor, _1, _2);
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 
-    std::move(headers));
+    dispatchMotionsAsyncCb, std::move(headers));
 
   if (ErrorCode::SUCCESS != bloomMotionSequence->init(cfg)) {
     LOGERR("Error in bloomMotionSequence->init()");

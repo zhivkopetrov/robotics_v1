@@ -23,11 +23,11 @@ struct DashboardButtonConfig {
 class DashboardButton final : public CommandButton {
 public:
   ErrorCode init(const DashboardButtonConfig &cfg,
-                 const InvokeDashboardCb &invokeDashboardCb);
+                 const InvokeDashboardServiceCb &invokeDashboardServiceCb);
   void handleEvent(const InputEvent &e) override;
 
 private:
-  InvokeDashboardCb _invokeDashboardCb;
+  InvokeDashboardServiceCb _invokeDashboardServiceCb;
   DashboardCommand _command;
 };
 

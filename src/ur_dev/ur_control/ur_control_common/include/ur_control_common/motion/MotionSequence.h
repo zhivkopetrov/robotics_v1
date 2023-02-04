@@ -10,7 +10,7 @@
 #include <any>
 
 //Other libraries headers
-#include "urscript_common/defines/UrScriptDefines.h"
+#include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
 #include "utils/ErrorCode.h"
@@ -20,26 +20,27 @@
 //Forward declarations
 
 using UrScriptHeaders = std::unordered_map<std::string, UrScriptPayload>;
-using MotionSequenceActionDoneCb = std::function<void()>;
 
 class MotionSequence : public NonCopyable, public NonMoveable { 
 public:
   MotionSequence(
-    const std::string& name, int32_t id, UrScriptHeaders&& headers);
+    const std::string& name, int32_t id, 
+    const DispatchMotionsAsyncCb& inputDispatchMotionsAsyncCb,
+    UrScriptHeaders&& headers);
   virtual ~MotionSequence() noexcept = default;
 
   virtual ErrorCode init(const std::any& cfg) = 0;
-  virtual void start(const MotionSequenceActionDoneCb& cb) = 0;
-  virtual void gracefulStop(const MotionSequenceActionDoneCb& cb) = 0;
-  virtual void abort(const MotionSequenceActionDoneCb& cb) = 0;
-  virtual void recover(const MotionSequenceActionDoneCb& cb) = 0;
+  virtual void start(const MotionActionDoneCb& cb) = 0;
+  virtual void gracefulStop(const MotionActionDoneCb& cb) = 0;
+  virtual void abort(const MotionActionDoneCb& cb) = 0;
+  virtual void recover(const MotionActionDoneCb& cb) = 0;
 
   int32_t getId() const;
   std::string getName() const;
 
 protected:
-  std::queue<UrScriptPayload> loadedMotionCommands;
-  const UrScriptHeaders urScriptHeaders;
+  UrScriptHeaders urScriptHeaders;
+  const DispatchMotionsAsyncCb dispatchMotionsAsyncCb;
 
 private:
   std::string _name;

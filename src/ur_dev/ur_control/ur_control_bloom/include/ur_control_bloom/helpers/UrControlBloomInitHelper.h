@@ -41,6 +41,8 @@ private:
 
   static ErrorCode initMotionExecutor(
     const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom);
+  static ErrorCode initBloomMotionSequence(
+    const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom);
   
   static ErrorCode initStateMachine(UrControlBloom &bloom);
 };

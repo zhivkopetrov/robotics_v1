@@ -31,9 +31,9 @@ public:
   ErrorCode init(const UrContolCommonExternalBridgeConfig& cfg,
                  const UrControlCommonExternalBridgeOutInterface &interface);
 
-  void publishURScript(const std::string& data) const;
+  void publishURScript(const UrScriptPayload& data) const;
 
-  void invokeURScriptService(const std::string& data) const;
+  void invokeURScriptService(const UrScriptPayload& data) const;
 
 private:
   using String = std_msgs::msg::String;
