@@ -31,15 +31,25 @@ public:
                      const MotionActionDoneCb& actionDoneCb);
 
 private:
-  void runInternalThread();
+  using BlockingTask = std::function<void()>;
+
+  void runCommandComsumerLoop();
   void invokeSingleCommand(const MotionCommand& cmd);
 
+  void runBlockingInvokerLoop();
+
   MotionSequenceExecutorOutInterface _outInterface;
+
   std::mutex _actionDoneMutex;
   MotionActionDoneCb _actionDoneCb;
+  std::atomic<bool> _preemptCurrCommand = false;
 
-  std::thread _thread;
+  std::thread _commandConsumerThread;
   ThreadSafeQueue<MotionCommand> _commandQueue;
+
+  //performs blocking tasks such as invoking ROS2 services
+  std::thread _blockingInvokerThread;
+  ThreadSafeQueue<BlockingTask> _blockingTasksQueue;
 };
 
 #endif /* UR_CONTROL_COMMON_MOTIONSEQUENCEEXECUTOR_H_ */

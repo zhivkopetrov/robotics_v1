@@ -22,14 +22,22 @@ ErrorCode MotionSequenceExecutor::init(
     return ErrorCode::FAILURE;
   }
 
-  _thread = std::thread(&MotionSequenceExecutor::runInternalThread, this);
+  _commandConsumerThread = 
+    std::thread(&MotionSequenceExecutor::runCommandComsumerLoop, this);
+  _blockingInvokerThread = 
+    std::thread(&MotionSequenceExecutor::runBlockingInvokerLoop, this);
+
+  //detach the invoker thread, because we might want to terminate the program
+  //and now wait for it's blocking task to complete
+  _blockingInvokerThread.detach();
 
   return ErrorCode::SUCCESS;
 }
 
 void MotionSequenceExecutor::shutdown() {
   _commandQueue.shutdown();
-  _thread.join();
+  _blockingTasksQueue.shutdown();
+  _commandConsumerThread.join();
 }
 
 void MotionSequenceExecutor::dispatchAsync(
@@ -42,6 +50,7 @@ void MotionSequenceExecutor::dispatchAsync(
   if (!_commandQueue.isEmpty()) {
     LOGR("MotionSequenceExecutor: overriding active motion commands");
     _commandQueue.clear();
+    _preemptCurrCommand = true;
   }
 
   _actionDoneCb = actionDoneCb;
@@ -51,7 +60,7 @@ void MotionSequenceExecutor::dispatchAsync(
   _commandQueue.pushBatch(commands);
 }
 
-void MotionSequenceExecutor::runInternalThread() {
+void MotionSequenceExecutor::runCommandComsumerLoop() {
   MotionCommand command;
 
   while (true) {
@@ -83,17 +92,26 @@ void MotionSequenceExecutor::invokeSingleCommand(const MotionCommand& cmd) {
   }
  
   //MotionExecutionPolicy::BLOCKING
-  const auto f = [this, &cmd](){
+  BlockingTask blockingTask = [this, &cmd](){
     _outInterface.invokeURScriptServiceCb(cmd.data);
   };
 
-  //use std::packaged_task instead of std::async, because 
-  //std::async will block waiting on its destructor
-  std::packaged_task task(f);
-  std::future future = task.get_future();
+  //NOTE: keep task alive, because otherwise it could lead the
+  //      invoking thread with dangling reference to local object
+  auto task = std::make_shared<std::packaged_task<void()>>(blockingTask);
+  auto future = task->get_future();
+  auto f = [task](){
+    (*task)();
+  };
+  _blockingTasksQueue.push(std::move(f));
 
   //wait for future completion while keeping resposivness
   while (true) {
+    if (_preemptCurrCommand) {
+      _preemptCurrCommand = false;
+      break;
+    }
+
     if (_commandQueue.isShutDowned()) {
       break;
     }
@@ -103,5 +121,22 @@ void MotionSequenceExecutor::invokeSingleCommand(const MotionCommand& cmd) {
     if (std::future_status::ready == status) {
       break;
     }
+  }
+}
+
+void MotionSequenceExecutor::runBlockingInvokerLoop() {
+  BlockingTask blockingTask;
+
+  while (true) {
+    const auto [isShutdowned, hasTimedOut] = 
+      _blockingTasksQueue.waitAndPop(blockingTask);
+    if (isShutdowned) {
+      break; //stop thread
+    }
+    if (hasTimedOut) {
+      continue;
+    }
+
+    blockingTask();
   }
 }
