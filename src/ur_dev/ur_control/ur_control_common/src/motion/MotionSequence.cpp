@@ -9,12 +9,14 @@
 //Own components headers
 
 MotionSequence::MotionSequence(
-  const std::string& name, int32_t id, 
-  const DispatchMotionsAsyncCb& inputDispatchMotionsAsyncCb,
-  UrScriptHeaders&& headers) : 
-  urScriptHeaders(std::move(headers)), 
-  dispatchMotionsAsyncCb(inputDispatchMotionsAsyncCb), _name(name), _id(id) {
+  const std::string& name, int32_t id, UrScriptHeaders&& headers) : 
+  urScriptHeaders(std::move(headers)), _name(name), _id(id) {
 
+}
+
+void MotionSequence::setDispatchMotionsAsyncCb(
+  const DispatchMotionsAsyncCb& cb) {
+  dispatchMotionsAsyncCb = cb;
 }
 
 int32_t MotionSequence::getId() const {

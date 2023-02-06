@@ -9,10 +9,20 @@
 
 //Own components headers
 
+ErrorCode MotionExecutor::init(
+  const MotionSequenceExecutorOutInterface& outInterface) {
+  if (ErrorCode::SUCCESS != _motionSequenceExecutor.init(outInterface)) {
+    LOGERR("Error in _motionSequenceExecutor.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode MotionExecutor::addSequence(
   std::unique_ptr<MotionSequence> sequence) {
   const int32_t id = sequence->getId();
-  const auto [_, success] = 
+  const auto [it, success] = 
     _supportedSequences.try_emplace(id, std::move(sequence));
   if (!success) {
     LOGERR("Provided MotionSequence: [%s] has an id: [%d], which is already "
@@ -20,6 +30,11 @@ ErrorCode MotionExecutor::addSequence(
            sequence->getName().c_str(), id);
     return ErrorCode::FAILURE;
   }
+
+  using namespace std::placeholders;
+  MotionSequence& insertedSequence = *it->second;
+  insertedSequence.setDispatchMotionsAsyncCb(std::bind(
+    &MotionSequenceExecutor::dispatchAsync, &_motionSequenceExecutor, _1, _2));
   return ErrorCode::SUCCESS;
 }
 
@@ -67,4 +82,8 @@ ErrorCode MotionExecutor::performAction(
   }
 
   return ErrorCode::SUCCESS;
+}
+
+void MotionExecutor::shutdown() {
+  _motionSequenceExecutor.shutdown();
 }

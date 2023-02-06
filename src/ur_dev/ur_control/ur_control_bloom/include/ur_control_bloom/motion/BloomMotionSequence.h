@@ -15,9 +15,7 @@
 class BloomMotionSequence final : public MotionSequence {
 public:
   BloomMotionSequence(
-    const std::string& name, int32_t id, 
-    const DispatchMotionsAsyncCb& inputDispatchMotionsAsyncCb,
-    UrScriptHeaders&& headers);
+    const std::string& name, int32_t id, UrScriptHeaders&& headers);
 
   ErrorCode init(const std::any& cfg) override;
   void start(const MotionActionDoneCb& cb) override;

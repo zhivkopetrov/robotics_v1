@@ -11,10 +11,8 @@
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 BloomMotionSequence::BloomMotionSequence(
-  const std::string& name, int32_t id, 
-  const DispatchMotionsAsyncCb& inputDispatchMotionsAsyncCb,
-  UrScriptHeaders&& headers) : 
-    MotionSequence(name, id, inputDispatchMotionsAsyncCb, std::move(headers)) {
+  const std::string& name, int32_t id, UrScriptHeaders&& headers) : 
+    MotionSequence(name, id, std::move(headers)) {
 
 }
 
@@ -32,11 +30,6 @@ ErrorCode BloomMotionSequence::init(const std::any& cfg) {
   }();
   if (ErrorCode::SUCCESS != err) {
     LOGERR("Error, parsing BloomMotionSequenceConfig failed");
-    return ErrorCode::FAILURE;
-  }
-
-  if (nullptr == dispatchMotionsAsyncCb) {
-    LOGERR("Error, nullptr provided for DispatchMotionsAsyncCb");
     return ErrorCode::FAILURE;
   }
 
@@ -75,7 +68,7 @@ void BloomMotionSequence::gracefulStop(const MotionActionDoneCb& cb) {
 void BloomMotionSequence::abort(const MotionActionDoneCb& cb) {
   const std::vector<MotionCommand> commands {
     { urScriptHeaders[Motion::Bloom::ABORT_NAME], 
-      MotionExecutionPolicy::NON_BLOCKING }
+      MotionExecutionPolicy::BLOCKING }
   };
 
   dispatchMotionsAsyncCb(commands, cb);

@@ -13,6 +13,7 @@
 
 //Own components headers
 #include "ur_control_common/motion/MotionSequence.h"
+#include "ur_control_common/motion/MotionSequenceExecutor.h"
 
 //Forward declarations
 
@@ -22,10 +23,13 @@ enum class MotionAction {
 
 class MotionExecutor : public NonCopyable, public NonMoveable { 
 public:
+  ErrorCode init(const MotionSequenceExecutorOutInterface& outInterface);
   ErrorCode addSequence(std::unique_ptr<MotionSequence> sequence);
   ErrorCode loadSequence(int32_t id);
   ErrorCode performAction(
     MotionAction action, const MotionActionDoneCb& doneCb);
+
+  void shutdown();
 
 private:
   enum InternalDefines {
@@ -35,6 +39,8 @@ private:
   std::unordered_map<int32_t, std::unique_ptr<MotionSequence>> 
     _supportedSequences;
   int32_t _currSequenceId = EMPTY_SEQUENCE_ID;
+
+  MotionSequenceExecutor _motionSequenceExecutor;
 };
 
 #endif /* UR_CONTROL_COMMON_MOTIONSEXECUTOR_H_ */

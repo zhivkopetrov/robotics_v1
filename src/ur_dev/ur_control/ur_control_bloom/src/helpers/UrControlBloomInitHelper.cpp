@@ -132,11 +132,6 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
 
 ErrorCode UrControlBloomInitHelper::initMotionExecutor(
   const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
-  if (ErrorCode::SUCCESS != initBloomMotionSequence(cfg, bloom)) {
-    LOGERR("Error in initBloomMotionSequence()");
-    return ErrorCode::FAILURE;
-  }
-
   MotionSequenceExecutorOutInterface outInterface;
   const auto externalBridgeRawPointer = bloom._externalBridge.get();
   outInterface.publishURScriptCb = std::bind(
@@ -147,8 +142,13 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
     &UrControlCommonExternalBridge::invokeURScriptService, 
     externalBridgeRawPointer, _1);
 
-  if (ErrorCode::SUCCESS != bloom._motionSequenceExecutor.init(outInterface)) {
-    LOGERR("Error in _motionSequenceExecutor.init()");
+  if (ErrorCode::SUCCESS != bloom._motionExecutor.init(outInterface)) {
+    LOGERR("Error in _motionExecutor.init()");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initBloomMotionSequence(cfg, bloom)) {
+    LOGERR("Error in initBloomMotionSequence()");
     return ErrorCode::FAILURE;
   }
 
@@ -164,15 +164,11 @@ ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
     "def BloomTransportAndPlace():\n\tmovel(p[0.0,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
   headers[Motion::Bloom::RETURN_HOME_NAME] = 
     "def BloomReturnHome():\n\tmovel(p[0.5,-0.4,0.6,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
-  headers[Motion::Bloom::ABORT_NAME] = "def BloomAbort():\n\tstopl()\nend\n";
-
-  const DispatchMotionsAsyncCb dispatchMotionsAsyncCb = 
-    std::bind(&MotionSequenceExecutor::dispatchAsync, 
-              &bloom._motionSequenceExecutor, _1, _2);
+  headers[Motion::Bloom::ABORT_NAME] = "def BloomAbort():\n\tstopl(1.0)\nend\n";
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 
-    dispatchMotionsAsyncCb, std::move(headers));
+    std::move(headers));
 
   if (ErrorCode::SUCCESS != bloomMotionSequence->init(cfg)) {
     LOGERR("Error in bloomMotionSequence->init()");

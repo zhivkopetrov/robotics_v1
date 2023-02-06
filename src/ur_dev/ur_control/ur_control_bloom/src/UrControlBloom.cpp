@@ -32,7 +32,7 @@ void UrControlBloom::deinit() {
   _communicatorInterface.unregisterNodeCb(_dashboardProvider);
   _communicatorInterface.unregisterNodeCb(_externalBridge);
   _dashboardProvider->deinit();
-  _motionSequenceExecutor.shutdown();
+  _motionExecutor.shutdown();
   _stateMachine.shutdown();
   _layout.deinit();
 }
@@ -48,14 +48,26 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
     if (Keyboard::KEY_T == e.key) {
       _stateMachine.changeState(BloomState::BLOOM_RECOVERY);
     }
-    if (Keyboard::KEY_Y == e.key) {
+    else if (Keyboard::KEY_Y == e.key) {
       _stateMachine.changeState(BloomState::IDLE);
     }
-    if (Keyboard::KEY_U == e.key) {
+    else if (Keyboard::KEY_U == e.key) {
       _stateMachine.changeState(BloomState::BLOOM);
     }
-    if (Keyboard::KEY_I == e.key) {
+    else if (Keyboard::KEY_I == e.key) {
       _stateMachine.changeState(BloomState::JENGA);
+    }
+    else if (Keyboard::KEY_ENTER == e.key) {
+      const auto doneCb = [this](){
+        //The state will be changed from another thread
+        //Utilise the ActionEvent system
+        const auto f = [this](){
+          _stateMachine.changeState(BloomState::JENGA);
+        };
+        _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+      };
+
+      _motionExecutor.performAction(MotionAction::ABORT, doneCb);
     }
   }
 }

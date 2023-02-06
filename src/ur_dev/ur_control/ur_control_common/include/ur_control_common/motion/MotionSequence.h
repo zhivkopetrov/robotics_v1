@@ -24,9 +24,7 @@ using UrScriptHeaders = std::unordered_map<std::string, UrScriptPayload>;
 class MotionSequence : public NonCopyable, public NonMoveable { 
 public:
   MotionSequence(
-    const std::string& name, int32_t id, 
-    const DispatchMotionsAsyncCb& inputDispatchMotionsAsyncCb,
-    UrScriptHeaders&& headers);
+    const std::string& name, int32_t id, UrScriptHeaders&& headers);
   virtual ~MotionSequence() noexcept = default;
 
   virtual ErrorCode init(const std::any& cfg) = 0;
@@ -35,12 +33,14 @@ public:
   virtual void abort(const MotionActionDoneCb& cb) = 0;
   virtual void recover(const MotionActionDoneCb& cb) = 0;
 
+  void setDispatchMotionsAsyncCb(const DispatchMotionsAsyncCb& cb);
+
   int32_t getId() const;
   std::string getName() const;
 
 protected:
   UrScriptHeaders urScriptHeaders;
-  const DispatchMotionsAsyncCb dispatchMotionsAsyncCb;
+  DispatchMotionsAsyncCb dispatchMotionsAsyncCb;
 
 private:
   std::string _name;
