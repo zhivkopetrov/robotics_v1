@@ -63,6 +63,7 @@ private:
 
   std::string mTogglePinMsgPayload;
   std::string mUntogglePinMsgPayload;
+  bool mVerboseLogging = false;
 
   Mutex mIoMutex;
   IOStates mLatestIoStates;

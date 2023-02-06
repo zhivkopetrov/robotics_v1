@@ -1,6 +1,8 @@
 /UrBridgeRos2ParamProvider:
   ros__parameters:
     use_sim_time: false
+
+    verbose_logging: False
     
     #supported executor types:
       #SINGLE_THREADED(0)

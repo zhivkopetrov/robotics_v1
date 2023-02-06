@@ -17,6 +17,7 @@ UrBridgeExternalInterfaceConfig generetaUrBridgeExternalInterfaceConfig(
   cfg.robotIp = params.robotIp;
   cfg.robotInterfacePort = params.robotInterfacePort;
   cfg.urScriptServiceReadyPin = params.urScriptServiceReadyPin;
+  cfg.verboseLogging = params.verboseLogging;
 
   return cfg;
 }

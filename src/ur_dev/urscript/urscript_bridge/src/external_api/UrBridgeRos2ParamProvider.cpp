@@ -3,6 +3,7 @@
 
 //System headers
 #include <sstream>
+#include <iomanip>
 #include <thread>
 
 //Other libraries headers
@@ -14,13 +15,19 @@
 namespace {
 constexpr auto NODE_NAME = "UrBridgeRos2ParamProvider";
 
+constexpr auto VERBOSE_LOGGING_PARAM_NAME = "verbose_logging";
+
 constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
 constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME =
     "ros2_executor_threads_num";
+
 constexpr auto ROBOT_IP_PARAM_NAME = "robot_ip";
 constexpr auto ROBOT_INTERFACE_PORT_PARAM_NAME = "robot_interface_port";
 constexpr auto URSCRIPT_SERVICE_READY_PIN_PARAM_NAME =
     "urscript_service_ready_pin";
+
+//misc
+constexpr bool DEFAULT_VERBOSE_LOGGING = false;
 
 //ROS2 executor
 constexpr auto DEFAULT_EXECUTOR_TYPE = 0;
@@ -46,6 +53,8 @@ void UrBridgeRos2Params::print() const {
   std::ostringstream ostr;
   ostr << "==================================================================\n"
        << "Printing node(" << NODE_NAME << ") params:\n"
+       << VERBOSE_LOGGING_PARAM_NAME << ": " << std::boolalpha << 
+          verboseLogging << '\n'
        << ROS2_EXECUTOR_TYPE_PARAM_NAME << ": " <<
          getExecutorName(ros2CommunicatorCfg.executorType) << '\n'
        << ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME << ": "
@@ -77,6 +86,9 @@ void UrBridgeRos2Params::validate() {
 
 UrBridgeRos2ParamProvider::UrBridgeRos2ParamProvider()
     : rclcpp::Node(NODE_NAME) {
+  declare_parameter<bool>(VERBOSE_LOGGING_PARAM_NAME,
+      DEFAULT_VERBOSE_LOGGING);
+
   declare_parameter<int32_t>(ROS2_EXECUTOR_TYPE_PARAM_NAME,
       DEFAULT_EXECUTOR_TYPE);
   declare_parameter<int32_t>(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
@@ -90,6 +102,8 @@ UrBridgeRos2ParamProvider::UrBridgeRos2ParamProvider()
 }
 
 UrBridgeRos2Params UrBridgeRos2ParamProvider::getParams() {
+  get_parameter(VERBOSE_LOGGING_PARAM_NAME, _params.verboseLogging);
+
   int32_t executorTypeInt{};
   get_parameter(ROS2_EXECUTOR_TYPE_PARAM_NAME, executorTypeInt);
   _params.ros2CommunicatorCfg.executorType =

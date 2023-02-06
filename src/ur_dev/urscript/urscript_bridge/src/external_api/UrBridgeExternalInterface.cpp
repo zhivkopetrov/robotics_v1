@@ -42,6 +42,7 @@ UrBridgeExternalInterface::UrBridgeExternalInterface()
 ErrorCode UrBridgeExternalInterface::init(
     const UrBridgeExternalInterfaceConfig &cfg) {
   initTogglePinMessagesPayload(cfg.urScriptServiceReadyPin);
+  mVerboseLogging = cfg.verboseLogging;
 
   if (ErrorCode::SUCCESS != mTcpClient.init(cfg.robotIp,
           cfg.robotInterfacePort)) {
@@ -117,12 +118,24 @@ void UrBridgeExternalInterface::handleIOState(
 
 void UrBridgeExternalInterface::handleUrScript(
     const String::SharedPtr urScript) {
+
+  if (mVerboseLogging) {
+    const std::string scriptName = extractScriptName(urScript->data);
+    LOG_T("Received UrScript Topic: [%s]. Sending to robot\n", 
+        scriptName.c_str());
+  }
   mTcpClient.send(urScript->data);
 }
 
 void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
+  [[maybe_unused]]std::string scriptName;
+  if (mVerboseLogging) {
+    scriptName = extractScriptName(request->data);
+    LOG_T("Received UrScript Service: [%s]", scriptName.c_str());
+  }
+
   size_t endDelimiterFindIdx { };
   const bool success = validateUrscriptServiceRequest(request,
       response->error_reason, endDelimiterFindIdx);
@@ -132,14 +145,31 @@ void UrBridgeExternalInterface::handleUrScriptService(
     return;
   }
 
+  if (mVerboseLogging) {
+    LOG_T("UrScript Service: [%s] - expecting command pin(TOGGLED) from robot", 
+          scriptName.c_str());
+  }
   mTcpClient.send(mTogglePinMsgPayload);
   waitForPinState(PinState::TOGGLED);
+  if (mVerboseLogging) {
+    LOG_T("UrScript Service: [%s] - command pin(TOGGLED) received from robot\n",
+          scriptName.c_str());
+  }
 
   std::string data = request->data;
   data.insert(endDelimiterFindIdx, mUntogglePinMsgPayload);
 
+  if (mVerboseLogging) {
+    LOG_T("UrScript Service: [%s] - expecting command pin(UNTOGGLED) "
+          "from robot",scriptName.c_str());
+  }
   mTcpClient.send(data);
   waitForPinState(PinState::UNTOGGLED);
+  if (mVerboseLogging) {
+    LOG_T("UrScript Service: [%s] - command pin(UNTOGGLED) received "
+          "from robot\n", scriptName.c_str());
+  }
+
   response->success = true;
 }
 
@@ -170,7 +200,8 @@ void UrBridgeExternalInterface::waitForPinState(PinState state) {
   while (true) {
     {
       std::lock_guard<Mutex> lock(mIoMutex);
-      if (waitCondidition == mLatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
+      if (waitCondidition == 
+          mLatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
         break;
       }
     }

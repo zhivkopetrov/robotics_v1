@@ -17,6 +17,7 @@ struct UrBridgeRos2Params {
   std::string robotIp;
   uint16_t robotInterfacePort { };
   uint32_t urScriptServiceReadyPin { };
+  bool verboseLogging = false;
 
   void print() const;
   void validate();
