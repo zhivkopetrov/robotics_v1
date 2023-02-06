@@ -12,6 +12,20 @@
 #include "ur_control_common/defines/UrControlCommonTopics.h"
 #include "ur_control_common/external_api/config/UrContolCommonExternalBridgeConfig.h"
 
+namespace {
+
+using namespace std::literals;
+
+template <typename T>
+void waitForService(T &client) {
+  const char *serviceName = client->get_service_name();
+  while (!client->wait_for_service(1s)) {
+    LOG("Service [%s] not available. Waiting 1s ...", serviceName);
+  }
+}
+
+} //end anonymous namespace
+
 UrControlCommonExternalBridge::UrControlCommonExternalBridge(
   const std::string& nodeName) : Node(nodeName) {
 
@@ -44,13 +58,26 @@ void UrControlCommonExternalBridge::invokeURScriptService(
     const UrScriptPayload &data) const {
   auto request = std::make_shared<UrScript::Request>();
   request->data = data;
-  auto result = _urscriptPublisherService->async_send_request(request);
+  auto result = _urscriptService->async_send_request(request);
   std::shared_ptr<UrScript::Response> response = result.get();
 
   if (!response->success) {
     LOGERR("Service call to [%s] failed with error_reason: [%s]",
-        _urscriptPublisherService->get_service_name(),
+        _urscriptService->get_service_name(),
         response->error_reason.c_str());
+    return;
+  }
+}
+
+void UrControlCommonExternalBridge::invokeURScriptPreemptService() const {
+  auto request = std::make_shared<Trigger::Request>();
+  auto result = _urscriptPreemptService->async_send_request(request);
+  std::shared_ptr<Trigger::Response> response = result.get();
+
+  if (!response->success) {
+    LOGERR("Service call to [%s] failed with error_reason: [%s]",
+        _urscriptService->get_service_name(),
+        response->message.c_str());
     return;
   }
 }
@@ -91,7 +118,10 @@ ErrorCode UrControlCommonExternalBridge::initCommunication() {
   _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos,
       publisherOptions);
 
-  _urscriptPublisherService = create_client<UrScript>(URSCRIPT_SERVICE,
+  _urscriptService = create_client<UrScript>(URSCRIPT_SERVICE,
+      rmw_qos_profile_services_default, _publishersCallbackGroup);
+
+  _urscriptPreemptService = create_client<Trigger>(URSCRIPT_SERVICE_PREEMPT,
       rmw_qos_profile_services_default, _publishersCallbackGroup);
 
   _robotModeSubscriber = create_subscription<RobotModeType>(ROBOT_MODE_TOPIC,
@@ -101,6 +131,9 @@ ErrorCode UrControlCommonExternalBridge::initCommunication() {
   _safetyModeSubscriber = create_subscription<SafetyModeType>(SAFETY_MODE_TOPIC,
       qos, std::bind(&UrControlCommonExternalBridge::onSafetyModeMsg, this, _1),
       subsriptionOptions);
+
+  waitForService(_urscriptService);
+  waitForService(_urscriptPreemptService);
 
   return ErrorCode::SUCCESS;
 }

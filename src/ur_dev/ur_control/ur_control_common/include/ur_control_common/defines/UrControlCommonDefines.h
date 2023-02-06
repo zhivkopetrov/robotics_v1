@@ -54,8 +54,11 @@ enum class SafetyMode {
 };
 
 enum class MotionExecutionPolicy {
+  //fire and forget from same thread
+  NON_BLOCKING,
+
+  //wait on result in a separate motion thread
   BLOCKING,
-  NON_BLOCKING
 };
 
 struct MotionCommand {

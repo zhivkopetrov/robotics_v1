@@ -18,7 +18,8 @@
 
 struct MotionSequenceExecutorOutInterface {
   PublishURScriptCb publishURScriptCb;
-  InvokeURScriptServiceCb invokeURScriptServiceCb; 
+  InvokeURScriptServiceCb invokeURScriptServiceCb;
+  InvokeURScriptPreemptServiceCb invokeURScriptPreemptServiceCb;
 };
 
 class MotionSequenceExecutor : public NonCopyable, public NonMoveable { 
@@ -34,9 +35,10 @@ private:
   using BlockingTask = std::function<void()>;
 
   void runCommandComsumerLoop();
-  void invokeSingleCommand(const MotionCommand& cmd);
-
   void runBlockingInvokerLoop();
+  
+  void invokeCommand(const MotionCommand& cmd);
+  void invokeBlockingCommand(const UrScriptPayload& data);
 
   MotionSequenceExecutorOutInterface _outInterface;
 

@@ -142,6 +142,10 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
     &UrControlCommonExternalBridge::invokeURScriptService, 
     externalBridgeRawPointer, _1);
 
+  outInterface.invokeURScriptPreemptServiceCb = std::bind(
+    &UrControlCommonExternalBridge::invokeURScriptPreemptService, 
+    externalBridgeRawPointer);
+
   if (ErrorCode::SUCCESS != bloom._motionExecutor.init(outInterface)) {
     LOGERR("Error in _motionExecutor.init()");
     return ErrorCode::FAILURE;

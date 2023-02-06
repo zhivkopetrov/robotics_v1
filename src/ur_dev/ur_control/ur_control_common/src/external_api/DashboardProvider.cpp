@@ -10,10 +10,10 @@
 //Own components headers
 #include "ur_control_common/defines/UrControlCommonTopics.h"
 
-using namespace std::literals;
-
 namespace {
 constexpr auto NODE_NAME = "UrDashboardProvider";
+
+using namespace std::literals;
 
 template <typename T>
 void waitForService(T &client) {

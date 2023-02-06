@@ -33,6 +33,7 @@ public:
 private:
   using String = std_msgs::msg::String;
   using IOStates = ur_msgs::msg::IOStates;
+  using Trigger = std_srvs::srv::Trigger;
   using UrScriptSrv = urscript_interfaces::srv::UrScript;
   using GetEefAngleAxis = urscript_interfaces::srv::GetEefAngleAxis;
   using Mutex = std::shared_mutex;
@@ -52,11 +53,16 @@ private:
       const std::shared_ptr<UrScriptSrv::Request> request,
       std::shared_ptr<UrScriptSrv::Response> response);
 
+  void handleUrScriptServicePreempt(
+    const std::shared_ptr<Trigger::Request> request,
+    std::shared_ptr<Trigger::Response> response);
+
   void handleGetEefAngleAxisService(
       const std::shared_ptr<GetEefAngleAxis::Request> request,
       std::shared_ptr<GetEefAngleAxis::Response> response);
 
-  void waitForPinState(PinState state);
+  //returns wait aborted or not
+  bool waitForPinState(PinState state);
 
   TcpClient mTcpClient;
   uint32_t mUrScriptServiceReadyPin { };
@@ -72,9 +78,13 @@ private:
   std::unique_ptr<tf2_ros::TransformListener> mTfListener;
   Mutex mTfMutex;
 
+  std::atomic<bool> mActiveUrscriptServiceCall = false;
+  std::atomic<bool> mActiveUrscriptServicePreemptRequest = false;
+
   rclcpp::Subscription<IOStates>::SharedPtr mIoStatesSubscribtion;
   rclcpp::Subscription<String>::SharedPtr mUrScriptSubscribtion;
   rclcpp::Service<UrScriptSrv>::SharedPtr mUrScriptService;
+  rclcpp::Service<Trigger>::SharedPtr mUrScriptServicePreempt;
   rclcpp::Service<GetEefAngleAxis>::SharedPtr mGetEefAngleAxisService;
 
   const rclcpp::CallbackGroup::SharedPtr mCallbackGroup = create_callback_group(

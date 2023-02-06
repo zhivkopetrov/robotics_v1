@@ -19,15 +19,28 @@
 #include "urscript_bridge/utils/Tf2Utils.h"
 
 namespace {
+using namespace std::literals;
+
 constexpr auto NODE_NAME = "urscript_bridge";
+
+class AtomicBoolAutoLiveScope {
+public:
+  AtomicBoolAutoLiveScope(std::atomic<bool>& obj) : mObj(obj) {
+    mObj = true;
+  }
+  ~AtomicBoolAutoLiveScope() noexcept {
+    mObj = false;
+  }
+
+private:
+  std::atomic<bool>& mObj;
+};
 
 template<typename T>
 void waitForPublishers(const T& subscription) {
   while (0 == subscription->get_publisher_count()) {
     LOG("Topic [%s] publishers not available. Waiting 1s ...",
         subscription->get_topic_name());
-
-    using namespace std::literals;
     std::this_thread::sleep_for(1s);
   }
 }
@@ -96,6 +109,11 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
           std::placeholders::_1, std::placeholders::_2),
       rmw_qos_profile_services_default, mCallbackGroup);
 
+  mUrScriptServicePreempt = create_service<Trigger>(URSCRIPT_SERVICE_PREEMPT,
+      std::bind(&UrBridgeExternalInterface::handleUrScriptServicePreempt, this,
+          std::placeholders::_1, std::placeholders::_2),
+      rmw_qos_profile_services_default, mCallbackGroup);
+
   mGetEefAngleAxisService = create_service<GetEefAngleAxis>(
       GET_EEF_ANGLE_AXIS_SERVICE,
       std::bind(&UrBridgeExternalInterface::handleGetEefAngleAxisService, this,
@@ -130,6 +148,8 @@ void UrBridgeExternalInterface::handleUrScript(
 void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
+  response->success = true;
+  AtomicBoolAutoLiveScope urscriptServiceCall(mActiveUrscriptServiceCall);
   [[maybe_unused]]std::string scriptName;
   if (mVerboseLogging) {
     scriptName = extractScriptName(request->data);
@@ -149,8 +169,15 @@ void UrBridgeExternalInterface::handleUrScriptService(
     LOG_T("UrScript Service: [%s] - expecting command pin(TOGGLED) from robot", 
           scriptName.c_str());
   }
+
   mTcpClient.send(mTogglePinMsgPayload);
-  waitForPinState(PinState::TOGGLED);
+  bool waitAborted = waitForPinState(PinState::TOGGLED);
+  if (waitAborted) {
+    if (mVerboseLogging) {
+      LOG_T("UrScript Service: [%s] - aborted externally", scriptName.c_str());
+    }
+    return;
+  }
   if (mVerboseLogging) {
     LOG_T("UrScript Service: [%s] - command pin(TOGGLED) received from robot\n",
           scriptName.c_str());
@@ -164,13 +191,36 @@ void UrBridgeExternalInterface::handleUrScriptService(
           "from robot",scriptName.c_str());
   }
   mTcpClient.send(data);
-  waitForPinState(PinState::UNTOGGLED);
+  waitAborted = waitForPinState(PinState::UNTOGGLED);
+  if (waitAborted) {
+    if (mVerboseLogging) {
+      LOG_T("UrScript Service: [%s] - aborted externally", scriptName.c_str());
+    }
+    return;
+  }
   if (mVerboseLogging) {
     LOG_T("UrScript Service: [%s] - command pin(UNTOGGLED) received "
           "from robot\n", scriptName.c_str());
   }
+}
 
+void UrBridgeExternalInterface::handleUrScriptServicePreempt(
+  [[maybe_unused]]const std::shared_ptr<Trigger::Request> request,
+  std::shared_ptr<Trigger::Response> response) {
   response->success = true;
+  if (!mActiveUrscriptServiceCall) {
+    return;
+  }
+    
+  AtomicBoolAutoLiveScope preemptRequest(mActiveUrscriptServicePreemptRequest);
+
+  //wait for service to be aborted
+  while (true) {
+    std::this_thread::sleep_for(10ms);
+    if (!mActiveUrscriptServiceCall) {
+      break;
+    }
+  }
 }
 
 void UrBridgeExternalInterface::handleGetEefAngleAxisService(
@@ -193,11 +243,15 @@ void UrBridgeExternalInterface::handleGetEefAngleAxisService(
   }
 }
 
-void UrBridgeExternalInterface::waitForPinState(PinState state) {
-  using namespace std::literals;
-
+bool UrBridgeExternalInterface::waitForPinState(PinState state) {
   const bool waitCondidition = PinState::TOGGLED == state ? true : false;
+  bool waitAborted = false; 
   while (true) {
+    if (mActiveUrscriptServicePreemptRequest) {
+      waitAborted = true;
+      return waitAborted;
+    }
+
     {
       std::lock_guard<Mutex> lock(mIoMutex);
       if (waitCondidition == 
@@ -208,5 +262,7 @@ void UrBridgeExternalInterface::waitForPinState(PinState state) {
 
     std::this_thread::sleep_for(10ms);
   }
+
+  return waitAborted;
 }
 

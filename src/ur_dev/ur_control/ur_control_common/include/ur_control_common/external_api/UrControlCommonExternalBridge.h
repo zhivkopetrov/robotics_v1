@@ -6,6 +6,7 @@
 //Other libraries headers
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/string.hpp>
+#include <std_srvs/srv/trigger.hpp>
 #include <ur_dashboard_msgs/msg/robot_mode.hpp>
 #include <ur_dashboard_msgs/msg/safety_mode.hpp>
 #include <urscript_interfaces/srv/ur_script.hpp>
@@ -35,8 +36,11 @@ public:
 
   void invokeURScriptService(const UrScriptPayload& data) const;
 
+  void invokeURScriptPreemptService() const;
+
 private:
   using String = std_msgs::msg::String;
+  using Trigger = std_srvs::srv::Trigger;
   using UrScript = urscript_interfaces::srv::UrScript;
   using RobotModeType = ur_dashboard_msgs::msg::RobotMode;
   using SafetyModeType = ur_dashboard_msgs::msg::SafetyMode;
@@ -50,7 +54,8 @@ private:
 
   UrControlCommonExternalBridgeOutInterface _outInterface;
   rclcpp::Publisher<String>::SharedPtr _urscriptPublisher;
-  rclcpp::Client<UrScript>::SharedPtr _urscriptPublisherService;
+  rclcpp::Client<UrScript>::SharedPtr _urscriptService;
+  rclcpp::Client<Trigger>::SharedPtr _urscriptPreemptService;
 
   rclcpp::Subscription<RobotModeType>::SharedPtr _robotModeSubscriber;
   rclcpp::Subscription<SafetyModeType>::SharedPtr _safetyModeSubscriber;

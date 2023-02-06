@@ -16,6 +16,7 @@
 using PublishURScriptCb = std::function<void(const UrScriptPayload& data)>;
 using InvokeURScriptServiceCb = 
   std::function<void(const UrScriptPayload& data)>;
+using InvokeURScriptPreemptServiceCb = std::function<void()>;
 using InvokeDashboardServiceCb = std::function<void(DashboardCommand command)>;
 using RobotModeChangeCb = std::function<void(RobotMode mode)>;
 using SafetyModeChangeCb = std::function<void(SafetyMode mode)>;

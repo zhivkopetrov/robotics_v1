@@ -2,7 +2,7 @@
   ros__parameters:
     use_sim_time: false
 
-    verbose_logging: False
+    verbose_logging: True
     
     #supported executor types:
       #SINGLE_THREADED(0)
