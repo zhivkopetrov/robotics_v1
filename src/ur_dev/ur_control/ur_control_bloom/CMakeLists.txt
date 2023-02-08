@@ -29,7 +29,9 @@ add_executable(
         ${_INC_DIR}/layout/config/UrControlBloomLayoutConfig.h
         ${_INC_DIR}/layout/UrControlBloomLayout.h
         ${_INC_DIR}/motion/BloomMotionSequence.h
+        ${_INC_DIR}/motion/JengaMotionSequence.h
         ${_INC_DIR}/motion/config/BloomMotionSequenceConfig.h
+        ${_INC_DIR}/motion/config/JengaMotionSequenceConfig.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/UrControlBloom.cpp
@@ -39,6 +41,7 @@ add_executable(
         ${_SRC_DIR}/helpers/UrControlBloomInitHelper.cpp
         ${_SRC_DIR}/layout/UrControlBloomLayout.cpp
         ${_SRC_DIR}/motion/BloomMotionSequence.cpp
+        ${_SRC_DIR}/motion/JengaMotionSequence.cpp
 )
 
 target_include_directories(

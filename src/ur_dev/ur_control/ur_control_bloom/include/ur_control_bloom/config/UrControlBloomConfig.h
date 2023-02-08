@@ -11,6 +11,7 @@
 #include "ur_control_bloom/layout/config/UrControlBloomLayoutConfig.h"
 #include "ur_control_bloom/external_api/config/UrContolBloomExternalBridgeConfig.h"
 #include "ur_control_bloom/motion/config/BloomMotionSequenceConfig.h"
+#include "ur_control_bloom/motion/config/JengaMotionSequenceConfig.h"
 
 //Forward declarations
 
@@ -18,6 +19,7 @@ struct UrControlBloomConfig {
   UrControlBloomLayoutConfig layoutCfg;
   UrContolBloomExternalBridgeConfig externalBridgeCfg;
   BloomMotionSequenceConfig bloomMotionSequenceCfg;
+  JengaMotionSequenceConfig jengaMotionSequenceCfg;
 };
 
 #endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMCONFIG_H_ */
