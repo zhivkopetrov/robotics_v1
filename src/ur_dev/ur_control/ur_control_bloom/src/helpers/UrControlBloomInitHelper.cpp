@@ -206,9 +206,9 @@ ErrorCode UrControlBloomInitHelper::initJengaMotionSequence(
   headers[Motion::Jenga::GRASP_NAME] = 
     "def JengaGrasp():\n\tmovel(p[-0.5,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
   headers[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] = 
-    "def JengaTransportAndPlace():\n\tmovel(p[0.0,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
+    "def JengaTransportAndPlace():\n\tmovel(p[0.0,0.4,-0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
   headers[Motion::Jenga::RETURN_HOME_NAME] = 
-    "def JengaReturnHome():\n\tmovel(p[0.5,-0.4,0.6,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
+    "def JengaReturnHome():\n\tmovel(p[0.5,0.4,-0.4,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
 
   auto jengaMotionSequence = std::make_unique<JengaMotionSequence>(
     Motion::JENGA_MOTION_SEQUENCE_NAME, Motion::JENGA_MOTION_ID, 

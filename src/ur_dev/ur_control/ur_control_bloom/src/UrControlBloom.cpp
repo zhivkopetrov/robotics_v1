@@ -59,12 +59,7 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
     }
     else if (Keyboard::KEY_ENTER == e.key) {
       const auto doneCb = [this](){
-        //The state will be changed from another thread
-        //Utilise the ActionEvent system
-        const auto f = [this](){
-          _stateMachine.changeState(BloomState::JENGA);
-        };
-        _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+        _stateMachine.changeState(BloomState::IDLE);
       };
 
       _motionExecutor.performAction(MotionAction::ABORT, doneCb);
@@ -97,7 +92,7 @@ void UrControlBloom::enterBloomState() {
   _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
 
   const auto doneCb = [this](){
-    _stateMachine.changeState(BloomState::IDLE);
+    _stateMachine.changeState(BloomState::JENGA);
   };
   _motionExecutor.performAction(MotionAction::START, doneCb);
 }
@@ -116,6 +111,12 @@ void UrControlBloom::exitBloomRecoveryState() {
 
 void UrControlBloom::enterJengaState() {
   _layout.enterJengaState();
+  _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
+
+  const auto doneCb = [this](){
+    _stateMachine.changeState(BloomState::BLOOM);
+  };
+  _motionExecutor.performAction(MotionAction::START, doneCb);
 }
 
 void UrControlBloom::exitJengaState() {
