@@ -39,7 +39,7 @@ private:
   using Mutex = std::shared_mutex;
 
   enum class PinState {
-    UNTOGGLED, TOGGLED
+    UNFLIPPED, FLIPPED
   };
 
   void initTogglePinMessagesPayload(uint32_t pin);
@@ -64,11 +64,13 @@ private:
   //returns wait aborted or not
   bool waitForPinState(PinState state);
 
+  std::pair<std::string, PinState> getPinPayload();
+
+  std::string getToggledPinPayload(uint32_t pin) const;
+  std::string getUntoggledPinPayload(uint32_t pin) const;
+
   TcpClient mTcpClient;
   uint32_t mUrScriptServiceReadyPin { };
-
-  std::string mTogglePinMsgPayload;
-  std::string mUntogglePinMsgPayload;
   bool mVerboseLogging = false;
 
   Mutex mIoMutex;

@@ -75,8 +75,14 @@ void UrBridgeRos2Params::validate() {
         ros2CommunicatorCfg.numberOfThreads, maxHardwareThreads);
   }
 
-  constexpr uint32_t maxPinIdx = 17;
-  if (urScriptServiceReadyPin > maxPinIdx) {
+  //pin 0 is reserved for aborting (overriding URScripts)
+  constexpr uint32_t reservedPinIdx = 0;
+
+  //per documentation 
+  //https://s3-eu-west-1.amazonaws.com/ur-support-site/46196/scriptManual.pdf
+  constexpr uint32_t maxPinIdx = 7;
+  if ((urScriptServiceReadyPin > maxPinIdx) || 
+      (reservedPinIdx == urScriptServiceReadyPin)) {
     handleParamError(URSCRIPT_SERVICE_READY_PIN_PARAM_NAME,
         urScriptServiceReadyPin, DEFAULT_URSCRIPT_SERVICE_READY_PIN);
   }

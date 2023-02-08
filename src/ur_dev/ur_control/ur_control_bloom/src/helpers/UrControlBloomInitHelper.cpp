@@ -168,7 +168,8 @@ ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
     "def BloomTransportAndPlace():\n\tmovel(p[0.0,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
   headers[Motion::Bloom::RETURN_HOME_NAME] = 
     "def BloomReturnHome():\n\tmovel(p[0.5,-0.4,0.6,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
-  headers[Motion::Bloom::ABORT_NAME] = "def BloomAbort():\n\tstopl(1.0)\nend\n";
+  headers[Motion::Bloom::ABORT_NAME] = 
+    "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 
