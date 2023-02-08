@@ -41,7 +41,7 @@ ErrorCode BloomMotionSequence::init(const std::any& cfg) {
   return ErrorCode::SUCCESS;
 }
 
-void BloomMotionSequence::start(const MotionActionDoneCb& cb) {
+void BloomMotionSequence::start(const MotionCommandBatchDoneCb& cb) {
   const std::vector<MotionCommand> commands {
     { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
       MotionExecutionPolicy::BLOCKING },
@@ -50,13 +50,13 @@ void BloomMotionSequence::start(const MotionActionDoneCb& cb) {
     { urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME], 
       MotionExecutionPolicy::BLOCKING },
     { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
+      MotionExecutionPolicy::BLOCKING }
   };
 
   dispatchMotionsAsyncCb(commands, cb);
 }
 
-void BloomMotionSequence::gracefulStop(const MotionActionDoneCb& cb) {
+void BloomMotionSequence::gracefulStop(const MotionCommandBatchDoneCb& cb) {
   const std::vector<MotionCommand> commands {
     { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
       MotionExecutionPolicy::BLOCKING }
@@ -65,23 +65,14 @@ void BloomMotionSequence::gracefulStop(const MotionActionDoneCb& cb) {
   dispatchMotionsAsyncCb(commands, cb);
 }
 
-void BloomMotionSequence::abort(const MotionActionDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Bloom::ABORT_NAME], 
-      MotionExecutionPolicy::BLOCKING }
-  };
-
-  dispatchMotionsAsyncCb(commands, cb);
-}
-
-void BloomMotionSequence::recover(const MotionActionDoneCb& cb) {
+void BloomMotionSequence::recover(const MotionCommandBatchDoneCb& cb) {
   const std::vector<MotionCommand> commands {
     { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
+      MotionExecutionPolicy::BLOCKING } ,
     { urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME], 
       MotionExecutionPolicy::BLOCKING },
     { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
+      MotionExecutionPolicy::BLOCKING }
   };
 
   dispatchMotionsAsyncCb(commands, cb);
@@ -91,8 +82,7 @@ ErrorCode BloomMotionSequence::validateUrscriptHeaders() const {
   const std::vector<const char*> headers {
     Motion::Bloom::GRASP_NAME, 
     Motion::Bloom::TRANSPORT_AND_PLACE_NAME, 
-    Motion::Bloom::RETURN_HOME_NAME,
-    Motion::Bloom::ABORT_NAME
+    Motion::Bloom::RETURN_HOME_NAME
   };
 
   for (const char* header : headers) {

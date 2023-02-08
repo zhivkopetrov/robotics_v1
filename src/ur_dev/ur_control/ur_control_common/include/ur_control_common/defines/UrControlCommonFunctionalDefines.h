@@ -20,9 +20,18 @@ using InvokeURScriptPreemptServiceCb = std::function<void()>;
 using InvokeDashboardServiceCb = std::function<void(DashboardCommand command)>;
 using RobotModeChangeCb = std::function<void(RobotMode mode)>;
 using SafetyModeChangeCb = std::function<void(SafetyMode mode)>;
-using MotionActionDoneCb = std::function<void()>;
+
+using MotionCommandBatchDoneCb = std::function<void()>;
+using MotionCommandDoneCb = std::function<void()>;
+
+struct MotionCommand {
+  UrScriptPayload data;
+  MotionExecutionPolicy policy = MotionExecutionPolicy::NON_BLOCKING;
+  MotionCommandDoneCb motionCommandDoneCb = nullptr; //optional
+};
+
 using DispatchMotionsAsyncCb = 
   std::function<void(const std::vector<MotionCommand>& commands, 
-                     const MotionActionDoneCb& actionDoneCb)>;
+                     const MotionCommandBatchDoneCb& actionDoneCb)>;
 
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONFUNCTIONALDEFINES_H_ */

@@ -50,7 +50,7 @@ ErrorCode MotionExecutor::loadSequence(int32_t id) {
 }
 
 ErrorCode MotionExecutor::performAction(
-  MotionAction action, const MotionActionDoneCb& doneCb) {
+  MotionAction action, const MotionCommandBatchDoneCb& doneCb) {
   if (EMPTY_SEQUENCE_ID == _currSequenceId) {
     LOGERR("No current MotionSequence loaded");
     return ErrorCode::FAILURE;

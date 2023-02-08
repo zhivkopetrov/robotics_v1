@@ -5,7 +5,6 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
 #include "ur_control_common/motion/MotionSequence.h"
 
 //Own components headers
@@ -18,10 +17,9 @@ public:
     const std::string& name, int32_t id, UrScriptHeaders&& headers);
 
   ErrorCode init(const std::any& cfg) override;
-  void start(const MotionActionDoneCb& cb) override;
-  void gracefulStop(const MotionActionDoneCb& cb) override;
-  void abort(const MotionActionDoneCb& cb) override;
-  void recover(const MotionActionDoneCb& cb) override;
+  void start(const MotionCommandBatchDoneCb& cb) override;
+  void gracefulStop(const MotionCommandBatchDoneCb& cb) override;
+  void recover(const MotionCommandBatchDoneCb& cb) override;
 
 private:
   ErrorCode validateUrscriptHeaders() const;

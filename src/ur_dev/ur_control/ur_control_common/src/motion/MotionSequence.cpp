@@ -26,3 +26,14 @@ int32_t MotionSequence::getId() const {
 std::string MotionSequence::getName() const {
   return _name;
 }
+
+void MotionSequence::abort(const MotionCommandBatchDoneCb& cb) {
+  //NOTE: pin 0 is reserved for aborting (overriding URScripts)
+  constexpr auto abortCmdPayload = 
+    "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";
+  const std::vector<MotionCommand> commands {
+    { abortCmdPayload, MotionExecutionPolicy::BLOCKING }
+  };
+
+  dispatchMotionsAsyncCb(commands, cb);
+}

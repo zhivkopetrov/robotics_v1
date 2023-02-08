@@ -28,11 +28,11 @@ public:
   virtual ~MotionSequence() noexcept = default;
 
   virtual ErrorCode init(const std::any& cfg) = 0;
-  virtual void start(const MotionActionDoneCb& cb) = 0;
-  virtual void gracefulStop(const MotionActionDoneCb& cb) = 0;
-  virtual void abort(const MotionActionDoneCb& cb) = 0;
-  virtual void recover(const MotionActionDoneCb& cb) = 0;
+  virtual void start(const MotionCommandBatchDoneCb& cb) = 0;
+  virtual void gracefulStop(const MotionCommandBatchDoneCb& cb) = 0;
+  virtual void recover(const MotionCommandBatchDoneCb& cb) = 0;
 
+  void abort(const MotionCommandBatchDoneCb& cb);
   void setDispatchMotionsAsyncCb(const DispatchMotionsAsyncCb& cb);
 
   int32_t getId() const;

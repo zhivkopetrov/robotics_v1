@@ -7,6 +7,7 @@
 
 //Other libraries headers
 #include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
+#include "game_engine/defines/ActionEventDefines.h"
 #include "utils/concurrency/ThreadSafeQueue.h"
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
@@ -17,6 +18,7 @@
 //Forward declarations
 
 struct MotionSequenceExecutorOutInterface {
+  InvokeActionEventCb invokeActionEventCb;
   PublishURScriptCb publishURScriptCb;
   InvokeURScriptServiceCb invokeURScriptServiceCb;
   InvokeURScriptPreemptServiceCb invokeURScriptPreemptServiceCb;
@@ -28,8 +30,10 @@ public:
 
   void shutdown();
 
+  //NOTE: actionDoneCb will be called through the ActionEventSystem
+  //      with ActionEventType::NON_BLOCKING param
   void dispatchAsync(const std::vector<MotionCommand>& commands, 
-                     const MotionActionDoneCb& actionDoneCb);
+                     const MotionCommandBatchDoneCb& motionCommandBatchDoneCb);
 
 private:
   using BlockingTask = std::function<void()>;
@@ -38,12 +42,13 @@ private:
   void runBlockingInvokerLoop();
   
   void invokeCommand(const MotionCommand& cmd);
-  void invokeBlockingCommand(const UrScriptPayload& data);
+  void invokeNonBlockingCommand(const MotionCommand& cmd);
+  void invokeBlockingCommand(const MotionCommand& cmd);
 
   MotionSequenceExecutorOutInterface _outInterface;
 
-  std::mutex _actionDoneMutex;
-  MotionActionDoneCb _actionDoneCb;
+  std::mutex _motionCommandBatchDoneMutex;
+  MotionCommandBatchDoneCb _motionCommandBatchDoneCb;
   std::atomic<bool> _preemptCurrCommand = false;
 
   std::thread _commandConsumerThread;

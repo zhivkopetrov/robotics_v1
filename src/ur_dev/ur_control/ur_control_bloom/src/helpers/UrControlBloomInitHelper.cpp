@@ -12,6 +12,7 @@
 #include "ur_control_bloom/config/UrControlBloomConfig.h"
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 #include "ur_control_bloom/motion/BloomMotionSequence.h"
+#include "ur_control_bloom/motion/JengaMotionSequence.h"
 
 using namespace std::placeholders;
 
@@ -131,7 +132,7 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
 }
 
 ErrorCode UrControlBloomInitHelper::initMotionExecutor(
-  const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
+  const UrControlBloomConfig &cfg, UrControlBloom &bloom) {
   MotionSequenceExecutorOutInterface outInterface;
   const auto externalBridgeRawPointer = bloom._externalBridge.get();
   outInterface.publishURScriptCb = std::bind(
@@ -145,6 +146,8 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
   outInterface.invokeURScriptPreemptServiceCb = std::bind(
     &UrControlCommonExternalBridge::invokeURScriptPreemptService, 
     externalBridgeRawPointer);
+
+  outInterface.invokeActionEventCb = bloom._invokeActionEventCb;
 
   if (ErrorCode::SUCCESS != bloom._motionExecutor.init(outInterface)) {
     LOGERR("Error in _motionExecutor.init()");
@@ -161,15 +164,15 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
 ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
     const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
-    UrScriptHeaders headers;
+  UrScriptHeaders headers;
+
+  //TODO parse from files
   headers[Motion::Bloom::GRASP_NAME] = 
     "def BloomGrasp():\n\tmovel(p[-0.5,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
   headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = 
     "def BloomTransportAndPlace():\n\tmovel(p[0.0,-0.4,0.2,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
   headers[Motion::Bloom::RETURN_HOME_NAME] = 
     "def BloomReturnHome():\n\tmovel(p[0.5,-0.4,0.6,0.0,-3.16,0.0],a=1.0,v=1.0,t=0,r=0)\nend\n";
-  headers[Motion::Bloom::ABORT_NAME] = 
-    "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 

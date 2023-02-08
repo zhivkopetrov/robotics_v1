@@ -61,9 +61,4 @@ enum class MotionExecutionPolicy {
   BLOCKING,
 };
 
-struct MotionCommand {
-  UrScriptPayload data;
-  MotionExecutionPolicy policy = MotionExecutionPolicy::NON_BLOCKING;
-};
-
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_ */

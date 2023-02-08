@@ -97,14 +97,8 @@ void UrControlBloom::enterBloomState() {
   _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
 
   const auto doneCb = [this](){
-    //The state will be changed from another thread
-    //Utilise the ActionEvent system
-    const auto f = [this](){
-      _stateMachine.changeState(BloomState::IDLE);
-    };
-    _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+    _stateMachine.changeState(BloomState::IDLE);
   };
-
   _motionExecutor.performAction(MotionAction::START, doneCb);
 }
 

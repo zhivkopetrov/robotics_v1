@@ -28,6 +28,11 @@ ErrorCode MotionSequenceExecutor::init(
     return ErrorCode::FAILURE;
   }
 
+  if (_outInterface.invokeActionEventCb == nullptr) {
+    LOGERR("Error, nullptr provided for InvokeActionEventCb");
+    return ErrorCode::FAILURE;
+  }
+
   _commandConsumerThread = 
     std::thread(&MotionSequenceExecutor::runCommandComsumerLoop, this);
   _blockingInvokerThread = 
@@ -48,10 +53,10 @@ void MotionSequenceExecutor::shutdown() {
 
 void MotionSequenceExecutor::dispatchAsync(
   const std::vector<MotionCommand>& commands, 
-  const MotionActionDoneCb& actionDoneCb) {
-  //_actionDoneMutex and _commandQueue must be in sync
+  const MotionCommandBatchDoneCb& motionCommandBatchDoneCb) {
+  //_motionCommandBatchDoneMutex and _commandQueue must be in sync
   //otherwise a data race (not data corruption) might occur
-  std::lock_guard<std::mutex> lock(_actionDoneMutex);
+  std::lock_guard<std::mutex> lock(_motionCommandBatchDoneMutex);
 
   if (!_commandQueue.isEmpty()) {
     LOGY("MotionSequenceExecutor: overriding active motion commands");
@@ -59,7 +64,7 @@ void MotionSequenceExecutor::dispatchAsync(
     _preemptCurrCommand = true;
   }
 
-  _actionDoneCb = actionDoneCb;
+  _motionCommandBatchDoneCb = motionCommandBatchDoneCb;
 
   //after the batch is inserted in the queue, a notification signal will
   //wake the internal _thread waiting on the conditional variable
@@ -81,12 +86,19 @@ void MotionSequenceExecutor::runCommandComsumerLoop() {
 
     invokeCommand(command);
 
-    //_actionDoneMutex and _commandQueue must be in sync
+    //_motionCommandBatchDoneMutex and _commandQueue must be in sync
     //otherwise a data race (not data corruption) might occur
-    std::lock_guard<std::mutex> lock(_actionDoneMutex);
+    std::lock_guard<std::mutex> lock(_motionCommandBatchDoneMutex);
     if (_commandQueue.isEmpty()) {
       //last command was popped -> invoke the done callback
-      _actionDoneCb();
+      //through the ActionEventSystem
+      const auto motionCommandBatchDoneCbCopy = _motionCommandBatchDoneCb;
+
+      //make a copy, because the lambda can be changed
+      const auto f = [motionCommandBatchDoneCbCopy](){
+        motionCommandBatchDoneCbCopy();
+      };
+      _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
     }
   }
 }
@@ -112,11 +124,11 @@ void MotionSequenceExecutor::invokeCommand(const MotionCommand& cmd) {
   switch (cmd.policy)
   {
   case MotionExecutionPolicy::NON_BLOCKING:
-    _outInterface.publishURScriptCb(cmd.data);
+    invokeNonBlockingCommand(cmd);
     break;
 
   case MotionExecutionPolicy::BLOCKING:
-    invokeBlockingCommand(cmd.data);
+    invokeBlockingCommand(cmd);
     break;
   
   default:
@@ -126,22 +138,34 @@ void MotionSequenceExecutor::invokeCommand(const MotionCommand& cmd) {
   }
 }
 
-void MotionSequenceExecutor::invokeBlockingCommand(
-    const UrScriptPayload& data) {
-  BlockingTask blockingTask = [this, &data](){
-    _outInterface.invokeURScriptServiceCb(data);
+void MotionSequenceExecutor::invokeNonBlockingCommand(
+  const MotionCommand& cmd) {
+  _outInterface.publishURScriptCb(cmd.data);
+  if (cmd.motionCommandDoneCb) {
+    const auto motionCommandDoneCbCopy = cmd.motionCommandDoneCb;
+    const auto f = [motionCommandDoneCbCopy](){
+      motionCommandDoneCbCopy();
+    };
+    _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+  }
+}
+
+void MotionSequenceExecutor::invokeBlockingCommand(const MotionCommand& cmd) {
+  const BlockingTask blockingTask = [this, &cmd](){
+    _outInterface.invokeURScriptServiceCb(cmd.data);
   };
 
   //NOTE: keep task alive, because otherwise it could lead the
   //      invoking thread with dangling reference to local object
-  auto task = std::make_shared<std::packaged_task<void()>>(blockingTask);
-  auto future = task->get_future();
-  auto f = [task](){
-    (*task)();
+  auto packagedTask =
+    std::make_shared<std::packaged_task<void()>>(blockingTask);
+  auto future = packagedTask->get_future();
+  auto task = [packagedTask](){
+    (*packagedTask)();
   };
-  _blockingTasksQueue.push(std::move(f));
+  _blockingTasksQueue.push(std::move(task));
 
-  //wait for future completion while keeping resposivness
+  //wait for future completion while keeping responsiveness
   while (true) {
     if (_preemptCurrCommand) {
       _preemptCurrCommand = false;
@@ -156,6 +180,14 @@ void MotionSequenceExecutor::invokeBlockingCommand(
     using namespace std::literals;
     const auto status = future.wait_for(10ms);
     if (std::future_status::ready == status) {
+      if (cmd.motionCommandDoneCb) {
+        const auto motionCommandDoneCbCopy = cmd.motionCommandDoneCb;
+        const auto f = [motionCommandDoneCbCopy](){
+          motionCommandDoneCbCopy();
+        };
+        _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
+      }
+
       break;
     }
   }
