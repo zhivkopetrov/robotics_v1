@@ -8,33 +8,12 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "ur_control_bloom/motion/config/BloomMotionSequenceConfig.h"
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
-BloomMotionSequence::BloomMotionSequence(const std::string& name, int32_t id) : 
-    MotionSequence(name, id) {
-
-}
-
-ErrorCode BloomMotionSequence::init(const std::any& cfg) {
-  auto err = ErrorCode::SUCCESS;
-  [[maybe_unused]]const BloomMotionSequenceConfig parsedCfg = [&cfg, &err]() {
-    BloomMotionSequenceConfig localCfg;
-    try {
-      localCfg = std::any_cast<const BloomMotionSequenceConfig&>(cfg);
-    } catch (const std::bad_any_cast &e) {
-      LOGERR("std::any_cast<BloomMotionSequenceConfig&> failed, %s", e.what());
-      err = ErrorCode::FAILURE;
-    }
-    return localCfg;
-  }();
-  if (ErrorCode::SUCCESS != err) {
-    LOGERR("Error, parsing BloomMotionSequenceConfig failed");
-    return ErrorCode::FAILURE;
-  }
-
+BloomMotionSequence::BloomMotionSequence(
+  const BloomMotionSequenceConfig& cfg, const std::string& name, int32_t id) : 
+    MotionSequence(name, id), _cfg(cfg) {
   populateUrscriptHeaders();
-  return ErrorCode::SUCCESS;
 }
 
 void BloomMotionSequence::start(const MotionCommandBatchDoneCb& cb) {

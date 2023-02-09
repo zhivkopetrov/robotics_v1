@@ -154,53 +154,21 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != 
-        initBloomMotionSequence(cfg.bloomMotionSequenceCfg, bloom)) {
-    LOGERR("Error in initBloomMotionSequence()");
-    return ErrorCode::FAILURE;
-  }
-
-  if (ErrorCode::SUCCESS != 
-        initJengaMotionSequence(cfg.jengaMotionSequenceCfg, bloom)) {
-    LOGERR("Error in initJengaMotionSequence()");
-    return ErrorCode::FAILURE;
-  }
-
-  return ErrorCode::SUCCESS;
-}
-
-ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
-    const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
-    Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID);
-
-  if (ErrorCode::SUCCESS != bloomMotionSequence->init(cfg)) {
-    LOGERR("Error in bloomMotionSequence->init()");
-    return ErrorCode::FAILURE;
-  }
-
+    cfg.bloomMotionSequenceCfg, Motion::BLOOM_MOTION_SEQUENCE_NAME, 
+    Motion::BLOOM_MOTION_ID);
   if (ErrorCode::SUCCESS != 
-    bloom._motionExecutor.addSequence(std::move(bloomMotionSequence))) {
-    LOGERR("Error in motionExecutor.addSequence()");
+      bloom._motionExecutor.addSequence(std::move(bloomMotionSequence))) {
+    LOGERR("Error in motionExecutor.addSequence() for BloomMotionSequence");
     return ErrorCode::FAILURE;
   }
 
-  return ErrorCode::SUCCESS;
-}
-
-ErrorCode UrControlBloomInitHelper::initJengaMotionSequence(
-  const JengaMotionSequenceConfig &cfg, UrControlBloom &bloom) {
   auto jengaMotionSequence = std::make_unique<JengaMotionSequence>(
-    Motion::JENGA_MOTION_SEQUENCE_NAME, Motion::JENGA_MOTION_ID);
-
-  if (ErrorCode::SUCCESS != jengaMotionSequence->init(cfg)) {
-    LOGERR("Error in jengaMotionSequence->init()");
-    return ErrorCode::FAILURE;
-  }
-
+    cfg.jengaMotionSequenceCfg, Motion::JENGA_MOTION_SEQUENCE_NAME, 
+    Motion::JENGA_MOTION_ID);
   if (ErrorCode::SUCCESS != 
-    bloom._motionExecutor.addSequence(std::move(jengaMotionSequence))) {
-    LOGERR("Error in motionExecutor.addSequence()");
+      bloom._motionExecutor.addSequence(std::move(jengaMotionSequence))) {
+    LOGERR("Error in motionExecutor.addSequence() for JengaMotionSequence");
     return ErrorCode::FAILURE;
   }
 

@@ -4,10 +4,7 @@
 //System headers
 #include <cstdint>
 #include <string>
-#include <queue>
 #include <unordered_map>
-#include <functional>
-#include <any>
 
 //Other libraries headers
 #include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
@@ -19,14 +16,11 @@
 
 //Forward declarations
 
-
-
 class MotionSequence : public NonCopyable, public NonMoveable { 
 public:
   MotionSequence(const std::string& name, int32_t id);
   virtual ~MotionSequence() noexcept = default;
 
-  virtual ErrorCode init(const std::any& cfg) = 0;
   virtual void start(const MotionCommandBatchDoneCb& cb) = 0;
   virtual void gracefulStop(const MotionCommandBatchDoneCb& cb) = 0;
   virtual void recover(const MotionCommandBatchDoneCb& cb) = 0;

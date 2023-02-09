@@ -8,33 +8,12 @@
 #include "utils/Log.h"
 
 //Own components headers
-#include "ur_control_bloom/motion/config/JengaMotionSequenceConfig.h"
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 JengaMotionSequence::JengaMotionSequence(
-  const std::string& name, int32_t id) : MotionSequence(name, id) {
-
-}
-
-ErrorCode JengaMotionSequence::init(const std::any& cfg) {
-  auto err = ErrorCode::SUCCESS;
-  [[maybe_unused]]const JengaMotionSequenceConfig parsedCfg = [&cfg, &err]() {
-    JengaMotionSequenceConfig localCfg;
-    try {
-      localCfg = std::any_cast<const JengaMotionSequenceConfig&>(cfg);
-    } catch (const std::bad_any_cast &e) {
-      LOGERR("std::any_cast<JengaMotionSequenceConfig&> failed, %s", e.what());
-      err = ErrorCode::FAILURE;
-    }
-    return localCfg;
-  }();
-  if (ErrorCode::SUCCESS != err) {
-    LOGERR("Error, parsing JengaMotionSequenceConfig failed");
-    return ErrorCode::FAILURE;
-  }
-
+  const JengaMotionSequenceConfig& cfg,
+  const std::string& name, int32_t id) : MotionSequence(name, id), _cfg(cfg) {
   populateUrscriptHeaders();
-  return ErrorCode::SUCCESS;
 }
 
 void JengaMotionSequence::start(const MotionCommandBatchDoneCb& cb) {
