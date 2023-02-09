@@ -19,12 +19,11 @@
 
 //Forward declarations
 
-using UrScriptHeaders = std::unordered_map<std::string, UrScriptPayload>;
+
 
 class MotionSequence : public NonCopyable, public NonMoveable { 
 public:
-  MotionSequence(
-    const std::string& name, int32_t id, UrScriptHeaders&& headers);
+  MotionSequence(const std::string& name, int32_t id);
   virtual ~MotionSequence() noexcept = default;
 
   virtual ErrorCode init(const std::any& cfg) = 0;
@@ -39,6 +38,7 @@ public:
   std::string getName() const;
 
 protected:
+  using UrScriptHeaders = std::unordered_map<std::string, UrScriptPayload>;
   UrScriptHeaders urScriptHeaders;
   DispatchMotionsAsyncCb dispatchMotionsAsyncCb;
 

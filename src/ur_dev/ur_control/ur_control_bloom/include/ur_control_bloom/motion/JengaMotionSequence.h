@@ -10,11 +10,11 @@
 //Own components headers
 
 //Forward declarations
+struct JengaMotionSequenceConfig;
 
 class JengaMotionSequence final : public MotionSequence {
 public:
-  JengaMotionSequence(
-    const std::string& name, int32_t id, UrScriptHeaders&& headers);
+  JengaMotionSequence(const std::string& name, int32_t id);
 
   ErrorCode init(const std::any& cfg) override;
   void start(const MotionCommandBatchDoneCb& cb) override;
@@ -22,7 +22,7 @@ public:
   void recover(const MotionCommandBatchDoneCb& cb) override;
 
 private:
-  ErrorCode validateUrscriptHeaders() const;
+  void populateUrscriptHeaders();
 };
 
 #endif /* UR_CONTROL_BLOOM_JENGAMOTIONSEQUENCE_H_ */

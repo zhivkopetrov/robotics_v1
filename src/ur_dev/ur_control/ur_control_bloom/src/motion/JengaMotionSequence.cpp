@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "urscript_common/motion/UrScriptBuilder.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -11,8 +12,7 @@
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 JengaMotionSequence::JengaMotionSequence(
-  const std::string& name, int32_t id, UrScriptHeaders&& headers) : 
-    MotionSequence(name, id, std::move(headers)) {
+  const std::string& name, int32_t id) : MotionSequence(name, id) {
 
 }
 
@@ -33,11 +33,7 @@ ErrorCode JengaMotionSequence::init(const std::any& cfg) {
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != validateUrscriptHeaders()) {
-    LOGERR("validateUrscriptHeaders() failed");
-    return ErrorCode::FAILURE;
-  }
-
+  populateUrscriptHeaders();
   return ErrorCode::SUCCESS;
 }
 
@@ -78,20 +74,37 @@ void JengaMotionSequence::recover(const MotionCommandBatchDoneCb& cb) {
   dispatchMotionsAsyncCb(commands, cb);
 }
 
-ErrorCode JengaMotionSequence::validateUrscriptHeaders() const {
-  const std::vector<const char*> headers {
-    Motion::Jenga::GRASP_NAME, 
-    Motion::Jenga::TRANSPORT_AND_PLACE_NAME, 
-    Motion::Jenga::RETURN_HOME_NAME
-  };
+void JengaMotionSequence::populateUrscriptHeaders() {
+  //TODO parse from files
+  const AngleAxis orientation(0.0, -3.16, 0.0);
+  constexpr double accel = 1.0;
+  constexpr double vel = 1.0;
+  constexpr double blendingRadius = 0.0;
 
-  for (const char* header : headers) {
-    if (urScriptHeaders.find(header) == urScriptHeaders.end()) {
-      LOGERR(
-        "Could not find UrScriptHeader [%s] in JengaMotionSequence", header);
-      return ErrorCode::FAILURE;
-    }
-  }
+  const WaypointCartesian graspPose(Point3d(-0.5, -0.6, 0.2), orientation);
+  auto graspCommand = std::make_unique<MoveLinearCommand>(
+    graspPose, accel, vel, blendingRadius);
 
-  return ErrorCode::SUCCESS;
+  const WaypointCartesian transportPose(Point3d(0.0, -0.6, 0.2), orientation);
+  auto transportCommand = std::make_unique<MoveLinearCommand>(
+    transportPose, accel, vel, blendingRadius);
+
+  const WaypointCartesian homePose(Point3d(0.5, -0.4, 0.6), orientation);
+  auto returnHomeCommand = std::make_unique<MoveLinearCommand>(
+    homePose, accel, vel, blendingRadius);
+
+  MotionCommandContainer cmdContainer;
+
+  cmdContainer.addCommand(std::move(graspCommand));
+  urScriptHeaders[Motion::Jenga::GRASP_NAME] = UrScriptBuilder::construct(
+    Motion::Jenga::GRASP_NAME, cmdContainer);
+
+  cmdContainer.addCommand(std::move(transportCommand));
+  urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] = 
+    UrScriptBuilder::construct(
+      Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
+
+  cmdContainer.addCommand(std::move(returnHomeCommand));
+  urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] = UrScriptBuilder::construct(
+    Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
 }

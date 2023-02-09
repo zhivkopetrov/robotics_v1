@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-#include "urscript_common/motion/UrScriptBuilder.h"
+
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "utils/Log.h"
 
@@ -171,42 +171,8 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
 ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
     const BloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
-  //TODO parse from files
-  const AngleAxis orientation(0.0, -3.16, 0.0);
-  constexpr double accel = 1.0;
-  constexpr double vel = 1.0;
-  constexpr double blendingRadius = 0.0;
-
-  const WaypointCartesian graspPose(Point3d(-0.5, -0.4, 0.2), orientation);
-  auto graspCommand = std::make_unique<MoveLinearCommand>(
-    graspPose, accel, vel, blendingRadius);
-
-  const WaypointCartesian transportPose(Point3d(0.0, -0.4, 0.2), orientation);
-  auto transportCommand = std::make_unique<MoveLinearCommand>(
-    transportPose, accel, vel, blendingRadius);
-
-  const WaypointCartesian homePose(Point3d(0.5, -0.4, 0.6), orientation);
-  auto returnHomeCommand = std::make_unique<MoveLinearCommand>(
-    homePose, accel, vel, blendingRadius);
-
-  UrScriptHeaders headers;
-  MotionCommandContainer cmdContainer;
-
-  cmdContainer.addCommand(std::move(graspCommand));
-  headers[Motion::Bloom::GRASP_NAME] = UrScriptBuilder::construct(
-    Motion::Bloom::GRASP_NAME, cmdContainer);
-
-  cmdContainer.addCommand(std::move(transportCommand));
-  headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = UrScriptBuilder::construct(
-    Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
-
-  cmdContainer.addCommand(std::move(returnHomeCommand));
-  headers[Motion::Bloom::RETURN_HOME_NAME] = UrScriptBuilder::construct(
-    Motion::Bloom::RETURN_HOME_NAME, cmdContainer);
-
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
-    Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 
-    std::move(headers));
+    Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID);
 
   if (ErrorCode::SUCCESS != bloomMotionSequence->init(cfg)) {
     LOGERR("Error in bloomMotionSequence->init()");
@@ -224,42 +190,8 @@ ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
 
 ErrorCode UrControlBloomInitHelper::initJengaMotionSequence(
   const JengaMotionSequenceConfig &cfg, UrControlBloom &bloom) {
-  //TODO parse from files
-  const AngleAxis orientation(0.0, -3.16, 0.0);
-  constexpr double accel = 1.0;
-  constexpr double vel = 1.0;
-  constexpr double blendingRadius = 0.0;
-
-  const WaypointCartesian graspPose(Point3d(-0.5, -0.6, 0.2), orientation);
-  auto graspCommand = std::make_unique<MoveLinearCommand>(
-    graspPose, accel, vel, blendingRadius);
-
-  const WaypointCartesian transportPose(Point3d(0.0, -0.6, 0.2), orientation);
-  auto transportCommand = std::make_unique<MoveLinearCommand>(
-    transportPose, accel, vel, blendingRadius);
-
-  const WaypointCartesian homePose(Point3d(0.5, -0.4, 0.6), orientation);
-  auto returnHomeCommand = std::make_unique<MoveLinearCommand>(
-    homePose, accel, vel, blendingRadius);
-
-  UrScriptHeaders headers;
-  MotionCommandContainer cmdContainer;
-
-  cmdContainer.addCommand(std::move(graspCommand));
-  headers[Motion::Jenga::GRASP_NAME] = UrScriptBuilder::construct(
-    Motion::Jenga::GRASP_NAME, cmdContainer);
-
-  cmdContainer.addCommand(std::move(transportCommand));
-  headers[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] = UrScriptBuilder::construct(
-    Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
-
-  cmdContainer.addCommand(std::move(returnHomeCommand));
-  headers[Motion::Jenga::RETURN_HOME_NAME] = UrScriptBuilder::construct(
-    Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
-
   auto jengaMotionSequence = std::make_unique<JengaMotionSequence>(
-    Motion::JENGA_MOTION_SEQUENCE_NAME, Motion::JENGA_MOTION_ID, 
-    std::move(headers));
+    Motion::JENGA_MOTION_SEQUENCE_NAME, Motion::JENGA_MOTION_ID);
 
   if (ErrorCode::SUCCESS != jengaMotionSequence->init(cfg)) {
     LOGERR("Error in jengaMotionSequence->init()");
