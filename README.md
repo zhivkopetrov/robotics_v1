@@ -2,7 +2,7 @@
 
 ## A C++20 Robot Operating System 2 (ROS2) Foxy Fitzroy workspace
 *You're reading the documentation for an older, but still supported, version of ROS 2.  
-For information on the latest version, please look at the [master](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/master") branch.*
+For information on the latest version, please look at the [master](https://github.com/zhivkopetrov/robotics_v1/tree/master) branch.*
 
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022) / [Official Video](https://www.youtube.com/watch?v=wgNpRyYdaUs)
