@@ -5,13 +5,19 @@
 #include <cstdint>
 
 //Other libraries headers
+#include "urscript_common/motion/MotionStructs.h"
 
 //Own components headers
 
 //Forward declarations
 
 struct JengaMotionSequenceConfig {
-  int32_t waypointsCount = 0;
+  WaypointJoint homeJoint;
+
+  WaypointCartesian homeCartesian;
+  WaypointCartesian graspApproachCartesian;
+  WaypointCartesian baseCenterACartesian;
+  WaypointCartesian baseCenterBCartesian;
 };
 
 #endif /* UR_CONTROL_BLOOM_JENGAMOTIONSEQUENCECONFIG_H_ */
