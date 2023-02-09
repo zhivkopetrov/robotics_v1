@@ -87,7 +87,7 @@ MoveLinearCommand::MoveLinearCommand(
 
 }
 
-UrScriptPayload MoveLinearCommand::serialize() const {
+UrScriptPayload MoveLinearCommand::construct() const {
   std::ostringstream ostr;
   ostr << "movel(" << waypoint.serialize() << "," 
        << MoveCommandBase::serialize() << ")";
@@ -102,7 +102,7 @@ MoveJointCommand::MoveJointCommand(
 
 }
 
-UrScriptPayload MoveJointCommand::serialize() const {
+UrScriptPayload MoveJointCommand::construct() const {
   std::ostringstream ostr;
   ostr << "movej(" << waypoint.serialize() << "," 
        << MoveCommandBase::serialize() << ")";

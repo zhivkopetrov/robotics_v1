@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-#include "urscript_common/motion/MotionStructs.h"
+#include "urscript_common/motion/UrScriptBuilder.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "utils/Log.h"
 
@@ -178,34 +178,31 @@ ErrorCode UrControlBloomInitHelper::initBloomMotionSequence(
   constexpr double blendingRadius = 0.0;
 
   const WaypointCartesian graspPose(Point3d(-0.5, -0.4, 0.2), orientation);
-  const MoveLinearCommand graspCommand(graspPose, accel, vel, blendingRadius);
+  auto graspCommand = std::make_unique<MoveLinearCommand>(
+    graspPose, accel, vel, blendingRadius);
 
   const WaypointCartesian transportPose(Point3d(0.0, -0.4, 0.2), orientation);
-  const MoveLinearCommand transportCommand(
-      transportPose, accel, vel, blendingRadius);
+  auto transportCommand = std::make_unique<MoveLinearCommand>(
+    transportPose, accel, vel, blendingRadius);
 
   const WaypointCartesian homePose(Point3d(0.5, -0.4, 0.6), orientation);
-  const MoveLinearCommand returnHomeCommand(
-      homePose, accel, vel, blendingRadius);
+  auto returnHomeCommand = std::make_unique<MoveLinearCommand>(
+    homePose, accel, vel, blendingRadius);
 
   UrScriptHeaders headers;
-  auto& graspHeaderValue = headers[Motion::Bloom::GRASP_NAME];
-  graspHeaderValue = "def BloomGrasp():\n\t";
-  graspHeaderValue.append(graspCommand.serialize()).append("\nend\n");
-  LOGC("%s", graspHeaderValue.c_str());
+  MotionCommandContainer cmdContainer;
 
-  auto& transportAndPlaceHeaderValue = 
-    headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME];
-  transportAndPlaceHeaderValue = "def BloomTransportAndPlace():\n\t";
-  transportAndPlaceHeaderValue.append(
-      transportCommand.serialize()).append("\nend\n");
-  LOGC("%s", transportAndPlaceHeaderValue.c_str());
+  cmdContainer.addCommand(std::move(graspCommand));
+  headers[Motion::Bloom::GRASP_NAME] = UrScriptBuilder::construct(
+    Motion::Bloom::GRASP_NAME, cmdContainer);
 
-  auto& returnHomeHeaderValue = headers[Motion::Bloom::RETURN_HOME_NAME];
-  returnHomeHeaderValue = "def BloomReturnHome():\n\t";
-  returnHomeHeaderValue.append(
-      returnHomeCommand.serialize()).append("\nend\n");
-  LOGC("%s", returnHomeHeaderValue.c_str());
+  cmdContainer.addCommand(std::move(transportCommand));
+  headers[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = UrScriptBuilder::construct(
+    Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
+
+  cmdContainer.addCommand(std::move(returnHomeCommand));
+  headers[Motion::Bloom::RETURN_HOME_NAME] = UrScriptBuilder::construct(
+    Motion::Bloom::RETURN_HOME_NAME, cmdContainer);
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     Motion::BLOOM_MOTION_SEQUENCE_NAME, Motion::BLOOM_MOTION_ID, 
@@ -234,31 +231,31 @@ ErrorCode UrControlBloomInitHelper::initJengaMotionSequence(
   constexpr double blendingRadius = 0.0;
 
   const WaypointCartesian graspPose(Point3d(-0.5, -0.6, 0.2), orientation);
-  const MoveLinearCommand graspCommand(graspPose, accel, vel, blendingRadius);
+  auto graspCommand = std::make_unique<MoveLinearCommand>(
+    graspPose, accel, vel, blendingRadius);
 
   const WaypointCartesian transportPose(Point3d(0.0, -0.6, 0.2), orientation);
-  const MoveLinearCommand transportCommand(
-      transportPose, accel, vel, blendingRadius);
+  auto transportCommand = std::make_unique<MoveLinearCommand>(
+    transportPose, accel, vel, blendingRadius);
 
   const WaypointCartesian homePose(Point3d(0.5, -0.4, 0.6), orientation);
-  const MoveLinearCommand returnHomeCommand(
-      homePose, accel, vel, blendingRadius);
+  auto returnHomeCommand = std::make_unique<MoveLinearCommand>(
+    homePose, accel, vel, blendingRadius);
 
   UrScriptHeaders headers;
-  auto& graspHeaderValue = headers[Motion::Jenga::GRASP_NAME];
-  graspHeaderValue = "def JengaGrasp():\n\t";
-  graspHeaderValue.append(graspCommand.serialize()).append("\nend\n");
+  MotionCommandContainer cmdContainer;
 
-  auto& transportAndPlaceHeaderValue = 
-    headers[Motion::Jenga::TRANSPORT_AND_PLACE_NAME];
-  transportAndPlaceHeaderValue = "def JengaTransportAndPlace():\n\t";
-  transportAndPlaceHeaderValue.append(
-      transportCommand.serialize()).append("\nend\n");
+  cmdContainer.addCommand(std::move(graspCommand));
+  headers[Motion::Jenga::GRASP_NAME] = UrScriptBuilder::construct(
+    Motion::Jenga::GRASP_NAME, cmdContainer);
 
-  auto& returnHomeHeaderValue = headers[Motion::Jenga::RETURN_HOME_NAME];
-  returnHomeHeaderValue = "def JengaReturnHome():\n\t";
-  returnHomeHeaderValue.append(
-      returnHomeCommand.serialize()).append("\nend\n");
+  cmdContainer.addCommand(std::move(transportCommand));
+  headers[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] = UrScriptBuilder::construct(
+    Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
+
+  cmdContainer.addCommand(std::move(returnHomeCommand));
+  headers[Motion::Jenga::RETURN_HOME_NAME] = UrScriptBuilder::construct(
+    Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
 
   auto jengaMotionSequence = std::make_unique<JengaMotionSequence>(
     Motion::JENGA_MOTION_SEQUENCE_NAME, Motion::JENGA_MOTION_ID, 

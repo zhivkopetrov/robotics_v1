@@ -24,9 +24,12 @@ add_library(
         ${_INC_DIR}/defines/UrScriptDefines.h
         ${_INC_DIR}/message_helpers/UrScriptMessageHelpers.h
         ${_INC_DIR}/motion/MotionStructs.h
+        ${_INC_DIR}/motion/MotionCommandContainer.h
+        ${_INC_DIR}/motion/UrScriptBuilder.h
      
         ${_SRC_DIR}/message_helpers/UrScriptMessageHelpers.cpp
         ${_SRC_DIR}/motion/MotionStructs.cpp
+        ${_SRC_DIR}/motion/UrScriptBuilder.cpp
 )
 
 target_include_directories(
