@@ -1,5 +1,5 @@
 //Corresponding header
-#include "urscript_common/defines/UrScriptStructs.h"
+#include "urscript_common/motion/MotionStructs.h"
 
 //System headers
 #include <sstream>

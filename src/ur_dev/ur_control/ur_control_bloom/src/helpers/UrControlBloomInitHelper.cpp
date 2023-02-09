@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-#include "urscript_common/defines/UrScriptStructs.h"
+#include "urscript_common/motion/MotionStructs.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "utils/Log.h"
 

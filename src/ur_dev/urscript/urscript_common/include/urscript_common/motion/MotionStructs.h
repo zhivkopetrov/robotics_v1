@@ -1,5 +1,5 @@
-#ifndef URSCRIPT_COMMON_URSCRIPTSTRUCTS_H_
-#define URSCRIPT_COMMON_URSCRIPTSTRUCTS_H_
+#ifndef URSCRIPT_COMMON_MOTIONSTRUCTS_H_
+#define URSCRIPT_COMMON_MOTIONSTRUCTS_H_
 
 //System headers
 #include <array>
@@ -89,4 +89,4 @@ struct MoveJointCommand : public MoveCommandBase {
   WaypointJoint waypoint;
 };
 
-#endif /* URSCRIPT_COMMON_URSCRIPTSTRUCTS_H_ */
+#endif /* URSCRIPT_COMMON_MOTIONSTRUCTS_H_ */

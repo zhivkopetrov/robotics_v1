@@ -22,11 +22,11 @@ add_library(
     STATIC
         ${_INC_DIR}/defines/UrScriptTopics.h
         ${_INC_DIR}/defines/UrScriptDefines.h
-        ${_INC_DIR}/defines/UrScriptStructs.h
         ${_INC_DIR}/message_helpers/UrScriptMessageHelpers.h
+        ${_INC_DIR}/motion/MotionStructs.h
      
-        ${_SRC_DIR}/defines/UrScriptStructs.cpp
         ${_SRC_DIR}/message_helpers/UrScriptMessageHelpers.cpp
+        ${_SRC_DIR}/motion/MotionStructs.cpp
 )
 
 target_include_directories(
