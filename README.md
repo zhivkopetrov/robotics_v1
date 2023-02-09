@@ -15,7 +15,7 @@ The workspace contains several interesting, competitive, visual games with their
 - [UR Driver](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_driver) - forked helper repositories for Universal Robots Client Library and Universal Robots ROS2 driver + description
 
 *You're reading the documentation for the latest version of ROS2.  
-An older, but still supported ROS2 version - Foxy Fitzroy is available under the [foxy](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/foxy") branch.*
+An older, but still supported ROS2 version - Foxy Fitzroy is available under the [foxy](https://github.com/zhivkopetrov/robotics_v1/tree/foxy") branch.*
 
 ## Build Status
 <table width="100%">
