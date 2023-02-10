@@ -50,8 +50,10 @@ struct WaypointJoint {
   WaypointJoint() = default;
   WaypointJoint(const Ur10eJoints& intputJoints);
 
+  // joints are transfromed into radians for 'movej' compatibility
   std::string serialize() const;
 
+  // joints are stored as degrees for convenience
   Ur10eJoints joints { };
 };
 

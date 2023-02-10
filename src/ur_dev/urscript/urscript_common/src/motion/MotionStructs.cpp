@@ -7,6 +7,7 @@
 //Other libraries headers
 
 //Own components headers
+#include "urscript_common/motion/MotionUtils.h"
 
 namespace {
 constexpr auto FIXED_PRECISION = 3;
@@ -58,9 +59,9 @@ std::string WaypointJoint::serialize() const {
   ostr.precision(FIXED_PRECISION);
   ostr << "[";
   for (int32_t i = BASE_JOINT_IDX; i < WRIST_3_JOINT_IDX; ++i) {
-    ostr << std::fixed << joints[i] << ",";
+    ostr << std::fixed << toRadians(joints[i]) << ",";
   }
-  ostr << std::fixed << joints[WRIST_3_JOINT_IDX] << "]";
+  ostr << std::fixed << toRadians(joints[WRIST_3_JOINT_IDX]) << "]";
   return ostr.str();
 }
 
@@ -74,8 +75,8 @@ MoveCommandBase::MoveCommandBase(
 std::string MoveCommandBase::serialize() const {
   std::ostringstream ostr;
   ostr.precision(FIXED_PRECISION);
-  ostr << std::fixed << "a=" << acceleration << ","
-       << "v=" << velocity << "," << "t=0.0,r=" << blendingRadius;
+  ostr << std::fixed << "a=" << acceleration << ", "
+       << "v=" << velocity << ", " << "t=0.000, r=" << blendingRadius;
   return ostr.str();
 }
 
@@ -89,7 +90,7 @@ MoveLinearCommand::MoveLinearCommand(
 
 UrScriptPayload MoveLinearCommand::construct() const {
   std::ostringstream ostr;
-  ostr << "movel(" << waypoint.serialize() << "," 
+  ostr << "movel(" << waypoint.serialize() << ", " 
        << MoveCommandBase::serialize() << ")";
   return ostr.str();
 }
@@ -104,7 +105,7 @@ MoveJointCommand::MoveJointCommand(
 
 UrScriptPayload MoveJointCommand::construct() const {
   std::ostringstream ostr;
-  ostr << "movej(" << waypoint.serialize() << "," 
+  ostr << "movej(" << waypoint.serialize() << ", " 
        << MoveCommandBase::serialize() << ")";
   return ostr.str();
 }

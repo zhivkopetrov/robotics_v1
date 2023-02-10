@@ -54,36 +54,37 @@ void BloomMotionSequence::recover(const MotionCommandBatchDoneCb& cb) {
 }
 
 void BloomMotionSequence::populateUrscriptHeaders() {
-  //TODO parse from files
-  const AngleAxis orientation(0.0, -3.16, 0.0);
   constexpr double accel = 1.0;
   constexpr double vel = 1.0;
   constexpr double blendingRadius = 0.0;
 
-  const WaypointCartesian graspPose(Point3d(-0.5, -0.4, 0.2), orientation);
-  auto graspCommand = std::make_unique<MoveLinearCommand>(
-    graspPose, accel, vel, blendingRadius);
-
-  const WaypointCartesian transportPose(Point3d(0.0, -0.4, 0.2), orientation);
-  auto transportCommand = std::make_unique<MoveLinearCommand>(
-    transportPose, accel, vel, blendingRadius);
-
-  const WaypointCartesian homePose(Point3d(0.5, -0.4, 0.6), orientation);
-  auto returnHomeCommand = std::make_unique<MoveLinearCommand>(
-    homePose, accel, vel, blendingRadius);
-
   MotionCommandContainer cmdContainer;
 
-  cmdContainer.addCommand(std::move(graspCommand));
+  auto graspApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.graspApproachJoint, accel, vel, blendingRadius);
+  auto graspCommand = std::make_unique<MoveJointCommand>(
+    _cfg.graspJoint, accel, vel, blendingRadius);
+  cmdContainer.addCommand(std::move(graspApproachCommand))
+              .addCommand(std::move(graspCommand));
   urScriptHeaders[Motion::Bloom::GRASP_NAME] = UrScriptBuilder::construct(
     Motion::Bloom::GRASP_NAME, cmdContainer);
 
-  cmdContainer.addCommand(std::move(transportCommand));
+  auto placeApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.placeApproachJoint, accel, vel, blendingRadius);
+  auto placeCommand = std::make_unique<MoveLinearCommand>(
+    _cfg.placeCartesian, accel, vel, blendingRadius);
+  cmdContainer.addCommand(std::move(placeApproachCommand))
+              .addCommand(std::move(placeCommand));
   urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] = 
     UrScriptBuilder::construct(
       Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
 
-  cmdContainer.addCommand(std::move(returnHomeCommand));
+  auto placeRetractCommand = std::make_unique<MoveLinearCommand>(
+    _cfg.placeApproachCartesian, accel, vel, blendingRadius);
+  auto returnHomeCommand = std::make_unique<MoveJointCommand>(
+    _cfg.homeJoint, accel, vel, blendingRadius);
+  cmdContainer.addCommand(std::move(placeRetractCommand))
+              .addCommand(std::move(returnHomeCommand));
   urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME] = UrScriptBuilder::construct(
     Motion::Bloom::RETURN_HOME_NAME, cmdContainer);
 }

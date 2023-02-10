@@ -15,10 +15,11 @@ struct BloomMotionSequenceConfig {
   WaypointJoint homeJoint;
   WaypointJoint graspJoint;
   WaypointJoint graspApproachJoint;
-  WaypointJoint placeJoint;
   WaypointJoint placeApproachJoint;
 
   WaypointCartesian homeCartesian;
+  WaypointCartesian placeCartesian;
+  WaypointCartesian placeApproachCartesian;
 };
 
 #endif /* UR_CONTROL_BLOOM_BLOOMMOTIONSEQUENCECONFIG_H_ */

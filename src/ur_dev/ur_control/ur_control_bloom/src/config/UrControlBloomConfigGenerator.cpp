@@ -74,13 +74,15 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
   cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
   cfg.homeCartesian = 
     WaypointCartesian(Point3d(-0.176, -0.691, 0.502), AngleAxis(0, 3.148, 0));
+  cfg.placeApproachCartesian = WaypointCartesian(
+    Point3d(-0.196, -0.812, 0.6), AngleAxis(0, -2.224, 2.224));
+  cfg.placeCartesian = WaypointCartesian(
+    Point3d(-0.196, -0.812, 0.236), AngleAxis(0, -2.224, 2.224));
 
   cfg.graspJoint = 
     WaypointJoint({ 30.05, -105.96, -131.78, -32.58, 89.97, 30.25 });
   cfg.graspApproachJoint = 
     WaypointJoint({ 30.1, -86.3, -119.74, -64.23, 90.1, 30.12 });
-  cfg.placeJoint = 
-    WaypointJoint({ -92.42, -127.52, -126.75, 74.27, 91.99, 0 });
   cfg.placeApproachJoint = 
     WaypointJoint({ -92.42, -94.62, -118.4, 33.02, 92.21, 0 });
 
@@ -91,16 +93,18 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
     [[maybe_unused]]const UrControlBloomRos2Params &rosParams) {
   JengaMotionSequenceConfig cfg;
   //TODO parse from files
-  const AngleAxis orientation(2.224, -2.224, 0.0);
+  cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
+  cfg.graspApproachJoint = 
+    WaypointJoint({ 12.47, -79.58, -125.28, -65.63, 90.33, 139.23 });
+
   cfg.homeCartesian = 
     WaypointCartesian(Point3d(-0.176, -0.691, 0.502), AngleAxis(0, 3.148, 0));
-
   cfg.graspApproachCartesian = WaypointCartesian(
-    Point3d(0.596, -0.426, -0.04), AngleAxis(0.994, 2.991, 0));
-  cfg.baseCenterACartesian = WaypointCartesian(
-    Point3d(0.495, -0.758, -0.04), AngleAxis(1.403, -2.799, -0.009));
-  cfg.baseCenterBCartesian = WaypointCartesian(
     Point3d(0.55, -0.055, 0.25), AngleAxis(0.994, 2.991, 0));
+  cfg.baseCenterACartesian = WaypointCartesian(
+    Point3d(0.596, -0.426, -0.04), AngleAxis(1.403, -2.799, -0.009));
+  cfg.baseCenterBCartesian = WaypointCartesian(
+    Point3d(0.495, -0.758, -0.04), AngleAxis(0.994, 2.991, 0));
 
   return cfg;
 }

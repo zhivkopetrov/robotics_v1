@@ -13,6 +13,7 @@
 
 struct JengaMotionSequenceConfig {
   WaypointJoint homeJoint;
+  WaypointJoint graspApproachJoint;
 
   WaypointCartesian homeCartesian;
   WaypointCartesian graspApproachCartesian;
