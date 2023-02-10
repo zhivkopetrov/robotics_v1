@@ -12,9 +12,9 @@ MotionSequence::MotionSequence(const std::string& name, int32_t id) :
 
 }
 
-void MotionSequence::setDispatchMotionsAsyncCb(
-  const DispatchMotionsAsyncCb& cb) {
-  dispatchMotionsAsyncCb = cb;
+void MotionSequence::setDispatchUscriptsAsyncCb(
+  const DispatchUscriptsAsyncCb& cb) {
+  dispatchUscriptsAsyncCb = cb;
 }
 
 int32_t MotionSequence::getId() const {
@@ -25,13 +25,13 @@ std::string MotionSequence::getName() const {
   return _name;
 }
 
-void MotionSequence::abort(const MotionCommandBatchDoneCb& cb) {
+void MotionSequence::abort(const UscriptsBatchDoneCb& batchDoneCb) {
   //NOTE: pin 0 is reserved for aborting (overriding URScripts)
   constexpr auto abortCmdPayload = 
     "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";
-  const std::vector<MotionCommand> commands {
-    { abortCmdPayload, MotionExecutionPolicy::BLOCKING }
+  const std::vector<UscriptCommand> commands {
+    { abortCmdPayload }
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, batchDoneCb);
 }

@@ -33,8 +33,9 @@ ErrorCode MotionExecutor::addSequence(
 
   using namespace std::placeholders;
   MotionSequence& insertedSequence = *it->second;
-  insertedSequence.setDispatchMotionsAsyncCb(std::bind(
-    &MotionSequenceExecutor::dispatchAsync, &_motionSequenceExecutor, _1, _2));
+  insertedSequence.setDispatchUscriptsAsyncCb(std::bind(
+    &MotionSequenceExecutor::dispatchUscriptsAsync, &_motionSequenceExecutor, 
+    _1, _2));
   return ErrorCode::SUCCESS;
 }
 
@@ -50,7 +51,7 @@ ErrorCode MotionExecutor::loadSequence(int32_t id) {
 }
 
 ErrorCode MotionExecutor::performAction(
-  MotionAction action, const MotionCommandBatchDoneCb& doneCb) {
+  MotionAction action, const UscriptsBatchDoneCb& batchDoneCb) {
   if (EMPTY_SEQUENCE_ID == _currSequenceId) {
     LOGERR("No current MotionSequence loaded");
     return ErrorCode::FAILURE;
@@ -59,19 +60,19 @@ ErrorCode MotionExecutor::performAction(
   const auto& motionSequence = _supportedSequences[_currSequenceId];
   switch (action) {
   case MotionAction::START:
-    motionSequence->start(doneCb);
+    motionSequence->start(batchDoneCb);
     break;
 
   case MotionAction::GRACEFUL_STOP:
-    motionSequence->gracefulStop(doneCb);
+    motionSequence->gracefulStop(batchDoneCb);
     break;
 
   case MotionAction::ABORT:
-    motionSequence->abort(doneCb);
+    motionSequence->abort(batchDoneCb);
     break;
 
   case MotionAction::RECOVER:
-    motionSequence->recover(doneCb);
+    motionSequence->recover(batchDoneCb);
     break;
   
   default:

@@ -16,41 +16,33 @@ JengaMotionSequence::JengaMotionSequence(
   populateUrscriptHeaders();
 }
 
-void JengaMotionSequence::start(const MotionCommandBatchDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Jenga::GRASP_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
+void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
+  const std::vector<UscriptCommand> commands {
+    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
+    { urScriptHeaders[Motion::Jenga::GRASP_NAME] },
+    { urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] },
+    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, cb);
 }
 
-void JengaMotionSequence::gracefulStop(const MotionCommandBatchDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING }
+void JengaMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
+  const std::vector<UscriptCommand> commands {
+    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] }
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, cb);
 }
 
-void JengaMotionSequence::recover(const MotionCommandBatchDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
+void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
+  const std::vector<UscriptCommand> commands {
+    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
+    { urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] },
+    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, cb);
 }
 
 void JengaMotionSequence::populateUrscriptHeaders() {

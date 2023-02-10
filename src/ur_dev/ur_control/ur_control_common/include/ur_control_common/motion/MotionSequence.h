@@ -21,12 +21,12 @@ public:
   MotionSequence(const std::string& name, int32_t id);
   virtual ~MotionSequence() noexcept = default;
 
-  virtual void start(const MotionCommandBatchDoneCb& cb) = 0;
-  virtual void gracefulStop(const MotionCommandBatchDoneCb& cb) = 0;
-  virtual void recover(const MotionCommandBatchDoneCb& cb) = 0;
+  virtual void start(const UscriptsBatchDoneCb& cb) = 0;
+  virtual void gracefulStop(const UscriptsBatchDoneCb& cb) = 0;
+  virtual void recover(const UscriptsBatchDoneCb& cb) = 0;
 
-  void abort(const MotionCommandBatchDoneCb& cb);
-  void setDispatchMotionsAsyncCb(const DispatchMotionsAsyncCb& cb);
+  void abort(const UscriptsBatchDoneCb& cb);
+  void setDispatchUscriptsAsyncCb(const DispatchUscriptsAsyncCb& cb);
 
   int32_t getId() const;
   std::string getName() const;
@@ -34,7 +34,7 @@ public:
 protected:
   using UrScriptHeaders = std::unordered_map<std::string, UrScriptPayload>;
   UrScriptHeaders urScriptHeaders;
-  DispatchMotionsAsyncCb dispatchMotionsAsyncCb;
+  DispatchUscriptsAsyncCb dispatchUscriptsAsyncCb;
 
 private:
   std::string _name;

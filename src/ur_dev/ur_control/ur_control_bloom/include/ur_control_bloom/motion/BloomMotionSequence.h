@@ -17,9 +17,9 @@ public:
   BloomMotionSequence(
     const BloomMotionSequenceConfig& cfg, const std::string& name, int32_t id);
 
-  void start(const MotionCommandBatchDoneCb& cb) override;
-  void gracefulStop(const MotionCommandBatchDoneCb& cb) override;
-  void recover(const MotionCommandBatchDoneCb& cb) override;
+  void start(const UscriptsBatchDoneCb& cb) override;
+  void gracefulStop(const UscriptsBatchDoneCb& cb) override;
+  void recover(const UscriptsBatchDoneCb& cb) override;
 
 private:
   void populateUrscriptHeaders();

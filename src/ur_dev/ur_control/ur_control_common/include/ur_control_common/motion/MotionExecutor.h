@@ -27,7 +27,7 @@ public:
   ErrorCode addSequence(std::unique_ptr<MotionSequence> sequence);
   ErrorCode loadSequence(int32_t id);
   ErrorCode performAction(
-    MotionAction action, const MotionCommandBatchDoneCb& doneCb);
+    MotionAction action, const UscriptsBatchDoneCb& batchDoneCb);
 
   void shutdown();
 

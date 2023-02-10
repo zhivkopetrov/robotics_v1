@@ -32,8 +32,8 @@ public:
 
   //NOTE: actionDoneCb will be called through the ActionEventSystem
   //      with ActionEventType::NON_BLOCKING param
-  void dispatchAsync(const std::vector<MotionCommand>& commands, 
-                     const MotionCommandBatchDoneCb& motionCommandBatchDoneCb);
+  void dispatchUscriptsAsync(const std::vector<UscriptCommand>& commands, 
+                             const UscriptsBatchDoneCb& batchDoneCb);
 
 private:
   using BlockingTask = std::function<void()>;
@@ -41,18 +41,18 @@ private:
   void runCommandComsumerLoop();
   void runBlockingInvokerLoop();
   
-  void invokeCommand(const MotionCommand& cmd);
-  void invokeNonBlockingCommand(const MotionCommand& cmd);
-  void invokeBlockingCommand(const MotionCommand& cmd);
+  void invokeCommand(const UscriptCommand& cmd);
+  void invokeNonBlockingCommand(const UscriptCommand& cmd);
+  void invokeBlockingCommand(const UscriptCommand& cmd);
 
   MotionSequenceExecutorOutInterface _outInterface;
 
-  std::mutex _motionCommandBatchDoneMutex;
-  MotionCommandBatchDoneCb _motionCommandBatchDoneCb;
+  std::mutex _uscriptsBatchDoneMutex;
+  UscriptsBatchDoneCb _uscriptsBatchDoneCb;
   std::atomic<bool> _preemptCurrCommand = false;
 
   std::thread _commandConsumerThread;
-  ThreadSafeQueue<MotionCommand> _commandQueue;
+  ThreadSafeQueue<UscriptCommand> _commandQueue;
 
   //performs blocking tasks such as invoking ROS2 services
   std::thread _blockingInvokerThread;

@@ -16,41 +16,33 @@ BloomMotionSequence::BloomMotionSequence(
   populateUrscriptHeaders();
 }
 
-void BloomMotionSequence::start(const MotionCommandBatchDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Bloom::GRASP_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING }
+void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
+  const std::vector<UscriptCommand> commands {
+    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME] },
+    { urScriptHeaders[Motion::Bloom::GRASP_NAME] },
+    { urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] },
+    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME] }
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, cb);
 }
 
-void BloomMotionSequence::gracefulStop(const MotionCommandBatchDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING }
+void BloomMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
+  const std::vector<UscriptCommand> commands {
+    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME] }
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, cb);
 }
 
-void BloomMotionSequence::recover(const MotionCommandBatchDoneCb& cb) {
-  const std::vector<MotionCommand> commands {
-    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING } ,
-    { urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME], 
-      MotionExecutionPolicy::BLOCKING },
-    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME], 
-      MotionExecutionPolicy::BLOCKING }
+void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
+  const std::vector<UscriptCommand> commands {
+    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME] } ,
+    { urScriptHeaders[Motion::Bloom::TRANSPORT_AND_PLACE_NAME] },
+    { urScriptHeaders[Motion::Bloom::RETURN_HOME_NAME] }
   };
 
-  dispatchMotionsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, cb);
 }
 
 void BloomMotionSequence::populateUrscriptHeaders() {

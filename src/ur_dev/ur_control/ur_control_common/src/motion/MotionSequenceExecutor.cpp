@@ -51,12 +51,12 @@ void MotionSequenceExecutor::shutdown() {
   _commandConsumerThread.join();
 }
 
-void MotionSequenceExecutor::dispatchAsync(
-  const std::vector<MotionCommand>& commands, 
-  const MotionCommandBatchDoneCb& motionCommandBatchDoneCb) {
-  //_motionCommandBatchDoneMutex and _commandQueue must be in sync
+void MotionSequenceExecutor::dispatchUscriptsAsync(
+  const std::vector<UscriptCommand>& commands, 
+  const UscriptsBatchDoneCb& batchDoneCb) {
+  //_uscriptsBatchDoneMutex and _commandQueue must be in sync
   //otherwise a data race (not data corruption) might occur
-  std::lock_guard<std::mutex> lock(_motionCommandBatchDoneMutex);
+  std::lock_guard<std::mutex> lock(_uscriptsBatchDoneMutex);
 
   if (!_commandQueue.isEmpty()) {
     LOGY("MotionSequenceExecutor: overriding active motion commands");
@@ -64,7 +64,7 @@ void MotionSequenceExecutor::dispatchAsync(
     _preemptCurrCommand = true;
   }
 
-  _motionCommandBatchDoneCb = motionCommandBatchDoneCb;
+  _uscriptsBatchDoneCb = batchDoneCb;
 
   //after the batch is inserted in the queue, a notification signal will
   //wake the internal _thread waiting on the conditional variable
@@ -72,7 +72,7 @@ void MotionSequenceExecutor::dispatchAsync(
 }
 
 void MotionSequenceExecutor::runCommandComsumerLoop() {
-  MotionCommand command;
+  UscriptCommand command;
 
   while (true) {
     const auto [isShutdowned, hasTimedOut] = 
@@ -86,17 +86,16 @@ void MotionSequenceExecutor::runCommandComsumerLoop() {
 
     invokeCommand(command);
 
-    //_motionCommandBatchDoneMutex and _commandQueue must be in sync
+    //_uscriptsBatchDoneMutex and _commandQueue must be in sync
     //otherwise a data race (not data corruption) might occur
-    std::lock_guard<std::mutex> lock(_motionCommandBatchDoneMutex);
+    std::lock_guard<std::mutex> lock(_uscriptsBatchDoneMutex);
     if (_commandQueue.isEmpty()) {
       //last command was popped -> invoke the done callback
       //through the ActionEventSystem
-      const auto motionCommandBatchDoneCbCopy = _motionCommandBatchDoneCb;
-
       //make a copy, because the lambda can be changed
-      const auto f = [motionCommandBatchDoneCbCopy](){
-        motionCommandBatchDoneCbCopy();
+      const auto uscriptsBatchDoneCbCopy = _uscriptsBatchDoneCb;
+      const auto f = [uscriptsBatchDoneCbCopy](){
+        uscriptsBatchDoneCbCopy();
       };
       _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
     }
@@ -120,7 +119,7 @@ void MotionSequenceExecutor::runBlockingInvokerLoop() {
   }
 }
 
-void MotionSequenceExecutor::invokeCommand(const MotionCommand& cmd) {
+void MotionSequenceExecutor::invokeCommand(const UscriptCommand& cmd) {
   switch (cmd.policy)
   {
   case MotionExecutionPolicy::NON_BLOCKING:
@@ -139,18 +138,18 @@ void MotionSequenceExecutor::invokeCommand(const MotionCommand& cmd) {
 }
 
 void MotionSequenceExecutor::invokeNonBlockingCommand(
-  const MotionCommand& cmd) {
+  const UscriptCommand& cmd) {
   _outInterface.publishURScriptCb(cmd.data);
-  if (cmd.motionCommandDoneCb) {
-    const auto motionCommandDoneCbCopy = cmd.motionCommandDoneCb;
-    const auto f = [motionCommandDoneCbCopy](){
-      motionCommandDoneCbCopy();
+  if (cmd.doneCb) {
+    const auto doneCbCopy = cmd.doneCb;
+    const auto f = [doneCbCopy](){
+      doneCbCopy();
     };
     _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
   }
 }
 
-void MotionSequenceExecutor::invokeBlockingCommand(const MotionCommand& cmd) {
+void MotionSequenceExecutor::invokeBlockingCommand(const UscriptCommand& cmd) {
   const BlockingTask blockingTask = [this, &cmd](){
     _outInterface.invokeURScriptServiceCb(cmd.data);
   };
@@ -180,10 +179,10 @@ void MotionSequenceExecutor::invokeBlockingCommand(const MotionCommand& cmd) {
     using namespace std::literals;
     const auto status = future.wait_for(10ms);
     if (std::future_status::ready == status) {
-      if (cmd.motionCommandDoneCb) {
-        const auto motionCommandDoneCbCopy = cmd.motionCommandDoneCb;
-        const auto f = [motionCommandDoneCbCopy](){
-          motionCommandDoneCbCopy();
+      if (cmd.doneCb) {
+        const auto doneCbCopy = cmd.doneCb;
+        const auto f = [doneCbCopy](){
+          doneCbCopy();
         };
         _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
       }
