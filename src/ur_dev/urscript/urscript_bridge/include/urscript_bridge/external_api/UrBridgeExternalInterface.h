@@ -66,9 +66,6 @@ private:
 
   std::pair<std::string, PinState> getPinPayload();
 
-  std::string getToggledPinPayload(uint32_t pin) const;
-  std::string getUntoggledPinPayload(uint32_t pin) const;
-
   TcpClient mTcpClient;
   uint32_t mUrScriptServiceReadyPin { };
   bool mVerboseLogging = false;

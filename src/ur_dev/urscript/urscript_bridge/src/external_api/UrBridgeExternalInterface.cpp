@@ -237,19 +237,6 @@ bool UrBridgeExternalInterface::waitForPinState(PinState state) {
   return waitAborted;
 }
 
-std::string UrBridgeExternalInterface::getToggledPinPayload(uint32_t pin) const {
-  std::string payload = "\tset_standard_digital_out(";
-  payload.append(std::to_string(pin)).append(", True)\n");
-  return payload;
-}
-
-std::string UrBridgeExternalInterface::getUntoggledPinPayload(
-  uint32_t pin) const {
-  std::string payload = "\tset_standard_digital_out(";
-  payload.append(std::to_string(pin)).append(", False)\n");
-  return payload;
-}
-
 std::pair<std::string, UrBridgeExternalInterface::PinState> 
 UrBridgeExternalInterface::getPinPayload() {
   std::string payloadStr = "\tset_standard_digital_out(";
