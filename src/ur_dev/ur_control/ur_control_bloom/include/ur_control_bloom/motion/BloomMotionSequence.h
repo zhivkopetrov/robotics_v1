@@ -22,8 +22,6 @@ public:
   void recover(const UscriptsBatchDoneCb& cb) override;
 
 private:
-  void populateUrscriptHeaders();
-
   const BloomMotionSequenceConfig _cfg;
 };
 

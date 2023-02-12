@@ -57,12 +57,7 @@ struct WaypointJoint {
   Ur10eJoints joints { };
 };
 
-struct MotionCommandBase {
-  virtual ~MotionCommandBase() noexcept = default;
-  virtual UrScriptPayload construct() const = 0;
-};
-
-struct MoveCommandBase : public MotionCommandBase {
+struct MoveCommandBase : public UrScriptCommandBase {
   MoveCommandBase() = default;
   MoveCommandBase(
     double inputVelocity, double inputAcceleration, double inputBlendingRadius);
@@ -77,8 +72,8 @@ struct MoveCommandBase : public MotionCommandBase {
 struct MoveLinearCommand final : public MoveCommandBase {
   MoveLinearCommand() = default;
   MoveLinearCommand(
-    const WaypointCartesian& inputWaypoint, double inputVelocity,
-    double inputAcceleration, double inputBlendingRadius);
+    const WaypointCartesian& inputWaypoint, double inputVelocity = 1.0,
+    double inputAcceleration = 1.0, double inputBlendingRadius = 0.0);
 
   UrScriptPayload construct() const override;
 
@@ -88,8 +83,8 @@ struct MoveLinearCommand final : public MoveCommandBase {
 struct MoveJointCommand final : public MoveCommandBase {
   MoveJointCommand() = default;
   MoveJointCommand(
-    const WaypointJoint& inputWaypoint, double inputVelocity,
-    double inputAcceleration, double inputBlendingRadius);
+    const WaypointJoint& inputWaypoint, double inputVelocity = 1.0,
+    double inputAcceleration = 1.0, double inputBlendingRadius = 0.0);
 
   UrScriptPayload construct() const override;
 

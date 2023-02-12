@@ -10,8 +10,6 @@
 
 //Forward declarations
 
-using UrScriptPayload = std::string;
-
 enum Ur10eRobotJoints {
   BASE_JOINT_IDX,
   SHOULDER_JOINT_IDX,
@@ -21,6 +19,13 @@ enum Ur10eRobotJoints {
   WRIST_3_JOINT_IDX,
 
   UR_10E_JOINTS_COUNT
+};
+
+using UrScriptPayload = std::string;
+
+struct UrScriptCommandBase {
+  virtual ~UrScriptCommandBase() noexcept = default;
+  virtual UrScriptPayload construct() const = 0;
 };
 
 #endif /* URSCRIPT_COMMON_URSCRIPTDEFINES_H_ */

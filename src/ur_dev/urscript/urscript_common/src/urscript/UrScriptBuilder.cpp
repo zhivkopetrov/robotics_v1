@@ -1,5 +1,5 @@
 //Corresponding header
-#include "urscript_common/motion/UrScriptBuilder.h"
+#include "urscript_common/urscript/UrScriptBuilder.h"
 
 //System headers
 #include <sstream>
@@ -9,8 +9,8 @@
 //Own components headers
 
 UrScriptPayload UrScriptBuilder::construct(
-    std::string_view methodName, MotionCommandContainer& commandContainer) {
-  const MotionContainerCommands cmds = 
+    std::string_view methodName, UrscriptCommandContainer& commandContainer) {
+  const UrscriptContainerCommands cmds = 
     commandContainer.transferStoredCommands();
 
   std::ostringstream ostr;

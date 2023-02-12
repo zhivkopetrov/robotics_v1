@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-#include "urscript_common/motion/UrScriptBuilder.h"
+#include "urscript_common/urscript/UrScriptBuilder.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -13,68 +13,84 @@
 JengaMotionSequence::JengaMotionSequence(
   const JengaMotionSequenceConfig& cfg,
   const std::string& name, int32_t id) : MotionSequence(name, id), _cfg(cfg) {
-  populateUrscriptHeaders();
+
 }
 
 void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
-  const std::vector<UscriptCommand> commands {
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
-    { urScriptHeaders[Motion::Jenga::GRASP_NAME] },
-    { urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] },
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
-  };
+  std::vector<UscriptCommand> commands;
+  UrscriptCommandContainer cmdContainer;
+  UrScriptPayload cmdPayload;
+
+  auto graspApproachCommand = 
+    std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian);
+  auto baseCenterACommand = 
+    std::make_unique<MoveLinearCommand>(_cfg.baseCenterACartesian);
+  cmdContainer.addCommand(std::move(graspApproachCommand))
+              .addCommand(std::move(baseCenterACommand));
+  cmdPayload = UrScriptBuilder::construct(
+    Motion::Jenga::GRASP_NAME, cmdContainer);
+  commands.push_back( { cmdPayload } );
+
+  auto transportApproachCommand = 
+    std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian);
+  auto baseCenterBCommand = 
+    std::make_unique<MoveLinearCommand>(_cfg.baseCenterBCartesian);
+
+  cmdContainer.addCommand(std::move(transportApproachCommand))
+              .addCommand(std::move(baseCenterBCommand));
+  cmdPayload = UrScriptBuilder::construct(
+    Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
+  commands.push_back( { cmdPayload } );
+
+  auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
+  cmdContainer.addCommand(std::move(returnHomeCommand));
+  cmdPayload = UrScriptBuilder::construct(
+    Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
+  commands.push_back( { cmdPayload } );
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
 void JengaMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
+  UrscriptCommandContainer cmdContainer;
+
+  auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
+  cmdContainer.addCommand(std::move(returnHomeCommand));
+  const UrScriptPayload cmdPayload = 
+    UrScriptBuilder::construct(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
+
   const std::vector<UscriptCommand> commands {
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] }
+    { cmdPayload }
   };
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
 void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
-  const std::vector<UscriptCommand> commands {
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
-    { urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] },
-    { urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] },
-  };
+  std::vector<UscriptCommand> commands;
+  UrscriptCommandContainer cmdContainer;
+
+  //TODO fill on init
+  constexpr bool holdingJenga = false;
+  if (holdingJenga) {
+    auto placeApproachCommand = 
+      std::make_unique<MoveJointCommand>(_cfg.graspApproachJoint);
+
+    //TODO recover from file where should jenga be placed
+    auto placeCommand = 
+      std::make_unique<MoveLinearCommand>(_cfg.baseCenterACartesian);
+    cmdContainer.addCommand(std::move(placeApproachCommand))
+                .addCommand(std::move(placeCommand));
+    const UrScriptPayload cmdPayload = UrScriptBuilder::construct(
+      Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
+    commands.push_back( { cmdPayload } );
+  } else {
+    auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
+    cmdContainer.addCommand(std::move(returnHomeCommand));
+    const UrScriptPayload cmdPayload = 
+      UrScriptBuilder::construct(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
+    commands.push_back( { cmdPayload } );
+  }
 
   dispatchUscriptsAsyncCb(commands, cb);
-}
-
-void JengaMotionSequence::populateUrscriptHeaders() {
-  constexpr double accel = 1.0;
-  constexpr double vel = 1.0;
-  constexpr double blendingRadius = 0.0;
-
-  MotionCommandContainer cmdContainer;
-
-  auto graspApproachCommand = std::make_unique<MoveLinearCommand>(
-    _cfg.graspApproachCartesian, accel, vel, blendingRadius);
-  auto baseCenterACommand = std::make_unique<MoveLinearCommand>(
-    _cfg.baseCenterACartesian, accel, vel, blendingRadius);
-  cmdContainer.addCommand(std::move(graspApproachCommand))
-              .addCommand(std::move(baseCenterACommand));
-  urScriptHeaders[Motion::Jenga::GRASP_NAME] = UrScriptBuilder::construct(
-    Motion::Jenga::GRASP_NAME, cmdContainer);
-
-  auto transportApproachCommand = std::make_unique<MoveLinearCommand>(
-    _cfg.graspApproachCartesian, accel, vel, blendingRadius);
-  auto baseCenterBCommand = std::make_unique<MoveLinearCommand>(
-    _cfg.baseCenterBCartesian, accel, vel, blendingRadius);
-
-  cmdContainer.addCommand(std::move(transportApproachCommand))
-              .addCommand(std::move(baseCenterBCommand));
-  urScriptHeaders[Motion::Jenga::TRANSPORT_AND_PLACE_NAME] = 
-    UrScriptBuilder::construct(
-      Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
-
-  auto returnHomeCommand = std::make_unique<MoveJointCommand>(
-    _cfg.homeJoint, accel, vel, blendingRadius);
-  cmdContainer.addCommand(std::move(returnHomeCommand));
-  urScriptHeaders[Motion::Jenga::RETURN_HOME_NAME] = UrScriptBuilder::construct(
-    Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
 }
