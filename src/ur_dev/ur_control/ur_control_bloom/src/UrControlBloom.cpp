@@ -45,13 +45,7 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
   _layout.handleEvent(e);
 
   if (TouchEvent::KEYBOARD_RELEASE == e.type) {
-    if (Keyboard::KEY_T == e.key) {
-      _stateMachine.changeState(BloomState::BLOOM_RECOVERY);
-    }
-    else if (Keyboard::KEY_Y == e.key) {
-      _stateMachine.changeState(BloomState::IDLE);
-    }
-    else if (Keyboard::KEY_U == e.key) {
+    if (Keyboard::KEY_U == e.key) {
       _stateMachine.changeState(BloomState::BLOOM);
     }
     else if (Keyboard::KEY_I == e.key) {
@@ -73,6 +67,20 @@ void UrControlBloom::process() {
 
 void UrControlBloom::enterInitState() {
   _layout.enterInitState();
+
+  const auto f = [this]() {
+    //TODO load which state should be recoved from
+    constexpr bool wasLastStateBloomOrBloomRecovery = false;
+    return wasLastStateBloomOrBloomRecovery ? 
+      [this](){
+        _stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+      }() :
+      [this](){
+        _stateMachine.changeState(BloomState::JENGA_RECOVERY);
+      }();
+  };
+
+  _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 void UrControlBloom::exitInitState() {
@@ -89,8 +97,8 @@ void UrControlBloom::exitIdleState() {
 
 void UrControlBloom::enterBloomState() {
   _layout.enterBloomState();
-  _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
 
+  _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
   const auto doneCb = [this](){
     _stateMachine.changeState(BloomState::JENGA);
   };
@@ -103,6 +111,12 @@ void UrControlBloom::exitBloomState() {
 
 void UrControlBloom::enterBloomRecoveryState() {
   _layout.enterBloomRecoveryState();
+
+  _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
+  const auto doneCb = [this](){
+    _stateMachine.changeState(BloomState::IDLE);
+  };
+  _motionExecutor.performAction(MotionAction::RECOVER, doneCb);
 }
 
 void UrControlBloom::exitBloomRecoveryState() {
@@ -111,8 +125,8 @@ void UrControlBloom::exitBloomRecoveryState() {
 
 void UrControlBloom::enterJengaState() {
   _layout.enterJengaState();
-  _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
 
+  _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
   const auto doneCb = [this](){
     _stateMachine.changeState(BloomState::BLOOM);
   };
@@ -125,6 +139,12 @@ void UrControlBloom::exitJengaState() {
 
 void UrControlBloom::enterJengaRecoveryState() {
   _layout.enterJengaRecoveryState();
+
+  _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
+  const auto doneCb = [this](){
+    _stateMachine.changeState(BloomState::IDLE);
+  };
+  _motionExecutor.performAction(MotionAction::RECOVER, doneCb);
 }
 
 void UrControlBloom::exitJengaRecoveryState() {
