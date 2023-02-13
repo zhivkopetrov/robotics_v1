@@ -10,6 +10,8 @@
 
 //Forward declarations
 
+using UrScriptPayload = std::string;
+
 enum Ur10eRobotJoints {
   BASE_JOINT_IDX,
   SHOULDER_JOINT_IDX,
@@ -21,11 +23,28 @@ enum Ur10eRobotJoints {
   UR_10E_JOINTS_COUNT
 };
 
-using UrScriptPayload = std::string;
+enum class GripperType {
+  HARDWARE,
+  SIMULATION
+};
 
-struct UrScriptCommandBase {
-  virtual ~UrScriptCommandBase() noexcept = default;
+enum class UrScriptCommandType {
+  MOVE,
+  GRIPPER,
+  PARAM_CHANGE
+};
+
+struct UrScriptCommand {
+  UrScriptCommand(UrScriptCommandType type) : _commandType(type) {}
+  virtual ~UrScriptCommand() noexcept = default;
   virtual UrScriptPayload construct() const = 0;
+
+  UrScriptCommandType getCommandType () const {
+    return _commandType;
+  }
+
+private:
+  UrScriptCommandType _commandType;
 };
 
 #endif /* URSCRIPT_COMMON_URSCRIPTDEFINES_H_ */

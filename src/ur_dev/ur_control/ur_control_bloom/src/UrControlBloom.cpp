@@ -69,6 +69,9 @@ void UrControlBloom::enterInitState() {
   _layout.enterInitState();
 
   const auto f = [this]() {
+    //TODO initialise and break release, 
+    //if robot mode or safety mode are not proper
+
     //TODO load which state should be recoved from
     constexpr bool wasLastStateBloomOrBloomRecovery = false;
     return wasLastStateBloomOrBloomRecovery ? 

@@ -5,6 +5,11 @@
     gui_window_y: 27
     gui_window_width: 1848
     gui_window_height: 1053
+
+    #supported gripper types:
+      #HARDWARE(0)
+      #SIMULATION(1)
+    gripper_type: 1
     
     #supported executor types:
       #SINGLE_THREADED(0)

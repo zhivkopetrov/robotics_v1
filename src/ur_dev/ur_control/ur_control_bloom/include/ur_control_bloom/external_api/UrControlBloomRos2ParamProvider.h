@@ -6,6 +6,7 @@
 
 //Other libraries headers
 #include <rclcpp/node.hpp>
+#include "urscript_common/defines/UrScriptDefines.h"
 #include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "utils/drawing/Rectangle.h"
 
@@ -18,6 +19,7 @@ struct UrControlBloomRos2Params {
   Ros2CommunicatorConfig ros2CommunicatorConfig;
   std::string robotIp;
   uint16_t robotInterfacePort {};
+  GripperType gripperType = GripperType::SIMULATION;
 
   void print() const;
   void validate();

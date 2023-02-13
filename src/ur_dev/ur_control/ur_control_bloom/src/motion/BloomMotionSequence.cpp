@@ -18,15 +18,18 @@ BloomMotionSequence::BloomMotionSequence(
 
 void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
   std::vector<UscriptCommand> commands;
-  UrscriptCommandContainer cmdContainer;
+  UrScriptCommandContainer cmdContainer;
   UrScriptPayload cmdPayload;
 
   auto graspApproachCommand = 
    std::make_unique<MoveJointCommand>(_cfg.graspApproachJoint);
   auto graspCommand = 
     std::make_unique<MoveJointCommand>(_cfg.graspJoint);
+  auto closeGripperCommand = 
+    std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
   cmdContainer.addCommand(std::move(graspApproachCommand))
-              .addCommand(std::move(graspCommand));
+              .addCommand(std::move(graspCommand))
+              .addCommand(std::move(closeGripperCommand));
   cmdPayload = UrScriptBuilder::construct(
     Motion::Bloom::RETURN_HOME_NAME, cmdContainer);
   commands.push_back( { cmdPayload } );
@@ -35,8 +38,11 @@ void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
     std::make_unique<MoveJointCommand>(_cfg.placeApproachJoint);
   auto placeCommand = 
     std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
+  auto openGripperCommand = 
+    std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
   cmdContainer.addCommand(std::move(placeApproachCommand))
-              .addCommand(std::move(placeCommand));
+              .addCommand(std::move(placeCommand))
+              .addCommand(std::move(openGripperCommand));
   cmdPayload = UrScriptBuilder::construct(
     Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
   commands.push_back( { cmdPayload } );
@@ -54,7 +60,7 @@ void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
 }
 
 void BloomMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
-  UrscriptCommandContainer cmdContainer;
+  UrScriptCommandContainer cmdContainer;
 
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
   cmdContainer.addCommand(std::move(returnHomeCommand));
@@ -70,7 +76,7 @@ void BloomMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
 
 void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
   std::vector<UscriptCommand> commands;
-  UrscriptCommandContainer cmdContainer;
+  UrScriptCommandContainer cmdContainer;
 
   //TODO fill on init
   constexpr bool holdingRose = false;
@@ -79,14 +85,21 @@ void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
       std::make_unique<MoveJointCommand>(_cfg.placeApproachJoint);
     auto placeCommand = 
       std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
+    auto openGripperCommand = 
+      std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
     cmdContainer.addCommand(std::move(placeApproachCommand))
-                .addCommand(std::move(placeCommand));
+                .addCommand(std::move(placeCommand))
+                .addCommand(std::move(openGripperCommand));
     const UrScriptPayload cmdPayload = UrScriptBuilder::construct(
       Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
     commands.push_back( { cmdPayload } );
   } else {
+    auto openGripperCommand = 
+      std::make_unique<GripperActuateCommand>(
+        GripperActuateType::OPEN, GripperCommandPolicy::NON_BLOCKING);
     auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
-    cmdContainer.addCommand(std::move(returnHomeCommand));
+    cmdContainer.addCommand(std::move(returnHomeCommand))
+                .addCommand(std::move(openGripperCommand));
     const UrScriptPayload cmdPayload = 
       UrScriptBuilder::construct(Motion::Bloom::RETURN_HOME_NAME, cmdContainer);
     commands.push_back( { cmdPayload } );

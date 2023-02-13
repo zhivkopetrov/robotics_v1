@@ -57,8 +57,8 @@ struct WaypointJoint {
   Ur10eJoints joints { };
 };
 
-struct MoveCommandBase : public UrScriptCommandBase {
-  MoveCommandBase() = default;
+struct MoveCommandBase : public UrScriptCommand {
+  MoveCommandBase();
   MoveCommandBase(
     double inputVelocity, double inputAcceleration, double inputBlendingRadius);
 

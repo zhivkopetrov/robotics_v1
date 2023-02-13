@@ -109,6 +109,16 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   return cfg;
 }
 
+UrControlBloomMotionSequenceConfig generateUrControlBloomMotionSequenceConfig(
+  const UrControlBloomRos2Params &rosParams) {
+  UrControlBloomMotionSequenceConfig cfg;
+  cfg.gripperType = rosParams.gripperType;
+  cfg.bloomMotionSequenceCfg = generateBloomMotionSequenceConfig(rosParams);
+  cfg.jengaMotionSequenceCfg = generateJengaMotionSequenceConfig(rosParams);
+
+  return cfg;
+}
+
 EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
                                   const UrControlBloomRos2Params &rosParams) {
   auto cfg = getDefaultEngineConfig(projectInstallPrefix);
@@ -134,8 +144,7 @@ UrControlBloomConfig generateGameConfig(
     const UrControlBloomRos2Params &rosParams) {
   UrControlBloomConfig cfg;
   cfg.externalBridgeCfg = generateUrContolBloomExternalBridgeConfig(rosParams);
-  cfg.bloomMotionSequenceCfg = generateBloomMotionSequenceConfig(rosParams);
-  cfg.jengaMotionSequenceCfg = generateJengaMotionSequenceConfig(rosParams);
+  cfg.motionSequenceCfg = generateUrControlBloomMotionSequenceConfig(rosParams);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.roseRsrcId = UrControlBloomResources::ROSE;

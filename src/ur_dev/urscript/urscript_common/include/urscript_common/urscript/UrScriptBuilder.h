@@ -7,7 +7,7 @@
 //Other libraries headers
 
 //Own components headers
-#include "urscript_common/urscript/UrscriptCommandContainer.h"
+#include "urscript_common/urscript/UrScriptCommandContainer.h"
 
 //Forward declarations
 
@@ -18,7 +18,7 @@ public:
   //transfers stored commands from commandsContainer and 
   //embbeds them into a UrScriptPayload
   static UrScriptPayload construct(
-      std::string_view methodName, UrscriptCommandContainer& commandContainer);
+      std::string_view methodName, UrScriptCommandContainer& commandContainer);
 };
 
 #endif /* URSCRIPT_COMMON_URSCRIPTBUILDER_H_ */

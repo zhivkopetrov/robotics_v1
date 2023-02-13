@@ -7,6 +7,7 @@
 
 //Other libraries headers
 #include "utils/data_type/EnumClassUtils.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -18,6 +19,7 @@ constexpr auto GUI_WINDOW_X_PARAM_NAME = "gui_window_x";
 constexpr auto GUI_WINDOW_Y_PARAM_NAME = "gui_window_y";
 constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
+constexpr auto GRIPPER_TYPE_PARAM_NAME = "gripper_type";
 constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
 constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = "ros2_executor_threads_num";
 constexpr auto ROBOT_IP_PARAM_NAME = "robot_ip";
@@ -32,6 +34,9 @@ constexpr auto DEFAULT_WINDOW_HEIGHT = 1053;
 //ROS2 executor
 constexpr auto DEFAULT_EXECUTOR_TYPE = 0;
 constexpr auto DEFAULT_EXECUTOR_THREADS_NUM = 2;
+
+//gripper
+constexpr auto DEFAULT_GRIPPER_TYPE = getEnumValue(GripperType::SIMULATION);
 
 //robot
 constexpr auto DEFAULT_ROBOT_IP = "192.168.1.102";
@@ -57,6 +62,9 @@ void UrControlBloomRos2Params::print() const {
        << GUI_WINDOW_WIDTH_PARAM_NAME << ": " << guiWindow.w << '\n'
        << GUI_WINDOW_HEIGHT_PARAM_NAME << ": " << guiWindow.h << '\n'
        << GUI_WINDOW_HEIGHT_PARAM_NAME << ": " << guiWindow.h << '\n'
+       << GRIPPER_TYPE_PARAM_NAME << ": " <<
+         (GripperType::HARDWARE == gripperType ? "Hardware" : "Simulation") 
+          << '\n'
        << ROS2_EXECUTOR_TYPE_PARAM_NAME << ": " <<
          getExecutorName(ros2CommunicatorConfig.executorType) << '\n'
        << ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME << ": "
@@ -82,6 +90,12 @@ void UrControlBloomRos2Params::validate() {
     handleParamError(ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME,
         ros2CommunicatorConfig.numberOfThreads, maxHardwareThreads);
   }
+  if ((GripperType::HARDWARE != gripperType) && 
+      (GripperType::SIMULATION != gripperType)) {
+    LOGERR("Error, received unsupported GripperType: [%d]. Defaulting to "
+           "GripperType::SIMULATION", getEnumValue(gripperType));
+    gripperType = GripperType::SIMULATION;
+  }
 
   //TODO validate ip and port
 }
@@ -93,6 +107,8 @@ UrControlBloomRos2ParamProvider::UrControlBloomRos2ParamProvider()
   declare_parameter<int32_t>(GUI_WINDOW_WIDTH_PARAM_NAME, DEFAULT_WINDOW_WIDTH);
   declare_parameter<int32_t>(GUI_WINDOW_HEIGHT_PARAM_NAME,
       DEFAULT_WINDOW_HEIGHT);
+
+  declare_parameter<int32_t>(GRIPPER_TYPE_PARAM_NAME, DEFAULT_GRIPPER_TYPE);
 
   declare_parameter<int32_t>(ROS2_EXECUTOR_TYPE_PARAM_NAME,
       DEFAULT_EXECUTOR_TYPE);
@@ -109,6 +125,10 @@ UrControlBloomRos2Params UrControlBloomRos2ParamProvider::getParams() {
   get_parameter(GUI_WINDOW_Y_PARAM_NAME, _params.guiWindow.y);
   get_parameter(GUI_WINDOW_WIDTH_PARAM_NAME, _params.guiWindow.w);
   get_parameter(GUI_WINDOW_HEIGHT_PARAM_NAME, _params.guiWindow.h);
+
+  int32_t gripperTypeInt{};
+  get_parameter(GRIPPER_TYPE_PARAM_NAME, gripperTypeInt);
+  _params.gripperType = toEnum<GripperType>(gripperTypeInt);
 
   int32_t executorTypeInt{};
   get_parameter(ROS2_EXECUTOR_TYPE_PARAM_NAME, executorTypeInt);

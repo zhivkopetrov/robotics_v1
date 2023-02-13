@@ -9,25 +9,25 @@
 
 //Own components headers
 #include "urscript_common/motion/MotionStructs.h"
+#include "urscript_common/gripper/GripperStructs.h"
 
 //Forward declarations
 
-using UrscriptContainerCommands = std::vector<std::unique_ptr<UrScriptCommandBase>>;
+using UrScriptContainerCommands = std::vector<std::unique_ptr<UrScriptCommand>>;
 
-class UrscriptCommandContainer {
+class UrScriptCommandContainer {
 public:
-  UrscriptCommandContainer& addCommand(
-      std::unique_ptr<UrScriptCommandBase> cmd) {
+  UrScriptCommandContainer& addCommand(std::unique_ptr<UrScriptCommand> cmd) {
     _cmds.push_back(std::move(cmd));
     return *this;
   }
 
-  UrscriptContainerCommands transferStoredCommands() {
+  UrScriptContainerCommands transferStoredCommands() {
     return std::move(_cmds);
   }
 
 private:
-  UrscriptContainerCommands _cmds;
+  UrScriptContainerCommands _cmds;
 };
 
 #endif /* URSCRIPT_COMMON_URSCRIPTCOMMANDCONTAINER_H_ */

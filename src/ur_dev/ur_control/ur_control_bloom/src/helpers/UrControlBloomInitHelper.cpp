@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-
+#include "urscript_common/gripper/GripperStructs.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "utils/Log.h"
 
@@ -62,7 +62,8 @@ ErrorCode UrControlBloomInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initMotionExecutor(parsedCfg, bloom)) {
+  if (ErrorCode::SUCCESS != 
+      initMotionExecutor(parsedCfg.motionSequenceCfg, bloom)) {
     LOGERR("initMotionExecutor() failed");
     return ErrorCode::FAILURE;
   }
@@ -132,7 +133,7 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
 }
 
 ErrorCode UrControlBloomInitHelper::initMotionExecutor(
-  const UrControlBloomConfig &cfg, UrControlBloom &bloom) {
+  const UrControlBloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
   MotionSequenceExecutorOutInterface outInterface;
   const auto externalBridgeRawPointer = bloom._externalBridge.get();
   outInterface.publishURScriptCb = std::bind(
@@ -148,6 +149,10 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
     externalBridgeRawPointer);
 
   outInterface.invokeActionEventCb = bloom._invokeActionEventCb;
+
+  //TODO remove when URSim docker image is extented to work with
+  //     Robotiq URScripts
+  setGripperTypeGlobally(cfg.gripperType);
 
   if (ErrorCode::SUCCESS != bloom._motionExecutor.init(outInterface)) {
     LOGERR("Error in _motionExecutor.init()");

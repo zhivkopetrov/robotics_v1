@@ -30,6 +30,7 @@ add_executable(
         ${_INC_DIR}/layout/UrControlBloomLayout.h
         ${_INC_DIR}/motion/BloomMotionSequence.h
         ${_INC_DIR}/motion/JengaMotionSequence.h
+        ${_INC_DIR}/motion/config/UrControlBloomMotionSequenceConfig.h
         ${_INC_DIR}/motion/config/BloomMotionSequenceConfig.h
         ${_INC_DIR}/motion/config/JengaMotionSequenceConfig.h
      

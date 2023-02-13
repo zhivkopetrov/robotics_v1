@@ -65,9 +65,14 @@ std::string WaypointJoint::serialize() const {
   return ostr.str();
 }
 
+MoveCommandBase::MoveCommandBase() 
+  : UrScriptCommand(UrScriptCommandType::MOVE) {
+
+}
+
 MoveCommandBase::MoveCommandBase(
     double inputVelocity, double inputAcceleration, double inputBlendingRadius)
-      : velocity(inputVelocity), 
+      : UrScriptCommand(UrScriptCommandType::MOVE), velocity(inputVelocity), 
       acceleration(inputAcceleration), blendingRadius(inputBlendingRadius) {
 
 }
