@@ -29,7 +29,6 @@ add_library(
         ${_INC_DIR}/external_api/config/UrContolCommonExternalBridgeConfig.h
         ${_INC_DIR}/external_api/UrControlCommonExternalBridge.h
         ${_INC_DIR}/external_api/DashboardProvider.h
-        ${_INC_DIR}/helpers/ScriptParser.h
         ${_INC_DIR}/layout/UrControlCommonLayout.h
         ${_INC_DIR}/layout/config/UrControlCommonLayoutConfig.h
         ${_INC_DIR}/layout/helpers/UrControlCommonLayoutInitHelper.h
@@ -46,7 +45,6 @@ add_library(
         
         ${_SRC_DIR}/external_api/UrControlCommonExternalBridge.cpp
         ${_SRC_DIR}/external_api/DashboardProvider.cpp
-        ${_SRC_DIR}/helpers/ScriptParser.cpp
         ${_SRC_DIR}/layout/UrControlCommonLayout.cpp
         ${_SRC_DIR}/layout/helpers/UrControlCommonLayoutInitHelper.cpp
         ${_SRC_DIR}/layout/entities/robot/SafetyModeVisuals.cpp

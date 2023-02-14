@@ -1,5 +1,5 @@
-#ifndef UR_CONTROL_COMMON_SCRIPTPARSER_H_
-#define UR_CONTROL_COMMON_SCRIPTPARSER_H_
+#ifndef URSCRIPT_COMMON_URSCRIPTPARSER_H_
+#define URSCRIPT_COMMON_URSCRIPTPARSER_H_
 
 //System headers
 #include <cstdint>
@@ -13,9 +13,9 @@
 
 //Forward declarations
 
-class ScriptParser {
+class UrScriptParser {
 public:
-  ScriptParser() = delete;
+  UrScriptParser() = delete;
 
   static ErrorCode parseScripts(const std::string &folderLocation,
                                 std::vector<std::string> &outScripts);
@@ -31,4 +31,4 @@ private:
                                    std::string &outScript);
 };
 
-#endif /* UR_CONTROL_COMMON_SCRIPTPARSER_H_ */
+#endif /* URSCRIPT_COMMON_URSCRIPTPARSER_H_ */

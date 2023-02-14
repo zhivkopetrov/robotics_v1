@@ -39,7 +39,7 @@ ErrorCode MotionExecutor::addSequence(
   return ErrorCode::SUCCESS;
 }
 
-ErrorCode MotionExecutor::loadSequence(int32_t id) {
+ErrorCode MotionExecutor::loadSequence(MotionSequenceHandle id) {
   auto it = _supportedSequences.find(id);
   if (it == _supportedSequences.end()) {
     LOGERR("Provided sequenceId: [%d] is not a supported sequence id", id);

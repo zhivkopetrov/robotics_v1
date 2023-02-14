@@ -8,6 +8,7 @@
 #include "ur_control_common/external_api/UrControlCommonExternalBridge.h"
 #include "ur_control_common/external_api/DashboardProvider.h"
 #include "ur_control_common/motion/MotionExecutor.h"
+#include "urscript_common/urscript/UrScriptBuilder.h"
 #include "ros2_game_engine/communicator/Ros2CommunicatorInterface.h"
 #include "game_engine/Game.h"
 #include "utils/design_pattern/StateMachine.h"
@@ -50,7 +51,9 @@ private:
   UrControlBloomLayout _layout;
   StateMachine _stateMachine;
   MotionExecutor _motionExecutor;
+  std::shared_ptr<UrScriptBuilder> _urScriptBuilder;
 
+  //ROS2 related objects
   std::shared_ptr<DashboardProvider> _dashboardProvider;
   std::shared_ptr<UrControlCommonExternalBridge> _externalBridge;
   Ros2CommunicatorInterface _communicatorInterface;

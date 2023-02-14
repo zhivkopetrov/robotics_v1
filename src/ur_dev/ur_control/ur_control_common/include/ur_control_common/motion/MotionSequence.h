@@ -4,21 +4,24 @@
 //System headers
 #include <cstdint>
 #include <string>
-#include <unordered_map>
+#include <memory>
 
 //Other libraries headers
-#include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
+#include "urscript_common/urscript/UrScriptBuilder.h"
 #include "utils/class/NonCopyable.h"
 #include "utils/class/NonMoveable.h"
 #include "utils/ErrorCode.h"
 
 //Own components headers
+#include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
 
 //Forward declarations
 
 class MotionSequence : public NonCopyable, public NonMoveable { 
 public:
-  MotionSequence(const std::string& name, int32_t id);
+  MotionSequence(
+    const std::string& name, int32_t id, 
+    std::shared_ptr<UrScriptBuilder> urScriptBuilder);
   virtual ~MotionSequence() noexcept = default;
 
   virtual void start(const UscriptsBatchDoneCb& cb) = 0;
@@ -32,13 +35,16 @@ public:
   std::string getName() const;
 
 protected:
-  using UrScriptHeaders = std::unordered_map<std::string, UrScriptPayload>;
-  UrScriptHeaders urScriptHeaders;
+  UrScriptPayload constructUrScript(
+    std::string_view methodName, 
+    UrScriptCommandContainer& commandContainer) const;
+
   DispatchUscriptsAsyncCb dispatchUscriptsAsyncCb;
 
 private:
   std::string _name;
   int32_t _id { };
+  const std::shared_ptr<UrScriptBuilder> _urScriptBuilder;
 };
 
 #endif /* UR_CONTROL_COMMON_MOTIONSEQUENCE_H_ */

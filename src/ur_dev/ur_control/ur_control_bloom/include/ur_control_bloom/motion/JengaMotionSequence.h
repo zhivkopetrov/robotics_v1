@@ -15,7 +15,8 @@
 class JengaMotionSequence final : public MotionSequence {
 public:
   JengaMotionSequence(
-    const JengaMotionSequenceConfig& cfg, const std::string& name, int32_t id);
+    const JengaMotionSequenceConfig& cfg, const std::string& name, int32_t id,
+    const std::shared_ptr<UrScriptBuilder>& urScriptBuilder);
 
   void start(const UscriptsBatchDoneCb& cb) override;
   void gracefulStop(const UscriptsBatchDoneCb& cb) override;

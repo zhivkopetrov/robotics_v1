@@ -4,7 +4,6 @@
 //System headers
 
 //Other libraries headers
-#include "urscript_common/defines/UrScriptDefines.h"
 
 //Own components headers
 #include "ur_control_bloom/motion/config/BloomMotionSequenceConfig.h"
@@ -13,7 +12,6 @@
 //Forward declarations
 
 struct UrControlBloomMotionSequenceConfig {
-  GripperType gripperType = GripperType::SIMULATION;
   BloomMotionSequenceConfig bloomMotionSequenceCfg;
   JengaMotionSequenceConfig jengaMotionSequenceCfg;
 };

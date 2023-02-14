@@ -4,11 +4,11 @@
 //System headers
 
 //Other libraries headers
+#include "urscript_common/urscript/UrScriptParser.h"
 #include "sdl_utils/input/InputEvent.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "ur_control_common/helpers/ScriptParser.h"
 
 ErrorCode ButtonHandler::init(const ButtonHandlerConfig &cfg,
                               const ButtonHandlerOutInterface &outInterface) {
@@ -176,9 +176,9 @@ ErrorCode ButtonHandler::initCommandButtons(
 ErrorCode ButtonHandler::loadButtonScripts(
     const std::string &folderLocation, size_t expectedParsedScriptsCount, 
     std::vector<std::string> &outScripts) {
-  if (ErrorCode::SUCCESS != ScriptParser::parseScripts(folderLocation,
+  if (ErrorCode::SUCCESS != UrScriptParser::parseScripts(folderLocation,
           outScripts)) {
-    LOGERR("Error, ScriptParser::parseScripts() failed");
+    LOGERR("Error, UrScriptParser::parseScripts() failed");
     return ErrorCode::FAILURE;
   }
 

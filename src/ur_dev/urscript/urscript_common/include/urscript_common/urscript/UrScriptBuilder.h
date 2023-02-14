@@ -3,22 +3,32 @@
 
 //System headers
 #include <string_view>
+#include <string>
 
 //Other libraries headers
 
 //Own components headers
+#include "urscript_common/urscript/config/UrScriptBuilderConfig.h"
 #include "urscript_common/urscript/UrScriptCommandContainer.h"
+#include "utils/ErrorCode.h"
 
 //Forward declarations
 
 class UrScriptBuilder {
 public:
-  UrScriptBuilder() = delete;
+  ErrorCode init(const UrScriptBuilderConfig& cfg);
 
   //transfers stored commands from commandsContainer and 
   //embbeds them into a UrScriptPayload
-  static UrScriptPayload construct(
-      std::string_view methodName, UrScriptCommandContainer& commandContainer);
+  UrScriptPayload construct(
+    std::string_view methodName, 
+    UrScriptCommandContainer& commandContainer) const;
+
+private:
+  UrScriptPayload _gripperDefinitionsPayload;
+
+  //TODO remove when URSim docker image is extented to work with Robotiq URScripts
+  GripperType _gripperType = GripperType::SIMULATION;
 };
 
 #endif /* URSCRIPT_COMMON_URSCRIPTBUILDER_H_ */

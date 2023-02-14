@@ -15,7 +15,8 @@
 class BloomMotionSequence final : public MotionSequence {
 public:
   BloomMotionSequence(
-    const BloomMotionSequenceConfig& cfg, const std::string& name, int32_t id);
+    const BloomMotionSequenceConfig& cfg, const std::string& name, int32_t id, 
+    const std::shared_ptr<UrScriptBuilder>& urScriptBuilder);
 
   void start(const UscriptsBatchDoneCb& cb) override;
   void gracefulStop(const UscriptsBatchDoneCb& cb) override;

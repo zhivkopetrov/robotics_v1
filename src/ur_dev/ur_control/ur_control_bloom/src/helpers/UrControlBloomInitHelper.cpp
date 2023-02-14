@@ -39,7 +39,8 @@ ErrorCode UrControlBloomInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  //allocate memory for the ROS nodes in order to attach it's callbacks
+  //allocate memory for objects in order to attach it's callbacks
+  bloom._urScriptBuilder = std::make_shared<UrScriptBuilder>();
   bloom._dashboardProvider = std::make_shared<DashboardProvider>();
   bloom._externalBridge = 
     std::make_shared<UrControlCommonExternalBridge>(NODE_NAME);
@@ -59,6 +60,12 @@ ErrorCode UrControlBloomInitHelper::init(
   if (ErrorCode::SUCCESS != initUrControlBloomExternalBridge(
           parsedCfg.externalBridgeCfg, layoutInterface, bloom)) {
     LOGERR("initControllerExternalBridge() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != 
+      initUrScriptBuilder(parsedCfg.urScriptBuilderCfg, bloom)) {
+    LOGERR("initUrScriptBuilder() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -132,6 +139,16 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
   return ErrorCode::SUCCESS;
 }
 
+  ErrorCode UrControlBloomInitHelper::initUrScriptBuilder(
+    const UrScriptBuilderConfig &cfg, UrControlBloom &bloom) {
+  if (ErrorCode::SUCCESS != bloom._urScriptBuilder->init(cfg)) {
+    LOGERR("Error in _urScriptBuilder->init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode UrControlBloomInitHelper::initMotionExecutor(
   const UrControlBloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
   MotionSequenceExecutorOutInterface outInterface;
@@ -150,10 +167,6 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
   outInterface.invokeActionEventCb = bloom._invokeActionEventCb;
 
-  //TODO remove when URSim docker image is extented to work with
-  //     Robotiq URScripts
-  setGripperTypeGlobally(cfg.gripperType);
-
   if (ErrorCode::SUCCESS != bloom._motionExecutor.init(outInterface)) {
     LOGERR("Error in _motionExecutor.init()");
     return ErrorCode::FAILURE;
@@ -161,7 +174,7 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     cfg.bloomMotionSequenceCfg, Motion::BLOOM_MOTION_SEQUENCE_NAME, 
-    Motion::BLOOM_MOTION_ID);
+    Motion::BLOOM_MOTION_ID, bloom._urScriptBuilder);
   if (ErrorCode::SUCCESS != 
       bloom._motionExecutor.addSequence(std::move(bloomMotionSequence))) {
     LOGERR("Error in motionExecutor.addSequence() for BloomMotionSequence");
@@ -170,7 +183,7 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
   auto jengaMotionSequence = std::make_unique<JengaMotionSequence>(
     cfg.jengaMotionSequenceCfg, Motion::JENGA_MOTION_SEQUENCE_NAME, 
-    Motion::JENGA_MOTION_ID);
+    Motion::JENGA_MOTION_ID, bloom._urScriptBuilder);
   if (ErrorCode::SUCCESS != 
       bloom._motionExecutor.addSequence(std::move(jengaMotionSequence))) {
     LOGERR("Error in motionExecutor.addSequence() for JengaMotionSequence");

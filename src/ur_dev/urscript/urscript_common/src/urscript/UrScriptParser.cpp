@@ -1,5 +1,5 @@
 //Corresponding header
-#include "ur_control_common/helpers/ScriptParser.h"
+#include "urscript_common/urscript/UrScriptParser.h"
 
 //System headers
 #include <fstream>
@@ -13,10 +13,10 @@
 //Own components headers
 #include "utils/Log.h"
 
-ErrorCode ScriptParser::parseScripts(const std::string &folderLocation,
-                                     std::vector<std::string> &outScripts) {
+ErrorCode UrScriptParser::parseScripts(
+  const std::string &folderLocation, std::vector<std::string> &outScripts) {
   std::vector<std::string> files;
-  ErrorCode err = ScriptParser::getDirectoryFiles(folderLocation, files);
+  ErrorCode err = UrScriptParser::getDirectoryFiles(folderLocation, files);
   if (ErrorCode::SUCCESS != err) {
     LOGERR("Error, ScriptParser::getDirectoryFiles() failed for directory [%s]",
         folderLocation.c_str());
@@ -25,7 +25,7 @@ ErrorCode ScriptParser::parseScripts(const std::string &folderLocation,
 
   err = parseFiles(files, outScripts);
   if (ErrorCode::SUCCESS != err) {
-    LOGERR("Error, ScriptParser::parseFiles() failed for directory [%s]",
+    LOGERR("Error, UrScriptParser::parseFiles() failed for directory [%s]",
         folderLocation.c_str());
     return ErrorCode::FAILURE;
   }
@@ -33,8 +33,8 @@ ErrorCode ScriptParser::parseScripts(const std::string &folderLocation,
   return ErrorCode::SUCCESS;
 }
 
-ErrorCode ScriptParser::getDirectoryFiles(const std::string &folderLocation,
-                                          std::vector<std::string> &outFiles) {
+ErrorCode UrScriptParser::getDirectoryFiles(
+  const std::string &folderLocation, std::vector<std::string> &outFiles) {
   if (!FileSystemUtils::isDirectoryPresent(folderLocation)) {
     LOGERR("Error, script folder [%s] is missing", folderLocation.c_str());
     return ErrorCode::FAILURE;
@@ -57,8 +57,8 @@ ErrorCode ScriptParser::getDirectoryFiles(const std::string &folderLocation,
   return ErrorCode::SUCCESS;
 }
 
-ErrorCode ScriptParser::parseFiles(const std::vector<std::string> &files,
-                                   std::vector<std::string> &outScripts) {
+ErrorCode UrScriptParser::parseFiles(
+  const std::vector<std::string> &files, std::vector<std::string> &outScripts) {
   const size_t size = files.size();
   outScripts.resize(size);
 
@@ -73,8 +73,8 @@ ErrorCode ScriptParser::parseFiles(const std::vector<std::string> &files,
   return ErrorCode::SUCCESS;
 }
 
-ErrorCode ScriptParser::parseSingleFile(const std::string &file,
-                                        std::string &outScript) {
+ErrorCode UrScriptParser::parseSingleFile(
+  const std::string &file, std::string &outScript) {
   std::ifstream ifstream(file, std::ios::in);
 
   if (!ifstream) {

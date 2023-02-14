@@ -4,15 +4,15 @@
 //System headers
 
 //Other libraries headers
-#include "urscript_common/urscript/UrScriptBuilder.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 JengaMotionSequence::JengaMotionSequence(
-  const JengaMotionSequenceConfig& cfg,
-  const std::string& name, int32_t id) : MotionSequence(name, id), _cfg(cfg) {
+  const JengaMotionSequenceConfig& cfg, const std::string& name, int32_t id, 
+  const std::shared_ptr<UrScriptBuilder>& urScriptBuilder) 
+  : MotionSequence(name, id, urScriptBuilder), _cfg(cfg) {
 
 }
 
@@ -30,8 +30,7 @@ void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
   cmdContainer.addCommand(std::move(graspApproachCommand))
               .addCommand(std::move(baseCenterACommand))
               .addCommand(std::move(closeGripperCommand));
-  cmdPayload = UrScriptBuilder::construct(
-    Motion::Jenga::GRASP_NAME, cmdContainer);
+  cmdPayload = constructUrScript(Motion::Jenga::GRASP_NAME, cmdContainer);
   commands.push_back( { cmdPayload } );
 
   auto transportApproachCommand = 
@@ -39,19 +38,18 @@ void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
   auto baseCenterBCommand = 
     std::make_unique<MoveLinearCommand>(_cfg.baseCenterBCartesian);
   auto openGripperCommand = 
-    std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
+    std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
 
   cmdContainer.addCommand(std::move(transportApproachCommand))
               .addCommand(std::move(baseCenterBCommand))
               .addCommand(std::move(openGripperCommand));
-  cmdPayload = UrScriptBuilder::construct(
+  cmdPayload = constructUrScript(
     Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
   commands.push_back( { cmdPayload } );
 
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
   cmdContainer.addCommand(std::move(returnHomeCommand));
-  cmdPayload = UrScriptBuilder::construct(
-    Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
+  cmdPayload = constructUrScript(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
   commands.push_back( { cmdPayload } );
 
   dispatchUscriptsAsyncCb(commands, cb);
@@ -63,7 +61,7 @@ void JengaMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
   cmdContainer.addCommand(std::move(returnHomeCommand));
   const UrScriptPayload cmdPayload = 
-    UrScriptBuilder::construct(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
+    constructUrScript(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
 
   const std::vector<UscriptCommand> commands {
     { cmdPayload }
@@ -91,8 +89,8 @@ void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
     cmdContainer.addCommand(std::move(placeApproachCommand))
                 .addCommand(std::move(placeCommand))
                 .addCommand(std::move(openGripperCommand));
-    const UrScriptPayload cmdPayload = UrScriptBuilder::construct(
-      Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
+    const UrScriptPayload cmdPayload = 
+      constructUrScript(Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
     commands.push_back( { cmdPayload } );
   } else {
     auto openGripperCommand = 
@@ -102,7 +100,7 @@ void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
     cmdContainer.addCommand(std::move(openGripperCommand))
                 .addCommand(std::move(returnHomeCommand));
     const UrScriptPayload cmdPayload = 
-      UrScriptBuilder::construct(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
+      constructUrScript(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
     commands.push_back( { cmdPayload } );
   }
 

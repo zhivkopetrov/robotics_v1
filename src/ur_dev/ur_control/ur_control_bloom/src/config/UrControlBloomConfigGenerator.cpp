@@ -19,6 +19,7 @@
 namespace {
 constexpr auto PROJECT_NAME = "ur_control_bloom";
 constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
+constexpr auto GRIPPER_DEFINITIONS_FOLDER_NAME = "gripper_definitions";
 constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
 constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
 
@@ -102,9 +103,27 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   cfg.graspApproachCartesian = WaypointCartesian(
     Point3d(0.55, -0.055, 0.25), AngleAxis(0.994, 2.991, 0));
   cfg.baseCenterACartesian = WaypointCartesian(
-    Point3d(0.596, -0.426, -0.04), AngleAxis(1.403, -2.799, -0.009));
+    Point3d(0.596, -0.426, -0.015), AngleAxis(1.403, -2.799, -0.009));
   cfg.baseCenterBCartesian = WaypointCartesian(
-    Point3d(0.495, -0.758, -0.04), AngleAxis(0.994, 2.991, 0));
+    Point3d(0.495, -0.758, -0.015), AngleAxis(1.403, -2.799, -0.009));
+
+  return cfg;
+}
+
+UrScriptBuilderConfig generateUrScriptBuilderConfig(
+  const std::string &projectInstallPrefix,
+  const UrControlBloomRos2Params &rosParams) {
+  UrScriptBuilderConfig cfg;
+
+  std::string scriptsFolderLocation = projectInstallPrefix;
+  scriptsFolderLocation.append("/").append(
+      ResourceFileHeader::getResourcesFolderName().append("/").append(
+          SCRIPTS_FOLDER_NAME)).append("/");
+
+  cfg.gripperDefinitionFolder = 
+    scriptsFolderLocation + GRIPPER_DEFINITIONS_FOLDER_NAME;
+
+  cfg.gripperType = rosParams.gripperType;
 
   return cfg;
 }
@@ -112,7 +131,7 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
 UrControlBloomMotionSequenceConfig generateUrControlBloomMotionSequenceConfig(
   const UrControlBloomRos2Params &rosParams) {
   UrControlBloomMotionSequenceConfig cfg;
-  cfg.gripperType = rosParams.gripperType;
+
   cfg.bloomMotionSequenceCfg = generateBloomMotionSequenceConfig(rosParams);
   cfg.jengaMotionSequenceCfg = generateJengaMotionSequenceConfig(rosParams);
 
@@ -145,6 +164,8 @@ UrControlBloomConfig generateGameConfig(
   UrControlBloomConfig cfg;
   cfg.externalBridgeCfg = generateUrContolBloomExternalBridgeConfig(rosParams);
   cfg.motionSequenceCfg = generateUrControlBloomMotionSequenceConfig(rosParams);
+  cfg.urScriptBuilderCfg = 
+    generateUrScriptBuilderConfig(projectInstallPrefix, rosParams);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.roseRsrcId = UrControlBloomResources::ROSE;

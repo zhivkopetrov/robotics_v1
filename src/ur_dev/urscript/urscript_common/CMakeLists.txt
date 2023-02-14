@@ -26,13 +26,16 @@ add_library(
         ${_INC_DIR}/gripper/GripperStructs.h
         ${_INC_DIR}/motion/MotionStructs.h
         ${_INC_DIR}/motion/MotionUtils.h
+        ${_INC_DIR}/urscript/UrScriptParser.h
         ${_INC_DIR}/urscript/UrScriptCommandContainer.h
         ${_INC_DIR}/urscript/UrScriptBuilder.h
+        ${_INC_DIR}/urscript/config/UrScriptBuilderConfig.h
      
         ${_SRC_DIR}/message_helpers/UrScriptMessageHelpers.cpp
         ${_SRC_DIR}/gripper/GripperStructs.cpp
         ${_SRC_DIR}/motion/MotionStructs.cpp
         ${_SRC_DIR}/motion/MotionUtils.cpp
+        ${_SRC_DIR}/urscript/UrScriptParser.cpp
         ${_SRC_DIR}/urscript/UrScriptBuilder.cpp
 )
 
