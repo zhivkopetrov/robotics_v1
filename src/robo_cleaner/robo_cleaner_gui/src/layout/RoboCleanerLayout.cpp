@@ -38,6 +38,10 @@ void RoboCleanerLayout::draw() const {
   _commonLayout.drawThirdLayer();
 }
 
+void RoboCleanerLayout::handleEvent(const InputEvent &e) {
+  _commonLayout.handleEvent(e);
+}
+
 void RoboCleanerLayout::process() {
   _commonLayout.process();
 }

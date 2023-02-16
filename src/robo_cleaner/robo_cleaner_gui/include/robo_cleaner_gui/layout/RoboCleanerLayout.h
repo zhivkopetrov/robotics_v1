@@ -26,6 +26,7 @@ public:
                  RoboCleanerLayoutInterface& interface);
   void deinit();
   void draw() const;
+  void handleEvent(const InputEvent &e);
 
   void process();
 
