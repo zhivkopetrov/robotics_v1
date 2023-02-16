@@ -22,35 +22,35 @@ enum class DashboardCommand {
 
 //1:1 UR msg mapping
 enum class RobotMode {
-    Unknown = -2,
-    NoController,
-    Disconnected,
-    ConfirmSafety,
-    Booting,
-    PowerOff,
-    PowerOn,
-    Idle,
-    Backdrive,
-    Running,
-    UpdatingFirmware
+  Unknown = -2,
+  NoController,
+  Disconnected,
+  ConfirmSafety,
+  Booting,
+  PowerOff,
+  PowerOn,
+  Idle,
+  Backdrive,
+  Running,
+  UpdatingFirmware
 };
 
 //1:1 UR msg mapping
 enum class SafetyMode {
-    Unknown,
-    Normal,
-    Reduced,
-    ProtectiveStop,
-    Recovery,
-    SafeguardStop,
-    SystemEmergencyStop,
-    RobotEmergencyStop,
-    Violation,
-    Fault,
-    ValidateJointId,
-    UndefinedSafetyMode,
-    AutomaticModeSafeguardStop,
-    SystemThreePositionEnablingStop
+  Unknown,
+  Normal,
+  Reduced,
+  ProtectiveStop,
+  Recovery,
+  SafeguardStop,
+  SystemEmergencyStop,
+  RobotEmergencyStop,
+  Violation,
+  Fault,
+  ValidateJointId,
+  UndefinedSafetyMode,
+  AutomaticModeSafeguardStop,
+  SystemThreePositionEnablingStop
 };
 
 enum class MotionExecutionPolicy {
@@ -60,5 +60,14 @@ enum class MotionExecutionPolicy {
   //wait on result in a separate motion thread
   BLOCKING,
 };
+
+enum class MotionAction {
+  START, 
+  GRACEFUL_STOP, 
+  ABORT, 
+  RECOVER
+};
+
+std::string toString(MotionAction action);
 
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_ */

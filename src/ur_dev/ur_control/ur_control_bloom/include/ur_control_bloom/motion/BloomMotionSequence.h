@@ -24,7 +24,11 @@ public:
   void gracefulStop(const UscriptsBatchDoneCb& cb) override;
   void recover(const UscriptsBatchDoneCb& cb) override;
 
+  void abort(const UscriptsBatchDoneCb& cb);
+
 private:
+  void serializeState(MotionAction action);
+  
   const BloomMotionSequenceConfig _cfg;
   std::shared_ptr<StateFileHandler> _stateFileHandler;
 };

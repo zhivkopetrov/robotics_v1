@@ -19,6 +19,7 @@ JengaMotionSequence::JengaMotionSequence(
 }
 
 void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
+  serializeState(MotionAction::START);
   std::vector<UscriptCommand> commands;
   UrScriptCommandContainer cmdContainer;
   UrScriptPayload cmdPayload;
@@ -58,6 +59,7 @@ void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
 }
 
 void JengaMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
+  serializeState(MotionAction::GRACEFUL_STOP);
   UrScriptCommandContainer cmdContainer;
 
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
@@ -73,6 +75,7 @@ void JengaMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
 }
 
 void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
+  serializeState(MotionAction::RECOVER);
   std::vector<UscriptCommand> commands;
   UrScriptCommandContainer cmdContainer;
 
@@ -107,4 +110,20 @@ void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
   }
 
   dispatchUscriptsAsyncCb(commands, cb);
+}
+
+void JengaMotionSequence::abort(const UscriptsBatchDoneCb& cb) {
+  serializeState(MotionAction::ABORT);
+  MotionSequence::abort(cb);
+}
+
+void JengaMotionSequence::serializeState(MotionAction action) {
+  const std::string stateName = toString(action);
+  const ErrorCode errCode = _stateFileHandler->updateEntry(
+    Motion::Jenga::SECTION_NAME, Motion::Jenga::MOTION_ACTION_ENTRY_NAME, 
+    stateName);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR(
+      "Error trying to serialize BloomMotionState: [%s]", stateName.c_str());
+  }
 }
