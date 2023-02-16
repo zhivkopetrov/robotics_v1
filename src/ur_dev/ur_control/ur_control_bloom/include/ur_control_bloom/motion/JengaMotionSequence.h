@@ -9,6 +9,7 @@
 
 //Own components headers
 #include "ur_control_bloom/motion/config/JengaMotionSequenceConfig.h"
+#include "ur_control_bloom/helpers/StateFileHandler.h"
 
 //Forward declarations
 
@@ -16,7 +17,8 @@ class JengaMotionSequence final : public MotionSequence {
 public:
   JengaMotionSequence(
     const JengaMotionSequenceConfig& cfg, const std::string& name, int32_t id,
-    const std::shared_ptr<UrScriptBuilder>& urScriptBuilder);
+    const std::shared_ptr<UrScriptBuilder>& urScriptBuilder,
+    const std::shared_ptr<StateFileHandler>& stateFileHandler);
 
   void start(const UscriptsBatchDoneCb& cb) override;
   void gracefulStop(const UscriptsBatchDoneCb& cb) override;
@@ -24,6 +26,7 @@ public:
 
 private:
   const JengaMotionSequenceConfig _cfg;
+  std::shared_ptr<StateFileHandler> _stateFileHandler;
 };
 
 #endif /* UR_CONTROL_BLOOM_JENGAMOTIONSEQUENCE_H_ */

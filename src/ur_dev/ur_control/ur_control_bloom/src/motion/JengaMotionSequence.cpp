@@ -11,8 +11,10 @@
 
 JengaMotionSequence::JengaMotionSequence(
   const JengaMotionSequenceConfig& cfg, const std::string& name, int32_t id, 
-  const std::shared_ptr<UrScriptBuilder>& urScriptBuilder) 
-  : MotionSequence(name, id, urScriptBuilder), _cfg(cfg) {
+  const std::shared_ptr<UrScriptBuilder>& urScriptBuilder,
+  const std::shared_ptr<StateFileHandler>& stateFileHandler) 
+  : MotionSequence(name, id, urScriptBuilder), _cfg(cfg),
+  _stateFileHandler(stateFileHandler) {
 
 }
 

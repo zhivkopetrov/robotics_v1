@@ -16,6 +16,7 @@
 
 //Own components headers
 #include "ur_control_bloom/layout/UrControlBloomLayout.h"
+#include "ur_control_bloom/helpers/StateFileHandler.h"
 
 //Forward declarations
 class InputEvent;
@@ -52,6 +53,7 @@ private:
   StateMachine _stateMachine;
   MotionExecutor _motionExecutor;
   std::shared_ptr<UrScriptBuilder> _urScriptBuilder;
+  std::shared_ptr<StateFileHandler> _stateFileHandler;
 
   //ROS2 related objects
   std::shared_ptr<DashboardProvider> _dashboardProvider;

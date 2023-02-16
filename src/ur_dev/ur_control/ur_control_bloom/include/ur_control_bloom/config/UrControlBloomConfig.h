@@ -20,6 +20,7 @@ struct UrControlBloomConfig {
   UrContolBloomExternalBridgeConfig externalBridgeCfg;
   UrControlBloomMotionSequenceConfig motionSequenceCfg;
   UrScriptBuilderConfig urScriptBuilderCfg;
+  std::string stateFilePath;
 };
 
 #endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMCONFIG_H_ */

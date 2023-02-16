@@ -44,6 +44,7 @@ ErrorCode UrControlBloomInitHelper::init(
   bloom._dashboardProvider = std::make_shared<DashboardProvider>();
   bloom._externalBridge = 
     std::make_shared<UrControlCommonExternalBridge>(NODE_NAME);
+  bloom._stateFileHandler = std::make_shared<StateFileHandler>();
 
   UrControlCommonLayoutInterface layoutInterface;
   if (ErrorCode::SUCCESS != 
@@ -66,6 +67,12 @@ ErrorCode UrControlBloomInitHelper::init(
   if (ErrorCode::SUCCESS != 
       initUrScriptBuilder(parsedCfg.urScriptBuilderCfg, bloom)) {
     LOGERR("initUrScriptBuilder() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != 
+      initStateFileHandler(parsedCfg.stateFilePath, bloom)) {
+    LOGERR("initStateFileHandler() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -149,6 +156,16 @@ ErrorCode UrControlBloomInitHelper::initUrControlBloomExternalBridge(
   return ErrorCode::SUCCESS;
 }
 
+ErrorCode UrControlBloomInitHelper::initStateFileHandler(
+  const std::string &filePath, UrControlBloom &bloom) {
+  if (ErrorCode::SUCCESS != bloom._stateFileHandler->init(filePath)) {
+    LOGERR("Error in _stateFileHandler->init()");
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
 ErrorCode UrControlBloomInitHelper::initMotionExecutor(
   const UrControlBloomMotionSequenceConfig &cfg, UrControlBloom &bloom) {
   MotionSequenceExecutorOutInterface outInterface;
@@ -174,7 +191,7 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
   auto bloomMotionSequence = std::make_unique<BloomMotionSequence>(
     cfg.bloomMotionSequenceCfg, Motion::BLOOM_MOTION_SEQUENCE_NAME, 
-    Motion::BLOOM_MOTION_ID, bloom._urScriptBuilder);
+    Motion::BLOOM_MOTION_ID, bloom._urScriptBuilder, bloom._stateFileHandler);
   if (ErrorCode::SUCCESS != 
       bloom._motionExecutor.addSequence(std::move(bloomMotionSequence))) {
     LOGERR("Error in motionExecutor.addSequence() for BloomMotionSequence");
@@ -183,7 +200,7 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
 
   auto jengaMotionSequence = std::make_unique<JengaMotionSequence>(
     cfg.jengaMotionSequenceCfg, Motion::JENGA_MOTION_SEQUENCE_NAME, 
-    Motion::JENGA_MOTION_ID, bloom._urScriptBuilder);
+    Motion::JENGA_MOTION_ID, bloom._urScriptBuilder, bloom._stateFileHandler);
   if (ErrorCode::SUCCESS != 
       bloom._motionExecutor.addSequence(std::move(jengaMotionSequence))) {
     LOGERR("Error in motionExecutor.addSequence() for JengaMotionSequence");

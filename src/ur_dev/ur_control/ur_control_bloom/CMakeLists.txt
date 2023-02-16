@@ -26,6 +26,7 @@ add_executable(
         ${_INC_DIR}/external_api/UrControlBloomRos2ParamProvider.h
         ${_INC_DIR}/helpers/UrControlBloomBuilder.h
         ${_INC_DIR}/helpers/UrControlBloomInitHelper.h
+        ${_INC_DIR}/helpers/StateFileHandler.h
         ${_INC_DIR}/layout/config/UrControlBloomLayoutConfig.h
         ${_INC_DIR}/layout/UrControlBloomLayout.h
         ${_INC_DIR}/motion/BloomMotionSequence.h
@@ -40,6 +41,7 @@ add_executable(
         ${_SRC_DIR}/external_api/UrControlBloomRos2ParamProvider.cpp
         ${_SRC_DIR}/helpers/UrControlBloomBuilder.cpp
         ${_SRC_DIR}/helpers/UrControlBloomInitHelper.cpp
+        ${_SRC_DIR}/helpers/StateFileHandler.cpp
         ${_SRC_DIR}/layout/UrControlBloomLayout.cpp
         ${_SRC_DIR}/motion/BloomMotionSequence.cpp
         ${_SRC_DIR}/motion/JengaMotionSequence.cpp

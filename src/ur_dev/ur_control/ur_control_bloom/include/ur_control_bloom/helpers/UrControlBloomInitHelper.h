@@ -4,6 +4,7 @@
 //System headers
 #include <cstdint>
 #include <any>
+#include <string>
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -42,6 +43,9 @@ private:
 
   static ErrorCode initUrScriptBuilder(
     const UrScriptBuilderConfig &cfg, UrControlBloom &bloom);
+
+  static ErrorCode initStateFileHandler(
+    const std::string &filePath, UrControlBloom &bloom);
       
   static ErrorCode initMotionExecutor(
     const UrControlBloomMotionSequenceConfig &cfg, UrControlBloom &bloom);

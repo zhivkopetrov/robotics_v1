@@ -22,6 +22,8 @@ constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
 constexpr auto GRIPPER_DEFINITIONS_FOLDER_NAME = "gripper_definitions";
 constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
 constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
+constexpr auto CONFIG_FOLDER_NAME = "config";
+constexpr auto STATE_FILE_NAME = "system_state.ini";
 
 enum TimerIds {
 
@@ -158,6 +160,14 @@ EngineConfig generateEngineConfig(const std::string &projectInstallPrefix,
   return cfg;
 }
 
+std::string generateStateFilePath(const std::string &projectInstallPrefix) {
+  std::string filePath = projectInstallPrefix;
+  filePath.append("/").append(CONFIG_FOLDER_NAME).append("/")
+          .append(STATE_FILE_NAME);
+
+  return filePath;
+}
+
 UrControlBloomConfig generateGameConfig(
     const std::string &projectInstallPrefix,
     const UrControlBloomRos2Params &rosParams) {
@@ -166,6 +176,7 @@ UrControlBloomConfig generateGameConfig(
   cfg.motionSequenceCfg = generateUrControlBloomMotionSequenceConfig(rosParams);
   cfg.urScriptBuilderCfg = 
     generateUrScriptBuilderConfig(projectInstallPrefix, rosParams);
+  cfg.stateFilePath = generateStateFilePath(projectInstallPrefix);
 
   auto &layoutCfg = cfg.layoutCfg;
   layoutCfg.roseRsrcId = UrControlBloomResources::ROSE;

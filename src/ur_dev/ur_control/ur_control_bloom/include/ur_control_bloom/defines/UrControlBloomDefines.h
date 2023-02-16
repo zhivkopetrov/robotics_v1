@@ -11,6 +11,8 @@
 
 namespace BloomState {
 
+constexpr auto SECTION_NAME = "BloomState";
+
 constexpr auto STATES_COUNT = 6;
   
 constexpr auto INIT = "Init";
@@ -34,6 +36,8 @@ constexpr auto JENGA_MOTION_SEQUENCE_NAME = "JengaMotionSequence";
 
 namespace Bloom {
 
+constexpr auto SECTION_NAME = "BloomMotion";
+
 constexpr auto GRASP_NAME = "BloomGrasp";
 constexpr auto TRANSPORT_AND_PLACE_NAME = "BloomTransportAndPlace";
 constexpr auto RETURN_HOME_NAME = "BloomReturnHome";
@@ -41,6 +45,8 @@ constexpr auto RETURN_HOME_NAME = "BloomReturnHome";
 } //namespace Bloom
 
 namespace Jenga {
+
+constexpr auto SECTION_NAME = "JengaMotion";
 
 constexpr auto GRASP_NAME = "JengaGrasp";
 constexpr auto TRANSPORT_AND_PLACE_NAME = "JengaTransportAndPlace";
