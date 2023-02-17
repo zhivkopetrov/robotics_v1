@@ -49,6 +49,8 @@ private:
   void enterJengaRecoveryState();
   void exitJengaRecoveryState();
 
+  void serializeState(const std::string& stateName);
+
   UrControlBloomLayout _layout;
   StateMachine _stateMachine;
   MotionExecutor _motionExecutor;

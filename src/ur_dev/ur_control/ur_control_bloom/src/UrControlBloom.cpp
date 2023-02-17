@@ -66,6 +66,7 @@ void UrControlBloom::process() {
 }
 
 void UrControlBloom::enterInitState() {
+  serializeState(BloomState::JENGA);
   _layout.enterInitState();
 
   const auto f = [this]() {
@@ -91,6 +92,7 @@ void UrControlBloom::exitInitState() {
 }
 
 void UrControlBloom::enterIdleState() {
+  serializeState(BloomState::IDLE);
   _layout.enterIdleState();
 }
 
@@ -99,6 +101,7 @@ void UrControlBloom::exitIdleState() {
 }
 
 void UrControlBloom::enterBloomState() {
+  serializeState(BloomState::BLOOM);
   _layout.enterBloomState();
 
   _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
@@ -113,6 +116,7 @@ void UrControlBloom::exitBloomState() {
 }
 
 void UrControlBloom::enterBloomRecoveryState() {
+  serializeState(BloomState::BLOOM_RECOVERY);
   _layout.enterBloomRecoveryState();
 
   _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
@@ -127,6 +131,7 @@ void UrControlBloom::exitBloomRecoveryState() {
 }
 
 void UrControlBloom::enterJengaState() {
+  serializeState(BloomState::JENGA);
   _layout.enterJengaState();
 
   _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
@@ -141,6 +146,7 @@ void UrControlBloom::exitJengaState() {
 }
 
 void UrControlBloom::enterJengaRecoveryState() {
+  serializeState(BloomState::JENGA_RECOVERY);
   _layout.enterJengaRecoveryState();
 
   _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
@@ -154,3 +160,10 @@ void UrControlBloom::exitJengaRecoveryState() {
   _layout.exitJengaRecoveryState();
 }
 
+void UrControlBloom::serializeState(const std::string& stateName) {
+  const ErrorCode errCode = _stateFileHandler->updateEntry(
+    BloomState::SECTION_NAME, BloomState::STATE_ENTRY_NAME, stateName);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("Error trying to serialize BloomState: [%s]", stateName.c_str());
+  }
+}

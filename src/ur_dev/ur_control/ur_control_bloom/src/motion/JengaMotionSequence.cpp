@@ -108,3 +108,13 @@ void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
+
+void JengaMotionSequence::serializeState() {
+  const std::string holdingObjStr = _state.holdingObject ? "True" : "False";
+  const ErrorCode errCode = _stateFileHandler->updateEntry(
+    Motion::Jenga::SECTION_NAME, Motion::Jenga::HOLDING_OBJECT_ENTRY_NAME, 
+    holdingObjStr);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("Error trying to serialize JengaMotionSequenceState");
+  }
+}

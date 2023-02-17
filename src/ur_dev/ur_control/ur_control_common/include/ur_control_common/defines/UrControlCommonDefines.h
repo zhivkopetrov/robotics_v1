@@ -22,35 +22,35 @@ enum class DashboardCommand {
 
 //1:1 UR msg mapping
 enum class RobotMode {
-    Unknown = -2,
-    NoController,
-    Disconnected,
-    ConfirmSafety,
-    Booting,
-    PowerOff,
-    PowerOn,
-    Idle,
-    Backdrive,
-    Running,
-    UpdatingFirmware
+  Unknown = -2,
+  NoController,
+  Disconnected,
+  ConfirmSafety,
+  Booting,
+  PowerOff,
+  PowerOn,
+  Idle,
+  Backdrive,
+  Running,
+  UpdatingFirmware
 };
 
 //1:1 UR msg mapping
 enum class SafetyMode {
-    Unknown,
-    Normal,
-    Reduced,
-    ProtectiveStop,
-    Recovery,
-    SafeguardStop,
-    SystemEmergencyStop,
-    RobotEmergencyStop,
-    Violation,
-    Fault,
-    ValidateJointId,
-    UndefinedSafetyMode,
-    AutomaticModeSafeguardStop,
-    SystemThreePositionEnablingStop
+  Unknown,
+  Normal,
+  Reduced,
+  ProtectiveStop,
+  Recovery,
+  SafeguardStop,
+  SystemEmergencyStop,
+  RobotEmergencyStop,
+  Violation,
+  Fault,
+  ValidateJointId,
+  UndefinedSafetyMode,
+  AutomaticModeSafeguardStop,
+  SystemThreePositionEnablingStop
 };
 
 enum class MotionExecutionPolicy {

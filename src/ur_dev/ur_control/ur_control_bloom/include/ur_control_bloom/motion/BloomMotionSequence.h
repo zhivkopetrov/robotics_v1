@@ -25,7 +25,14 @@ public:
   void recover(const UscriptsBatchDoneCb& cb) override;
 
 private:
+  struct BloomState {
+    bool holdingObject = false;
+  };
+
+  void serializeState();
+
   const BloomMotionSequenceConfig _cfg;
+  BloomState _state;
   std::shared_ptr<StateFileHandler> _stateFileHandler;
 };
 

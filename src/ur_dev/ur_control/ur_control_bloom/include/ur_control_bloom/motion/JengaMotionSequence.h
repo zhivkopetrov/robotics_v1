@@ -25,7 +25,14 @@ public:
   void recover(const UscriptsBatchDoneCb& cb) override;
 
 private:
+  struct JengaState {
+    bool holdingObject = false;
+  };
+
+  void serializeState();
+
   const JengaMotionSequenceConfig _cfg;
+  JengaState _state;
   std::shared_ptr<StateFileHandler> _stateFileHandler;
 };
 

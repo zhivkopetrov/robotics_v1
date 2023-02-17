@@ -107,3 +107,13 @@ void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
+
+void BloomMotionSequence::serializeState() {
+  const std::string holdingObjStr = _state.holdingObject ? "True" : "False";
+  const ErrorCode errCode = _stateFileHandler->updateEntry(
+    Motion::Bloom::SECTION_NAME, Motion::Bloom::HOLDING_OBJECT_ENTRY_NAME, 
+    holdingObjStr);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("Error trying to serialize BloomMotionSequenceState");
+  }
+}
