@@ -13,6 +13,9 @@
 
 //Forward declarations
 
+inline constexpr auto BOOL_TRUE_VALUE_STR = "True";
+inline constexpr auto BOOL_FALSE_VALUE_STR = "False";
+
 class StateFileHandler {
 public:
   ErrorCode init(std::string_view filePath);
@@ -21,6 +24,10 @@ public:
   ErrorCode updateEntry(
     const std::string& sectionName, const std::string& entryName,
     const std::string& entryValue);
+
+  ErrorCode getEntry(
+    const std::string& sectionName, const std::string& entryName, 
+    std::string& outValue) const;
 
 private:
   IniFileData _data;

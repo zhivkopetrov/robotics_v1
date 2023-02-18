@@ -74,7 +74,7 @@ void UrControlBloom::enterInitState() {
     //if robot mode or safety mode are not proper
 
     //TODO load which state should be recoved from
-    constexpr bool wasLastStateBloomOrBloomRecovery = false;
+    constexpr bool wasLastStateBloomOrBloomRecovery = true;
     return wasLastStateBloomOrBloomRecovery ? 
       [this](){
         _stateMachine.changeState(BloomState::BLOOM_RECOVERY);

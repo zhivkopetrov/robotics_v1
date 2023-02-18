@@ -29,6 +29,7 @@ private:
     bool holdingObject = false;
   };
 
+  void loadState();
   void serializeState();
 
   const JengaMotionSequenceConfig _cfg;

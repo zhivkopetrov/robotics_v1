@@ -47,3 +47,25 @@ ErrorCode StateFileHandler::updateEntry(
 
   return ErrorCode::SUCCESS;
 }
+
+ErrorCode StateFileHandler::getEntry(
+  const std::string& sectionName, const std::string& entryName, 
+  std::string& outValue) const {
+  const auto sectionIt = _data.find(sectionName);
+  if (sectionIt == _data.end()) {
+    LOGERR("Section name [%s] not found in file data for [%s]", 
+           sectionName.c_str(), _filePath.c_str());
+    return ErrorCode::FAILURE;
+  }
+
+  const IniFileSection& section = sectionIt->second;
+  auto entryIt = section.find(entryName);
+  if (entryIt == section.end()) {
+    LOGERR("Entry name [%s] not found in file data for [%s]", entryName.c_str(),
+           _filePath.c_str());
+    return ErrorCode::FAILURE;
+  }
+  outValue = entryIt->second;
+  
+  return ErrorCode::SUCCESS;
+}

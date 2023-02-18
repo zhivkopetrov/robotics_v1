@@ -15,7 +15,7 @@ JengaMotionSequence::JengaMotionSequence(
   const std::shared_ptr<StateFileHandler>& stateFileHandler) 
   : MotionSequence(name, id, urScriptBuilder), _cfg(cfg),
   _stateFileHandler(stateFileHandler) {
-
+  loadState();
 }
 
 void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
@@ -107,6 +107,26 @@ void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
   }
 
   dispatchUscriptsAsyncCb(commands, cb);
+}
+
+void JengaMotionSequence::loadState() {
+  _state.holdingObject = [this](){
+    std::string strValue;
+    const ErrorCode errCode = _stateFileHandler->getEntry(
+      Motion::Bloom::SECTION_NAME, Motion::Bloom::HOLDING_OBJECT_ENTRY_NAME, 
+      strValue);
+    if (ErrorCode::SUCCESS != errCode) {
+      LOGERR("Error trying to getEntry(): [%s] for section: [%s]. "
+            "Defaulting to False", Motion::Bloom::HOLDING_OBJECT_ENTRY_NAME, 
+            Motion::Bloom::SECTION_NAME);
+      return false;
+    }
+
+    if (BOOL_TRUE_VALUE_STR == strValue) {
+      return true;
+    }
+    return false;
+  }();
 }
 
 void JengaMotionSequence::serializeState() {

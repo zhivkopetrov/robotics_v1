@@ -43,6 +43,8 @@ constexpr auto HOLDING_OBJECT_ENTRY_NAME = "HoldingObject";
 constexpr auto GRASP_NAME = "BloomGrasp";
 constexpr auto TRANSPORT_AND_PLACE_NAME = "BloomTransportAndPlace";
 constexpr auto RETURN_HOME_NAME = "BloomReturnHome";
+constexpr auto RETRACT_AND_RETURN_HOME_NAME = "BloomRetractAndReturnHome";
+constexpr auto RETURN_HOME_AND_OPEN_GRIPPER_NAME = "BloomReturnHomeAndOpenGripper";
 
 } //namespace Bloom
 

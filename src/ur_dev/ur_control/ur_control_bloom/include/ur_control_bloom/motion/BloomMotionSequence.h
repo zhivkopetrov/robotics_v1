@@ -29,6 +29,13 @@ private:
     bool holdingObject = false;
   };
 
+  UscriptCommand generateGraspCommand();
+  UscriptCommand generateTransportAndPlaceCommand();
+  UscriptCommand generateRetractAndReturnHomeCommand();
+  UscriptCommand generateReturnHomeCommand();
+  UscriptCommand generateReturnHomeAndOpenGripperCommand();
+
+  void loadState();
   void serializeState();
 
   const BloomMotionSequenceConfig _cfg;
