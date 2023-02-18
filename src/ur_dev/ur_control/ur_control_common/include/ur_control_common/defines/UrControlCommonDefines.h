@@ -61,4 +61,13 @@ enum class MotionExecutionPolicy {
   BLOCKING,
 };
 
+enum class MotionAction {
+  START, 
+  GRACEFUL_STOP, 
+  ABORT, 
+  RECOVER
+};
+
+std::string toString(MotionAction action);
+
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_ */

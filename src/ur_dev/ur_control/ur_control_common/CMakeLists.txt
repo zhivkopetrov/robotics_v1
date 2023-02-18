@@ -43,6 +43,7 @@ add_library(
         ${_INC_DIR}/motion/MotionSequenceExecutor.h
         ${_INC_DIR}/motion/MotionExecutor.h
         
+        ${_SRC_DIR}/defines/UrControlCommonDefines.cpp
         ${_SRC_DIR}/external_api/UrControlCommonExternalBridge.cpp
         ${_SRC_DIR}/external_api/DashboardProvider.cpp
         ${_SRC_DIR}/layout/UrControlCommonLayout.cpp

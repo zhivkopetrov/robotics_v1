@@ -18,10 +18,6 @@
 
 //Forward declarations
 
-enum class MotionAction {
-  START, GRACEFUL_STOP, ABORT, RECOVER
-};
-
 using MotionSequenceHandle = int32_t;
 
 class MotionExecutor : public NonCopyable, public NonMoveable { 
