@@ -25,12 +25,15 @@ public:
   void recover(const UrscriptsBatchDoneCb& cb) override;
 
 private:
-  UscriptCommand generateGraspCommand();
-  UscriptCommand generateTransportAndPlaceCommand();
-  UscriptCommand generateReturnHomeCommand();
-  UscriptCommand generateReturnHomeAndOpenGripperCommand();
+  UrscriptCommand generateGraspCommand(int32_t currObjIdx);
+  UrscriptCommand generateTransportAndPlaceCommand(int32_t currObjIdx);
+  UrscriptCommand generateReturnHomeCommand();
+  UrscriptCommand generateReturnHomeAndOpenGripperCommand();
 
   void handleSuccessfulPlacement();
+
+  WaypointCartesian computeObjectPose(
+    const Point3d& towerCenter, int32_t objectIdx) const;
 
   void loadState();
   void serializeState();

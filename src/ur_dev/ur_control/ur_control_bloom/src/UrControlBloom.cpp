@@ -51,7 +51,15 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
     else if (Keyboard::KEY_I == e.key) {
       _stateMachine.changeState(BloomState::JENGA);
     }
-    else if (Keyboard::KEY_ENTER == e.key) {
+    else if ((Keyboard::KEY_ENTER == e.key) || 
+             (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
+      const auto doneCb = [this](){
+        _stateMachine.changeState(BloomState::IDLE);
+      };
+
+      _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
+    }
+    else if (Keyboard::KEY_BACKSPACE == e.key) {
       const auto doneCb = [this](){
         _stateMachine.changeState(BloomState::IDLE);
       };
@@ -66,22 +74,15 @@ void UrControlBloom::process() {
 }
 
 void UrControlBloom::enterInitState() {
-  serializeState(BloomState::JENGA);
   _layout.enterInitState();
 
   const auto f = [this]() {
     //TODO initialise and break release, 
     //if robot mode or safety mode are not proper
 
-    //TODO load which state should be recoved from
-    constexpr bool wasLastStateBloomOrBloomRecovery = true;
-    return wasLastStateBloomOrBloomRecovery ? 
-      [this](){
-        _stateMachine.changeState(BloomState::BLOOM_RECOVERY);
-      }() :
-      [this](){
-        _stateMachine.changeState(BloomState::JENGA_RECOVERY);
-      }();
+    return [this, transitionState = getRecoveryTransitionStateName()](){
+      _stateMachine.changeState(transitionState);
+    }();
   };
 
   _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
@@ -158,6 +159,31 @@ void UrControlBloom::enterJengaRecoveryState() {
 
 void UrControlBloom::exitJengaRecoveryState() {
   _layout.exitJengaRecoveryState();
+}
+
+std::string UrControlBloom::getRecoveryTransitionStateName() const {
+  std::string stateStr;
+  const ErrorCode errCode = _stateFileHandler->getEntry(
+    BloomState::SECTION_NAME, BloomState::STATE_ENTRY_NAME, 
+    stateStr);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("Error trying to getEntry(): [%s] for section: [%s]. "
+            "Defaulting to [%s]", BloomState::STATE_ENTRY_NAME, 
+            BloomState::SECTION_NAME, BloomState::IDLE);
+    stateStr = BloomState::IDLE;
+  }
+
+  if ((BloomState::BLOOM == stateStr) || 
+      (BloomState::BLOOM_RECOVERY == stateStr)) {
+    return BloomState::BLOOM_RECOVERY;
+  }
+
+  if ((BloomState::JENGA == stateStr) || 
+      (BloomState::JENGA_RECOVERY == stateStr)) {
+    return BloomState::JENGA_RECOVERY;
+  }
+
+  return BloomState::IDLE;
 }
 
 void UrControlBloom::serializeState(const std::string& stateName) {

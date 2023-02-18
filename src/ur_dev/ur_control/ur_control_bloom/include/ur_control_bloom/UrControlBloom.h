@@ -49,6 +49,7 @@ private:
   void enterJengaRecoveryState();
   void exitJengaRecoveryState();
 
+  std::string getRecoveryTransitionStateName() const;
   void serializeState(const std::string& stateName);
 
   UrControlBloomLayout _layout;

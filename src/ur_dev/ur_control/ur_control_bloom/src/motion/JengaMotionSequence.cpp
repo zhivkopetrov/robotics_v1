@@ -24,11 +24,19 @@ JengaMotionSequence::JengaMotionSequence(
 }
 
 void JengaMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
-  const std::vector<UscriptCommand> commands {
-    generateGraspCommand(), 
-    generateTransportAndPlaceCommand(), 
-    generateReturnHomeCommand()
-  };
+  constexpr int32_t urscriptsPerBlock = 2;
+  constexpr int32_t returnHomeUrscripts = 1;
+  const int32_t blocksLeftFromCurrTower = 
+    _state.totalObjectsCount - _state.currentObjectIdx;
+
+  std::vector<UrscriptCommand> commands;
+  commands.reserve(
+    (blocksLeftFromCurrTower * urscriptsPerBlock) + returnHomeUrscripts);
+  for (int32_t i = _state.currentObjectIdx; i < _state.totalObjectsCount; ++i) {
+    commands.push_back(generateGraspCommand(i));
+    commands.push_back(generateTransportAndPlaceCommand(i));
+  }
+  commands.push_back(generateReturnHomeCommand());
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
@@ -39,26 +47,32 @@ void JengaMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
 }
 
 void JengaMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
-  std::vector<UscriptCommand> commands;
+  std::vector<UrscriptCommand> commands;
   if (_state.holdingObject) {
-    commands.push_back(generateTransportAndPlaceCommand());
+    commands.push_back(
+      generateTransportAndPlaceCommand(_state.currentObjectIdx));
   }
   commands.push_back(generateReturnHomeAndOpenGripperCommand());
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
-UscriptCommand JengaMotionSequence::generateGraspCommand() {
+UrscriptCommand JengaMotionSequence::generateGraspCommand(int32_t currObjIdx) {
   auto graspApproachCommand = 
     std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian);
-  auto baseCenterACommand = 
-    std::make_unique<MoveLinearCommand>(_cfg.baseCenterACartesian);
+  const Point3d& towerCenterPos = 
+    TowerDirection::A_TO_B == _state.towerDirection ?
+      _cfg.baseCenterACartesian.pos : _cfg.baseCenterBCartesian.pos;
+  //the index should be reversed of the placing phase
+  const WaypointCartesian graspWaypoint = computeObjectPose(towerCenterPos, 
+    _state.totalObjectsCount - currObjIdx);
+  auto graspCommand = std::make_unique<MoveLinearCommand>(graspWaypoint);
   auto closeGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(graspApproachCommand))
-              .addCommand(std::move(baseCenterACommand))
+              .addCommand(std::move(graspCommand))
               .addCommand(std::move(closeGripperCommand));
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Jenga::GRASP_NAME, cmdContainer);
@@ -70,29 +84,35 @@ UscriptCommand JengaMotionSequence::generateGraspCommand() {
   return { cmdPayload, doneCb };
 }
 
-UscriptCommand JengaMotionSequence::generateTransportAndPlaceCommand() {
+UrscriptCommand JengaMotionSequence::generateTransportAndPlaceCommand(
+  int32_t currObjIdx) {
   auto transportApproachCommand = 
     std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian);
-  auto baseCenterBCommand = 
-    std::make_unique<MoveLinearCommand>(_cfg.baseCenterBCartesian);
+  const Point3d& towerCenterPos = 
+    TowerDirection::A_TO_B == _state.towerDirection ?
+      _cfg.baseCenterBCartesian.pos : _cfg.baseCenterACartesian.pos;
+  //the index should be reversed of the grasping phase
+  const WaypointCartesian placeWaypoint = 
+    computeObjectPose(towerCenterPos, currObjIdx);
+  auto placeCommand = std::make_unique<MoveLinearCommand>(placeWaypoint);
   auto openGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(transportApproachCommand))
-              .addCommand(std::move(baseCenterBCommand))
+              .addCommand(std::move(placeCommand))
               .addCommand(std::move(openGripperCommand));
   const UrScriptPayload cmdPayload = constructUrScript(
     Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
 
   const UrscriptDoneCb doneCb = [this](){
-    _state.holdingObject = false;
+    handleSuccessfulPlacement();
     serializeState();
   };
   return { cmdPayload, doneCb };
 }
 
-UscriptCommand JengaMotionSequence::generateReturnHomeCommand() {
+UrscriptCommand JengaMotionSequence::generateReturnHomeCommand() {
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
 
   UrScriptCommandContainer cmdContainer;
@@ -100,13 +120,10 @@ UscriptCommand JengaMotionSequence::generateReturnHomeCommand() {
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
 
-  const UrscriptDoneCb doneCb = [this](){
-    handleSuccessfulPlacement();
-  };
   return { cmdPayload };
 }
 
-UscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
+UrscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
   auto openGripperCommand = std::make_unique<GripperActuateCommand>(
     GripperActuateType::OPEN, GripperCommandPolicy::NON_BLOCKING);
@@ -121,13 +138,64 @@ UscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
 }
 
 void JengaMotionSequence::handleSuccessfulPlacement() {
+  std::string towerStr = TowerDirection::A_TO_B == _state.towerDirection ? 
+    TOWER_DIR_A_TO_B_STR : TOWER_DIR_B_TO_A_STR;
+  LOGG("Jenga successful placement for Block[%d], Floor[%d], Tower: [%s]", 
+       _state.currentObjectIdx, _state.currentObjectIdx / 2, towerStr.c_str());
+
+  _state.holdingObject = false;
   ++_state.currentObjectIdx;
   //swap towers
-  if (_state.totalObjectsCount >= _state.currentObjectIdx) {
+  if (_state.currentObjectIdx >= _state.totalObjectsCount) {
     _state.currentObjectIdx = 0;
     _state.towerDirection = TowerDirection::A_TO_B == _state.towerDirection ?
       TowerDirection::B_TO_A : TowerDirection::A_TO_B;
+
+    towerStr = TowerDirection::A_TO_B == _state.towerDirection ? 
+      TOWER_DIR_A_TO_B_STR : TOWER_DIR_B_TO_A_STR;
+    LOGM("Swapping towers. New target Tower: [%s]", towerStr.c_str());
   }
+}
+
+WaypointCartesian JengaMotionSequence::computeObjectPose(
+  const Point3d& towerCenter, int32_t objectIdx) const {
+  //block position have a repetative nature
+  //odd index floors has +- depth, zero orientation
+  //even index floors has +- depth, 90 deg rotated orientation
+  constexpr int32_t blocksPerRepeat = 4;
+  constexpr int32_t oddFloorFirstBlockIdx = 0;
+  constexpr int32_t oddFloorSecondBlockIdx = 1;
+  constexpr int32_t evenFloorFirstBlockIdx = 2;
+  constexpr int32_t evenFloorSecondBlockIdx = 3;
+  const int32_t floorIdx = objectIdx / 2;
+
+  Point3d objectPos = towerCenter;
+  objectPos.z += floorIdx * _cfg.jengaBlockDimensions.height;
+  AngleAxis objectOrientation;
+  switch (objectIdx % blocksPerRepeat)
+  {
+  case oddFloorFirstBlockIdx:
+    objectPos.x += _cfg.jengaBlockDimensions.depth;
+    objectOrientation = _cfg.zeroOrientation;
+    break;
+
+  case oddFloorSecondBlockIdx:
+    objectPos.x -= _cfg.jengaBlockDimensions.depth;
+    objectOrientation = _cfg.zeroOrientation;
+    break;
+
+  case evenFloorFirstBlockIdx:
+    objectPos.y += _cfg.jengaBlockDimensions.depth;
+    objectOrientation = _cfg.ninetyOrientation;
+    break;
+
+  case evenFloorSecondBlockIdx:
+    objectPos.y -= _cfg.jengaBlockDimensions.depth;
+    objectOrientation = _cfg.ninetyOrientation;
+    break;
+  }
+
+  return WaypointCartesian(objectPos, objectOrientation);
 }
 
 void JengaMotionSequence::loadState() {

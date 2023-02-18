@@ -19,7 +19,7 @@ BloomMotionSequence::BloomMotionSequence(
 }
 
 void BloomMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
-  const std::vector<UscriptCommand> commands {
+  const std::vector<UrscriptCommand> commands {
     generateGraspCommand(), 
     generateTransportAndPlaceCommand(), 
     generateRetractAndReturnHomeCommand()
@@ -34,7 +34,7 @@ void BloomMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
 }
 
 void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
-  std::vector<UscriptCommand> commands;
+  std::vector<UrscriptCommand> commands;
   if (_state.holdingObject) {
     commands.push_back(generateTransportAndPlaceCommand());
     commands.push_back(generateRetractAndReturnHomeCommand());
@@ -44,7 +44,7 @@ void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
-UscriptCommand BloomMotionSequence::generateGraspCommand() {
+UrscriptCommand BloomMotionSequence::generateGraspCommand() {
   auto graspApproachCommand = 
     std::make_unique<MoveJointCommand>(_cfg.graspApproachJoint);
   auto graspCommand = std::make_unique<MoveJointCommand>(_cfg.graspJoint);
@@ -65,7 +65,7 @@ UscriptCommand BloomMotionSequence::generateGraspCommand() {
   return { cmdPayload, doneCb };
 }
 
-UscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
+UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
   auto placeApproachCommand = 
   std::make_unique<MoveJointCommand>(_cfg.placeApproachJoint);
   auto placeCommand = std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
@@ -86,7 +86,7 @@ UscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
   return { cmdPayload, doneCb };
 }
 
-UscriptCommand BloomMotionSequence::generateRetractAndReturnHomeCommand() {
+UrscriptCommand BloomMotionSequence::generateRetractAndReturnHomeCommand() {
   auto placeRetractCommand = 
     std::make_unique<MoveLinearCommand>(_cfg.placeApproachCartesian);
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
@@ -100,7 +100,7 @@ UscriptCommand BloomMotionSequence::generateRetractAndReturnHomeCommand() {
   return { cmdPayload };
 }
 
-UscriptCommand BloomMotionSequence::generateReturnHomeCommand() {
+UrscriptCommand BloomMotionSequence::generateReturnHomeCommand() {
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
 
   UrScriptCommandContainer cmdContainer;
@@ -111,7 +111,7 @@ UscriptCommand BloomMotionSequence::generateReturnHomeCommand() {
   return { cmdPayload };
 }
 
-UscriptCommand BloomMotionSequence::generateReturnHomeAndOpenGripperCommand() {
+UrscriptCommand BloomMotionSequence::generateReturnHomeAndOpenGripperCommand() {
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
   auto openGripperCommand = 
     std::make_unique<GripperActuateCommand>(

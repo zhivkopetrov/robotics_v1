@@ -11,7 +11,17 @@
 
 //Forward declarations
 
+struct JengaBlockDimensions {
+  double width { };
+  double depth { };
+  double height { };
+};
+
 struct JengaMotionSequenceConfig {
+  JengaBlockDimensions jengaBlockDimensions;
+  AngleAxis zeroOrientation;   //neutral orientation
+  AngleAxis ninetyOrientation; //neutral orientation + 90 deg on wrist_3
+
   WaypointJoint homeJoint;
   WaypointJoint graspApproachJoint;
 

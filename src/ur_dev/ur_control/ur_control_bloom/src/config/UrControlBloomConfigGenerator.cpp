@@ -95,19 +95,26 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
 JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
     [[maybe_unused]]const UrControlBloomRos2Params &rosParams) {
   JengaMotionSequenceConfig cfg;
+  JengaBlockDimensions& blockDimensions = cfg.jengaBlockDimensions;
+  blockDimensions.width = 0.075;  //7.5cm
+  blockDimensions.depth = 0.025;  //2.5cm
+  blockDimensions.height = 0.015; //1.5cm
+
   //TODO parse from files
   cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
   cfg.graspApproachJoint = 
     WaypointJoint({ 12.47, -79.58, -125.28, -65.63, 90.33, 139.23 });
 
-  cfg.homeCartesian = 
-    WaypointCartesian(Point3d(-0.176, -0.691, 0.502), AngleAxis(0, 3.148, 0));
+  cfg.zeroOrientation = AngleAxis(0, 3.148, 0);
+  cfg.ninetyOrientation = AngleAxis(2.221, 2.221, 0);
+  cfg.homeCartesian = WaypointCartesian(
+    Point3d(-0.176, -0.691, 0.502), cfg.zeroOrientation);
   cfg.graspApproachCartesian = WaypointCartesian(
-    Point3d(0.55, -0.055, 0.25), AngleAxis(0.994, 2.991, 0));
+    Point3d(0.545, -0.592, 0.25), cfg.zeroOrientation);
   cfg.baseCenterACartesian = WaypointCartesian(
-    Point3d(0.596, -0.426, -0.015), AngleAxis(1.403, -2.799, -0.009));
+    Point3d(0.596, -0.426, -0.015), cfg.zeroOrientation);
   cfg.baseCenterBCartesian = WaypointCartesian(
-    Point3d(0.495, -0.758, -0.015), AngleAxis(1.403, -2.799, -0.009));
+    Point3d(0.495, -0.758, -0.015), cfg.zeroOrientation);
 
   return cfg;
 }

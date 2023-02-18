@@ -52,7 +52,7 @@ void MotionSequenceExecutor::shutdown() {
 }
 
 void MotionSequenceExecutor::dispatchUscriptsAsync(
-  const std::vector<UscriptCommand>& commands, 
+  const std::vector<UrscriptCommand>& commands, 
   const UrscriptsBatchDoneCb& batchDoneCb) {
   //_uscriptsBatchDoneMutex and _commandQueue must be in sync
   //otherwise a data race (not data corruption) might occur
@@ -72,7 +72,7 @@ void MotionSequenceExecutor::dispatchUscriptsAsync(
 }
 
 void MotionSequenceExecutor::runCommandComsumerLoop() {
-  UscriptCommand command;
+  UrscriptCommand command;
 
   while (true) {
     const auto [isShutdowned, hasTimedOut] = 
@@ -119,7 +119,7 @@ void MotionSequenceExecutor::runBlockingInvokerLoop() {
   }
 }
 
-void MotionSequenceExecutor::invokeCommand(const UscriptCommand& cmd) {
+void MotionSequenceExecutor::invokeCommand(const UrscriptCommand& cmd) {
   switch (cmd.policy)
   {
   case MotionExecutionPolicy::NON_BLOCKING:
@@ -138,7 +138,7 @@ void MotionSequenceExecutor::invokeCommand(const UscriptCommand& cmd) {
 }
 
 void MotionSequenceExecutor::invokeNonBlockingCommand(
-  const UscriptCommand& cmd) {
+  const UrscriptCommand& cmd) {
   _outInterface.publishURScriptCb(cmd.data);
   if (cmd.doneCb) {
     const auto doneCbCopy = cmd.doneCb;
@@ -149,7 +149,7 @@ void MotionSequenceExecutor::invokeNonBlockingCommand(
   }
 }
 
-void MotionSequenceExecutor::invokeBlockingCommand(const UscriptCommand& cmd) {
+void MotionSequenceExecutor::invokeBlockingCommand(const UrscriptCommand& cmd) {
   const BlockingTask blockingTask = [this, &cmd](){
     _outInterface.invokeURScriptServiceCb(cmd.data);
   };

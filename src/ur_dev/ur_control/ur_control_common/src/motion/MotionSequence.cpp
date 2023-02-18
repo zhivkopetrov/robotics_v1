@@ -31,7 +31,7 @@ void MotionSequence::abort(const UrscriptsBatchDoneCb& batchDoneCb) {
   //NOTE: pin 0 is reserved for aborting (overriding URScripts)
   constexpr auto abortCmdPayload = 
     "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";
-  const std::vector<UscriptCommand> commands {
+  const std::vector<UrscriptCommand> commands {
     { abortCmdPayload }
   };
 

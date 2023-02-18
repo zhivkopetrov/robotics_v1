@@ -32,7 +32,7 @@ public:
 
   //NOTE: actionDoneCb will be called through the ActionEventSystem
   //      with ActionEventType::NON_BLOCKING param
-  void dispatchUscriptsAsync(const std::vector<UscriptCommand>& commands, 
+  void dispatchUscriptsAsync(const std::vector<UrscriptCommand>& commands, 
                              const UrscriptsBatchDoneCb& batchDoneCb);
 
 private:
@@ -41,9 +41,9 @@ private:
   void runCommandComsumerLoop();
   void runBlockingInvokerLoop();
   
-  void invokeCommand(const UscriptCommand& cmd);
-  void invokeNonBlockingCommand(const UscriptCommand& cmd);
-  void invokeBlockingCommand(const UscriptCommand& cmd);
+  void invokeCommand(const UrscriptCommand& cmd);
+  void invokeNonBlockingCommand(const UrscriptCommand& cmd);
+  void invokeBlockingCommand(const UrscriptCommand& cmd);
 
   MotionSequenceExecutorOutInterface _outInterface;
 
@@ -52,7 +52,7 @@ private:
   std::atomic<bool> _preemptCurrCommand = false;
 
   std::thread _commandConsumerThread;
-  ThreadSafeQueue<UscriptCommand> _commandQueue;
+  ThreadSafeQueue<UrscriptCommand> _commandQueue;
 
   //performs blocking tasks such as invoking ROS2 services
   std::thread _blockingInvokerThread;

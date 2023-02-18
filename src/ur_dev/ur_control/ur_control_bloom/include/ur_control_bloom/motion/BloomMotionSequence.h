@@ -29,11 +29,11 @@ private:
     bool holdingObject = false;
   };
 
-  UscriptCommand generateGraspCommand();
-  UscriptCommand generateTransportAndPlaceCommand();
-  UscriptCommand generateRetractAndReturnHomeCommand();
-  UscriptCommand generateReturnHomeCommand();
-  UscriptCommand generateReturnHomeAndOpenGripperCommand();
+  UrscriptCommand generateGraspCommand();
+  UrscriptCommand generateTransportAndPlaceCommand();
+  UrscriptCommand generateRetractAndReturnHomeCommand();
+  UrscriptCommand generateReturnHomeCommand();
+  UrscriptCommand generateReturnHomeAndOpenGripperCommand();
 
   void loadState();
   void serializeState();

@@ -24,14 +24,14 @@ using SafetyModeChangeCb = std::function<void(SafetyMode mode)>;
 using UrscriptsBatchDoneCb = std::function<void()>;
 using UrscriptDoneCb = std::function<void()>;
 
-struct UscriptCommand {
+struct UrscriptCommand {
   UrScriptPayload data;
   UrscriptDoneCb doneCb = nullptr; //optional
   MotionExecutionPolicy policy = MotionExecutionPolicy::BLOCKING;
 };
 
 using DispatchUscriptsAsyncCb = 
-  std::function<void(const std::vector<UscriptCommand>& commands, 
+  std::function<void(const std::vector<UrscriptCommand>& commands, 
                      const UrscriptsBatchDoneCb& batchDoneCb)>;
 
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONFUNCTIONALDEFINES_H_ */
