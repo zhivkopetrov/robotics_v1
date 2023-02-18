@@ -25,12 +25,24 @@ public:
   void recover(const UscriptsBatchDoneCb& cb) override;
 
 private:
-  struct JengaState {
-    bool holdingObject = false;
-  };
+  UscriptCommand generateGraspCommand();
+  UscriptCommand generateTransportAndPlaceCommand();
+  UscriptCommand generateReturnHomeCommand();
+  UscriptCommand generateReturnHomeAndOpenGripperCommand();
 
   void loadState();
   void serializeState();
+
+  enum class TowerDirection {
+    A_TO_B,
+    B_TO_A
+  };
+
+  struct JengaState {
+    int32_t currentObjectIdx = 0;
+    TowerDirection towerDirection = TowerDirection::A_TO_B;
+    bool holdingObject = false;
+  };
 
   const JengaMotionSequenceConfig _cfg;
   JengaState _state;

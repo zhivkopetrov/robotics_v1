@@ -52,10 +52,13 @@ namespace Jenga {
 
 constexpr auto SECTION_NAME = "JengaMotion";
 constexpr auto HOLDING_OBJECT_ENTRY_NAME = "HoldingObject";
+constexpr auto CURRENT_OBJECT_IDX_ENTRY_NAME = "CurrentObjectIdx";
+constexpr auto DIRECTION_ENTRY_NAME = "Direction";
 
 constexpr auto GRASP_NAME = "JengaGrasp";
 constexpr auto TRANSPORT_AND_PLACE_NAME = "JengaTransportAndPlace";
 constexpr auto RETURN_HOME_NAME = "JengaReturnHome";
+constexpr auto RETURN_HOME_AND_OPEN_GRIPPER_NAME = "JengaReturnHomeAndOpenGripper";
 
 } //namespace Bloom
 

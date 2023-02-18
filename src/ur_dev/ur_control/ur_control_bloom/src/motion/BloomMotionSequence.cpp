@@ -29,21 +29,17 @@ void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
 }
 
 void BloomMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
-  std::vector<UscriptCommand> commands { generateReturnHomeCommand() };
+  //for now the graceful_stop and recover implementations are identical
+  recover(cb);
+}
+
+void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
+  std::vector<UscriptCommand> commands;
   if (_state.holdingObject) {
     commands.push_back(generateTransportAndPlaceCommand());
     commands.push_back(generateRetractAndReturnHomeCommand());
   }
-
-  dispatchUscriptsAsyncCb(commands, cb);
-}
-
-void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
-  const std::vector<UscriptCommand> commands {
-    _state.holdingObject ?
-      generateTransportAndPlaceCommand() :
-      generateReturnHomeAndOpenGripperCommand()
-  };
+  commands.push_back(generateReturnHomeAndOpenGripperCommand());
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
