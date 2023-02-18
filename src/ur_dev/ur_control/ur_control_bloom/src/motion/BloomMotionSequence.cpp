@@ -18,7 +18,7 @@ BloomMotionSequence::BloomMotionSequence(
   loadState();
 }
 
-void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
+void BloomMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
   const std::vector<UscriptCommand> commands {
     generateGraspCommand(), 
     generateTransportAndPlaceCommand(), 
@@ -28,12 +28,12 @@ void BloomMotionSequence::start(const UscriptsBatchDoneCb& cb) {
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
-void BloomMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
+void BloomMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
   //for now the graceful_stop and recover implementations are identical
   recover(cb);
 }
 
-void BloomMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
+void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   std::vector<UscriptCommand> commands;
   if (_state.holdingObject) {
     commands.push_back(generateTransportAndPlaceCommand());
@@ -58,7 +58,7 @@ UscriptCommand BloomMotionSequence::generateGraspCommand() {
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Bloom::GRASP_NAME, cmdContainer);
 
-  const UscriptDoneCb doneCb = [this](){
+  const UrscriptDoneCb doneCb = [this](){
     _state.holdingObject = true;
     serializeState();
   };
@@ -79,7 +79,7 @@ UscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
 
-  const UscriptDoneCb doneCb = [this](){
+  const UrscriptDoneCb doneCb = [this](){
     _state.holdingObject = false;
     serializeState();
   };

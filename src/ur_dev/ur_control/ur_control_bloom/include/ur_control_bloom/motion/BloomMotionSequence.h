@@ -20,9 +20,9 @@ public:
     const std::shared_ptr<UrScriptBuilder>& urScriptBuilder,
     const std::shared_ptr<StateFileHandler>& stateFileHandler);
 
-  void start(const UscriptsBatchDoneCb& cb) override;
-  void gracefulStop(const UscriptsBatchDoneCb& cb) override;
-  void recover(const UscriptsBatchDoneCb& cb) override;
+  void start(const UrscriptsBatchDoneCb& cb) override;
+  void gracefulStop(const UrscriptsBatchDoneCb& cb) override;
+  void recover(const UrscriptsBatchDoneCb& cb) override;
 
 private:
   struct BloomState {

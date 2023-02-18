@@ -53,10 +53,10 @@ void MotionSequenceExecutor::shutdown() {
 
 void MotionSequenceExecutor::dispatchUscriptsAsync(
   const std::vector<UscriptCommand>& commands, 
-  const UscriptsBatchDoneCb& batchDoneCb) {
+  const UrscriptsBatchDoneCb& batchDoneCb) {
   //_uscriptsBatchDoneMutex and _commandQueue must be in sync
   //otherwise a data race (not data corruption) might occur
-  std::lock_guard<std::mutex> lock(_uscriptsBatchDoneMutex);
+  std::lock_guard<std::mutex> lock(_urscriptsBatchDoneMutex);
 
   if (!_commandQueue.isEmpty()) {
     LOGY("MotionSequenceExecutor: overriding active motion commands");
@@ -64,7 +64,7 @@ void MotionSequenceExecutor::dispatchUscriptsAsync(
     _preemptCurrCommand = true;
   }
 
-  _uscriptsBatchDoneCb = batchDoneCb;
+  _urscriptsBatchDoneCb = batchDoneCb;
 
   //after the batch is inserted in the queue, a notification signal will
   //wake the internal _thread waiting on the conditional variable
@@ -88,14 +88,14 @@ void MotionSequenceExecutor::runCommandComsumerLoop() {
 
     //_uscriptsBatchDoneMutex and _commandQueue must be in sync
     //otherwise a data race (not data corruption) might occur
-    std::lock_guard<std::mutex> lock(_uscriptsBatchDoneMutex);
+    std::lock_guard<std::mutex> lock(_urscriptsBatchDoneMutex);
     if (_commandQueue.isEmpty()) {
       //last command was popped -> invoke the done callback
       //through the ActionEventSystem
       //make a copy, because the lambda can be changed
-      const auto uscriptsBatchDoneCbCopy = _uscriptsBatchDoneCb;
-      const auto f = [uscriptsBatchDoneCbCopy](){
-        uscriptsBatchDoneCbCopy();
+      const auto urscriptsBatchDoneCbCopy = _urscriptsBatchDoneCb;
+      const auto f = [urscriptsBatchDoneCbCopy](){
+        urscriptsBatchDoneCbCopy();
       };
       _outInterface.invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
     }

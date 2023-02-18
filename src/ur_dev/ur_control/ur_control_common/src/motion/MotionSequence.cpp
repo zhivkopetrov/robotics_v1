@@ -27,7 +27,7 @@ std::string MotionSequence::getName() const {
   return _name;
 }
 
-void MotionSequence::abort(const UscriptsBatchDoneCb& batchDoneCb) {
+void MotionSequence::abort(const UrscriptsBatchDoneCb& batchDoneCb) {
   //NOTE: pin 0 is reserved for aborting (overriding URScripts)
   constexpr auto abortCmdPayload = 
     "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";

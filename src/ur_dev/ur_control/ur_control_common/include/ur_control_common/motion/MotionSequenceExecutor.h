@@ -33,7 +33,7 @@ public:
   //NOTE: actionDoneCb will be called through the ActionEventSystem
   //      with ActionEventType::NON_BLOCKING param
   void dispatchUscriptsAsync(const std::vector<UscriptCommand>& commands, 
-                             const UscriptsBatchDoneCb& batchDoneCb);
+                             const UrscriptsBatchDoneCb& batchDoneCb);
 
 private:
   using BlockingTask = std::function<void()>;
@@ -47,8 +47,8 @@ private:
 
   MotionSequenceExecutorOutInterface _outInterface;
 
-  std::mutex _uscriptsBatchDoneMutex;
-  UscriptsBatchDoneCb _uscriptsBatchDoneCb;
+  std::mutex _urscriptsBatchDoneMutex;
+  UrscriptsBatchDoneCb _urscriptsBatchDoneCb;
   std::atomic<bool> _preemptCurrCommand = false;
 
   std::thread _commandConsumerThread;

@@ -21,17 +21,17 @@ using InvokeDashboardServiceCb = std::function<void(DashboardCommand command)>;
 using RobotModeChangeCb = std::function<void(RobotMode mode)>;
 using SafetyModeChangeCb = std::function<void(SafetyMode mode)>;
 
-using UscriptsBatchDoneCb = std::function<void()>;
-using UscriptDoneCb = std::function<void()>;
+using UrscriptsBatchDoneCb = std::function<void()>;
+using UrscriptDoneCb = std::function<void()>;
 
 struct UscriptCommand {
   UrScriptPayload data;
-  UscriptDoneCb doneCb = nullptr; //optional
+  UrscriptDoneCb doneCb = nullptr; //optional
   MotionExecutionPolicy policy = MotionExecutionPolicy::BLOCKING;
 };
 
 using DispatchUscriptsAsyncCb = 
   std::function<void(const std::vector<UscriptCommand>& commands, 
-                     const UscriptsBatchDoneCb& batchDoneCb)>;
+                     const UrscriptsBatchDoneCb& batchDoneCb)>;
 
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONFUNCTIONALDEFINES_H_ */

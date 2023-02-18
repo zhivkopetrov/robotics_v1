@@ -23,7 +23,7 @@ JengaMotionSequence::JengaMotionSequence(
   loadState();
 }
 
-void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
+void JengaMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
   const std::vector<UscriptCommand> commands {
     generateGraspCommand(), 
     generateTransportAndPlaceCommand(), 
@@ -33,12 +33,12 @@ void JengaMotionSequence::start(const UscriptsBatchDoneCb& cb) {
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
-void JengaMotionSequence::gracefulStop(const UscriptsBatchDoneCb& cb) {
+void JengaMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
   //for now the graceful_stop and recover implementations are identical
   recover(cb);
 }
 
-void JengaMotionSequence::recover(const UscriptsBatchDoneCb& cb) {
+void JengaMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   std::vector<UscriptCommand> commands;
   if (_state.holdingObject) {
     commands.push_back(generateTransportAndPlaceCommand());
@@ -63,7 +63,7 @@ UscriptCommand JengaMotionSequence::generateGraspCommand() {
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Jenga::GRASP_NAME, cmdContainer);
 
-  const UscriptDoneCb doneCb = [this](){
+  const UrscriptDoneCb doneCb = [this](){
     _state.holdingObject = true;
     serializeState();
   };
@@ -85,7 +85,7 @@ UscriptCommand JengaMotionSequence::generateTransportAndPlaceCommand() {
   const UrScriptPayload cmdPayload = constructUrScript(
     Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
 
-  const UscriptDoneCb doneCb = [this](){
+  const UrscriptDoneCb doneCb = [this](){
     _state.holdingObject = false;
     serializeState();
   };
@@ -100,6 +100,9 @@ UscriptCommand JengaMotionSequence::generateReturnHomeCommand() {
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Jenga::RETURN_HOME_NAME, cmdContainer);
 
+  const UrscriptDoneCb doneCb = [this](){
+    handleSuccessfulPlacement();
+  };
   return { cmdPayload };
 }
 
@@ -115,6 +118,16 @@ UscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
     Motion::Jenga::RETURN_HOME_AND_OPEN_GRIPPER_NAME, cmdContainer);
 
   return { cmdPayload };
+}
+
+void JengaMotionSequence::handleSuccessfulPlacement() {
+  ++_state.currentObjectIdx;
+  //swap towers
+  if (_state.totalObjectsCount >= _state.currentObjectIdx) {
+    _state.currentObjectIdx = 0;
+    _state.towerDirection = TowerDirection::A_TO_B == _state.towerDirection ?
+      TowerDirection::B_TO_A : TowerDirection::A_TO_B;
+  }
 }
 
 void JengaMotionSequence::loadState() {
@@ -144,8 +157,8 @@ void JengaMotionSequence::loadState() {
       strValue);
     if (ErrorCode::SUCCESS != errCode) {
       LOGERR("Error trying to getEntry(): [%s] for section: [%s]. "
-            "Defaulting to [%s]", Motion::Jenga::DIRECTION_ENTRY_NAME, 
-            Motion::Jenga::SECTION_NAME, TOWER_DIR_A_TO_B_STR);
+             "Defaulting to [%s]", Motion::Jenga::DIRECTION_ENTRY_NAME, 
+             Motion::Jenga::SECTION_NAME, TOWER_DIR_A_TO_B_STR);
       return defaultDir;
     }
 
@@ -163,8 +176,8 @@ void JengaMotionSequence::loadState() {
       strValue);
     if (ErrorCode::SUCCESS != errCode) {
       LOGERR("Error trying to getEntry(): [%s] for section: [%s]. "
-            "Defaulting to [%d]", Motion::Jenga::CURRENT_OBJECT_IDX_ENTRY_NAME, 
-            Motion::Jenga::SECTION_NAME, defaultCurrObjIdx);
+             "Defaulting to [%d]", Motion::Jenga::CURRENT_OBJECT_IDX_ENTRY_NAME, 
+             Motion::Jenga::SECTION_NAME, defaultCurrObjIdx);
       return defaultCurrObjIdx;
     }
 
@@ -173,6 +186,28 @@ void JengaMotionSequence::loadState() {
     } catch (const std::exception &e) {
       LOGERR("%s", e.what());
       return defaultCurrObjIdx;
+    }
+  }();
+
+  _state.totalObjectsCount = [this](){
+    constexpr auto defaultTotalObjectsCount = 10;
+    std::string strValue;
+    const ErrorCode errCode = 
+      _stateFileHandler->getEntry(Motion::Jenga::SECTION_NAME,
+         Motion::Jenga::TOTAL_OBJECTS_COUNT_ENTRY_NAME, 
+      strValue);
+    if (ErrorCode::SUCCESS != errCode) {
+      LOGERR("Error trying to getEntry(): [%s] for section: [%s]. Defaulting "
+             "to [%d]", Motion::Jenga::TOTAL_OBJECTS_COUNT_ENTRY_NAME, 
+             Motion::Jenga::SECTION_NAME, defaultTotalObjectsCount);
+      return defaultTotalObjectsCount;
+    }
+
+    try {
+      return std::stoi(strValue);
+    } catch (const std::exception &e) {
+      LOGERR("%s", e.what());
+      return defaultTotalObjectsCount;
     }
   }();
 }
@@ -200,6 +235,13 @@ void JengaMotionSequence::serializeState() {
   errCode = _stateFileHandler->updateEntry(
     Motion::Jenga::SECTION_NAME, Motion::Jenga::DIRECTION_ENTRY_NAME, 
     directionStr);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("Error trying to serialize JengaMotionSequenceState");
+  }
+
+  errCode = _stateFileHandler->updateEntry(
+    Motion::Jenga::SECTION_NAME, Motion::Jenga::TOTAL_OBJECTS_COUNT_ENTRY_NAME, 
+    std::to_string(_state.totalObjectsCount));
   if (ErrorCode::SUCCESS != errCode) {
     LOGERR("Error trying to serialize JengaMotionSequenceState");
   }

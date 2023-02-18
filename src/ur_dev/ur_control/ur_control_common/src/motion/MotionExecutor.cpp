@@ -51,7 +51,7 @@ ErrorCode MotionExecutor::loadSequence(MotionSequenceHandle id) {
 }
 
 ErrorCode MotionExecutor::performAction(
-  MotionAction action, const UscriptsBatchDoneCb& batchDoneCb) {
+  MotionAction action, const UrscriptsBatchDoneCb& batchDoneCb) {
   if (EMPTY_SEQUENCE_ID == _currSequenceId) {
     LOGERR("No current MotionSequence loaded");
     return ErrorCode::FAILURE;

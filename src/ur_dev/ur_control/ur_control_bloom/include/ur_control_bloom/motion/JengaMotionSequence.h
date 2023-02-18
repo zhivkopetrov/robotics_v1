@@ -20,15 +20,17 @@ public:
     const std::shared_ptr<UrScriptBuilder>& urScriptBuilder,
     const std::shared_ptr<StateFileHandler>& stateFileHandler);
 
-  void start(const UscriptsBatchDoneCb& cb) override;
-  void gracefulStop(const UscriptsBatchDoneCb& cb) override;
-  void recover(const UscriptsBatchDoneCb& cb) override;
+  void start(const UrscriptsBatchDoneCb& cb) override;
+  void gracefulStop(const UrscriptsBatchDoneCb& cb) override;
+  void recover(const UrscriptsBatchDoneCb& cb) override;
 
 private:
   UscriptCommand generateGraspCommand();
   UscriptCommand generateTransportAndPlaceCommand();
   UscriptCommand generateReturnHomeCommand();
   UscriptCommand generateReturnHomeAndOpenGripperCommand();
+
+  void handleSuccessfulPlacement();
 
   void loadState();
   void serializeState();
@@ -40,6 +42,7 @@ private:
 
   struct JengaState {
     int32_t currentObjectIdx = 0;
+    int32_t totalObjectsCount = 0;
     TowerDirection towerDirection = TowerDirection::A_TO_B;
     bool holdingObject = false;
   };

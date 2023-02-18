@@ -24,11 +24,11 @@ public:
     std::shared_ptr<UrScriptBuilder> urScriptBuilder);
   virtual ~MotionSequence() noexcept = default;
 
-  virtual void start(const UscriptsBatchDoneCb& cb) = 0;
-  virtual void gracefulStop(const UscriptsBatchDoneCb& cb) = 0;
-  virtual void recover(const UscriptsBatchDoneCb& cb) = 0;
+  virtual void start(const UrscriptsBatchDoneCb& cb) = 0;
+  virtual void gracefulStop(const UrscriptsBatchDoneCb& cb) = 0;
+  virtual void recover(const UrscriptsBatchDoneCb& cb) = 0;
 
-  void abort(const UscriptsBatchDoneCb& cb);
+  void abort(const UrscriptsBatchDoneCb& cb);
   void setDispatchUscriptsAsyncCb(const DispatchUscriptsAsyncCb& cb);
 
   int32_t getId() const;

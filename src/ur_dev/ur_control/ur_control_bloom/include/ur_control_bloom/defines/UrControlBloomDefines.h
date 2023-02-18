@@ -53,6 +53,7 @@ namespace Jenga {
 constexpr auto SECTION_NAME = "JengaMotion";
 constexpr auto HOLDING_OBJECT_ENTRY_NAME = "HoldingObject";
 constexpr auto CURRENT_OBJECT_IDX_ENTRY_NAME = "CurrentObjectIdx";
+constexpr auto TOTAL_OBJECTS_COUNT_ENTRY_NAME = "TotalObjectsCount";
 constexpr auto DIRECTION_ENTRY_NAME = "Direction";
 
 constexpr auto GRASP_NAME = "JengaGrasp";
