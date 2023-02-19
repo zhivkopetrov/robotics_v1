@@ -109,7 +109,7 @@ UrscriptCommand JengaMotionSequence::generateTransportAndPlaceCommand(
     computeObjectPose(towerCenterPos, currObjIdx);
   auto placeCommand = std::make_unique<MoveLinearCommand>(placeWaypoint);
   auto openGripperCommand = 
-    std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
+    std::make_unique<GripperPreciseActuateCommand>(_cfg.gripperOpening);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(transportApproachCommand))

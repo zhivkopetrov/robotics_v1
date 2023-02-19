@@ -100,9 +100,14 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   cfg.totalObjectsPerTower = TOTAL_OBJECTS_PER_TOWER;
 
   JengaBlockDimensions& blockDimensions = cfg.blockDimensions;
-  blockDimensions.width = 0.075;  //7.5cm
-  blockDimensions.depth = 0.025;  //2.5cm
-  blockDimensions.height = 0.015; //1.5cm
+  blockDimensions.width = 0.075;  //75 mm
+  blockDimensions.depth = 0.025;  //25 mm
+  blockDimensions.height = 0.015; //15 mm
+
+  constexpr double gripperOpeningAddition = 0.015; //mm
+
+  //cummulative opening of 40 mm between gripper fingers
+  cfg.gripperOpening = blockDimensions.depth + gripperOpeningAddition;
 
   //TODO parse from files
   cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
