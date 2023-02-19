@@ -47,7 +47,7 @@ void JengaMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
   //JengaEndStrategy::SWAP_TOWERS
   //after jenga tower is completed, same method ::start() will be called,
   //thus the vice-versa construction will begin
-  //this will continue indefinitely or untill gracefully_stopped/aborted 
+  //this will continue indefinitely or until gracefully_stopped/aborted 
   const UrscriptsBatchDoneCb callSameMethodCb = [this, cb](){
     start(cb);
   };

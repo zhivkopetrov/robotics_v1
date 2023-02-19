@@ -124,7 +124,7 @@ void UrControlBloom::enterBloomRecoveryState() {
 
   _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
   const auto doneCb = [this](){
-    _stateMachine.changeState(BloomState::IDLE);
+    _stateMachine.changeState(BloomState::BLOOM);
   };
   _motionExecutor.performAction(MotionAction::RECOVER, doneCb);
 }
@@ -154,7 +154,7 @@ void UrControlBloom::enterJengaRecoveryState() {
 
   _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
   const auto doneCb = [this](){
-    _stateMachine.changeState(BloomState::IDLE);
+    _stateMachine.changeState(BloomState::JENGA);
   };
   _motionExecutor.performAction(MotionAction::RECOVER, doneCb);
 }
