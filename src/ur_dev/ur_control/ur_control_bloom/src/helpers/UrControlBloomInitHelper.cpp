@@ -257,12 +257,12 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   transition.transitions.clear();
 
   transition.stateName = BloomState::BLOOM_RECOVERY;
-  transition.transitions.insert(BloomState::IDLE);
+  transition.transitions.insert(BloomState::BLOOM);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
 
   transition.stateName = BloomState::JENGA_RECOVERY;
-  transition.transitions.insert(BloomState::IDLE);
+  transition.transitions.insert(BloomState::JENGA);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
 
