@@ -25,6 +25,8 @@ public:
   void recover(const UrscriptsBatchDoneCb& cb) override;
 
 private:
+  void performRemainingTowerSequence(const UrscriptsBatchDoneCb& cb);
+
   UrscriptCommand generateGraspCommand(int32_t currObjIdx);
   UrscriptCommand generateTransportAndPlaceCommand(int32_t currObjIdx);
   UrscriptCommand generateReturnHomeCommand();
@@ -45,7 +47,6 @@ private:
 
   struct JengaState {
     int32_t currentObjectIdx = 0;
-    int32_t totalObjectsCount = 0;
     TowerDirection towerDirection = TowerDirection::A_TO_B;
     bool holdingObject = false;
   };

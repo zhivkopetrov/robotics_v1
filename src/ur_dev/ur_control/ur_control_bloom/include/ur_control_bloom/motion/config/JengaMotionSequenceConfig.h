@@ -8,6 +8,7 @@
 #include "urscript_common/motion/MotionStructs.h"
 
 //Own components headers
+#include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 //Forward declarations
 
@@ -18,7 +19,10 @@ struct JengaBlockDimensions {
 };
 
 struct JengaMotionSequenceConfig {
-  JengaBlockDimensions jengaBlockDimensions;
+  JengaEndStrategy endStrategy = JengaEndStrategy::SWAP_TOWERS;
+  int32_t totalObjectsPerTower = 0;
+
+  JengaBlockDimensions blockDimensions;
   AngleAxis zeroOrientation;   //neutral orientation
   AngleAxis ninetyOrientation; //neutral orientation + 90 deg on wrist_3
 

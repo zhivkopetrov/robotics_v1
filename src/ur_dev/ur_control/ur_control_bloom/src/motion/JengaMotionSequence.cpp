@@ -27,18 +27,31 @@ void JengaMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
   constexpr int32_t urscriptsPerBlock = 2;
   constexpr int32_t returnHomeUrscripts = 1;
   const int32_t blocksLeftFromCurrTower = 
-    _state.totalObjectsCount - _state.currentObjectIdx;
+    _cfg.totalObjectsPerTower - _state.currentObjectIdx;
 
   std::vector<UrscriptCommand> commands;
   commands.reserve(
     (blocksLeftFromCurrTower * urscriptsPerBlock) + returnHomeUrscripts);
-  for (int32_t i = _state.currentObjectIdx; i < _state.totalObjectsCount; ++i) {
+  for (int32_t i = _state.currentObjectIdx; 
+       i < _cfg.totalObjectsPerTower; ++i) {
     commands.push_back(generateGraspCommand(i));
     commands.push_back(generateTransportAndPlaceCommand(i));
   }
-  commands.push_back(generateReturnHomeCommand());
 
-  dispatchUscriptsAsyncCb(commands, cb);
+  if (JengaEndStrategy::TRANSITION_TO_IDLE_STATE == _cfg.endStrategy) {
+    commands.push_back(generateReturnHomeCommand());
+    dispatchUscriptsAsyncCb(commands, cb);
+    return;
+  }
+
+  //JengaEndStrategy::SWAP_TOWERS
+  //after jenga tower is completed, same method ::start() will be called,
+  //thus the vice-versa construction will begin
+  //this will continue indefinitely or untill gracefully_stopped/aborted 
+  const UrscriptsBatchDoneCb callSameMethodCb = [this, cb](){
+    start(cb);
+  };
+  dispatchUscriptsAsyncCb(commands, callSameMethodCb);
 }
 
 void JengaMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
@@ -65,7 +78,7 @@ UrscriptCommand JengaMotionSequence::generateGraspCommand(int32_t currObjIdx) {
       _cfg.baseCenterACartesian.pos : _cfg.baseCenterBCartesian.pos;
   //the index should be reversed of the placing phase
   const WaypointCartesian graspWaypoint = computeObjectPose(towerCenterPos, 
-    _state.totalObjectsCount - currObjIdx);
+    _cfg.totalObjectsPerTower - currObjIdx);
   auto graspCommand = std::make_unique<MoveLinearCommand>(graspWaypoint);
   auto closeGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
@@ -140,20 +153,20 @@ UrscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
 void JengaMotionSequence::handleSuccessfulPlacement() {
   std::string towerStr = TowerDirection::A_TO_B == _state.towerDirection ? 
     TOWER_DIR_A_TO_B_STR : TOWER_DIR_B_TO_A_STR;
-  LOGG("Jenga successful placement for Block[%d], Floor[%d], Tower: [%s]", 
+  LOGG("Jenga successful placement for Block[%d], Floor[%d], TowerDir: [%s]", 
        _state.currentObjectIdx, _state.currentObjectIdx / 2, towerStr.c_str());
 
   _state.holdingObject = false;
   ++_state.currentObjectIdx;
   //swap towers
-  if (_state.currentObjectIdx >= _state.totalObjectsCount) {
+  if (_state.currentObjectIdx >= _cfg.totalObjectsPerTower) {
     _state.currentObjectIdx = 0;
     _state.towerDirection = TowerDirection::A_TO_B == _state.towerDirection ?
       TowerDirection::B_TO_A : TowerDirection::A_TO_B;
 
     towerStr = TowerDirection::A_TO_B == _state.towerDirection ? 
       TOWER_DIR_A_TO_B_STR : TOWER_DIR_B_TO_A_STR;
-    LOGM("Swapping towers. New target Tower: [%s]", towerStr.c_str());
+    LOGM("Swapping towers. New TowerDir: [%s]", towerStr.c_str());
   }
 }
 
@@ -170,27 +183,27 @@ WaypointCartesian JengaMotionSequence::computeObjectPose(
   const int32_t floorIdx = objectIdx / 2;
 
   Point3d objectPos = towerCenter;
-  objectPos.z += floorIdx * _cfg.jengaBlockDimensions.height;
+  objectPos.z += floorIdx * _cfg.blockDimensions.height;
   AngleAxis objectOrientation;
   switch (objectIdx % blocksPerRepeat)
   {
   case oddFloorFirstBlockIdx:
-    objectPos.x += _cfg.jengaBlockDimensions.depth;
+    objectPos.x += _cfg.blockDimensions.depth;
     objectOrientation = _cfg.zeroOrientation;
     break;
 
   case oddFloorSecondBlockIdx:
-    objectPos.x -= _cfg.jengaBlockDimensions.depth;
+    objectPos.x -= _cfg.blockDimensions.depth;
     objectOrientation = _cfg.zeroOrientation;
     break;
 
   case evenFloorFirstBlockIdx:
-    objectPos.y += _cfg.jengaBlockDimensions.depth;
+    objectPos.y += _cfg.blockDimensions.depth;
     objectOrientation = _cfg.ninetyOrientation;
     break;
 
   case evenFloorSecondBlockIdx:
-    objectPos.y -= _cfg.jengaBlockDimensions.depth;
+    objectPos.y -= _cfg.blockDimensions.depth;
     objectOrientation = _cfg.ninetyOrientation;
     break;
   }
@@ -256,28 +269,6 @@ void JengaMotionSequence::loadState() {
       return defaultCurrObjIdx;
     }
   }();
-
-  _state.totalObjectsCount = [this](){
-    constexpr auto defaultTotalObjectsCount = 10;
-    std::string strValue;
-    const ErrorCode errCode = 
-      _stateFileHandler->getEntry(Motion::Jenga::SECTION_NAME,
-         Motion::Jenga::TOTAL_OBJECTS_COUNT_ENTRY_NAME, 
-      strValue);
-    if (ErrorCode::SUCCESS != errCode) {
-      LOGERR("Error trying to getEntry(): [%s] for section: [%s]. Defaulting "
-             "to [%d]", Motion::Jenga::TOTAL_OBJECTS_COUNT_ENTRY_NAME, 
-             Motion::Jenga::SECTION_NAME, defaultTotalObjectsCount);
-      return defaultTotalObjectsCount;
-    }
-
-    try {
-      return std::stoi(strValue);
-    } catch (const std::exception &e) {
-      LOGERR("%s", e.what());
-      return defaultTotalObjectsCount;
-    }
-  }();
 }
 
 void JengaMotionSequence::serializeState() {
@@ -303,13 +294,6 @@ void JengaMotionSequence::serializeState() {
   errCode = _stateFileHandler->updateEntry(
     Motion::Jenga::SECTION_NAME, Motion::Jenga::DIRECTION_ENTRY_NAME, 
     directionStr);
-  if (ErrorCode::SUCCESS != errCode) {
-    LOGERR("Error trying to serialize JengaMotionSequenceState");
-  }
-
-  errCode = _stateFileHandler->updateEntry(
-    Motion::Jenga::SECTION_NAME, Motion::Jenga::TOTAL_OBJECTS_COUNT_ENTRY_NAME, 
-    std::to_string(_state.totalObjectsCount));
   if (ErrorCode::SUCCESS != errCode) {
     LOGERR("Error trying to serialize JengaMotionSequenceState");
   }

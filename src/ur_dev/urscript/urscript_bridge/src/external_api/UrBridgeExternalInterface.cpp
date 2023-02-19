@@ -138,8 +138,7 @@ void UrBridgeExternalInterface::handleUrScriptService(
   [[maybe_unused]]std::string scriptName;
   if (mVerboseLogging) {
     scriptName = extractScriptName(request->data);
-    LOG_T("Received UrScript Service: [%s] with data:\n%s", scriptName.c_str(),
-          request->data.c_str());
+    LOG_T("Received UrScript Service: [%s]", scriptName.c_str());
   }
 
   size_t endDelimiterFindIdx { };

@@ -44,6 +44,8 @@ void UrControlBloom::draw() const {
 void UrControlBloom::handleEvent(const InputEvent &e) {
   _layout.handleEvent(e);
 
+  //TODO extend the state machine to accept inputs events
+  //pass the input even to the active state
   if (TouchEvent::KEYBOARD_RELEASE == e.type) {
     if (Keyboard::KEY_U == e.key) {
       _stateMachine.changeState(BloomState::BLOOM);
@@ -54,7 +56,7 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
     else if ((Keyboard::KEY_ENTER == e.key) || 
              (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
       const auto doneCb = [this](){
-        _stateMachine.changeState(BloomState::IDLE);
+        _stateMachine.changeState(BloomState::BLOOM);
       };
 
       _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
@@ -137,7 +139,7 @@ void UrControlBloom::enterJengaState() {
 
   _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
   const auto doneCb = [this](){
-    _stateMachine.changeState(BloomState::BLOOM);
+    _stateMachine.changeState(BloomState::IDLE);
   };
   _motionExecutor.performAction(MotionAction::START, doneCb);
 }

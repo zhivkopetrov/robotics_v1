@@ -20,8 +20,10 @@ constexpr auto GUI_WINDOW_Y_PARAM_NAME = "gui_window_y";
 constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
 constexpr auto GRIPPER_TYPE_PARAM_NAME = "gripper_type";
+constexpr auto JENGA_END_STRATEGY_PARAM_NAME = "jenga_end_strategy";
 constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
-constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = "ros2_executor_threads_num";
+constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = 
+  "ros2_executor_threads_num";
 constexpr auto ROBOT_IP_PARAM_NAME = "robot_ip";
 constexpr auto ROBOT_INTERFACE_PORT_PARAM_NAME = "robot_interface_port";
 
@@ -35,8 +37,10 @@ constexpr auto DEFAULT_WINDOW_HEIGHT = 1053;
 constexpr auto DEFAULT_EXECUTOR_TYPE = 0;
 constexpr auto DEFAULT_EXECUTOR_THREADS_NUM = 2;
 
-//gripper
+//misc
 constexpr auto DEFAULT_GRIPPER_TYPE = getEnumValue(GripperType::SIMULATION);
+constexpr auto DEFAULT_JENGA_END_STRATEGY = 
+  getEnumValue(JengaEndStrategy::TRANSITION_TO_IDLE_STATE);
 
 //robot
 constexpr auto DEFAULT_ROBOT_IP = "192.168.1.102";
@@ -65,6 +69,9 @@ void UrControlBloomRos2Params::print() const {
        << GRIPPER_TYPE_PARAM_NAME << ": " <<
          (GripperType::HARDWARE == gripperType ? "Hardware" : "Simulation") 
           << '\n'
+       << JENGA_END_STRATEGY_PARAM_NAME << ": " <<
+         (JengaEndStrategy::SWAP_TOWERS == jengaEndStrategy ? 
+              "SWAP_TOWERS" : "TRANSITION_TO_IDLE_STATE") << '\n'
        << ROS2_EXECUTOR_TYPE_PARAM_NAME << ": " <<
          getExecutorName(ros2CommunicatorConfig.executorType) << '\n'
        << ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME << ": "
@@ -96,6 +103,12 @@ void UrControlBloomRos2Params::validate() {
            "GripperType::SIMULATION", getEnumValue(gripperType));
     gripperType = GripperType::SIMULATION;
   }
+  if ((JengaEndStrategy::SWAP_TOWERS != jengaEndStrategy) && 
+      (JengaEndStrategy::TRANSITION_TO_IDLE_STATE != jengaEndStrategy)) {
+    LOGERR("Error, received unsupported JengaEndStrategy: [%d]. Defaulting to "
+           "JengaEndStrategy::SWAP_TOWERS", getEnumValue(gripperType));
+    jengaEndStrategy = JengaEndStrategy::SWAP_TOWERS;
+  }
 
   //TODO validate ip and port
 }
@@ -109,6 +122,8 @@ UrControlBloomRos2ParamProvider::UrControlBloomRos2ParamProvider()
       DEFAULT_WINDOW_HEIGHT);
 
   declare_parameter<int32_t>(GRIPPER_TYPE_PARAM_NAME, DEFAULT_GRIPPER_TYPE);
+  declare_parameter<int32_t>(JENGA_END_STRATEGY_PARAM_NAME, 
+    DEFAULT_JENGA_END_STRATEGY);
 
   declare_parameter<int32_t>(ROS2_EXECUTOR_TYPE_PARAM_NAME,
       DEFAULT_EXECUTOR_TYPE);
@@ -129,6 +144,10 @@ UrControlBloomRos2Params UrControlBloomRos2ParamProvider::getParams() {
   int32_t gripperTypeInt{};
   get_parameter(GRIPPER_TYPE_PARAM_NAME, gripperTypeInt);
   _params.gripperType = toEnum<GripperType>(gripperTypeInt);
+
+  int32_t jengaEndStrategyTypeInt{};
+  get_parameter(JENGA_END_STRATEGY_PARAM_NAME, jengaEndStrategyTypeInt);
+  _params.jengaEndStrategy = toEnum<JengaEndStrategy>(jengaEndStrategyTypeInt);
 
   int32_t executorTypeInt{};
   get_parameter(ROS2_EXECUTOR_TYPE_PARAM_NAME, executorTypeInt);

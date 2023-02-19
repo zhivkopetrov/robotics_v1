@@ -10,6 +10,11 @@
       #HARDWARE(0)
       #SIMULATION(1)
     gripper_type: 1
+
+    #supported jenga end strategies:
+      #SWAP_TOWERS(0)
+      #TRANSITION_TO_IDLE_STATE(1)
+    jenga_end_strategy: 0
     
     #supported executor types:
       #SINGLE_THREADED(0)

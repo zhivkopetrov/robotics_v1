@@ -24,6 +24,7 @@ constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
 constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
 constexpr auto CONFIG_FOLDER_NAME = "config";
 constexpr auto STATE_FILE_NAME = "system_state.ini";
+constexpr auto TOTAL_OBJECTS_PER_TOWER = 10;
 
 enum TimerIds {
 
@@ -95,7 +96,10 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
 JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
     [[maybe_unused]]const UrControlBloomRos2Params &rosParams) {
   JengaMotionSequenceConfig cfg;
-  JengaBlockDimensions& blockDimensions = cfg.jengaBlockDimensions;
+  cfg.endStrategy = rosParams.jengaEndStrategy;
+  cfg.totalObjectsPerTower = TOTAL_OBJECTS_PER_TOWER;
+
+  JengaBlockDimensions& blockDimensions = cfg.blockDimensions;
   blockDimensions.width = 0.075;  //7.5cm
   blockDimensions.depth = 0.025;  //2.5cm
   blockDimensions.height = 0.015; //1.5cm

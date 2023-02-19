@@ -11,6 +11,7 @@
 #include "utils/drawing/Rectangle.h"
 
 //Own components headers
+#include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 //Forward declarations
 
@@ -20,6 +21,7 @@ struct UrControlBloomRos2Params {
   std::string robotIp;
   uint16_t robotInterfacePort {};
   GripperType gripperType = GripperType::SIMULATION;
+  JengaEndStrategy jengaEndStrategy = JengaEndStrategy::SWAP_TOWERS;
 
   void print() const;
   void validate();
