@@ -64,6 +64,20 @@ private:
   const GripperCommandPolicy _policy;
 };
 
+//accepts values in range [0-140] mm per technical specification
+//https://www.universal-robots.com/plus/products/robotiq/robotiq-2f-140/
+struct GripperPreciseActuateCommand final : public GripperCommandBase {
+  GripperPreciseActuateCommand(
+    int32_t mmOpening, 
+    GripperCommandPolicy policy = GripperCommandPolicy::BLOCKING);
+
+  UrScriptPayload construct() const override;
+
+private:
+  const GripperCommandPolicy _policy;
+  int32_t _mmOpening;
+};
+
 // percent accepts values in range [0-100]
 struct GripperParamCommand final : public GripperCommandBase {
   GripperParamCommand(GripperParamType type, int32_t percent = 100);

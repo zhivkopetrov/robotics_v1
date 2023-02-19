@@ -83,16 +83,48 @@ std::string GripperActuateCommand::serializeCloseActuateType() const {
   return data;
 }
 
+GripperPreciseActuateCommand::GripperPreciseActuateCommand(
+  int32_t mmOpening, GripperCommandPolicy policy) 
+    : _policy(policy), _mmOpening(mmOpening) {
+  constexpr int32_t minOpening = 0;   //mm
+  constexpr int32_t maxOpening = 140; //mm
+  if ((minOpening > _mmOpening) || (maxOpening < _mmOpening)) {
+    LOGR("Received Invalid GripperPreciseActuateCommand gripper opening value: "
+         "[%d]. Valid range is [%d-%d]. Defaulting to %d", 
+         _mmOpening, minOpening, maxOpening, minOpening);
+    mmOpening = minOpening;
+  }
+}
+
+UrScriptPayload GripperPreciseActuateCommand::construct() const {
+  UrScriptPayload payload;
+  if (GripperType::SIMULATION == gGripperType) {
+    payload.append(GRIPPER_SIMULATION_WARNING_MSG);
+  }
+
+  payload.append("rq_move");
+  if (GripperCommandPolicy::BLOCKING == _policy) {
+    payload.append("_and_wait");
+  }
+
+  //URScript rq_move_mm distributes the opening from center to both fingers
+  //thus, the whole opening should be divided by 2
+  const int32_t openingValue = _mmOpening / 2;
+  payload.append("_mm(").append(std::to_string(openingValue).append(")"));
+
+  return payload;
+}
+
 GripperParamCommand::GripperParamCommand(GripperParamType type, int32_t percent) 
   : _paramType(type), _percentValue(percent) {
-    if ((0 > _percentValue) || 100 < _percentValue) {
-      const std::string commandTypeStr = 
-        GripperParamType::SPEED == _paramType ? "Speed" : "Force";
-      LOGR("Received Invalid %sGripperCommand percent value: [%d]. "
-           "Valid range is [0-100]. Defaulting to 100", commandTypeStr.c_str(),
-           _percentValue);
-        _percentValue = 100;
-    }
+  if ((0 > _percentValue) || (100 < _percentValue)) {
+    const std::string commandTypeStr = 
+      GripperParamType::SPEED == _paramType ? "Speed" : "Force";
+    LOGR("Received Invalid %sGripperCommand percent value: [%d]. "
+          "Valid range is [0-100]. Defaulting to 100", commandTypeStr.c_str(),
+          _percentValue);
+    _percentValue = 100;
+  }
 }
 
 UrScriptPayload GripperParamCommand::construct() const {
