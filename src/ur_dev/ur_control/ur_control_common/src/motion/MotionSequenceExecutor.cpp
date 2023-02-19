@@ -46,6 +46,15 @@ ErrorCode MotionSequenceExecutor::init(
 }
 
 void MotionSequenceExecutor::shutdown() {
+  //TODO construct via code concepts, not by a raw URScript
+  //NOTE: pin 0 is reserved for aborting (overriding URScripts)
+  const UrScriptPayload abortCmdPayload = 
+    "def AbortMotion():\n\tset_standard_digital_out(0, False)\nend\n";
+
+  //Utilise the URScript topic, as oppsed to the service, because the system
+  //is about to be shutdown
+  _outInterface.publishURScriptCb(abortCmdPayload);
+
   _commandQueue.shutdown();
   _blockingTasksQueue.shutdown();
   _commandConsumerThread.join();

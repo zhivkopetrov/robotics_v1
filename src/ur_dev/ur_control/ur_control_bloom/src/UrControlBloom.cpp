@@ -59,6 +59,7 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
         _stateMachine.changeState(BloomState::BLOOM);
       };
 
+      _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
       _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
     }
     else if (Keyboard::KEY_BACKSPACE == e.key) {
@@ -81,6 +82,8 @@ void UrControlBloom::enterInitState() {
   const auto f = [this]() {
     //TODO initialise and break release, 
     //if robot mode or safety mode are not proper
+
+    //TODO2 initialise Tool Center Point (TCP) and Center of Gravity (CoG)
 
     return [this, transitionState = getRecoveryTransitionStateName()](){
       _stateMachine.changeState(transitionState);

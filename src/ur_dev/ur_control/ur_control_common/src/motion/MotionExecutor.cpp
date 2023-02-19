@@ -86,5 +86,6 @@ ErrorCode MotionExecutor::performAction(
 }
 
 void MotionExecutor::shutdown() {
+  LOG("[MotionExecutor]: aborting current motion (if any) on system shutdown");
   _motionSequenceExecutor.shutdown();
 }
