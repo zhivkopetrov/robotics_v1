@@ -74,19 +74,30 @@ UrContolBloomExternalBridgeConfig generateUrContolBloomExternalBridgeConfig(
 BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
     [[maybe_unused]]const UrControlBloomRos2Params &rosParams) {
   BloomMotionSequenceConfig cfg;
-  //TODO parse from files
-  cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
-  cfg.homeCartesian = 
-    WaypointCartesian(Point3d(-0.176, -0.691, 0.502), AngleAxis(0, 3.148, 0));
-  cfg.placeApproachCartesian = WaypointCartesian(
-    Point3d(-0.196, -0.812, 0.6), AngleAxis(0, -2.224, 2.224));
-  cfg.placeCartesian = WaypointCartesian(
-    Point3d(-0.196, -0.812, 0.236), AngleAxis(0, -2.224, 2.224));
 
-  cfg.graspJoint = 
-    WaypointJoint({ 30.05, -105.96, -131.78, -32.58, 89.97, 30.25 });
+  cfg.pickAndPlaceAcc = 1.0; // [m/s2]
+  cfg.pickAndPlaceVel = 1.0; // [m/s]
+
+  const AngleAxis zeroOrientation(0, 3.148, 0);
+  const AngleAxis ninetyHorizontalOrientation(2.224, -2.224, 0.000);
+  const AngleAxis verticalOrientation(0, -2.224, 2.224);
+  //TODO parse from files
+  cfg.homeCartesian = 
+    WaypointCartesian(Point3d(-0.176, -0.691, 0.502), zeroOrientation);
+  cfg.graspApproachCartesian = 
+    WaypointCartesian(Point3d(0.6, 0.145, 0.25), ninetyHorizontalOrientation);
+  cfg.graspCartesian = 
+    WaypointCartesian(Point3d(0.6, 0.145, -0.005), ninetyHorizontalOrientation);
+  cfg.placeApproachCartesian = WaypointCartesian(
+    Point3d(-0.196, -0.812, 0.6), verticalOrientation);
+  cfg.placeCartesian = WaypointCartesian(
+    Point3d(-0.196, -0.812, 0.236), verticalOrientation);
+
+  cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
   cfg.graspApproachJoint = 
     WaypointJoint({ 30.1, -86.3, -119.74, -64.23, 90.1, 30.12 });
+  cfg.graspJoint = 
+    WaypointJoint({ 30.05, -105.96, -131.78, -32.58, 89.97, 30.25 });
   cfg.placeApproachJoint = 
     WaypointJoint({ -92.42, -94.62, -118.4, 33.02, 92.21, 0 });
 

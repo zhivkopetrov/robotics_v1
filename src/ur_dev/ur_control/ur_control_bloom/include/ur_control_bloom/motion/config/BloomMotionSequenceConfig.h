@@ -12,12 +12,17 @@
 //Forward declarations
 
 struct BloomMotionSequenceConfig {
+  double pickAndPlaceAcc = 0.0; //[m/s2]
+  double pickAndPlaceVel = 0.0; //[m/s]
+
   WaypointJoint homeJoint;
   WaypointJoint graspJoint;
   WaypointJoint graspApproachJoint;
   WaypointJoint placeApproachJoint;
 
   WaypointCartesian homeCartesian;
+  WaypointCartesian graspCartesian;
+  WaypointCartesian graspApproachCartesian;
   WaypointCartesian placeCartesian;
   WaypointCartesian placeApproachCartesian;
 };

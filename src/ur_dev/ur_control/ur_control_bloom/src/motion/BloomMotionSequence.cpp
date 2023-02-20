@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "urscript_common/motion/MotionUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -45,8 +46,15 @@ void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
 }
 
 UrscriptCommand BloomMotionSequence::generateGraspCommand() {
-  auto graspApproachCommand = 
-    std::make_unique<MoveJointCommand>(_cfg.graspApproachJoint);
+  //NOTE: even though MoveJointCommand waypoints are used
+  //their respective Cartesian counterparts are used to compute blending radius
+  const double blendingRadius = computeSafeBlendingRadius(
+    _cfg.homeCartesian.pos, _cfg.graspApproachCartesian.pos, 
+    _cfg.graspCartesian.pos);
+
+  auto graspApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.graspApproachJoint, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
+    blendingRadius);
   auto graspCommand = std::make_unique<MoveJointCommand>(_cfg.graspJoint);
   auto closeGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
@@ -66,8 +74,13 @@ UrscriptCommand BloomMotionSequence::generateGraspCommand() {
 }
 
 UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
-  auto placeApproachCommand = 
-  std::make_unique<MoveJointCommand>(_cfg.placeApproachJoint);
+  //NOTE: manually restrict the level of blending radius
+  //Even though a bigger blending radius could be achieved, this might result 
+  //in collision with the container that the rose will be placed into
+  constexpr double blendingRadius = 0.10;
+  auto placeApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.placeApproachJoint, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
+    blendingRadius);
   auto placeCommand = std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
   auto openGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
@@ -87,8 +100,13 @@ UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
 }
 
 UrscriptCommand BloomMotionSequence::generateRetractAndReturnHomeCommand() {
-  auto placeRetractCommand = 
-    std::make_unique<MoveLinearCommand>(_cfg.placeApproachCartesian);
+  //NOTE: manually restrict the level of blending radius
+  //Even though a bigger blending radius could be achieved, this might result 
+  //in collision with the container that the rose will be placed into
+  constexpr double blendingRadius = 0.10;
+  auto placeRetractCommand = std::make_unique<MoveLinearCommand>(
+    _cfg.placeApproachCartesian, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
+    blendingRadius);
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
 
   UrScriptCommandContainer cmdContainer;
