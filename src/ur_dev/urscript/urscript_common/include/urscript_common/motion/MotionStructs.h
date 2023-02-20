@@ -11,6 +11,7 @@
 
 //Forward declarations
 
+//units [m]
 struct Point3d {
   Point3d() = default;
   Point3d(double inputX, double inputY, double inputZ);
@@ -57,6 +58,7 @@ struct WaypointJoint {
   Ur10eJoints joints { };
 };
 
+//acceleration units [m/s2], velocity units [m/s], blending radius [m]
 struct MoveCommandBase : public UrScriptCommand {
   MoveCommandBase();
   MoveCommandBase(
