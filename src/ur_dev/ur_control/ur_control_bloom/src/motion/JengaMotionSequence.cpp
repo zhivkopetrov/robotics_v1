@@ -4,6 +4,7 @@
 //System headers
 
 //Other libraries headers
+#include "urscript_common/motion/MotionUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -24,20 +25,7 @@ JengaMotionSequence::JengaMotionSequence(
 }
 
 void JengaMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
-  constexpr int32_t urscriptsPerBlock = 2;
-  constexpr int32_t returnHomeUrscripts = 1;
-  const int32_t blocksLeftFromCurrTower = 
-    _cfg.totalObjectsPerTower - _state.currentObjectIdx;
-
-  std::vector<UrscriptCommand> commands;
-  commands.reserve(
-    (blocksLeftFromCurrTower * urscriptsPerBlock) + returnHomeUrscripts);
-  for (int32_t i = _state.currentObjectIdx; 
-       i < _cfg.totalObjectsPerTower; ++i) {
-    commands.push_back(generateGraspCommand(i));
-    commands.push_back(generateTransportAndPlaceCommand(i));
-  }
-
+  auto commands = generateFullPickAndPlaceCommandCycle();
   if (JengaEndStrategy::TRANSITION_TO_IDLE_STATE == _cfg.endStrategy) {
     commands.push_back(generateReturnHomeCommand());
     dispatchUscriptsAsyncCb(commands, cb);
@@ -60,26 +48,32 @@ void JengaMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
 }
 
 void JengaMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
-  std::vector<UrscriptCommand> commands;
+  std::vector<UrscriptCommand> commands { generateReturnHomeCommand() };
   if (_state.holdingObject) {
+    const Point3d& towerCenterPos = 
+      TowerDirection::A_TO_B == _state.towerDirection ?
+        _cfg.baseCenterBCartesian.pos : _cfg.baseCenterBCartesian.pos;
+    const WaypointCartesian placeWaypoint = 
+      computeObjectPose(towerCenterPos, _state.currentObjectIdx);
+
     commands.push_back(
-      generateTransportAndPlaceCommand(_state.currentObjectIdx));
+      generateTransportAndPlaceCommand(_cfg.homeCartesian, placeWaypoint));
   }
   commands.push_back(generateReturnHomeAndOpenGripperCommand());
 
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
-UrscriptCommand JengaMotionSequence::generateGraspCommand(int32_t currObjIdx) {
+UrscriptCommand JengaMotionSequence::generateGraspCommand(
+    const WaypointCartesian& currPose, const WaypointCartesian& graspPose) {
+  const double blendingRadius = computeSafeBlendingRadius(
+    currPose.pos, _cfg.graspApproachCartesian.pos, graspPose.pos);
+
   auto graspApproachCommand = 
-    std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian);
-  const Point3d& towerCenterPos = 
-    TowerDirection::A_TO_B == _state.towerDirection ?
-      _cfg.baseCenterACartesian.pos : _cfg.baseCenterBCartesian.pos;
-  //the index should be reversed of the placing phase
-  const WaypointCartesian graspWaypoint = computeObjectPose(towerCenterPos, 
-    _cfg.totalObjectsPerTower - currObjIdx);
-  auto graspCommand = std::make_unique<MoveLinearCommand>(graspWaypoint);
+    std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian, 
+      _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
+  auto graspCommand = std::make_unique<MoveLinearCommand>(
+    graspPose, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc);
   auto closeGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
 
@@ -98,16 +92,15 @@ UrscriptCommand JengaMotionSequence::generateGraspCommand(int32_t currObjIdx) {
 }
 
 UrscriptCommand JengaMotionSequence::generateTransportAndPlaceCommand(
-  int32_t currObjIdx) {
+  const WaypointCartesian& currPose, const WaypointCartesian& placePose) {
+  const double blendingRadius = computeSafeBlendingRadius(
+    currPose.pos, _cfg.graspApproachCartesian.pos, placePose.pos);
+
   auto transportApproachCommand = 
-    std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian);
-  const Point3d& towerCenterPos = 
-    TowerDirection::A_TO_B == _state.towerDirection ?
-      _cfg.baseCenterBCartesian.pos : _cfg.baseCenterACartesian.pos;
-  //the index should be reversed of the grasping phase
-  const WaypointCartesian placeWaypoint = 
-    computeObjectPose(towerCenterPos, currObjIdx);
-  auto placeCommand = std::make_unique<MoveLinearCommand>(placeWaypoint);
+    std::make_unique<MoveLinearCommand>(_cfg.graspApproachCartesian, 
+      _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
+  auto placeCommand = std::make_unique<MoveLinearCommand>(
+    placePose, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc);
   auto openGripperCommand = 
     std::make_unique<GripperPreciseActuateCommand>(_cfg.gripperOpening);
 
@@ -148,6 +141,42 @@ UrscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
     Motion::Jenga::RETURN_HOME_AND_OPEN_GRIPPER_NAME, cmdContainer);
 
   return { cmdPayload };
+}
+
+std::vector<UrscriptCommand> 
+JengaMotionSequence::generateFullPickAndPlaceCommandCycle() {
+  std::vector<UrscriptCommand> commands;
+  //reserve enough memory for all urscripts
+  constexpr int32_t urscriptsPerBlock = 2;
+  constexpr int32_t returnHomeUrscripts = 1;
+  const int32_t blocksLeftFromCurrTower = 
+    _cfg.totalObjectsPerTower - _state.currentObjectIdx;
+  commands.reserve(
+    (blocksLeftFromCurrTower * urscriptsPerBlock) + returnHomeUrscripts);
+
+  const auto [graspTowerCenterPos, placeTowerCenterPos] = [this](){
+    return TowerDirection::A_TO_B == _state.towerDirection ?
+      std::make_pair(
+        _cfg.baseCenterACartesian.pos, _cfg.baseCenterBCartesian.pos) :
+      std::make_pair(
+        _cfg.baseCenterBCartesian.pos, _cfg.baseCenterACartesian.pos);
+  }();
+
+  WaypointCartesian graspWaypoint;
+  WaypointCartesian placeWaypoint;
+  for (int32_t objIdx = _state.currentObjectIdx; 
+       objIdx < _cfg.totalObjectsPerTower; ++objIdx) {
+    //the indexes for grasping/placing should be mirrored
+    graspWaypoint = computeObjectPose(
+      graspTowerCenterPos, _cfg.totalObjectsPerTower - objIdx - 1);
+    placeWaypoint = computeObjectPose(placeTowerCenterPos, objIdx);
+
+    commands.push_back(generateGraspCommand(graspWaypoint, placeWaypoint));
+    commands.push_back(
+      generateTransportAndPlaceCommand(placeWaypoint, graspWaypoint));
+  }
+
+  return commands;
 }
 
 void JengaMotionSequence::handleSuccessfulPlacement() {

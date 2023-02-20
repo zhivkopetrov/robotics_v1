@@ -34,7 +34,7 @@ void BloomMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
 }
 
 void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
-  std::vector<UrscriptCommand> commands;
+  std::vector<UrscriptCommand> commands { generateReturnHomeCommand() };
   if (_state.holdingObject) {
     commands.push_back(generateTransportAndPlaceCommand());
     commands.push_back(generateRetractAndReturnHomeCommand());

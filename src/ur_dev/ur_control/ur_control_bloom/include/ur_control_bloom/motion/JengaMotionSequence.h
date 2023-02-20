@@ -27,10 +27,19 @@ public:
 private:
   void performRemainingTowerSequence(const UrscriptsBatchDoneCb& cb);
 
-  UrscriptCommand generateGraspCommand(int32_t currObjIdx);
-  UrscriptCommand generateTransportAndPlaceCommand(int32_t currObjIdx);
+  //NOTE: both grasp and place points are needed to precompute blending radius
+  UrscriptCommand generateGraspCommand(
+    const WaypointCartesian& currPose, const WaypointCartesian& graspPose);
+  UrscriptCommand generateTransportAndPlaceCommand(
+    const WaypointCartesian& currPose, const WaypointCartesian& placePose);
+
   UrscriptCommand generateReturnHomeCommand();
   UrscriptCommand generateReturnHomeAndOpenGripperCommand();
+
+  //Generates a full pick and place plan for the current jenga tower sequence.
+  //This could be a partial sequence if the jenga sequence was stopped/aborte.
+  //Or it could be a complete jenga sequence.
+  std::vector<UrscriptCommand> generateFullPickAndPlaceCommandCycle();
 
   void handleSuccessfulPlacement();
 

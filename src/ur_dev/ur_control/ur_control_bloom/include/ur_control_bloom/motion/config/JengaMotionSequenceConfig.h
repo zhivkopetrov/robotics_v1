@@ -23,10 +23,13 @@ struct JengaMotionSequenceConfig {
   int32_t totalObjectsPerTower = 0;
 
   JengaBlockDimensions blockDimensions;
-  int32_t gripperOpening = 0; //mm
+  int32_t gripperOpening = 0; // [mm]
 
   AngleAxis zeroOrientation;   //neutral orientation
   AngleAxis ninetyOrientation; //neutral orientation + 90 deg on wrist_3
+
+  double pickAndPlaceAcc = 0.0; //[m/s2]
+  double pickAndPlaceVel = 0.0; //[m/s]
 
   WaypointJoint homeJoint;
   WaypointJoint graspApproachJoint;
