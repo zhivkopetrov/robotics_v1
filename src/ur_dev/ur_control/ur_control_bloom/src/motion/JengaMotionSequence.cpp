@@ -131,8 +131,8 @@ UrscriptCommand JengaMotionSequence::generateReturnHomeCommand() {
 
 UrscriptCommand JengaMotionSequence::generateReturnHomeAndOpenGripperCommand() {
   auto returnHomeCommand = std::make_unique<MoveJointCommand>(_cfg.homeJoint);
-  auto openGripperCommand = std::make_unique<GripperActuateCommand>(
-    GripperActuateType::OPEN, GripperCommandPolicy::NON_BLOCKING);
+  auto openGripperCommand = 
+    std::make_unique<GripperPreciseActuateCommand>(_cfg.gripperOpening);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(openGripperCommand))
@@ -167,9 +167,9 @@ JengaMotionSequence::generateFullPickAndPlaceCommandCycle() {
   for (int32_t objIdx = _state.currentObjectIdx; 
        objIdx < _cfg.totalObjectsPerTower; ++objIdx) {
     //the indexes for grasping/placing should be mirrored
-    graspWaypoint = computeObjectPose(
-      graspTowerCenterPos, _cfg.totalObjectsPerTower - objIdx - 1);
-    placeWaypoint = computeObjectPose(placeTowerCenterPos, objIdx);
+    graspWaypoint = computeObjectPose(graspTowerCenterPos, objIdx);
+    placeWaypoint = computeObjectPose(
+      placeTowerCenterPos, _cfg.totalObjectsPerTower - objIdx - 1);
 
     commands.push_back(generateGraspCommand(graspWaypoint, placeWaypoint));
     commands.push_back(
