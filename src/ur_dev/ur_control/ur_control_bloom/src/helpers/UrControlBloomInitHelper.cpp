@@ -301,11 +301,5 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
     return ErrorCode::FAILURE;
   }
 
-  //TODO have a separate ::start method implemented in the game_engine library
-  if (ErrorCode::SUCCESS != sm.start(BloomState::INIT)) {
-    LOGERR("Error in stateMachine.start()");
-    return ErrorCode::FAILURE;
-  }
-
   return ErrorCode::SUCCESS;
 }

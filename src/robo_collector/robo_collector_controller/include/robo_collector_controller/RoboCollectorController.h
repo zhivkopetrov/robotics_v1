@@ -30,8 +30,6 @@ public:
   void draw() const override;
   void handleEvent(const InputEvent &e) override;
 
-  void process() override;
-
 private:
   RoboCollectorControllerLayout _layout;
   UserAuthenticateHelper _userAuthenticateHelper;

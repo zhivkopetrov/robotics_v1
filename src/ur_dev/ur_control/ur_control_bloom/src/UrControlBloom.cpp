@@ -46,8 +46,14 @@ void UrControlBloom::handleEvent(const InputEvent &e) {
   _stateMachine.handleEvent(e);
 }
 
-void UrControlBloom::process() {
+void UrControlBloom::start() {
+  const auto f = [this]() {
+    if (ErrorCode::SUCCESS != _stateMachine.start(BloomState::INIT)) {
+      LOGERR("Error in _stateMachine.start()");
+    }
+  };
 
+  _invokeActionEventCb(f, ActionEventType::NON_BLOCKING);
 }
 
 void UrControlBloom::enterInitState() {

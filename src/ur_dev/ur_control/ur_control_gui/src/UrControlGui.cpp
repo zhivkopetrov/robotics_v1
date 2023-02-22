@@ -40,8 +40,3 @@ void UrControlGui::draw() const {
 void UrControlGui::handleEvent(const InputEvent &e) {
   _layout.handleEvent(e);
 }
-
-void UrControlGui::process() {
-
-}
-
