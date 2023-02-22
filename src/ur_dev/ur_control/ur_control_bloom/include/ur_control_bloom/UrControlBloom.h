@@ -40,14 +40,19 @@ private:
   void exitInitState();
   void enterIdleState();
   void exitIdleState();
+  void handleEventIdleState(const InputEvent& e);
   void enterBloomState();
   void exitBloomState();
+  void handleEventBloomState(const InputEvent& e);
   void enterBloomRecoveryState();
   void exitBloomRecoveryState();
+  void handleEventBloomRecoveryState(const InputEvent& e);
   void enterJengaState();
   void exitJengaState();
+  void handleEventJengaState(const InputEvent& e);
   void enterJengaRecoveryState();
   void exitJengaRecoveryState();
+  void handleEventJengaRecoveryState(const InputEvent& e);
 
   std::string getRecoveryTransitionStateName() const;
   void serializeState(const std::string& stateName);

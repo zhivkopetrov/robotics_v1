@@ -43,33 +43,7 @@ void UrControlBloom::draw() const {
 
 void UrControlBloom::handleEvent(const InputEvent &e) {
   _layout.handleEvent(e);
-
-  //TODO extend the state machine to accept inputs events
-  //pass the input even to the active state
-  if (TouchEvent::KEYBOARD_RELEASE == e.type) {
-    if (Keyboard::KEY_U == e.key) {
-      _stateMachine.changeState(BloomState::BLOOM);
-    }
-    else if (Keyboard::KEY_I == e.key) {
-      _stateMachine.changeState(BloomState::JENGA);
-    }
-    else if ((Keyboard::KEY_ENTER == e.key) || 
-             (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
-      const auto doneCb = [this](){
-        _stateMachine.changeState(BloomState::BLOOM);
-      };
-
-      _motionExecutor.loadSequence(Motion::JENGA_MOTION_ID);
-      _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
-    }
-    else if (Keyboard::KEY_BACKSPACE == e.key) {
-      const auto doneCb = [this](){
-        _stateMachine.changeState(BloomState::IDLE);
-      };
-
-      _motionExecutor.performAction(MotionAction::ABORT, doneCb);
-    }
-  }
+  _stateMachine.handleEvent(e);
 }
 
 void UrControlBloom::process() {
@@ -106,6 +80,19 @@ void UrControlBloom::exitIdleState() {
   _layout.exitIdleState();
 }
 
+void UrControlBloom::handleEventIdleState(const InputEvent& e) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return; //only interested in keyboard release events
+  }
+
+  if (Keyboard::KEY_B == e.key) {
+    _stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+  }
+  else if (Keyboard::KEY_J == e.key) {
+    _stateMachine.changeState(BloomState::JENGA_RECOVERY);
+  }
+}
+
 void UrControlBloom::enterBloomState() {
   serializeState(BloomState::BLOOM);
   _layout.enterBloomState();
@@ -136,6 +123,41 @@ void UrControlBloom::exitBloomRecoveryState() {
   _layout.exitBloomRecoveryState();
 }
 
+void UrControlBloom::handleEventBloomRecoveryState(const InputEvent& e) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return; //only interested in keyboard release events
+  }
+
+  if (Keyboard::KEY_BACKSPACE == e.key) {
+    const auto doneCb = [this](){
+      _stateMachine.changeState(BloomState::IDLE);
+    };
+
+    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+  }
+}
+
+void UrControlBloom::handleEventBloomState(const InputEvent& e) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return; //only interested in keyboard release events
+  }
+
+  if ((Keyboard::KEY_ENTER == e.key) || (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
+    const auto doneCb = [this](){
+      _stateMachine.changeState(BloomState::IDLE);
+    };
+
+    _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
+  }
+  else if (Keyboard::KEY_BACKSPACE == e.key) {
+    const auto doneCb = [this](){
+      _stateMachine.changeState(BloomState::IDLE);
+    };
+
+    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+  }
+}
+
 void UrControlBloom::enterJengaState() {
   serializeState(BloomState::JENGA);
   _layout.enterJengaState();
@@ -151,6 +173,27 @@ void UrControlBloom::exitJengaState() {
   _layout.exitJengaState();
 }
 
+void UrControlBloom::handleEventJengaState(const InputEvent& e) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return; //only interested in keyboard release events
+  }
+
+  if ((Keyboard::KEY_ENTER == e.key) || (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
+    const auto doneCb = [this](){
+      _stateMachine.changeState(BloomState::BLOOM);
+    };
+
+    _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
+  }
+  else if (Keyboard::KEY_BACKSPACE == e.key) {
+    const auto doneCb = [this](){
+      _stateMachine.changeState(BloomState::IDLE);
+    };
+
+    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+  }
+}
+
 void UrControlBloom::enterJengaRecoveryState() {
   serializeState(BloomState::JENGA_RECOVERY);
   _layout.enterJengaRecoveryState();
@@ -164,6 +207,20 @@ void UrControlBloom::enterJengaRecoveryState() {
 
 void UrControlBloom::exitJengaRecoveryState() {
   _layout.exitJengaRecoveryState();
+}
+
+void UrControlBloom::handleEventJengaRecoveryState(const InputEvent& e) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return; //only interested in keyboard release events
+  }
+
+  if (Keyboard::KEY_BACKSPACE == e.key) {
+    const auto doneCb = [this](){
+      _stateMachine.changeState(BloomState::IDLE);
+    };
+
+    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+  }
 }
 
 std::string UrControlBloom::getRecoveryTransitionStateName() const {

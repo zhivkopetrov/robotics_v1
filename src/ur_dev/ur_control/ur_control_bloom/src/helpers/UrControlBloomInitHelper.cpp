@@ -220,31 +220,42 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   state.name = BloomState::INIT;
   state.onEnter = std::bind(&UrControlBloom::enterInitState, &bloom);
   state.onExit = std::bind(&UrControlBloom::exitInitState, &bloom);
+  state.handleEvent = nullptr;
   stateDescriptions.push_back(state);
 
   state.name = BloomState::IDLE;
   state.onEnter = std::bind(&UrControlBloom::enterIdleState, &bloom);
   state.onExit = std::bind(&UrControlBloom::exitIdleState, &bloom);
+  state.handleEvent = 
+    std::bind(&UrControlBloom::handleEventIdleState, &bloom, _1);
   stateDescriptions.push_back(state);
 
   state.name = BloomState::BLOOM;
   state.onEnter = std::bind(&UrControlBloom::enterBloomState, &bloom);
   state.onExit = std::bind(&UrControlBloom::exitBloomState, &bloom);
+  state.handleEvent = 
+    std::bind(&UrControlBloom::handleEventBloomState, &bloom, _1);
   stateDescriptions.push_back(state);
 
   state.name = BloomState::BLOOM_RECOVERY;
   state.onEnter = std::bind(&UrControlBloom::enterBloomRecoveryState, &bloom);
   state.onExit = std::bind(&UrControlBloom::exitBloomRecoveryState, &bloom);
+  state.handleEvent = 
+    std::bind(&UrControlBloom::handleEventBloomRecoveryState, &bloom, _1);
   stateDescriptions.push_back(state);
 
   state.name = BloomState::JENGA;
   state.onEnter = std::bind(&UrControlBloom::enterJengaState, &bloom);
   state.onExit = std::bind(&UrControlBloom::exitJengaState, &bloom);
+  state.handleEvent = 
+    std::bind(&UrControlBloom::handleEventJengaState, &bloom, _1);
   stateDescriptions.push_back(state);
 
   state.name = BloomState::JENGA_RECOVERY;
   state.onEnter = std::bind(&UrControlBloom::enterJengaRecoveryState, &bloom);
   state.onExit = std::bind(&UrControlBloom::exitJengaRecoveryState, &bloom);
+  state.handleEvent = 
+    std::bind(&UrControlBloom::handleEventJengaRecoveryState, &bloom, _1);
   stateDescriptions.push_back(state);
 
   std::vector<StateTransitions> stateTransitions;
@@ -267,8 +278,8 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   transition.transitions.clear();
 
   transition.stateName = BloomState::IDLE;
-  transition.transitions.insert(BloomState::BLOOM);
-  transition.transitions.insert(BloomState::JENGA);
+  transition.transitions.insert(BloomState::BLOOM_RECOVERY);
+  transition.transitions.insert(BloomState::JENGA_RECOVERY);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
 
@@ -290,6 +301,7 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
     return ErrorCode::FAILURE;
   }
 
+  //TODO have a separate ::start method implemented in the game_engine library
   if (ErrorCode::SUCCESS != sm.start(BloomState::INIT)) {
     LOGERR("Error in stateMachine.start()");
     return ErrorCode::FAILURE;
