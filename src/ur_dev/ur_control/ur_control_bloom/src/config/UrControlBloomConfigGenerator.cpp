@@ -24,7 +24,7 @@ constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
 constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
 constexpr auto CONFIG_FOLDER_NAME = "config";
 constexpr auto STATE_FILE_NAME = "system_state.ini";
-constexpr auto TOTAL_OBJECTS_PER_TOWER = 10;
+constexpr auto TOTAL_OBJECTS_PER_TOWER = 20;
 
 enum TimerIds {
 
@@ -122,20 +122,20 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   cfg.gripperOpening = static_cast<int32_t>(
     (blockDimensions.depth + gripperOpeningAddition) * m_to_mm_ratio);
 
-  cfg.pickAndPlaceAcc = 0.5; // [m/s2]
-  cfg.pickAndPlaceVel = 0.5; // [m/s]
+  cfg.pickAndPlaceAcc = 1.0; // [m/s2]
+  cfg.pickAndPlaceVel = 1.0; // [m/s]
 
   //TODO parse from files
   cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
   cfg.graspApproachJoint = 
-    WaypointJoint({ 12.47, -79.58, -125.28, -65.63, 90.33, 139.23 });
+    WaypointJoint({ -34.79, -99.07, -82.88, -88.33, 90.22, 55.23 });
 
   cfg.zeroOrientation = AngleAxis(0, 3.148, 0);
   cfg.ninetyOrientation = AngleAxis(2.221, 2.221, 0);
   cfg.homeCartesian = WaypointCartesian(
     Point3d(-0.176, -0.691, 0.502), cfg.zeroOrientation);
   cfg.graspApproachCartesian = WaypointCartesian(
-    Point3d(0.545, -0.592, 0.25), cfg.zeroOrientation);
+    Point3d(0.545, -0.592, 0.475), cfg.zeroOrientation);
   cfg.baseCenterACartesian = WaypointCartesian(
     Point3d(0.596, -0.426, -0.015), cfg.zeroOrientation);
   cfg.baseCenterBCartesian = WaypointCartesian(

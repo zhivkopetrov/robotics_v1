@@ -74,12 +74,20 @@ UrscriptCommand JengaMotionSequence::generateGraspCommand(
       _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
   auto graspCommand = std::make_unique<MoveLinearCommand>(
     graspPose, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc);
+  constexpr int32_t gripperSpeedPercent = 20;
+  auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::SPEED, gripperSpeedPercent);
+  constexpr int32_t gripperForcePercent = 50;
+  auto gripperForceCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::FORCE, gripperForcePercent);
   auto closeGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(graspApproachCommand))
               .addCommand(std::move(graspCommand))
+              .addCommand(std::move(gripperSpeedCommand))
+              .addCommand(std::move(gripperForceCommand))
               .addCommand(std::move(closeGripperCommand));
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Jenga::GRASP_NAME, cmdContainer);
@@ -101,12 +109,20 @@ UrscriptCommand JengaMotionSequence::generateTransportAndPlaceCommand(
       _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
   auto placeCommand = std::make_unique<MoveLinearCommand>(
     placePose, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc);
+  constexpr int32_t gripperSpeedPercent = 20;
+  auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::SPEED, gripperSpeedPercent);
+  constexpr int32_t gripperForcePercent = 50;
+  auto gripperForceCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::FORCE, gripperForcePercent);
   auto openGripperCommand = 
     std::make_unique<GripperPreciseActuateCommand>(_cfg.gripperOpening);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(transportApproachCommand))
               .addCommand(std::move(placeCommand))
+              .addCommand(std::move(gripperSpeedCommand))
+              .addCommand(std::move(gripperForceCommand))
               .addCommand(std::move(openGripperCommand));
   const UrScriptPayload cmdPayload = constructUrScript(
     Motion::Jenga::TRANSPORT_AND_PLACE_NAME, cmdContainer);
