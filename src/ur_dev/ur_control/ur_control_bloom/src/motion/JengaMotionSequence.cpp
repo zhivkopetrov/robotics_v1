@@ -52,7 +52,7 @@ void JengaMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   if (_state.holdingObject) {
     const Point3d& towerCenterPos = 
       TowerDirection::A_TO_B == _state.towerDirection ?
-        _cfg.baseCenterBCartesian.pos : _cfg.baseCenterBCartesian.pos;
+        _cfg.baseCenterBCartesian.pos : _cfg.baseCenterACartesian.pos;
     const WaypointCartesian placeWaypoint = 
       computeObjectPose(towerCenterPos, _state.currentObjectIdx);
 
@@ -183,13 +183,14 @@ JengaMotionSequence::generateFullPickAndPlaceCommandCycle() {
   for (int32_t objIdx = _state.currentObjectIdx; 
        objIdx < _cfg.totalObjectsPerTower; ++objIdx) {
     //the indexes for grasping/placing should be mirrored
-    graspWaypoint = computeObjectPose(graspTowerCenterPos, objIdx);
-    placeWaypoint = computeObjectPose(
-      placeTowerCenterPos, _cfg.totalObjectsPerTower - objIdx - 1);
+    graspWaypoint = computeObjectPose(graspTowerCenterPos, 
+      _cfg.totalObjectsPerTower - objIdx - 1);
+    placeWaypoint = computeObjectPose(placeTowerCenterPos, objIdx);
+    LOGG("Processing index: %d. graspWaypoint.pos.z: %f", objIdx, graspWaypoint.pos.z);
 
-    commands.push_back(generateGraspCommand(graspWaypoint, placeWaypoint));
+    commands.push_back(generateGraspCommand(placeWaypoint, graspWaypoint));
     commands.push_back(
-      generateTransportAndPlaceCommand(placeWaypoint, graspWaypoint));
+      generateTransportAndPlaceCommand(graspWaypoint, placeWaypoint));
   }
 
   return commands;
