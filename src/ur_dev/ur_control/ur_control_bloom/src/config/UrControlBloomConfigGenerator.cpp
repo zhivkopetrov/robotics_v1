@@ -111,9 +111,9 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   cfg.totalObjectsPerTower = TOTAL_OBJECTS_PER_TOWER;
 
   JengaBlockDimensions& blockDimensions = cfg.blockDimensions;
-  blockDimensions.width = 0.075;  // [m]
-  blockDimensions.depth = 0.025;  // [m]
-  blockDimensions.height = 0.015; // [m]
+  blockDimensions.width = 0.0747;  // [m]
+  blockDimensions.depth = 0.0242;  // [m]
+  blockDimensions.height = 0.0147; // [m]
 
   constexpr double gripperOpeningAddition = 0.015; // [m]
 
