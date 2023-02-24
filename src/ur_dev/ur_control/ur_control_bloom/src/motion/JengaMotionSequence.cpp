@@ -186,7 +186,6 @@ JengaMotionSequence::generateFullPickAndPlaceCommandCycle() {
     graspWaypoint = computeObjectPose(graspTowerCenterPos, 
       _cfg.totalObjectsPerTower - objIdx - 1);
     placeWaypoint = computeObjectPose(placeTowerCenterPos, objIdx);
-    LOGG("Processing index: %d. graspWaypoint.pos.z: %f", objIdx, graspWaypoint.pos.z);
 
     commands.push_back(generateGraspCommand(placeWaypoint, graspWaypoint));
     commands.push_back(

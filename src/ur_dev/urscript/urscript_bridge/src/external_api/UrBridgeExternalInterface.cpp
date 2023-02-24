@@ -121,11 +121,11 @@ void UrBridgeExternalInterface::handleIOState(
 
 void UrBridgeExternalInterface::handleUrScript(
     const String::SharedPtr urScript) {
-
   if (mVerboseLogging) {
     const std::string scriptName = extractScriptName(urScript->data);
-    LOG_T("Received UrScript Topic: [%s]. Sending command to robot\n", 
-        scriptName.c_str());
+    LOG_T("Received UrScript Topic: [%s] with data:\n%s\nUrScript Topic: [%s] "
+          "- Sending command to robot\n", scriptName.c_str(), 
+          urScript->data.c_str(), scriptName.c_str());
   }
   mTcpClient.send(urScript->data);
 }
