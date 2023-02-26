@@ -4,7 +4,7 @@
 //System headers
 #include <cstdint>
 #include <string>
-#include <vector>
+#include <any>
 
 //Other libraries headers
 #include "utils/drawing/Point.h"
@@ -12,6 +12,11 @@
 //Own components headers
 
 //Forward declarations
+
+enum ButtonHandlerType {
+  URSCRIPT,
+  CUSTOM_ACTION
+};
 
 struct CommandButtonDescription {
   Point pos;
@@ -21,9 +26,11 @@ struct CommandButtonDescription {
 struct ButtonHandlerConfig {
   uint64_t buttonRsrcId { };
   uint64_t buttonFontRsrcId { };
-  std::string gripperScriptFolderLocation;
-  std::string commandScriptsFolderLocation;
-  std::vector<CommandButtonDescription> commandButtonsDescription;
+};
+
+struct ButtonHandlerHighLevelConfig {
+  ButtonHandlerType type = ButtonHandlerType::URSCRIPT;
+  std::any cfg;
 };
 
 #endif /* UR_CONTROL_COMMON_BUTTONHANDLERCONFIG_H_ */

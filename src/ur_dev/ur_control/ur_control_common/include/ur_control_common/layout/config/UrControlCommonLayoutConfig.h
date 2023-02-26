@@ -13,7 +13,7 @@
 //Forward declarations
 
 struct UrControlCommonLayoutConfig {
-  ButtonHandlerConfig buttonHandlerCfg;
+  ButtonHandlerHighLevelConfig buttonHandlerHighLevelCfg;
 
   Rectangle screenBoundary;
   uint64_t mapRsrcId = 0;

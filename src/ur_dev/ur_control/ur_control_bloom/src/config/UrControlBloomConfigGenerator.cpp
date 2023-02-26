@@ -13,6 +13,7 @@
 
 //Own components headers
 #include "ur_control_bloom/config/UrControlBloomConfig.h"
+#include "ur_control_common/layout/entities/button_handler/config/UrScriptButtonHandlerConfig.h"
 #include "ur_control_bloom/external_api/UrControlBloomRos2ParamProvider.h"
 #include "generated/UrControlBloomResources.h"
 
@@ -26,28 +27,24 @@ constexpr auto CONFIG_FOLDER_NAME = "config";
 constexpr auto STATE_FILE_NAME = "system_state.ini";
 constexpr auto TOTAL_OBJECTS_PER_TOWER = 20;
 
-enum TimerIds {
-
-};
-
-ButtonHandlerConfig generateButtonHandlerConfig(
+ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
     const std::string &projectInstallPrefix) {
-  ButtonHandlerConfig cfg;
+  UrScriptButtonHandlerConfig concreteCfg;
 
-  cfg.buttonRsrcId = UrControlBloomResources::UP_BUTTON;
-  cfg.buttonFontRsrcId = UrControlBloomResources::VINQUE_RG_30;
+  concreteCfg.baseCfg.buttonRsrcId = UrControlBloomResources::UP_BUTTON;
+  concreteCfg.baseCfg.buttonFontRsrcId = UrControlBloomResources::VINQUE_RG_30;
   
   std::string scriptsFolderLocation = projectInstallPrefix;
   scriptsFolderLocation.append("/").append(
       ResourceFileHeader::getResourcesFolderName().append("/").append(
           SCRIPTS_FOLDER_NAME)).append("/");
 
-  cfg.gripperScriptFolderLocation = 
+  concreteCfg.gripperScriptFolderLocation = 
     scriptsFolderLocation + GRIPPER_SCRIPTS_FOLDER_NAME;
-  cfg.commandScriptsFolderLocation = 
+  concreteCfg.commandScriptsFolderLocation = 
     scriptsFolderLocation + COMMAND_SCRIPTS_FOLDER_NAME;
 
-  cfg.commandButtonsDescription = {
+  concreteCfg.commandButtonsDescription = {
     { Point(100,  450), "Jenga" },
     { Point(100,  225), "Bloom randomized" },
     { Point(400,   25), "Bloom 1st" },
@@ -57,7 +54,10 @@ ButtonHandlerConfig generateButtonHandlerConfig(
     { Point(1630, 450), "Park" }
   };
 
-  return cfg;
+  ButtonHandlerHighLevelConfig highLevelCfg;
+  highLevelCfg.type = ButtonHandlerType::URSCRIPT;
+  highLevelCfg.cfg = concreteCfg;
+  return highLevelCfg;
 }
 
 UrContolBloomExternalBridgeConfig generateUrContolBloomExternalBridgeConfig(
@@ -224,8 +224,8 @@ UrControlBloomConfig generateGameConfig(
   layoutCfg.stateVisualsFontRsrcId = UrControlBloomResources::VINQUE_RG_45;
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.buttonHandlerCfg = 
-    generateButtonHandlerConfig(projectInstallPrefix);
+  commonLayoutCfg.buttonHandlerHighLevelCfg = 
+    generateButtonHandlerHighLevelConfig(projectInstallPrefix);
 
   commonLayoutCfg.screenBoundary.w = rosParams.guiWindow.w;
   commonLayoutCfg.screenBoundary.h = rosParams.guiWindow.h;

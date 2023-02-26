@@ -14,7 +14,7 @@
 class UrControlCommonLayout;
 struct UrControlCommonLayoutConfig;
 struct UrControlCommonLayoutOutInterface;
-struct ButtonHandlerConfig;
+struct ButtonHandlerHighLevelConfig;
 
 class UrControlCommonLayoutInitHelper {
 public:
@@ -29,7 +29,7 @@ private:
                                         UrControlCommonLayout &layout);
 
   static ErrorCode initButtonHandler(
-      const ButtonHandlerConfig &cfg,
+      const ButtonHandlerHighLevelConfig &cfg,
       const UrControlCommonLayoutOutInterface &outInterface,
       UrControlCommonLayout &layout);
 };

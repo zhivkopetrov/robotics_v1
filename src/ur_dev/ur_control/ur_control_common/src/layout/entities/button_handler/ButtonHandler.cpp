@@ -10,69 +10,10 @@
 
 //Own components headers
 
-ErrorCode ButtonHandler::init(const ButtonHandlerConfig &cfg,
-                              const ButtonHandlerOutInterface &outInterface) {
-  if (ErrorCode::SUCCESS != initDashboardButtons(cfg,
-          outInterface.invokeDashboardServiceCb)) {
-    LOGERR("Error, initDashboardButtons() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  if (ErrorCode::SUCCESS != 
-          initGripperButtons(cfg, outInterface.publishURScriptCb)) {
-    LOGERR("Error, initUrScriptButtons() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  if (ErrorCode::SUCCESS != 
-          initCommandButtons(cfg, outInterface.publishURScriptCb)) {
-    LOGERR("Error, initUrScriptButtons() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  return ErrorCode::SUCCESS;
-}
-
-void ButtonHandler::draw() const {
-  for (const auto &btn : _dashboardButtons) {
-    btn.draw();
-  }
-
-  for (const auto &btn : _gripperButtons) {
-    btn.draw();
-  }
-
-  for (const auto &btn : _commandButtons) {
-    btn.draw();
-  }
-}
-
-void ButtonHandler::handleEvent(const InputEvent &e) {
-  for (auto &btn : _dashboardButtons) {
-    if (btn.isInputUnlocked() && btn.containsEvent(e)) {
-      btn.handleEvent(e);
-      return;
-    }
-  }
-
-  for (auto &btn : _gripperButtons) {
-    if (btn.isInputUnlocked() && btn.containsEvent(e)) {
-      btn.handleEvent(e);
-      return;
-    }
-  }
-
-  for (auto &btn : _commandButtons) {
-    if (btn.isInputUnlocked() && btn.containsEvent(e)) {
-      btn.handleEvent(e);
-      return;
-    }
-  }
-}
-
-ErrorCode ButtonHandler::initDashboardButtons(
-    const ButtonHandlerConfig &cfg,
-    const InvokeDashboardServiceCb &invokeDashboardServiceCb) {
+ErrorCode ButtonHandler::initInternal(
+  const ButtonHandlerConfig &cfg,
+  const InvokeDashboardServiceCb& invokeDashboardServiceCb) {
+  
   DashboardButtonConfig buttonCfg;
   CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
   baseCfg.rsrcId = cfg.buttonRsrcId;
@@ -91,103 +32,11 @@ ErrorCode ButtonHandler::initDashboardButtons(
     baseCfg.pos = buttonPositions[i];
     baseCfg.descriptionText = buttonDescriptions[i];
     buttonCfg.command = buttonCommands[i];
-    if (ErrorCode::SUCCESS != _dashboardButtons[i].init(buttonCfg,
-            invokeDashboardServiceCb)) {
+    if (ErrorCode::SUCCESS != 
+         _dashboardButtons[i].init(buttonCfg, invokeDashboardServiceCb)) {
       LOGERR("Error, _dashboardButtons[%d].init() failed", i);
       return ErrorCode::FAILURE;
     }
-  }
-
-  return ErrorCode::SUCCESS;
-}
-
-ErrorCode ButtonHandler::initGripperButtons(
-    const ButtonHandlerConfig &cfg,
-    const PublishURScriptCb &publishURScriptCb) {
-  std::vector<std::string> scripts;
-  if (ErrorCode::SUCCESS != loadButtonScripts(
-          cfg.gripperScriptFolderLocation, GRIPPER_BUTTONS_COUNT, scripts)) {
-    LOGERR("Error, loadButtonScripts() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  UrScriptButtonConfig buttonCfg;
-  CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
-  baseCfg.rsrcId = cfg.buttonRsrcId;
-  baseCfg.fontRsrcId = cfg.buttonFontRsrcId;
-  baseCfg.descriptionOffsetY = 25;
-  baseCfg.descriptionColor = Color(0x29B6F6FF); //light blue
-
-  const std::array<Point, GRIPPER_BUTTONS_COUNT> buttonPositions { 
-      Point(1480, 700), Point(1330, 880), Point(1630, 880) 
-  };
-  const std::array<std::string, GRIPPER_BUTTONS_COUNT> buttonsDescriptions {
-      "Activate gripper", "Open gripper", "Close gripper" 
-  };
-
-  for (int32_t i = 0; i < GRIPPER_BUTTONS_COUNT; ++i) {
-    buttonCfg.commandData = scripts[i];
-    baseCfg.pos = buttonPositions[i];
-    baseCfg.descriptionText = buttonsDescriptions[i];
-    if (ErrorCode::SUCCESS != _gripperButtons[i].init(
-            buttonCfg, publishURScriptCb)) {
-      LOGERR("Error, _gripperButtons[%d].init() failed", i);
-      return ErrorCode::FAILURE;
-    }
-  }
-
-  return ErrorCode::SUCCESS;
-}
-
-ErrorCode ButtonHandler::initCommandButtons(
-    const ButtonHandlerConfig &cfg,
-    const PublishURScriptCb &publishURScriptCb) {
-  const size_t commandButtonsCount = cfg.commandButtonsDescription.size();
-  std::vector<std::string> scripts;
-  if (ErrorCode::SUCCESS != loadButtonScripts(cfg.commandScriptsFolderLocation, 
-          commandButtonsCount, scripts)) {
-    LOGERR("Error, loadButtonScripts() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  UrScriptButtonConfig buttonCfg;
-  CommandButtonConfig &baseCfg = buttonCfg.baseCfg;
-  baseCfg.rsrcId = cfg.buttonRsrcId;
-  baseCfg.fontRsrcId = cfg.buttonFontRsrcId;
-  baseCfg.descriptionOffsetY = 25;
-  baseCfg.descriptionColor = Color(0x29B6F6FF); //light blue
-
-  const auto& buttonsDescr = cfg.commandButtonsDescription;
-  _commandButtons.resize(commandButtonsCount);
-  for (size_t i = 0; i < commandButtonsCount; ++i) {
-    buttonCfg.commandData = scripts[i];
-    baseCfg.pos = buttonsDescr[i].pos;
-    baseCfg.descriptionText = buttonsDescr[i].text;
-    if (ErrorCode::SUCCESS != _commandButtons[i].init(buttonCfg,
-            publishURScriptCb)) {
-      LOGERR("Error, _commandButtons[%zu].init() failed", i);
-      return ErrorCode::FAILURE;
-    }
-  }
-
-  return ErrorCode::SUCCESS;
-}
-
-ErrorCode ButtonHandler::loadButtonScripts(
-    const std::string &folderLocation, size_t expectedParsedScriptsCount, 
-    std::vector<std::string> &outScripts) {
-  if (ErrorCode::SUCCESS != UrScriptParser::parseScripts(folderLocation,
-          outScripts)) {
-    LOGERR("Error, UrScriptParser::parseScripts() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  const size_t parsedScriptsCount = outScripts.size();
-  if (expectedParsedScriptsCount != parsedScriptsCount) {
-    LOGERR("Error, Scripts count missmatch. Scripts parsed: %zu vs "
-           "Expected scripts count: %zu", parsedScriptsCount, 
-           expectedParsedScriptsCount);
-    return ErrorCode::FAILURE;
   }
 
   return ErrorCode::SUCCESS;

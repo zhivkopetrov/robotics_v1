@@ -3,6 +3,7 @@
 
 //System headers
 #include <cstdint>
+#include <memory>
 
 //Other libraries headers
 #include "manager_utils/drawing/Image.h"
@@ -30,7 +31,7 @@ public:
   void handleEvent(const InputEvent &e);
 
 protected:
-  ButtonHandler buttonHandler;
+  std::unique_ptr<ButtonHandler> buttonHandler;
   SafetyModeVisuals safetyModeVisuals;
 
 private:

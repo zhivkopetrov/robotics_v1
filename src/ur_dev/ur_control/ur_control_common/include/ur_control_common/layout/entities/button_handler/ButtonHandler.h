@@ -2,17 +2,13 @@
 #define UR_CONTROL_COMMON_BUTTONHANDLER_H_
 
 //System headers
-#include <cstdint>
 #include <array>
-#include <vector>
-#include <string>
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
 
 //Own components headers
 #include "ur_control_common/layout/entities/button_handler/config/ButtonHandlerConfig.h"
-#include "ur_control_common/layout/entities/buttons/UrScriptButton.h"
 #include "ur_control_common/layout/entities/buttons/DashboardButton.h"
 
 //Forward declarations
@@ -25,32 +21,17 @@ struct ButtonHandlerOutInterface {
 
 class ButtonHandler {
 public:
-  ErrorCode init(const ButtonHandlerConfig &cfg,
-                 const ButtonHandlerOutInterface &outInterface);
-  void draw() const;
-  void handleEvent(const InputEvent &e);
+  virtual ~ButtonHandler() noexcept = default;
 
-private:
-  ErrorCode initDashboardButtons(
-    const ButtonHandlerConfig &cfg,
-    const InvokeDashboardServiceCb &invokeDashboardServiceCb);               
+  virtual ErrorCode init(const ButtonHandlerHighLevelConfig& cfg,
+                         const ButtonHandlerOutInterface& outInterface) = 0;
+  virtual void draw() const = 0;
+  virtual void handleEvent(const InputEvent &e) = 0;
 
-  ErrorCode initGripperButtons(const ButtonHandlerConfig &cfg,
-                               const PublishURScriptCb &publishURScriptCb);
-
-  ErrorCode initCommandButtons(const ButtonHandlerConfig &cfg,
-                               const PublishURScriptCb &publishURScriptCb);
-
-  ErrorCode loadButtonScripts(const std::string &folderLocation,
-                              size_t expectedParsedScriptsCount,
-                              std::vector<std::string> &outScripts);
-
-  enum GripperButtonDefines {
-    ACTIVATE_GRIPPER_IDX, 
-    OPEN_GRIPPER_IDX, 
-    CLOSE_GRIPPER_IDX,
-    GRIPPER_BUTTONS_COUNT
-  };
+protected:
+  ErrorCode initInternal(
+    const ButtonHandlerConfig& cfg,
+    const InvokeDashboardServiceCb& invokeDashboardServiceCb);        
 
   enum DashboardButtonDefines {
     POWER_ON_IDX, 
@@ -60,8 +41,6 @@ private:
   };
 
   std::array<DashboardButton, DASHBOARD_BUTTONS_COUNT> _dashboardButtons;
-  std::array<UrScriptButton, GRIPPER_BUTTONS_COUNT> _gripperButtons;
-  std::vector<UrScriptButton> _commandButtons;
 };
 
 #endif /* UR_CONTROL_COMMON_BUTTONHANDLER_H_ */

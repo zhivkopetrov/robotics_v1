@@ -13,6 +13,7 @@
 
 //Own components headers
 #include "ur_control_gui/config/UrControlGuiConfig.h"
+#include "ur_control_common/layout/entities/button_handler/config/UrScriptButtonHandlerConfig.h"
 #include "ur_control_gui/external_api/UrControlGuiRos2ParamProvider.h"
 #include "generated/UrControlGuiResources.h"
 
@@ -22,28 +23,24 @@ constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
 constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
 constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
 
-enum TimerIds {
-
-};
-
-ButtonHandlerConfig generateButtonHandlerConfig(
+ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
     const std::string &projectInstallPrefix) {
-  ButtonHandlerConfig cfg;
+  UrScriptButtonHandlerConfig concreteCfg;
 
-  cfg.buttonRsrcId = UrControlGuiResources::UP_BUTTON;
-  cfg.buttonFontRsrcId = UrControlGuiResources::VINQUE_RG_30;
+  concreteCfg.baseCfg.buttonRsrcId = UrControlGuiResources::UP_BUTTON;
+  concreteCfg.baseCfg.buttonFontRsrcId = UrControlGuiResources::VINQUE_RG_30;
   
   std::string scriptsFolderLocation = projectInstallPrefix;
   scriptsFolderLocation.append("/").append(
       ResourceFileHeader::getResourcesFolderName().append("/").append(
           SCRIPTS_FOLDER_NAME)).append("/");
 
-  cfg.gripperScriptFolderLocation = 
+  concreteCfg.gripperScriptFolderLocation = 
     scriptsFolderLocation + GRIPPER_SCRIPTS_FOLDER_NAME;
-  cfg.commandScriptsFolderLocation = 
+  concreteCfg.commandScriptsFolderLocation = 
     scriptsFolderLocation + COMMAND_SCRIPTS_FOLDER_NAME;
 
-  cfg.commandButtonsDescription = {
+  concreteCfg.commandButtonsDescription = {
     { Point(100,  450), "Greet" },
     { Point(100,  225), "Return home (joint)" },
     { Point(300,   25), "Wake up" },
@@ -54,7 +51,10 @@ ButtonHandlerConfig generateButtonHandlerConfig(
     { Point(1545, 450), "Pick and place (blended)" }
   };
 
-  return cfg;
+  ButtonHandlerHighLevelConfig highLevelCfg;
+  highLevelCfg.type = ButtonHandlerType::URSCRIPT;
+  highLevelCfg.cfg = concreteCfg;
+  return highLevelCfg;
 }
 
 UrContolGuiExternalBridgeConfig generateUrContolGuiExternalBridgeConfig(
@@ -94,8 +94,8 @@ UrControlGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
   cfg.externalBridgeCfg = generateUrContolGuiExternalBridgeConfig(rosParams);
 
   auto& layoutCfg = cfg.commonLayoutCfg;
-  layoutCfg.buttonHandlerCfg = 
-    generateButtonHandlerConfig(projectInstallPrefix);
+  layoutCfg.buttonHandlerHighLevelCfg = 
+    generateButtonHandlerHighLevelConfig(projectInstallPrefix);
 
   layoutCfg.screenBoundary.w = rosParams.guiWindow.w;
   layoutCfg.screenBoundary.h = rosParams.guiWindow.h;

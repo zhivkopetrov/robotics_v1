@@ -5,12 +5,14 @@
 
 //Other libraries headers
 #include "utils/drawing/WidgetAligner.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
 #include "ur_control_common/layout/config/UrControlCommonLayoutConfig.h"
 #include "ur_control_common/layout/UrControlCommonLayout.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
+#include "ur_control_common/layout/entities/button_handler/UrScriptButtonHandler.h"
 
 ErrorCode UrControlCommonLayoutInitHelper::init(
     const UrControlCommonLayoutConfig &cfg,
@@ -21,8 +23,8 @@ ErrorCode UrControlCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initButtonHandler(cfg.buttonHandlerCfg,
-          outInterface, layout)) {
+  if (ErrorCode::SUCCESS != initButtonHandler(
+        cfg.buttonHandlerHighLevelCfg, outInterface, layout)) {
     LOGERR("Error, initButtonHandler() failed");
     return ErrorCode::FAILURE;
   }
@@ -51,17 +53,31 @@ ErrorCode UrControlCommonLayoutInitHelper::initStandaloneImages(
 }
 
 ErrorCode UrControlCommonLayoutInitHelper::initButtonHandler(
-    const ButtonHandlerConfig &cfg,
+    const ButtonHandlerHighLevelConfig &cfg,
     const UrControlCommonLayoutOutInterface &outInterface,
     UrControlCommonLayout &layout) {
+  std::any buttonHandlerOutInterface;
+  switch (cfg.type) {
+  case ButtonHandlerType::URSCRIPT:
+    layout.buttonHandler = std::make_unique<UrScriptButtonHandler>();
+    break;
+
+  case ButtonHandlerType::CUSTOM_ACTION:
+    LOGERR("Fill in missing implementation for ButtonHandlerType::CUSTOM_ACTION");
+    return ErrorCode::FAILURE;
+  
+  default:
+    LOGERR("Error, received unsupported ButtonHandlerType: [%d]", cfg.type);
+    return ErrorCode::FAILURE;
+  }
 
   ButtonHandlerOutInterface btnOutInterface;
   btnOutInterface.publishURScriptCb = outInterface.publishURScriptCb;
   btnOutInterface.invokeDashboardServiceCb = 
     outInterface.invokeDashboardServiceCb;
 
-  if (ErrorCode::SUCCESS != layout.buttonHandler.init(cfg, btnOutInterface)) {
-    LOGERR("Error in _buttonHandler.init()");
+  if (ErrorCode::SUCCESS != layout.buttonHandler->init(cfg, btnOutInterface)) {
+    LOGERR("Error in buttonHandler->init()");
     return ErrorCode::FAILURE;
   }
 

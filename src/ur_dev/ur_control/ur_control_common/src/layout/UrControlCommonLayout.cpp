@@ -15,9 +15,9 @@ ErrorCode UrControlCommonLayout::init(
     const UrControlCommonLayoutConfig &cfg,
     const UrControlCommonLayoutOutInterface &outInterface,
     UrControlCommonLayoutInterface &interface) {
-  if (ErrorCode::SUCCESS != UrControlCommonLayoutInitHelper::init(cfg,
-          outInterface, *this)) {
-    LOGERR("Error, UrControlGuiLayout::init() failed");
+  if (ErrorCode::SUCCESS != 
+      UrControlCommonLayoutInitHelper::init(cfg, outInterface, *this)) {
+    LOGERR("Error, UrControlCommonLayout::init() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -33,12 +33,12 @@ void UrControlCommonLayout::draw() const {
   _map.draw();
   _robot.draw();
 
-  buttonHandler.draw();
+  buttonHandler->draw();
   safetyModeVisuals.draw();
 }
 
 void UrControlCommonLayout::handleEvent(const InputEvent &e) {
-  buttonHandler.handleEvent(e);
+  buttonHandler->handleEvent(e);
 }
 
 void UrControlCommonLayout::produceInterface(
