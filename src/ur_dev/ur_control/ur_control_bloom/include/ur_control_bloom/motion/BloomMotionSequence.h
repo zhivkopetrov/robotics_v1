@@ -13,6 +13,8 @@
 
 //Forward declarations
 
+using TransportMoveCommands = std::vector<std::unique_ptr<MoveCommandBase>>;
+
 class BloomMotionSequence final : public MotionSequence {
 public:
   BloomMotionSequence(
@@ -25,6 +27,12 @@ public:
   void recover(const UrscriptsBatchDoneCb& cb) override;
 
 private:
+  enum class TransportStrategy {
+    BASIC,
+    FULL_ROTATION,
+    TWIST
+  };
+
   struct BloomState {
     bool holdingObject = false;
   };
@@ -34,6 +42,12 @@ private:
   UrscriptCommand generateRetractAndReturnHomeCommand();
   UrscriptCommand generateReturnHomeCommand();
   UrscriptCommand generateReturnHomeAndOpenGripperCommand();
+
+  TransportMoveCommands generateTransportMoveCommands(
+    TransportStrategy strategy) const;
+  TransportMoveCommands generateBasicTransportMoveCommands() const;
+  TransportMoveCommands generateFullRotationTransportMoveCommands() const;
+  TransportMoveCommands generateTwistTransportMoveCommands() const;
 
   void loadState();
   void serializeState();

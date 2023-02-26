@@ -5,6 +5,7 @@
 
 //Other libraries headers
 #include "urscript_common/motion/MotionUtils.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -82,32 +83,33 @@ UrscriptCommand BloomMotionSequence::generateGraspCommand() {
 }
 
 UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
-  //NOTE: manually restrict the level of blending radius
-  //Even though a bigger blending radius could be achieved, this might result 
-  //in collision with the container that the rose will be placed into
-  constexpr double blendingRadius = 0.10; //[m]
-  auto placeApproachCommand = std::make_unique<MoveJointCommand>(
-    _cfg.placeApproachBasicStrategyJoint, _cfg.pickAndPlaceVel, 
-    _cfg.pickAndPlaceAcc, blendingRadius);
-  auto placeCommand = std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
-  constexpr int32_t gripperSpeedPercent = 100;
-  auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
-    GripperParamType::SPEED, gripperSpeedPercent);
-  constexpr int32_t gripperForcePercent = 50;
-  auto gripperForceCommand = std::make_unique<GripperParamCommand>(
-    GripperParamType::FORCE, gripperForcePercent);
-  auto openGripperCommand = 
-    std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
-
   UrScriptCommandContainer cmdContainer;
-  cmdContainer.addCommand(std::move(placeApproachCommand))
-              .addCommand(std::move(placeCommand))
-              .addCommand(std::move(gripperSpeedCommand))
-              .addCommand(std::move(gripperForceCommand))
-              .addCommand(std::move(openGripperCommand));
+  TransportMoveCommands transportMoveCommands = 
+    generateTransportMoveCommands(TransportStrategy::TWIST);
+  for (auto& moveCommand : transportMoveCommands) {
+    cmdContainer.addCommand(std::move(moveCommand));
+  }
+
+  if (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy) {
+    auto placeCommand = 
+      std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
+      constexpr int32_t gripperSpeedPercent = 100;
+    auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
+      GripperParamType::SPEED, gripperSpeedPercent);
+    constexpr int32_t gripperForcePercent = 50;
+    auto gripperForceCommand = std::make_unique<GripperParamCommand>(
+      GripperParamType::FORCE, gripperForcePercent);
+    auto openGripperCommand = 
+      std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
+
+    cmdContainer.addCommand(std::move(gripperSpeedCommand))
+                .addCommand(std::move(gripperForceCommand))
+                .addCommand(std::move(openGripperCommand))
+                .addCommand(std::move(placeCommand));
+  }
+
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
-
   const UrscriptDoneCb doneCb = [this](){
     _state.holdingObject = false;
     serializeState();
@@ -158,6 +160,101 @@ UrscriptCommand BloomMotionSequence::generateReturnHomeAndOpenGripperCommand() {
     Motion::Bloom::RETURN_HOME_AND_OPEN_GRIPPER_NAME, cmdContainer);
 
   return { cmdPayload };
+}
+
+TransportMoveCommands BloomMotionSequence::generateTransportMoveCommands(
+  TransportStrategy strategy) const {
+  switch (strategy) {
+  case TransportStrategy::BASIC:
+    return generateBasicTransportMoveCommands();
+
+  case TransportStrategy::FULL_ROTATION:
+    return generateFullRotationTransportMoveCommands();
+
+  case TransportStrategy::TWIST:
+    return generateTwistTransportMoveCommands();
+  
+  default:
+    LOGERR("Error, received unsupported TransportStrategy: [%d]", 
+           getEnumValue(strategy));
+    break;
+  }
+}
+
+TransportMoveCommands 
+BloomMotionSequence::generateBasicTransportMoveCommands() const {
+  TransportMoveCommands cmds;
+  double blendingRadius = 0.20; //[m]
+  auto graspApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.graspApproachJoint, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
+    blendingRadius);
+
+  if (BloomEndStrategy::WAIT_AFTER_TRANSPORT == _cfg.endStrategy) {
+    //for this strategy this will be the last point, thus apply zero blending
+    blendingRadius = 0.0;
+  }
+
+  auto placeApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.placeApproachBasicStrategyJoint, _cfg.pickAndPlaceVel, 
+    _cfg.pickAndPlaceAcc, blendingRadius);
+
+  cmds.push_back(std::move(graspApproachCommand));
+  cmds.push_back(std::move(placeApproachCommand));
+  return cmds;
+}
+
+TransportMoveCommands 
+BloomMotionSequence::generateFullRotationTransportMoveCommands() const {
+  TransportMoveCommands cmds;
+  double blendingRadius = 0.20; //[m]
+  auto graspApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.graspApproachJoint, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
+    blendingRadius);
+
+  if (BloomEndStrategy::WAIT_AFTER_TRANSPORT == _cfg.endStrategy) {
+    //for this strategy this will be the last point, thus apply zero blending
+    blendingRadius = 0.0;
+  }
+
+  auto placeApproachCommand = std::make_unique<MoveJointCommand>(
+    _cfg.placeApproachFullRotationStrategyJoint, _cfg.pickAndPlaceVel, 
+    _cfg.pickAndPlaceAcc, blendingRadius);
+    
+  cmds.push_back(std::move(graspApproachCommand));
+  cmds.push_back(std::move(placeApproachCommand));
+  return cmds;
+}
+
+TransportMoveCommands 
+BloomMotionSequence::generateTwistTransportMoveCommands() const {
+  TransportMoveCommands cmds;
+  double blendingRadius = 0.30; //[m]
+  //NOTE: 
+  //graspApproachJoint is accounted for in the twistStrategyWaypointOneJoint
+  auto twistStrategyWaypointOneJointCommand = 
+    std::make_unique<MoveJointCommand>(_cfg.twistStrategyWaypointOneJoint, 
+    _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
+
+  auto twistStrategyWaypointTwoJointCommand = 
+    std::make_unique<MoveJointCommand>(_cfg.twistStrategyWaypointTwoJoint, 
+    _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
+
+  if (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy) {
+    //reduce the blending to prevent collision with the placement container
+    blendingRadius = 0.20; //[m]
+  } else { //BloomEndStrategy::WAIT_AFTER_TRANSPORT
+    //for this strategy this will be the last point, thus apply zero blending
+    blendingRadius = 0.0; //[m]
+  }
+
+  auto twistStrategyWaypointThreeJointCommand = 
+    std::make_unique<MoveJointCommand>(_cfg.twistStrategyWaypointThreeJoint, 
+    _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, blendingRadius);
+    
+  cmds.push_back(std::move(twistStrategyWaypointOneJointCommand));
+  cmds.push_back(std::move(twistStrategyWaypointTwoJointCommand));
+  cmds.push_back(std::move(twistStrategyWaypointThreeJointCommand));
+  return cmds;
 }
 
 void BloomMotionSequence::loadState() {

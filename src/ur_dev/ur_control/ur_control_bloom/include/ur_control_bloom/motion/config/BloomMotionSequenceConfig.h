@@ -8,10 +8,14 @@
 #include "urscript_common/motion/MotionStructs.h"
 
 //Own components headers
+#include "ur_control_bloom/defines/UrControlBloomDefines.h"
 
 //Forward declarations
 
 struct BloomMotionSequenceConfig {
+  //TODO populate from ros params
+  BloomEndStrategy endStrategy = BloomEndStrategy::PLACE_AND_RETURN_HOME;
+
   double pickAndPlaceAcc = 0.0; //[m/s2]
   double pickAndPlaceVel = 0.0; //[m/s]
 
@@ -21,9 +25,9 @@ struct BloomMotionSequenceConfig {
 
   WaypointJoint placeApproachBasicStrategyJoint;
   WaypointJoint placeApproachFullRotationStrategyJoint;
-  WaypointJoint bloomTwistStrategyWaypointOneJoint;
-  WaypointJoint bloomTwistStrategyWaypointTwoJoint;
-  WaypointJoint bloomTwistStrategyWaypointThreeJoint;
+  WaypointJoint twistStrategyWaypointOneJoint;
+  WaypointJoint twistStrategyWaypointTwoJoint;
+  WaypointJoint twistStrategyWaypointThreeJoint;
 
   WaypointCartesian homeCartesian;
   WaypointCartesian graspCartesian;

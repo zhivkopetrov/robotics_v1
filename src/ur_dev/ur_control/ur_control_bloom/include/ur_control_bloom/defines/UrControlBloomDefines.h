@@ -69,4 +69,9 @@ enum JengaEndStrategy {
   TRANSITION_TO_IDLE_STATE
 };
 
+enum BloomEndStrategy {
+  PLACE_AND_RETURN_HOME,
+  WAIT_AFTER_TRANSPORT
+};
+
 #endif /* UR_CONTROL_BLOOM_URCONTROLBLOOMDEFINES_H_ */

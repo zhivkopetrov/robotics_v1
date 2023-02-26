@@ -25,9 +25,7 @@ public:
   void recover(const UrscriptsBatchDoneCb& cb) override;
 
 private:
-  void performRemainingTowerSequence(const UrscriptsBatchDoneCb& cb);
-
-  //NOTE: both grasp and place points are needed to precompute blending radius
+  //NOTE: both current and future poses are needed to precompute blending radius
   UrscriptCommand generateGraspCommand(
     const WaypointCartesian& currPose, const WaypointCartesian& graspPose);
   UrscriptCommand generateTransportAndPlaceCommand(
