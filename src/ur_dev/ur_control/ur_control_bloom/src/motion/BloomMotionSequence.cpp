@@ -56,12 +56,20 @@ UrscriptCommand BloomMotionSequence::generateGraspCommand() {
     _cfg.graspApproachJoint, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
     blendingRadius);
   auto graspCommand = std::make_unique<MoveJointCommand>(_cfg.graspJoint);
+  constexpr int32_t gripperSpeedPercent = 100;
+  auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::SPEED, gripperSpeedPercent);
+  constexpr int32_t gripperForcePercent = 50;
+  auto gripperForceCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::FORCE, gripperForcePercent);
   auto closeGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(graspApproachCommand))
               .addCommand(std::move(graspCommand))
+              .addCommand(std::move(gripperSpeedCommand))
+              .addCommand(std::move(gripperForceCommand))
               .addCommand(std::move(closeGripperCommand));
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Bloom::GRASP_NAME, cmdContainer);
@@ -77,17 +85,25 @@ UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
   //NOTE: manually restrict the level of blending radius
   //Even though a bigger blending radius could be achieved, this might result 
   //in collision with the container that the rose will be placed into
-  constexpr double blendingRadius = 0.10;
+  constexpr double blendingRadius = 0.10; //[m]
   auto placeApproachCommand = std::make_unique<MoveJointCommand>(
-    _cfg.placeApproachJoint, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
-    blendingRadius);
+    _cfg.placeApproachBasicStrategyJoint, _cfg.pickAndPlaceVel, 
+    _cfg.pickAndPlaceAcc, blendingRadius);
   auto placeCommand = std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
+  constexpr int32_t gripperSpeedPercent = 100;
+  auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::SPEED, gripperSpeedPercent);
+  constexpr int32_t gripperForcePercent = 50;
+  auto gripperForceCommand = std::make_unique<GripperParamCommand>(
+    GripperParamType::FORCE, gripperForcePercent);
   auto openGripperCommand = 
     std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
 
   UrScriptCommandContainer cmdContainer;
   cmdContainer.addCommand(std::move(placeApproachCommand))
               .addCommand(std::move(placeCommand))
+              .addCommand(std::move(gripperSpeedCommand))
+              .addCommand(std::move(gripperForceCommand))
               .addCommand(std::move(openGripperCommand));
   const UrScriptPayload cmdPayload = 
     constructUrScript(Motion::Bloom::TRANSPORT_AND_PLACE_NAME, cmdContainer);
@@ -103,7 +119,7 @@ UrscriptCommand BloomMotionSequence::generateRetractAndReturnHomeCommand() {
   //NOTE: manually restrict the level of blending radius
   //Even though a bigger blending radius could be achieved, this might result 
   //in collision with the container that the rose will be placed into
-  constexpr double blendingRadius = 0.10;
+  constexpr double blendingRadius = 0.10; //[m]
   auto placeRetractCommand = std::make_unique<MoveLinearCommand>(
     _cfg.placeApproachCartesian, _cfg.pickAndPlaceVel, _cfg.pickAndPlaceAcc, 
     blendingRadius);

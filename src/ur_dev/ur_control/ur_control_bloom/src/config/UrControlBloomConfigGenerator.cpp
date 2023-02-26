@@ -50,12 +50,11 @@ ButtonHandlerConfig generateButtonHandlerConfig(
   cfg.commandButtonsDescription = {
     { Point(100,  450), "Jenga" },
     { Point(100,  225), "Bloom randomized" },
-    { Point(300,   25), "Bloom 1st" },
-    { Point(650,   25), "Bloom 2nd" },
-    { Point(1000,  25), "Bloom 3rd" },
-    { Point(1370,  25), "Bloom 4th" },
-    { Point(1545, 225), "Preempt motion" },
-    { Point(1545, 450), "Return home" }
+    { Point(400,   25), "Bloom 1st" },
+    { Point(850,   25), "Bloom 2nd" },
+    { Point(1300,  25), "Bloom 3rd" },
+    { Point(1630, 225), "Abort motion" },
+    { Point(1630, 450), "Park" }
   };
 
   return cfg;
@@ -98,8 +97,17 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
     WaypointJoint({ 30.1, -86.3, -119.74, -64.23, 90.1, 30.12 });
   cfg.graspJoint = 
     WaypointJoint({ 30.05, -105.96, -131.78, -32.58, 89.97, 30.25 });
-  cfg.placeApproachJoint = 
-    WaypointJoint({ -92.42, -94.62, -118.4, 33.02, 92.21, 0 });
+  cfg.placeApproachBasicStrategyJoint = 
+    WaypointJoint({ -92.42, -94.62, -118.4, 33.02, 92.71, 0 });
+  cfg.placeApproachFullRotationStrategyJoint = 
+    WaypointJoint({ -92.42, -94.62, -118.4, 33.02, -267.79, 0 });
+
+  cfg.bloomTwistStrategyWaypointOneJoint = 
+    WaypointJoint({ 30.0, -86.33, -117.38, -66.6, 180.0, 30.22 });
+  cfg.bloomTwistStrategyWaypointTwoJoint = 
+    WaypointJoint({ -10.0, -82.22, -90.66, -97.43, 270.0, 30.22 });
+  cfg.bloomTwistStrategyWaypointThreeJoint = 
+    WaypointJoint({ -50.0, -91.55, -122.70, -72.19, 180.0, 14.09 });
 
   return cfg;
 }

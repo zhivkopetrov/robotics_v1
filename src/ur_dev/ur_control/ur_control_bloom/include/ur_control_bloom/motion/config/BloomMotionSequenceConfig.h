@@ -18,7 +18,12 @@ struct BloomMotionSequenceConfig {
   WaypointJoint homeJoint;
   WaypointJoint graspJoint;
   WaypointJoint graspApproachJoint;
-  WaypointJoint placeApproachJoint;
+
+  WaypointJoint placeApproachBasicStrategyJoint;
+  WaypointJoint placeApproachFullRotationStrategyJoint;
+  WaypointJoint bloomTwistStrategyWaypointOneJoint;
+  WaypointJoint bloomTwistStrategyWaypointTwoJoint;
+  WaypointJoint bloomTwistStrategyWaypointThreeJoint;
 
   WaypointCartesian homeCartesian;
   WaypointCartesian graspCartesian;
