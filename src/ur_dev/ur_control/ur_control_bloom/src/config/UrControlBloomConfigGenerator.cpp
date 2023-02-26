@@ -224,8 +224,8 @@ UrControlBloomConfig generateGameConfig(
   layoutCfg.stateVisualsFontRsrcId = UrControlBloomResources::VINQUE_RG_45;
 
   auto &commonLayoutCfg = layoutCfg.commonLayoutCfg;
-  commonLayoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(
-      projectInstallPrefix);
+  commonLayoutCfg.buttonHandlerCfg = 
+    generateButtonHandlerConfig(projectInstallPrefix);
 
   commonLayoutCfg.screenBoundary.w = rosParams.guiWindow.w;
   commonLayoutCfg.screenBoundary.h = rosParams.guiWindow.h;

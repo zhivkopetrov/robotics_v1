@@ -20,6 +20,7 @@ using InvokeURScriptPreemptServiceCb = std::function<void()>;
 using InvokeDashboardServiceCb = std::function<void(DashboardCommand command)>;
 using RobotModeChangeCb = std::function<void(RobotMode mode)>;
 using SafetyModeChangeCb = std::function<void(SafetyMode mode)>;
+using CustomActionCb = std::function<void()>;
 
 using UrscriptsBatchDoneCb = std::function<void()>;
 using UrscriptDoneCb = std::function<void()>;

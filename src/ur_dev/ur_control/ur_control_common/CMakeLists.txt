@@ -34,11 +34,11 @@ add_library(
         ${_INC_DIR}/layout/helpers/UrControlCommonLayoutInitHelper.h
         ${_INC_DIR}/layout/helpers/UrControlCommonLayoutInterfaces.h
         ${_INC_DIR}/layout/entities/robot/SafetyModeVisuals.h
-        ${_INC_DIR}/layout/entities/buttons/ButtonHandler.h
+        ${_INC_DIR}/layout/entities/button_handler/ButtonHandler.h
+        ${_INC_DIR}/layout/entities/button_handler/config/ButtonHandlerConfig.h
         ${_INC_DIR}/layout/entities/buttons/CommandButton.h
         ${_INC_DIR}/layout/entities/buttons/UrScriptButton.h
         ${_INC_DIR}/layout/entities/buttons/DashboardButton.h
-        ${_INC_DIR}/layout/entities/buttons/config/ButtonHandlerConfig.h
         ${_INC_DIR}/motion/MotionSequence.h
         ${_INC_DIR}/motion/MotionSequenceExecutor.h
         ${_INC_DIR}/motion/MotionExecutor.h
@@ -49,7 +49,7 @@ add_library(
         ${_SRC_DIR}/layout/UrControlCommonLayout.cpp
         ${_SRC_DIR}/layout/helpers/UrControlCommonLayoutInitHelper.cpp
         ${_SRC_DIR}/layout/entities/robot/SafetyModeVisuals.cpp
-        ${_SRC_DIR}/layout/entities/buttons/ButtonHandler.cpp
+        ${_SRC_DIR}/layout/entities/button_handler/ButtonHandler.cpp
         ${_SRC_DIR}/layout/entities/buttons/CommandButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/UrScriptButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/DashboardButton.cpp

@@ -21,7 +21,7 @@ ErrorCode UrControlCommonLayoutInitHelper::init(
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initButtonHandler(cfg.buttonHandlerConfig,
+  if (ErrorCode::SUCCESS != initButtonHandler(cfg.buttonHandlerCfg,
           outInterface, layout)) {
     LOGERR("Error, initButtonHandler() failed");
     return ErrorCode::FAILURE;

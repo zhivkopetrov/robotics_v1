@@ -8,12 +8,12 @@
 #include "utils/drawing/Rectangle.h"
 
 //Own components headers
-#include "ur_control_common/layout/entities/buttons/config/ButtonHandlerConfig.h"
+#include "ur_control_common/layout/entities/button_handler/config/ButtonHandlerConfig.h"
 
 //Forward declarations
 
 struct UrControlCommonLayoutConfig {
-  ButtonHandlerConfig buttonHandlerConfig;
+  ButtonHandlerConfig buttonHandlerCfg;
 
   Rectangle screenBoundary;
   uint64_t mapRsrcId = 0;

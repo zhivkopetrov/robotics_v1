@@ -11,7 +11,7 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "ur_control_common/layout/entities/buttons/config/ButtonHandlerConfig.h"
+#include "ur_control_common/layout/entities/button_handler/config/ButtonHandlerConfig.h"
 #include "ur_control_common/layout/entities/buttons/UrScriptButton.h"
 #include "ur_control_common/layout/entities/buttons/DashboardButton.h"
 

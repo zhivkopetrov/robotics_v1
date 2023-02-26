@@ -9,7 +9,7 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "ur_control_common/layout/entities/buttons/ButtonHandler.h"
+#include "ur_control_common/layout/entities/button_handler/ButtonHandler.h"
 #include "ur_control_common/layout/entities/robot/SafetyModeVisuals.h"
 
 //Forward declarations

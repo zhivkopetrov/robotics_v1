@@ -93,9 +93,9 @@ UrControlGuiConfig generateGameConfig(const std::string &projectInstallPrefix,
   UrControlGuiConfig cfg;
   cfg.externalBridgeCfg = generateUrContolGuiExternalBridgeConfig(rosParams);
 
-  auto &layoutCfg = cfg.commonLayoutCfg;
-  layoutCfg.buttonHandlerConfig = generateButtonHandlerConfig(
-      projectInstallPrefix);
+  auto& layoutCfg = cfg.commonLayoutCfg;
+  layoutCfg.buttonHandlerCfg = 
+    generateButtonHandlerConfig(projectInstallPrefix);
 
   layoutCfg.screenBoundary.w = rosParams.guiWindow.w;
   layoutCfg.screenBoundary.h = rosParams.guiWindow.h;

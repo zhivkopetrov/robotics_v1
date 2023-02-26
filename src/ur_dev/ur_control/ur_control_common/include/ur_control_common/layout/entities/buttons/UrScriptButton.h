@@ -8,7 +8,6 @@
 #include "utils/ErrorCode.h"
 
 //Own components headers
-#include "ur_control_common/layout/entities/buttons/config/ButtonHandlerConfig.h"
 #include "ur_control_common/layout/entities/buttons/CommandButton.h"
 #include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"
 
