@@ -385,7 +385,7 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   transition.transitions.clear();
 
   transition.stateName = BloomState::BLOOM;
-  transition.transitions.insert(BloomState::JENGA_RECOVERY);
+  transition.transitions.insert(BloomState::JENGA);
   transition.transitions.insert(BloomState::IDLE);
   stateTransitions.push_back(transition);
   transition.transitions.clear();

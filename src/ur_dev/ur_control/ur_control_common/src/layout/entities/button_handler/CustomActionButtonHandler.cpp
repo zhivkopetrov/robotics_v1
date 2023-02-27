@@ -98,6 +98,39 @@ void CustomActionButtonHandler::handleEvent(const InputEvent &e) {
   }
 }
 
+ErrorCode CustomActionButtonHandler::setCommandButtonsLockStatus(
+    const std::vector<int32_t>& lockBtnIndexes,
+    const std::vector<int32_t>& unlockBtnIndexes) {
+  const ErrorCode errCode = 
+    sanityCheckCommandButtonsLockStatus(lockBtnIndexes, unlockBtnIndexes);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("Error in setCommandButtonsLockStatus()");
+    return ErrorCode::FAILURE;
+  }
+
+  for (const int32_t lockIdx : lockBtnIndexes) {
+    _commandButtons[lockIdx].lockInput();
+  }
+  for (const int32_t unlockIdx : unlockBtnIndexes) {
+    _commandButtons[unlockIdx].unlockInput();
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+void CustomActionButtonHandler::setGripperButtonsLockStatus(
+  GripperButtonsInputStatus status) {
+  if (GripperButtonsInputStatus::LOCKED == status) {
+    for (auto& btn : _gripperButtons) {
+      btn.lockInput();
+    }
+  } else {
+    for (auto& btn : _gripperButtons) {
+      btn.unlockInput();
+    }
+  }
+}
+
 ErrorCode CustomActionButtonHandler::initInternal(
     const CustomActionButtonHandlerConfig &cfg,
     const CustomActionButtonHandlerOutInterface &outInterface) {

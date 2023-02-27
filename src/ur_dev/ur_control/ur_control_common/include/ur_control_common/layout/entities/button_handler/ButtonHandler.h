@@ -3,6 +3,7 @@
 
 //System headers
 #include <array>
+#include <vector>
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
@@ -15,6 +16,10 @@
 //Forward declarations
 class InputEvent;
 
+enum class GripperButtonsInputStatus {
+  LOCKED, UNLOCKED
+};
+
 class ButtonHandler {
 public:
   virtual ~ButtonHandler() noexcept = default;
@@ -23,11 +28,20 @@ public:
                          const ButtonHandlerOutInterface& outInterface) = 0;
   virtual void draw() const = 0;
   virtual void handleEvent(const InputEvent &e) = 0;
+  virtual ErrorCode setCommandButtonsLockStatus(
+    const std::vector<int32_t>& lockBtnIndexes,
+    const std::vector<int32_t>& unlockBtnIndexes) = 0;
+  virtual void setGripperButtonsLockStatus(
+    GripperButtonsInputStatus status) = 0;
 
 protected:
   ErrorCode initInternal(
     const ButtonHandlerConfig& cfg,
-    const InvokeDashboardServiceCb& invokeDashboardServiceCb);        
+    const InvokeDashboardServiceCb& invokeDashboardServiceCb);
+
+  ErrorCode sanityCheckCommandButtonsLockStatus(
+    const std::vector<int32_t>& lockBtnIndexes,
+    const std::vector<int32_t>& unlockBtnIndexes);
 
   enum DashboardButtonDefines {
     POWER_ON_IDX, 

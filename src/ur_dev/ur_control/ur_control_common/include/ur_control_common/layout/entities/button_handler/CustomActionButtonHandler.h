@@ -28,6 +28,12 @@ public:
 
   void handleEvent(const InputEvent &e) override;
 
+  ErrorCode setCommandButtonsLockStatus(
+    const std::vector<int32_t>& lockBtnIndexes,
+    const std::vector<int32_t>& unlockBtnIndexes) override;
+    
+  void setGripperButtonsLockStatus(GripperButtonsInputStatus status) override;
+
 private:
   ErrorCode initInternal(
     const CustomActionButtonHandlerConfig &cfg,

@@ -2,6 +2,7 @@
 #include "ur_control_common/layout/entities/button_handler/ButtonHandler.h"
 
 //System headers
+#include <unordered_set>
 
 //Other libraries headers
 #include "urscript_common/urscript/UrScriptParser.h"
@@ -35,6 +36,29 @@ ErrorCode ButtonHandler::initInternal(
     if (ErrorCode::SUCCESS != 
          _dashboardButtons[i].init(buttonCfg, invokeDashboardServiceCb)) {
       LOGERR("Error, _dashboardButtons[%d].init() failed", i);
+      return ErrorCode::FAILURE;
+    }
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode ButtonHandler::sanityCheckCommandButtonsLockStatus(
+  const std::vector<int32_t>& lockBtnIndexes,
+  const std::vector<int32_t>& unlockBtnIndexes) {
+  std::unordered_set<int32_t> usedIndexes;
+  for (const int32_t lockIdx : lockBtnIndexes) {
+    const auto [_, inserted] = usedIndexes.insert(lockIdx);
+    if (!inserted) {
+      LOGERR("Found a duplicate index: [%d] in lockBtnIndexes", lockIdx);
+      return ErrorCode::FAILURE;
+    }
+  }
+
+  for (const int32_t unlockIdx : unlockBtnIndexes) {
+    const auto [_, inserted] = usedIndexes.insert(unlockIdx);
+    if (!inserted) {
+      LOGERR("Found a duplicate index: [%d] in unlockBtnIndexes", unlockIdx);
       return ErrorCode::FAILURE;
     }
   }
