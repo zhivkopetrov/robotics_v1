@@ -13,11 +13,11 @@
 
 ErrorCode UrControlBloomLayout::init(
   const UrControlBloomLayoutConfig& cfg,
-  const UrControlCommonLayoutOutInterface& commonOutInterface,
-  UrControlCommonLayoutInterface &commonInterface) {
+  const UrControlBloomLayoutOutInterface& outInterface,
+  UrControlBloomLayoutInterface& interface) {
 
   if (ErrorCode::SUCCESS != UrControlCommonLayout::init(cfg.commonLayoutCfg,
-          commonOutInterface, commonInterface)) {
+          outInterface.commonOutInterface, interface.commonInterface)) {
     LOGERR("UrControlCommonLayout::init() failed");
     return ErrorCode::FAILURE;
   }

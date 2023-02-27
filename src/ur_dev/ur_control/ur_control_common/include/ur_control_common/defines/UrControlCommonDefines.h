@@ -68,6 +68,13 @@ enum class MotionAction {
   RECOVER
 };
 
+enum GripperButtonDefines {
+  ACTIVATE_GRIPPER_IDX, 
+  OPEN_GRIPPER_IDX, 
+  CLOSE_GRIPPER_IDX,
+  GRIPPER_BUTTONS_COUNT
+};
+
 std::string toString(MotionAction action);
 
 #endif /* UR_CONTROL_COMMON_URCONTROLCOMMONDEFINES_H_ */

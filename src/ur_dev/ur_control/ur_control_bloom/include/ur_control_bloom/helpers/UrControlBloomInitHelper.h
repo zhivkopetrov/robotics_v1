@@ -16,9 +16,11 @@ class UrControlBloom;
 struct UrControlBloomConfig;
 struct UrControlBloomLayoutConfig;
 struct UrContolBloomExternalBridgeConfig;
+struct UrControlBloomLayoutInterface;
 struct UrControlCommonLayoutInterface;
 struct UrControlBloomMotionSequenceConfig;
 struct UrScriptBuilderConfig;
+struct CustomActionButtonHandlerCbs;
 
 class UrControlBloomInitHelper {
 public:
@@ -29,8 +31,10 @@ public:
 private:
   static ErrorCode initLayout(
       const UrControlBloomLayoutConfig &cfg,
-      UrControlCommonLayoutInterface &layoutInterface, //out param
+      UrControlBloomLayoutInterface &layoutInterface, //out param
       UrControlBloom &bloom);
+  static void populateCustomActionButtonHandlerCbs(
+    CustomActionButtonHandlerCbs& outCbs, UrControlBloom &bloom);
 
   static ErrorCode initDashboardHelper(
       const UrControlCommonLayoutInterface &layoutInterface, 

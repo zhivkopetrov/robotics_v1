@@ -2,6 +2,7 @@
 #define UR_CONTROL_COMMON_URCONTROLCOMMONLAYOUTINTERFACES_H_
 
 //System headers
+#include <any>
 
 //Other libraries headers
 
@@ -13,6 +14,7 @@
 struct UrControlCommonLayoutOutInterface {
   PublishURScriptCb publishURScriptCb;
   InvokeDashboardServiceCb invokeDashboardServiceCb;
+  std::any buttonHandlerAdditionalOutInterface; //if any
 };
 
 struct UrControlCommonLayoutInterface {

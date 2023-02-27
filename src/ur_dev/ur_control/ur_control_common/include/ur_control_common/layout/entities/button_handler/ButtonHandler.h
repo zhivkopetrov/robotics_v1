@@ -9,15 +9,11 @@
 
 //Own components headers
 #include "ur_control_common/layout/entities/button_handler/config/ButtonHandlerConfig.h"
+#include "ur_control_common/layout/entities/button_handler/ButtonHandlerInterfaces.h"
 #include "ur_control_common/layout/entities/buttons/DashboardButton.h"
 
 //Forward declarations
 class InputEvent;
-
-struct ButtonHandlerOutInterface {
-  PublishURScriptCb publishURScriptCb;
-  InvokeDashboardServiceCb invokeDashboardServiceCb;
-};
 
 class ButtonHandler {
 public:

@@ -36,11 +36,15 @@ add_library(
         ${_INC_DIR}/layout/entities/robot/SafetyModeVisuals.h
         ${_INC_DIR}/layout/entities/button_handler/ButtonHandler.h
         ${_INC_DIR}/layout/entities/button_handler/UrScriptButtonHandler.h
+        ${_INC_DIR}/layout/entities/button_handler/CustomActionButtonHandler.h
+        ${_INC_DIR}/layout/entities/button_handler/ButtonHandlerInterfaces.h
         ${_INC_DIR}/layout/entities/button_handler/config/ButtonHandlerConfig.h
         ${_INC_DIR}/layout/entities/button_handler/config/UrScriptButtonHandlerConfig.h
+        ${_INC_DIR}/layout/entities/button_handler/config/CustomActionButtonHandlerConfig.h
         ${_INC_DIR}/layout/entities/buttons/CommandButton.h
         ${_INC_DIR}/layout/entities/buttons/UrScriptButton.h
         ${_INC_DIR}/layout/entities/buttons/DashboardButton.h
+        ${_INC_DIR}/layout/entities/buttons/CustomActionButton.h
         ${_INC_DIR}/motion/MotionSequence.h
         ${_INC_DIR}/motion/MotionSequenceExecutor.h
         ${_INC_DIR}/motion/MotionExecutor.h
@@ -53,9 +57,11 @@ add_library(
         ${_SRC_DIR}/layout/entities/robot/SafetyModeVisuals.cpp
         ${_SRC_DIR}/layout/entities/button_handler/ButtonHandler.cpp
         ${_SRC_DIR}/layout/entities/button_handler/UrScriptButtonHandler.cpp
+        ${_SRC_DIR}/layout/entities/button_handler/CustomActionButtonHandler.cpp
         ${_SRC_DIR}/layout/entities/buttons/CommandButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/UrScriptButton.cpp
         ${_SRC_DIR}/layout/entities/buttons/DashboardButton.cpp
+        ${_SRC_DIR}/layout/entities/buttons/CustomActionButton.cpp
         ${_SRC_DIR}/motion/MotionSequence.cpp
         ${_SRC_DIR}/motion/MotionSequenceExecutor.cpp
         ${_SRC_DIR}/motion/MotionExecutor.cpp

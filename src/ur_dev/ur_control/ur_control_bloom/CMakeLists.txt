@@ -29,6 +29,7 @@ add_executable(
         ${_INC_DIR}/helpers/StateFileHandler.h
         ${_INC_DIR}/layout/config/UrControlBloomLayoutConfig.h
         ${_INC_DIR}/layout/UrControlBloomLayout.h
+        ${_INC_DIR}/layout/UrControlBloomLayoutInterfaces.h
         ${_INC_DIR}/motion/BloomMotionSequence.h
         ${_INC_DIR}/motion/JengaMotionSequence.h
         ${_INC_DIR}/motion/config/UrControlBloomMotionSequenceConfig.h

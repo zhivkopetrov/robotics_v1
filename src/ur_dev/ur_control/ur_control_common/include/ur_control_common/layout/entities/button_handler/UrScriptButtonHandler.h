@@ -40,13 +40,6 @@ private:
                               size_t expectedParsedScriptsCount,
                               std::vector<std::string> &outScripts);
 
-  enum GripperButtonDefines {
-    ACTIVATE_GRIPPER_IDX, 
-    OPEN_GRIPPER_IDX, 
-    CLOSE_GRIPPER_IDX,
-    GRIPPER_BUTTONS_COUNT
-  };
-
   std::array<UrScriptButton, GRIPPER_BUTTONS_COUNT> _gripperButtons;
   std::vector<UrScriptButton> _commandButtons;
 };

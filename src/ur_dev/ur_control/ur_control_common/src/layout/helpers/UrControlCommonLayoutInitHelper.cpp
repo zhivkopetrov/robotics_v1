@@ -13,6 +13,7 @@
 #include "ur_control_common/layout/UrControlCommonLayout.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "ur_control_common/layout/entities/button_handler/UrScriptButtonHandler.h"
+#include "ur_control_common/layout/entities/button_handler/CustomActionButtonHandler.h"
 
 ErrorCode UrControlCommonLayoutInitHelper::init(
     const UrControlCommonLayoutConfig &cfg,
@@ -56,15 +57,14 @@ ErrorCode UrControlCommonLayoutInitHelper::initButtonHandler(
     const ButtonHandlerHighLevelConfig &cfg,
     const UrControlCommonLayoutOutInterface &outInterface,
     UrControlCommonLayout &layout) {
-  std::any buttonHandlerOutInterface;
   switch (cfg.type) {
   case ButtonHandlerType::URSCRIPT:
     layout.buttonHandler = std::make_unique<UrScriptButtonHandler>();
     break;
 
   case ButtonHandlerType::CUSTOM_ACTION:
-    LOGERR("Fill in missing implementation for ButtonHandlerType::CUSTOM_ACTION");
-    return ErrorCode::FAILURE;
+    layout.buttonHandler = std::make_unique<CustomActionButtonHandler>();
+    break;
   
   default:
     LOGERR("Error, received unsupported ButtonHandlerType: [%d]", cfg.type);
@@ -75,6 +75,8 @@ ErrorCode UrControlCommonLayoutInitHelper::initButtonHandler(
   btnOutInterface.publishURScriptCb = outInterface.publishURScriptCb;
   btnOutInterface.invokeDashboardServiceCb = 
     outInterface.invokeDashboardServiceCb;
+  btnOutInterface.additionalOutInterface = 
+    outInterface.buttonHandlerAdditionalOutInterface;
 
   if (ErrorCode::SUCCESS != layout.buttonHandler->init(cfg, btnOutInterface)) {
     LOGERR("Error in buttonHandler->init()");

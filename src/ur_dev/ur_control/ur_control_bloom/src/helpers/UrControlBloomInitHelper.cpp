@@ -6,6 +6,7 @@
 //Other libraries headers
 #include "urscript_common/gripper/GripperStructs.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
+#include "ur_control_common/layout/entities/button_handler/ButtonHandlerInterfaces.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -46,21 +47,22 @@ ErrorCode UrControlBloomInitHelper::init(
     std::make_shared<UrControlCommonExternalBridge>(NODE_NAME);
   bloom._stateFileHandler = std::make_shared<StateFileHandler>();
 
-  UrControlCommonLayoutInterface layoutInterface;
+  UrControlBloomLayoutInterface layoutInterface;
   if (ErrorCode::SUCCESS != 
       initLayout(parsedCfg.layoutCfg, layoutInterface, bloom)) {
     LOGERR("Error, initLayout() failed");
     return ErrorCode::FAILURE;
   }
 
-  if (ErrorCode::SUCCESS != initDashboardHelper(layoutInterface, bloom)) {
+  if (ErrorCode::SUCCESS != 
+        initDashboardHelper(layoutInterface.commonInterface, bloom)) {
     LOGERR("initDashboardHelper() failed");
     return ErrorCode::FAILURE;
   }
 
   if (ErrorCode::SUCCESS != initUrControlBloomExternalBridge(
-          parsedCfg.externalBridgeCfg, layoutInterface, bloom)) {
-    LOGERR("initControllerExternalBridge() failed");
+        parsedCfg.externalBridgeCfg, layoutInterface.commonInterface, bloom)) {
+    LOGERR("initUrControlBloomExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
 
@@ -92,16 +94,24 @@ ErrorCode UrControlBloomInitHelper::init(
 
 ErrorCode UrControlBloomInitHelper::initLayout(
     const UrControlBloomLayoutConfig &cfg,
-    UrControlCommonLayoutInterface &layoutInterface, UrControlBloom &bloom) {
-  UrControlCommonLayoutOutInterface layoutOutInterface;
+    UrControlBloomLayoutInterface &layoutInterface, UrControlBloom &bloom) {
+  UrControlBloomLayoutOutInterface layoutOutInterface;
+  UrControlCommonLayoutOutInterface& commonOutInterface = 
+    layoutOutInterface.commonOutInterface;
+
   const auto externalBridgeRawPointer = bloom._externalBridge.get();
-  layoutOutInterface.publishURScriptCb = std::bind(
+  commonOutInterface.publishURScriptCb = std::bind(
       &UrControlCommonExternalBridge::publishURScript, 
       externalBridgeRawPointer, _1);
 
   const auto dashboardProviderRawPointer = bloom._dashboardProvider.get();
-  layoutOutInterface.invokeDashboardServiceCb = std::bind(
+  commonOutInterface.invokeDashboardServiceCb = std::bind(
       &DashboardProvider::invokeDashboard, dashboardProviderRawPointer, _1);
+
+  CustomActionButtonHandlerCbs customActionButtonHandlerCbs;
+  populateCustomActionButtonHandlerCbs(customActionButtonHandlerCbs, bloom);
+  commonOutInterface.buttonHandlerAdditionalOutInterface = 
+    customActionButtonHandlerCbs;
 
   if (ErrorCode::SUCCESS != bloom._layout.init(cfg, layoutOutInterface,
           layoutInterface)) {
@@ -110,6 +120,99 @@ ErrorCode UrControlBloomInitHelper::initLayout(
   }
 
   return ErrorCode::SUCCESS;
+}
+
+//TODO populate this method accordingly
+void UrControlBloomInitHelper::populateCustomActionButtonHandlerCbs(
+    CustomActionButtonHandlerCbs& outCbs, UrControlBloom &bloom) {
+  UrScriptCommandContainer cmdContainer;
+  UrScriptPayload cmdPayload;
+  UrScriptBuilder& builder = *bloom._urScriptBuilder;
+  const InvokeURScriptServiceCb invokeURScriptServiceCb = std::bind(
+      &UrControlCommonExternalBridge::invokeURScriptService, 
+      bloom._externalBridge.get(), _1);
+
+  CustomActionButtonCbs& gripperCbs = outCbs.gripperButtonCbs;
+  gripperCbs.resize(GRIPPER_BUTTONS_COUNT);
+
+  { //gripperCbs[ACTIVATE_GRIPPER_IDX]
+    auto gripperActiveCommand = std::make_unique<GripperActivateCommand>();
+    constexpr int32_t gripperSpeedPercent = 100;
+    auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
+      GripperParamType::SPEED, gripperSpeedPercent);
+    constexpr int32_t gripperForcePercent = 100;
+    auto gripperForceCommand = std::make_unique<GripperParamCommand>(
+      GripperParamType::FORCE, gripperForcePercent);
+    cmdContainer.addCommand(std::move(gripperActiveCommand))
+                .addCommand(std::move(gripperSpeedCommand))
+                .addCommand(std::move(gripperForceCommand));
+    cmdPayload = builder.construct(Gripper::ACTIVATE_NAME, cmdContainer);
+    gripperCbs[ACTIVATE_GRIPPER_IDX] = [cmdPayload, invokeURScriptServiceCb](){
+      invokeURScriptServiceCb(cmdPayload);
+    };
+  }
+
+  { //gripperCbs[OPEN_GRIPPER_IDX]
+    auto openGripperCommand = 
+      std::make_unique<GripperActuateCommand>(GripperActuateType::OPEN);
+    cmdContainer.addCommand(std::move(openGripperCommand));
+    cmdPayload = builder.construct(Gripper::OPEN_NAME, cmdContainer);
+    gripperCbs[OPEN_GRIPPER_IDX] = [cmdPayload, invokeURScriptServiceCb](){
+      invokeURScriptServiceCb(cmdPayload);
+    };
+  }
+
+  { //gripperCbs[CLOSE_GRIPPER_IDX]
+    auto openGripperCommand = 
+      std::make_unique<GripperActuateCommand>(GripperActuateType::CLOSE);
+    cmdContainer.addCommand(std::move(openGripperCommand));
+    cmdPayload = builder.construct(Gripper::CLOSE_NAME, cmdContainer);
+    gripperCbs[CLOSE_GRIPPER_IDX] = [cmdPayload, invokeURScriptServiceCb](){
+      invokeURScriptServiceCb(cmdPayload);
+    };
+  }
+
+  StateMachine& stateMachine = bloom._stateMachine;
+  MotionExecutor& motionExecutor = bloom._motionExecutor;
+  CustomActionButtonCbs& commandCbs = outCbs.commandButtonCbs;
+  commandCbs.resize(CUSTOM_ACTION_BUTTONS_COUNT);
+
+  commandCbs[JENGA_IDX] = [&stateMachine](){
+    stateMachine.changeState(BloomState::JENGA_RECOVERY);
+  };
+
+  commandCbs[BLOOM_RANDOMIZED_IDX] = [&stateMachine](){
+    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+  };
+
+  commandCbs[BLOOM_1ST_IDX] = [&stateMachine](){
+    //TODO invoke motionExecutor.setTransportStrategyId(Basic);
+    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+  };
+
+  commandCbs[BLOOM_2ND_IDX] = [&stateMachine](){
+    //TODO invoke motionExecutor.setTransportStrategyId(FullRotation);
+    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+  };
+
+  commandCbs[BLOOM_3RD_IDX] = [&stateMachine](){
+    //TODO invoke motionExecutor.setTransportStrategyId(Twist);
+    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+  };
+
+  commandCbs[ABORT_MOTION_IDX] = [&stateMachine, &motionExecutor](){
+    const auto doneCb = [&stateMachine](){
+      stateMachine.changeState(BloomState::IDLE);
+    };
+
+    motionExecutor.performAction(MotionAction::ABORT, doneCb);
+  };
+
+  commandCbs[PARK_IDX] = [](){
+    //implement additional ReturnHomeMotionSequence
+    //load the sequence and execute it
+    LOGR("TODO: implement me");
+  };
 }
 
 ErrorCode UrControlBloomInitHelper::initDashboardHelper(

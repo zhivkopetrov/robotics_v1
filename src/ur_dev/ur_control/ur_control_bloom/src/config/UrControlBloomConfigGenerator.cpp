@@ -13,7 +13,7 @@
 
 //Own components headers
 #include "ur_control_bloom/config/UrControlBloomConfig.h"
-#include "ur_control_common/layout/entities/button_handler/config/UrScriptButtonHandlerConfig.h"
+#include "ur_control_common/layout/entities/button_handler/config/CustomActionButtonHandlerConfig.h"
 #include "ur_control_bloom/external_api/UrControlBloomRos2ParamProvider.h"
 #include "generated/UrControlBloomResources.h"
 
@@ -21,15 +21,13 @@ namespace {
 constexpr auto PROJECT_NAME = "ur_control_bloom";
 constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
 constexpr auto GRIPPER_DEFINITIONS_FOLDER_NAME = "gripper_definitions";
-constexpr auto GRIPPER_SCRIPTS_FOLDER_NAME = "gripper";
-constexpr auto COMMAND_SCRIPTS_FOLDER_NAME = "command";
 constexpr auto CONFIG_FOLDER_NAME = "config";
 constexpr auto STATE_FILE_NAME = "system_state.ini";
 constexpr auto TOTAL_OBJECTS_PER_TOWER = 20;
 
 ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
     const std::string &projectInstallPrefix) {
-  UrScriptButtonHandlerConfig concreteCfg;
+  CustomActionButtonHandlerConfig concreteCfg;
 
   concreteCfg.baseCfg.buttonRsrcId = UrControlBloomResources::UP_BUTTON;
   concreteCfg.baseCfg.buttonFontRsrcId = UrControlBloomResources::VINQUE_RG_30;
@@ -39,23 +37,18 @@ ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
       ResourceFileHeader::getResourcesFolderName().append("/").append(
           SCRIPTS_FOLDER_NAME)).append("/");
 
-  concreteCfg.gripperScriptFolderLocation = 
-    scriptsFolderLocation + GRIPPER_SCRIPTS_FOLDER_NAME;
-  concreteCfg.commandScriptsFolderLocation = 
-    scriptsFolderLocation + COMMAND_SCRIPTS_FOLDER_NAME;
-
-  concreteCfg.commandButtonsDescription = {
-    { Point(100,  450), "Jenga" },
-    { Point(100,  225), "Bloom randomized" },
-    { Point(400,   25), "Bloom 1st" },
-    { Point(850,   25), "Bloom 2nd" },
-    { Point(1300,  25), "Bloom 3rd" },
-    { Point(1630, 225), "Abort motion" },
-    { Point(1630, 450), "Park" }
-  };
+  auto& btnsDescr = concreteCfg.commandButtonsDescription;
+  btnsDescr.resize(CUSTOM_ACTION_BUTTONS_COUNT);
+  btnsDescr[JENGA_IDX]            = { Point(100,  450), "Jenga" };
+  btnsDescr[BLOOM_RANDOMIZED_IDX] = { Point(100,  225), "Bloom randomized" };
+  btnsDescr[BLOOM_1ST_IDX]        = { Point(400,   25), "Bloom 1st" };
+  btnsDescr[BLOOM_2ND_IDX]        = { Point(850,   25), "Bloom 2nd" };
+  btnsDescr[BLOOM_3RD_IDX]        = { Point(1300,  25), "Bloom 3rd" };
+  btnsDescr[ABORT_MOTION_IDX]     = { Point(1630, 225), "Abort motion" };
+  btnsDescr[PARK_IDX]             = { Point(1630, 450), "Park" };
 
   ButtonHandlerHighLevelConfig highLevelCfg;
-  highLevelCfg.type = ButtonHandlerType::URSCRIPT;
+  highLevelCfg.type = ButtonHandlerType::CUSTOM_ACTION;
   highLevelCfg.cfg = concreteCfg;
   return highLevelCfg;
 }

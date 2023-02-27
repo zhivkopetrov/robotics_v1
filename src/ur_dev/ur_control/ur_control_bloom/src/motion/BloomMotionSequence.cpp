@@ -93,7 +93,7 @@ UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
   if (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy) {
     auto placeCommand = 
       std::make_unique<MoveLinearCommand>(_cfg.placeCartesian);
-      constexpr int32_t gripperSpeedPercent = 100;
+    constexpr int32_t gripperSpeedPercent = 100;
     auto gripperSpeedCommand = std::make_unique<GripperParamCommand>(
       GripperParamType::SPEED, gripperSpeedPercent);
     constexpr int32_t gripperForcePercent = 50;

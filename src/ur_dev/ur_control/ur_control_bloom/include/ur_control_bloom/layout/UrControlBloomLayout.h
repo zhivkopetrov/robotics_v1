@@ -7,10 +7,11 @@
 
 //Other libraries headers
 #include "ur_control_common/layout/UrControlCommonLayout.h"
-
-//Own components headers
 #include "manager_utils/drawing/Image.h"
 #include "manager_utils/drawing/Text.h"
+
+//Own components headers
+#include "ur_control_bloom/layout/UrControlBloomLayoutInterfaces.h"
 
 //Forward declarations
 class InputEvent;
@@ -19,8 +20,8 @@ struct UrControlBloomLayoutConfig;
 class UrControlBloomLayout : public UrControlCommonLayout {
 public:
   ErrorCode init(const UrControlBloomLayoutConfig& cfg,
-                 const UrControlCommonLayoutOutInterface& commonOutInterface,
-                 UrControlCommonLayoutInterface& commonInterface);
+                 const UrControlBloomLayoutOutInterface& outInterface,
+                 UrControlBloomLayoutInterface& interface);
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent& e);

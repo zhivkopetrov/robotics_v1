@@ -64,6 +64,25 @@ constexpr auto RETURN_HOME_AND_OPEN_GRIPPER_NAME = "JengaReturnHomeAndOpenGrippe
 
 } //namespace Motions
 
+namespace Gripper {
+
+constexpr auto ACTIVATE_NAME = "GripperActivate";
+constexpr auto OPEN_NAME = "GripperOpen";
+constexpr auto CLOSE_NAME = "GripperClose";
+
+} //namespace Gripper
+
+enum CustomActionButtonDefines {
+  JENGA_IDX, 
+  BLOOM_RANDOMIZED_IDX, 
+  BLOOM_1ST_IDX, 
+  BLOOM_2ND_IDX, 
+  BLOOM_3RD_IDX, 
+  ABORT_MOTION_IDX,
+  PARK_IDX,
+  CUSTOM_ACTION_BUTTONS_COUNT
+};
+
 enum JengaEndStrategy {
   SWAP_TOWERS,
   TRANSITION_TO_IDLE_STATE
