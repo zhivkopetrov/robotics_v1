@@ -57,6 +57,10 @@ private:
   std::string getRecoveryTransitionStateName() const;
   void serializeState(const std::string& stateName);
 
+  void executeRandomizedBloomStrategy();
+  void executeBloomStrategy(const int32_t strategyId);
+  void executeAbortMotion();
+
   UrControlBloomLayout _layout;
   StateMachine _stateMachine;
   MotionExecutor _motionExecutor;

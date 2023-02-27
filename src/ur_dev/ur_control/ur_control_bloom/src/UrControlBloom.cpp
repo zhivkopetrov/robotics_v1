@@ -4,7 +4,9 @@
 //System headers
 
 //Other libraries headers
+#include "utils/rng/Rng.h"
 #include "utils/input/InputEvent.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -135,11 +137,7 @@ void UrControlBloom::handleEventBloomRecoveryState(const InputEvent& e) {
   }
 
   if (Keyboard::KEY_BACKSPACE == e.key) {
-    const auto doneCb = [this](){
-      _stateMachine.changeState(BloomState::IDLE);
-    };
-
-    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+    executeAbortMotion();
   }
 }
 
@@ -156,11 +154,7 @@ void UrControlBloom::handleEventBloomState(const InputEvent& e) {
     _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
   }
   else if (Keyboard::KEY_BACKSPACE == e.key) {
-    const auto doneCb = [this](){
-      _stateMachine.changeState(BloomState::IDLE);
-    };
-
-    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+    executeAbortMotion();
   }
 }
 
@@ -186,17 +180,13 @@ void UrControlBloom::handleEventJengaState(const InputEvent& e) {
 
   if ((Keyboard::KEY_ENTER == e.key) || (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
     const auto doneCb = [this](){
-      _stateMachine.changeState(BloomState::BLOOM);
+      executeRandomizedBloomStrategy();
     };
 
     _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
   }
   else if (Keyboard::KEY_BACKSPACE == e.key) {
-    const auto doneCb = [this](){
-      _stateMachine.changeState(BloomState::IDLE);
-    };
-
-    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+    executeAbortMotion();
   }
 }
 
@@ -221,11 +211,7 @@ void UrControlBloom::handleEventJengaRecoveryState(const InputEvent& e) {
   }
 
   if (Keyboard::KEY_BACKSPACE == e.key) {
-    const auto doneCb = [this](){
-      _stateMachine.changeState(BloomState::IDLE);
-    };
-
-    _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+    executeAbortMotion();
   }
 }
 
@@ -260,4 +246,39 @@ void UrControlBloom::serializeState(const std::string& stateName) {
   if (ErrorCode::SUCCESS != errCode) {
     LOGERR("Error trying to serialize BloomState: [%s]", stateName.c_str());
   }
+}
+
+void UrControlBloom::executeRandomizedBloomStrategy() {
+  constexpr int32_t firstStrategyId = 
+    getEnumValue(Motion::Bloom::TransportStrategy::BASIC);
+  constexpr int32_t lastStrategyId = 
+    getEnumValue(Motion::Bloom::TransportStrategy::TWIST);
+  const int32_t strategyId = 
+    Rng::getInstance().getRandomNumber(firstStrategyId, lastStrategyId);
+  executeBloomStrategy(strategyId);
+}
+
+void UrControlBloom::executeBloomStrategy(const int32_t strategyId) {
+  ErrorCode errCode = _motionExecutor.loadSequence(Motion::BLOOM_MOTION_ID);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("motionExecutor.loadSequence failed for SequenceId:[%d]. Will not "
+           "execute Bloom Motion", Motion::BLOOM_MOTION_ID);
+    return;
+  }
+
+  errCode = _motionExecutor.setTransportStrategy(strategyId);
+  if (ErrorCode::SUCCESS != errCode) {
+    LOGERR("setTransportStrategy failed for strategyId:[%d]. Will not execute "
+           "Bloom Motion", strategyId);
+    return;
+  }
+  _stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+}
+
+void UrControlBloom::executeAbortMotion() {
+  const auto doneCb = [this](){
+    _stateMachine.changeState(BloomState::IDLE);
+  };
+
+  _motionExecutor.performAction(MotionAction::ABORT, doneCb);
 }

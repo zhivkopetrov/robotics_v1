@@ -7,7 +7,6 @@
 #include "urscript_common/gripper/GripperStructs.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "ur_control_common/layout/entities/button_handler/ButtonHandlerInterfaces.h"
-#include "utils/rng/Rng.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
@@ -174,59 +173,43 @@ void UrControlBloomInitHelper::populateCustomActionButtonHandlerCbs(
     };
   }
 
-  StateMachine& stateMachine = bloom._stateMachine;
-  MotionExecutor& motionExecutor = bloom._motionExecutor;
   CustomActionButtonCbs& commandCbs = outCbs.commandButtonCbs;
   commandCbs.resize(CUSTOM_ACTION_BUTTONS_COUNT);
 
-  commandCbs[JENGA_IDX] = [&stateMachine](){
-    stateMachine.changeState(BloomState::JENGA_RECOVERY);
+  commandCbs[JENGA_IDX] = [&bloom](){
+    bloom._stateMachine.changeState(BloomState::JENGA_RECOVERY);
   };
 
-  commandCbs[BLOOM_RANDOMIZED_IDX] = [&stateMachine, &motionExecutor](){
-    constexpr int32_t firstStrategyId = 
-      getEnumValue(Motion::Bloom::TransportStrategy::BASIC);
-    constexpr int32_t lastStrategyId = 
-      getEnumValue(Motion::Bloom::TransportStrategy::TWIST);
-    const int32_t strategyId = 
-      Rng::getInstance().getRandomNumber(firstStrategyId, lastStrategyId);
-    motionExecutor.setTransportStrategy(strategyId);
-    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+  commandCbs[BLOOM_RANDOMIZED_IDX] = [&bloom](){
+    bloom.executeRandomizedBloomStrategy();
   };
 
-  commandCbs[BLOOM_1ST_IDX] = [&stateMachine, &motionExecutor](){
+  commandCbs[BLOOM_1ST_IDX] = [&bloom](){
     constexpr int32_t strategyId = 
       getEnumValue(Motion::Bloom::TransportStrategy::BASIC);
-    motionExecutor.setTransportStrategy(strategyId);
-    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+    bloom.executeBloomStrategy(strategyId);
   };
 
-  commandCbs[BLOOM_2ND_IDX] = [&stateMachine, &motionExecutor](){
+  commandCbs[BLOOM_2ND_IDX] = [&bloom](){
     constexpr int32_t strategyId = 
       getEnumValue(Motion::Bloom::TransportStrategy::FULL_ROTATION);
-    motionExecutor.setTransportStrategy(strategyId);
-    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+    bloom.executeBloomStrategy(strategyId);
   };
 
-  commandCbs[BLOOM_3RD_IDX] = [&stateMachine, &motionExecutor](){
+  commandCbs[BLOOM_3RD_IDX] = [&bloom](){
     constexpr int32_t strategyId = 
       getEnumValue(Motion::Bloom::TransportStrategy::TWIST);
-    motionExecutor.setTransportStrategy(strategyId);
-    stateMachine.changeState(BloomState::BLOOM_RECOVERY);
+    bloom.executeBloomStrategy(strategyId);
   };
 
-  commandCbs[ABORT_MOTION_IDX] = [&stateMachine, &motionExecutor](){
-    const auto doneCb = [&stateMachine](){
-      stateMachine.changeState(BloomState::IDLE);
-    };
-
-    motionExecutor.performAction(MotionAction::ABORT, doneCb);
+  commandCbs[ABORT_MOTION_IDX] = [&bloom](){
+    bloom.executeAbortMotion();
   };
 
   commandCbs[PARK_IDX] = [](){
     //implement additional ReturnHomeMotionSequence
     //load the sequence and execute it
-    LOGR("TODO: implement me");
+    LOGR("Park implement missing. TODO: implement");
   };
 }
 
@@ -402,13 +385,13 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   transition.transitions.clear();
 
   transition.stateName = BloomState::BLOOM;
-  transition.transitions.insert(BloomState::JENGA);
+  transition.transitions.insert(BloomState::JENGA_RECOVERY);
   transition.transitions.insert(BloomState::IDLE);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
 
   transition.stateName = BloomState::JENGA;
-  transition.transitions.insert(BloomState::BLOOM);
+  transition.transitions.insert(BloomState::BLOOM_RECOVERY);
   transition.transitions.insert(BloomState::IDLE);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
