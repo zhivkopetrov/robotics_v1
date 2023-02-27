@@ -60,6 +60,7 @@ private:
   void executeRandomizedBloomStrategy();
   void executeBloomStrategy(const int32_t strategyId);
   void executeAbortMotion();
+  void executeGracefulStopAndTransitionToIdle();
 
   UrControlBloomLayout _layout;
   StateMachine _stateMachine;

@@ -79,13 +79,14 @@ constexpr auto CLOSE_NAME = "GripperClose";
 } //namespace Gripper
 
 enum CustomActionButtonDefines {
+  PARK_IDX,
   JENGA_IDX, 
   BLOOM_RANDOMIZED_IDX, 
   BLOOM_1ST_IDX, 
   BLOOM_2ND_IDX, 
   BLOOM_3RD_IDX, 
+  GRACEFUL_STOP_IDX,
   ABORT_MOTION_IDX,
-  PARK_IDX,
   CUSTOM_ACTION_BUTTONS_COUNT
 };
 

@@ -57,8 +57,8 @@ void UrControlBloomLayout::enterInitState() {
 
   const std::vector<int32_t> lockBtnIndexes = {};
   const std::vector<int32_t> unlockBtnIndexes = { 
-    JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX, ABORT_MOTION_IDX, PARK_IDX
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX, GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
   };
   if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
     lockBtnIndexes, unlockBtnIndexes)) {
@@ -75,10 +75,12 @@ void UrControlBloomLayout::exitInitState() {
 void UrControlBloomLayout::enterIdleState() {
   _stateText.setTextAndColor(BloomState::IDLE, Colors::GREEN);
 
-  const std::vector<int32_t> lockBtnIndexes = { ABORT_MOTION_IDX };
+  const std::vector<int32_t> lockBtnIndexes = { 
+    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
+  };
   const std::vector<int32_t> unlockBtnIndexes = { 
-    JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX, PARK_IDX
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX
   };
   if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
     lockBtnIndexes, unlockBtnIndexes)) {
@@ -97,10 +99,12 @@ void UrControlBloomLayout::enterBloomState() {
   _stateText.setTextAndColor(BloomState::BLOOM, Colors::GREEN);
 
   const std::vector<int32_t> lockBtnIndexes = { 
-    JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX, PARK_IDX
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX
   };
-  const std::vector<int32_t> unlockBtnIndexes = { ABORT_MOTION_IDX };
+  const std::vector<int32_t> unlockBtnIndexes = { 
+    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
+  };
   if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
     lockBtnIndexes, unlockBtnIndexes)) {
     LOGERR("Error, setCommandButtonsLockStatus() failed");
@@ -116,10 +120,12 @@ void UrControlBloomLayout::enterBloomRecoveryState() {
   _stateText.setTextAndColor(BloomState::BLOOM_RECOVERY, Colors::ORANGE);
 
   const std::vector<int32_t> lockBtnIndexes = { 
-    JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX, PARK_IDX
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX
   };
-  const std::vector<int32_t> unlockBtnIndexes = { ABORT_MOTION_IDX };
+  const std::vector<int32_t> unlockBtnIndexes = { 
+    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
+  };
   if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
     lockBtnIndexes, unlockBtnIndexes)) {
     LOGERR("Error, setCommandButtonsLockStatus() failed");
@@ -136,10 +142,12 @@ void UrControlBloomLayout::enterJengaState() {
   _stateText.setTextAndColor(BloomState::JENGA, Colors::GREEN);
 
   const std::vector<int32_t> lockBtnIndexes = { 
-    JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX, PARK_IDX
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX
   };
-  const std::vector<int32_t> unlockBtnIndexes = { ABORT_MOTION_IDX };
+  const std::vector<int32_t> unlockBtnIndexes = { 
+    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
+  };
   if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
     lockBtnIndexes, unlockBtnIndexes)) {
     LOGERR("Error, setCommandButtonsLockStatus() failed");
@@ -155,10 +163,12 @@ void UrControlBloomLayout::enterJengaRecoveryState() {
   _stateText.setTextAndColor(BloomState::JENGA_RECOVERY, Colors::ORANGE);
 
   const std::vector<int32_t> lockBtnIndexes = { 
-    JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX, PARK_IDX
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX
   };
-  const std::vector<int32_t> unlockBtnIndexes = { ABORT_MOTION_IDX };
+  const std::vector<int32_t> unlockBtnIndexes = { 
+    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
+  };
   if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
     lockBtnIndexes, unlockBtnIndexes)) {
     LOGERR("Error, setCommandButtonsLockStatus() failed");

@@ -147,11 +147,7 @@ void UrControlBloom::handleEventBloomState(const InputEvent& e) {
   }
 
   if ((Keyboard::KEY_ENTER == e.key) || (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
-    const auto doneCb = [this](){
-      _stateMachine.changeState(BloomState::IDLE);
-    };
-
-    _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
+    executeGracefulStopAndTransitionToIdle();
   }
   else if (Keyboard::KEY_BACKSPACE == e.key) {
     executeAbortMotion();
@@ -281,4 +277,12 @@ void UrControlBloom::executeAbortMotion() {
   };
 
   _motionExecutor.performAction(MotionAction::ABORT, doneCb);
+}
+
+void UrControlBloom::executeGracefulStopAndTransitionToIdle() {
+  const auto doneCb = [this](){
+    _stateMachine.changeState(BloomState::IDLE);
+  };
+
+  _motionExecutor.performAction(MotionAction::GRACEFUL_STOP, doneCb);
 }

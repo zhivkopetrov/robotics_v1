@@ -39,13 +39,14 @@ ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
 
   auto& btnsDescr = concreteCfg.commandButtonsDescription;
   btnsDescr.resize(CUSTOM_ACTION_BUTTONS_COUNT);
-  btnsDescr[JENGA_IDX]            = { Point(100,  450), "Jenga" };
-  btnsDescr[BLOOM_RANDOMIZED_IDX] = { Point(100,  225), "Bloom randomized" };
-  btnsDescr[BLOOM_1ST_IDX]        = { Point(400,   25), "Bloom 1st" };
-  btnsDescr[BLOOM_2ND_IDX]        = { Point(850,   25), "Bloom 2nd" };
-  btnsDescr[BLOOM_3RD_IDX]        = { Point(1300,  25), "Bloom 3rd" };
-  btnsDescr[ABORT_MOTION_IDX]     = { Point(1630, 225), "Abort motion" };
-  btnsDescr[PARK_IDX]             = { Point(1630, 450), "Park" };
+  btnsDescr[PARK_IDX]             = { Point(100,  450), "Park" };
+  btnsDescr[JENGA_IDX]            = { Point(100,  225), "Jenga" };
+  btnsDescr[BLOOM_RANDOMIZED_IDX] = { Point(300,   25), "Bloom randomized" };
+  btnsDescr[BLOOM_1ST_IDX]        = { Point(650,   25), "Bloom 1st" };
+  btnsDescr[BLOOM_2ND_IDX]        = { Point(1000,  25), "Bloom 2nd" };
+  btnsDescr[BLOOM_3RD_IDX]        = { Point(1350,  25), "Bloom 3rd" };
+  btnsDescr[GRACEFUL_STOP_IDX]    = { Point(1630, 225), "Graceful stop" };
+  btnsDescr[ABORT_MOTION_IDX]     = { Point(1630, 450), "Abort motion" };
 
   ButtonHandlerHighLevelConfig highLevelCfg;
   highLevelCfg.type = ButtonHandlerType::CUSTOM_ACTION;

@@ -176,6 +176,12 @@ void UrControlBloomInitHelper::populateCustomActionButtonHandlerCbs(
   CustomActionButtonCbs& commandCbs = outCbs.commandButtonCbs;
   commandCbs.resize(CUSTOM_ACTION_BUTTONS_COUNT);
 
+  commandCbs[PARK_IDX] = [](){
+    //implement additional ReturnHomeMotionSequence
+    //load the sequence and execute it
+    LOGR("Park implement missing. TODO: implement");
+  };
+
   commandCbs[JENGA_IDX] = [&bloom](){
     bloom._stateMachine.changeState(BloomState::JENGA_RECOVERY);
   };
@@ -202,14 +208,12 @@ void UrControlBloomInitHelper::populateCustomActionButtonHandlerCbs(
     bloom.executeBloomStrategy(strategyId);
   };
 
-  commandCbs[ABORT_MOTION_IDX] = [&bloom](){
-    bloom.executeAbortMotion();
+  commandCbs[GRACEFUL_STOP_IDX] = [&bloom](){
+    bloom.executeGracefulStopAndTransitionToIdle();
   };
 
-  commandCbs[PARK_IDX] = [](){
-    //implement additional ReturnHomeMotionSequence
-    //load the sequence and execute it
-    LOGR("Park implement missing. TODO: implement");
+  commandCbs[ABORT_MOTION_IDX] = [&bloom](){
+    bloom.executeAbortMotion();
   };
 }
 
