@@ -23,6 +23,7 @@ public:
   void start(const UrscriptsBatchDoneCb& cb) override;
   void gracefulStop(const UrscriptsBatchDoneCb& cb) override;
   void recover(const UrscriptsBatchDoneCb& cb) override;
+  ErrorCode setTransportStrategy(int32_t strategyId) override;
 
 private:
   //NOTE: both current and future poses are needed to precompute blending radius

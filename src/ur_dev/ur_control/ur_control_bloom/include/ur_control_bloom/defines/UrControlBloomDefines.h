@@ -37,6 +37,12 @@ constexpr auto JENGA_MOTION_SEQUENCE_NAME = "JengaMotionSequence";
 
 namespace Bloom {
 
+enum class TransportStrategy {
+  BASIC,
+  FULL_ROTATION,
+  TWIST
+};
+
 constexpr auto SECTION_NAME = "BloomMotion";
 constexpr auto HOLDING_OBJECT_ENTRY_NAME = "HoldingObject";
 

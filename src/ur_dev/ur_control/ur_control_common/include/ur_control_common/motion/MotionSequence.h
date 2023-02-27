@@ -27,6 +27,7 @@ public:
   virtual void start(const UrscriptsBatchDoneCb& cb) = 0;
   virtual void gracefulStop(const UrscriptsBatchDoneCb& cb) = 0;
   virtual void recover(const UrscriptsBatchDoneCb& cb) = 0;
+  virtual ErrorCode setTransportStrategy(int32_t strategyId) = 0;
 
   void abort(const UrscriptsBatchDoneCb& cb);
   void setDispatchUscriptsAsyncCb(const DispatchUscriptsAsyncCb& cb);

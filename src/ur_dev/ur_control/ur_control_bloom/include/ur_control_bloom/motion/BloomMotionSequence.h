@@ -25,14 +25,9 @@ public:
   void start(const UrscriptsBatchDoneCb& cb) override;
   void gracefulStop(const UrscriptsBatchDoneCb& cb) override;
   void recover(const UrscriptsBatchDoneCb& cb) override;
+  ErrorCode setTransportStrategy(int32_t strategyId) override;
 
 private:
-  enum class TransportStrategy {
-    BASIC,
-    FULL_ROTATION,
-    TWIST
-  };
-
   struct BloomState {
     bool holdingObject = false;
   };
@@ -44,7 +39,7 @@ private:
   UrscriptCommand generateReturnHomeAndOpenGripperCommand();
 
   TransportMoveCommands generateTransportMoveCommands(
-    TransportStrategy strategy) const;
+    Motion::Bloom::TransportStrategy strategy) const;
   TransportMoveCommands generateBasicTransportMoveCommands() const;
   TransportMoveCommands generateFullRotationTransportMoveCommands() const;
   TransportMoveCommands generateTwistTransportMoveCommands() const;
@@ -54,6 +49,8 @@ private:
 
   const BloomMotionSequenceConfig _cfg;
   BloomState _state;
+  Motion::Bloom::TransportStrategy _transportStrategy = 
+    Motion::Bloom::TransportStrategy::BASIC;
   std::shared_ptr<StateFileHandler> _stateFileHandler;
 };
 

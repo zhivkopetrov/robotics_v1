@@ -64,6 +64,12 @@ void JengaMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
+ErrorCode JengaMotionSequence::setTransportStrategy(int32_t strategyId) {
+  LOG("No-op operation setTransportStrategy:[%d] for JengaMotionSequence", 
+      strategyId);
+  return ErrorCode::SUCCESS;
+}
+
 UrscriptCommand JengaMotionSequence::generateGraspCommand(
     const WaypointCartesian& currPose, const WaypointCartesian& graspPose) {
   const double blendingRadius = computeSafeBlendingRadius(

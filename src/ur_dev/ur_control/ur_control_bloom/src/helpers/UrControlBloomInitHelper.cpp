@@ -7,6 +7,8 @@
 #include "urscript_common/gripper/GripperStructs.h"
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "ur_control_common/layout/entities/button_handler/ButtonHandlerInterfaces.h"
+#include "utils/rng/Rng.h"
+#include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -181,22 +183,35 @@ void UrControlBloomInitHelper::populateCustomActionButtonHandlerCbs(
     stateMachine.changeState(BloomState::JENGA_RECOVERY);
   };
 
-  commandCbs[BLOOM_RANDOMIZED_IDX] = [&stateMachine](){
+  commandCbs[BLOOM_RANDOMIZED_IDX] = [&stateMachine, &motionExecutor](){
+    constexpr int32_t firstStrategyId = 
+      getEnumValue(Motion::Bloom::TransportStrategy::BASIC);
+    constexpr int32_t lastStrategyId = 
+      getEnumValue(Motion::Bloom::TransportStrategy::TWIST);
+    const int32_t strategyId = 
+      Rng::getInstance().getRandomNumber(firstStrategyId, lastStrategyId);
+    motionExecutor.setTransportStrategy(strategyId);
     stateMachine.changeState(BloomState::BLOOM_RECOVERY);
   };
 
-  commandCbs[BLOOM_1ST_IDX] = [&stateMachine](){
-    //TODO invoke motionExecutor.setTransportStrategyId(Basic);
+  commandCbs[BLOOM_1ST_IDX] = [&stateMachine, &motionExecutor](){
+    constexpr int32_t strategyId = 
+      getEnumValue(Motion::Bloom::TransportStrategy::BASIC);
+    motionExecutor.setTransportStrategy(strategyId);
     stateMachine.changeState(BloomState::BLOOM_RECOVERY);
   };
 
-  commandCbs[BLOOM_2ND_IDX] = [&stateMachine](){
-    //TODO invoke motionExecutor.setTransportStrategyId(FullRotation);
+  commandCbs[BLOOM_2ND_IDX] = [&stateMachine, &motionExecutor](){
+    constexpr int32_t strategyId = 
+      getEnumValue(Motion::Bloom::TransportStrategy::FULL_ROTATION);
+    motionExecutor.setTransportStrategy(strategyId);
     stateMachine.changeState(BloomState::BLOOM_RECOVERY);
   };
 
-  commandCbs[BLOOM_3RD_IDX] = [&stateMachine](){
-    //TODO invoke motionExecutor.setTransportStrategyId(Twist);
+  commandCbs[BLOOM_3RD_IDX] = [&stateMachine, &motionExecutor](){
+    constexpr int32_t strategyId = 
+      getEnumValue(Motion::Bloom::TransportStrategy::TWIST);
+    motionExecutor.setTransportStrategy(strategyId);
     stateMachine.changeState(BloomState::BLOOM_RECOVERY);
   };
 

@@ -46,6 +46,17 @@ void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   dispatchUscriptsAsyncCb(commands, cb);
 }
 
+ErrorCode BloomMotionSequence::setTransportStrategy(int32_t strategyId) {
+  if ((getEnumValue(Motion::Bloom::TransportStrategy::BASIC) > strategyId) || 
+      (getEnumValue(Motion::Bloom::TransportStrategy::TWIST) < strategyId)) {
+    LOGERR("Received unsupported TransportStrategy:[%d]", strategyId);
+    return ErrorCode::FAILURE;
+  }
+
+  _transportStrategy = toEnum<Motion::Bloom::TransportStrategy>(strategyId);
+  return ErrorCode::SUCCESS;
+}
+
 UrscriptCommand BloomMotionSequence::generateGraspCommand() {
   //NOTE: even though MoveJointCommand waypoints are used
   //their respective Cartesian counterparts are used to compute blending radius
@@ -85,7 +96,7 @@ UrscriptCommand BloomMotionSequence::generateGraspCommand() {
 UrscriptCommand BloomMotionSequence::generateTransportAndPlaceCommand() {
   UrScriptCommandContainer cmdContainer;
   TransportMoveCommands transportMoveCommands = 
-    generateTransportMoveCommands(TransportStrategy::TWIST);
+    generateTransportMoveCommands(_transportStrategy);
   for (auto& moveCommand : transportMoveCommands) {
     cmdContainer.addCommand(std::move(moveCommand));
   }
@@ -163,15 +174,15 @@ UrscriptCommand BloomMotionSequence::generateReturnHomeAndOpenGripperCommand() {
 }
 
 TransportMoveCommands BloomMotionSequence::generateTransportMoveCommands(
-  TransportStrategy strategy) const {
+  Motion::Bloom::TransportStrategy strategy) const {
   switch (strategy) {
-  case TransportStrategy::BASIC:
+  case Motion::Bloom::TransportStrategy::BASIC:
     return generateBasicTransportMoveCommands();
 
-  case TransportStrategy::FULL_ROTATION:
+  case Motion::Bloom::TransportStrategy::FULL_ROTATION:
     return generateFullRotationTransportMoveCommands();
 
-  case TransportStrategy::TWIST:
+  case Motion::Bloom::TransportStrategy::TWIST:
     return generateTwistTransportMoveCommands();
   
   default:

@@ -28,6 +28,7 @@ public:
   ErrorCode loadSequence(MotionSequenceHandle id);
   ErrorCode performAction(
     MotionAction action, const UrscriptsBatchDoneCb& batchDoneCb);
+  ErrorCode setTransportStrategy(int32_t strategyId);
 
   void shutdown();
 

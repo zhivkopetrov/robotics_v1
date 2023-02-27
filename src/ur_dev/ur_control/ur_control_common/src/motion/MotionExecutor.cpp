@@ -79,7 +79,23 @@ ErrorCode MotionExecutor::performAction(
     LOGERR(
       "Received unsupported MotionAction type: [%d] for MotionSeuqnce: [%s]",
       getEnumValue(action), motionSequence->getName().c_str());
-    ErrorCode::FAILURE;
+    return ErrorCode::FAILURE;
+  }
+
+  return ErrorCode::SUCCESS;
+}
+
+ErrorCode MotionExecutor::setTransportStrategy(int32_t strategyId) {
+  if (EMPTY_SEQUENCE_ID == _currSequenceId) {
+    LOGERR("No current MotionSequence loaded");
+    return ErrorCode::FAILURE;
+  }
+
+  const auto& motionSequence = _supportedSequences[_currSequenceId];
+  if (ErrorCode::SUCCESS != motionSequence->setTransportStrategy(strategyId)) {
+    LOGERR("No current MotionSequenceId:[%d] setTransportStrategy() failed for "
+           "strategyId: [%d]", _currSequenceId, strategyId);
+    return ErrorCode::FAILURE;
   }
 
   return ErrorCode::SUCCESS;
