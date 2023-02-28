@@ -21,6 +21,7 @@ constexpr auto GUI_WINDOW_WIDTH_PARAM_NAME = "gui_window_width";
 constexpr auto GUI_WINDOW_HEIGHT_PARAM_NAME = "gui_window_height";
 constexpr auto GRIPPER_TYPE_PARAM_NAME = "gripper_type";
 constexpr auto JENGA_END_STRATEGY_PARAM_NAME = "jenga_end_strategy";
+constexpr auto BLOOM_END_STRATEGY_PARAM_NAME = "bloom_end_strategy";
 constexpr auto ROS2_EXECUTOR_TYPE_PARAM_NAME = "ros2_executor_type";
 constexpr auto ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME = 
   "ros2_executor_threads_num";
@@ -41,6 +42,8 @@ constexpr auto DEFAULT_EXECUTOR_THREADS_NUM = 2;
 constexpr auto DEFAULT_GRIPPER_TYPE = getEnumValue(GripperType::SIMULATION);
 constexpr auto DEFAULT_JENGA_END_STRATEGY = 
   getEnumValue(JengaEndStrategy::TRANSITION_TO_IDLE_STATE);
+constexpr auto DEFAULT_BLOOM_END_STRATEGY = 
+  getEnumValue(BloomEndStrategy::PLACE_AND_RETURN_HOME);
 
 //robot
 constexpr auto DEFAULT_ROBOT_IP = "192.168.1.102";
@@ -72,6 +75,9 @@ void UrControlBloomRos2Params::print() const {
        << JENGA_END_STRATEGY_PARAM_NAME << ": " <<
          (JengaEndStrategy::SWAP_TOWERS == jengaEndStrategy ? 
               "SWAP_TOWERS" : "TRANSITION_TO_IDLE_STATE") << '\n'
+       << BLOOM_END_STRATEGY_PARAM_NAME << ": " <<
+         (BloomEndStrategy::PLACE_AND_RETURN_HOME == bloomEndStrategy ? 
+              "PLACE_AND_RETURN_HOME" : "WAIT_AFTER_TRANSPORT") << '\n'
        << ROS2_EXECUTOR_TYPE_PARAM_NAME << ": " <<
          getExecutorName(ros2CommunicatorConfig.executorType) << '\n'
        << ROS2_EXECUTOR_THREADS_NUM_PARAM_NAME << ": "
@@ -106,8 +112,15 @@ void UrControlBloomRos2Params::validate() {
   if ((JengaEndStrategy::SWAP_TOWERS != jengaEndStrategy) && 
       (JengaEndStrategy::TRANSITION_TO_IDLE_STATE != jengaEndStrategy)) {
     LOGERR("Error, received unsupported JengaEndStrategy: [%d]. Defaulting to "
-           "JengaEndStrategy::SWAP_TOWERS", getEnumValue(gripperType));
+           "JengaEndStrategy::SWAP_TOWERS", getEnumValue(jengaEndStrategy));
     jengaEndStrategy = JengaEndStrategy::SWAP_TOWERS;
+  }
+  if ((BloomEndStrategy::PLACE_AND_RETURN_HOME != bloomEndStrategy) && 
+      (BloomEndStrategy::WAIT_AFTER_TRANSPORT != bloomEndStrategy)) {
+    LOGERR("Error, received unsupported BloomEndStrategy: [%d]. Defaulting to "
+           "BloomEndStrategy::PLACE_AND_RETURN_HOME", 
+           getEnumValue(bloomEndStrategy));
+    bloomEndStrategy = BloomEndStrategy::PLACE_AND_RETURN_HOME;
   }
 
   //TODO validate ip and port
@@ -124,6 +137,8 @@ UrControlBloomRos2ParamProvider::UrControlBloomRos2ParamProvider()
   declare_parameter<int32_t>(GRIPPER_TYPE_PARAM_NAME, DEFAULT_GRIPPER_TYPE);
   declare_parameter<int32_t>(JENGA_END_STRATEGY_PARAM_NAME, 
     DEFAULT_JENGA_END_STRATEGY);
+  declare_parameter<int32_t>(BLOOM_END_STRATEGY_PARAM_NAME, 
+    DEFAULT_BLOOM_END_STRATEGY);
 
   declare_parameter<int32_t>(ROS2_EXECUTOR_TYPE_PARAM_NAME,
       DEFAULT_EXECUTOR_TYPE);
@@ -148,6 +163,10 @@ UrControlBloomRos2Params UrControlBloomRos2ParamProvider::getParams() {
   int32_t jengaEndStrategyTypeInt{};
   get_parameter(JENGA_END_STRATEGY_PARAM_NAME, jengaEndStrategyTypeInt);
   _params.jengaEndStrategy = toEnum<JengaEndStrategy>(jengaEndStrategyTypeInt);
+
+  int32_t bloomEndStrategyTypeInt{};
+  get_parameter(BLOOM_END_STRATEGY_PARAM_NAME, bloomEndStrategyTypeInt);
+  _params.bloomEndStrategy = toEnum<BloomEndStrategy>(bloomEndStrategyTypeInt);
 
   int32_t executorTypeInt{};
   get_parameter(ROS2_EXECUTOR_TYPE_PARAM_NAME, executorTypeInt);

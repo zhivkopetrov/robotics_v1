@@ -22,6 +22,7 @@ struct UrControlBloomRos2Params {
   uint16_t robotInterfacePort {};
   GripperType gripperType = GripperType::SIMULATION;
   JengaEndStrategy jengaEndStrategy = JengaEndStrategy::SWAP_TOWERS;
+  BloomEndStrategy bloomEndStrategy = BloomEndStrategy::PLACE_AND_RETURN_HOME;
 
   void print() const;
   void validate();

@@ -65,8 +65,9 @@ UrContolBloomExternalBridgeConfig generateUrContolBloomExternalBridgeConfig(
 }
 
 BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
-    [[maybe_unused]]const UrControlBloomRos2Params &rosParams) {
+    const UrControlBloomRos2Params &rosParams) {
   BloomMotionSequenceConfig cfg;
+  cfg.endStrategy = rosParams.bloomEndStrategy;
 
   cfg.pickAndPlaceAcc = 1.0; // [m/s2]
   cfg.pickAndPlaceVel = 1.0; // [m/s]
@@ -107,7 +108,7 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
 }
 
 JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
-    [[maybe_unused]]const UrControlBloomRos2Params &rosParams) {
+    const UrControlBloomRos2Params &rosParams) {
   JengaMotionSequenceConfig cfg;
   cfg.endStrategy = rosParams.jengaEndStrategy;
   cfg.totalObjectsPerTower = TOTAL_OBJECTS_PER_TOWER;
