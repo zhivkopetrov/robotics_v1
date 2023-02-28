@@ -48,25 +48,6 @@ ErrorCode UrControlBloomInitHelper::init(
     std::make_shared<UrControlCommonExternalBridge>(NODE_NAME);
   bloom._stateFileHandler = std::make_shared<StateFileHandler>();
 
-  UrControlBloomLayoutInterface layoutInterface;
-  if (ErrorCode::SUCCESS != 
-      initLayout(parsedCfg.layoutCfg, layoutInterface, bloom)) {
-    LOGERR("Error, initLayout() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  if (ErrorCode::SUCCESS != 
-        initDashboardHelper(layoutInterface.commonInterface, bloom)) {
-    LOGERR("initDashboardHelper() failed");
-    return ErrorCode::FAILURE;
-  }
-
-  if (ErrorCode::SUCCESS != initUrControlBloomExternalBridge(
-        parsedCfg.externalBridgeCfg, layoutInterface.commonInterface, bloom)) {
-    LOGERR("initUrControlBloomExternalBridge() failed");
-    return ErrorCode::FAILURE;
-  }
-
   if (ErrorCode::SUCCESS != 
       initUrScriptBuilder(parsedCfg.urScriptBuilderCfg, bloom)) {
     LOGERR("initUrScriptBuilder() failed");
@@ -87,6 +68,25 @@ ErrorCode UrControlBloomInitHelper::init(
 
   if (ErrorCode::SUCCESS != initStateMachine(bloom)) {
     LOGERR("initStateMachine() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  UrControlBloomLayoutInterface layoutInterface;
+  if (ErrorCode::SUCCESS != 
+      initLayout(parsedCfg.layoutCfg, layoutInterface, bloom)) {
+    LOGERR("Error, initLayout() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != 
+        initDashboardHelper(layoutInterface.commonInterface, bloom)) {
+    LOGERR("initDashboardHelper() failed");
+    return ErrorCode::FAILURE;
+  }
+
+  if (ErrorCode::SUCCESS != initUrControlBloomExternalBridge(
+        parsedCfg.externalBridgeCfg, layoutInterface.commonInterface, bloom)) {
+    LOGERR("initUrControlBloomExternalBridge() failed");
     return ErrorCode::FAILURE;
   }
 
