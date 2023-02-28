@@ -28,6 +28,7 @@ struct BloomMotionSequenceConfig {
   WaypointJoint twistStrategyWaypointOneJoint;
   WaypointJoint twistStrategyWaypointTwoJoint;
   WaypointJoint twistStrategyWaypointThreeJoint;
+  WaypointJoint twistStrategyWaypointFourthJoint;
 
   WaypointCartesian homeCartesian;
   WaypointCartesian graspCartesian;

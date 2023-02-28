@@ -95,14 +95,15 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
   cfg.placeApproachBasicStrategyJoint = 
     WaypointJoint({ -92.42, -94.62, -118.4, 33.02, 92.71, 0 });
   cfg.placeApproachFullRotationStrategyJoint = 
-    WaypointJoint({ -92.42, -94.62, -118.4, 33.02, -267.79, 0 });
+    WaypointJoint({ -92.42, -94.62, -118.4, 33.02, 92.71, 360 });
 
   cfg.twistStrategyWaypointOneJoint = 
     WaypointJoint({ 30.0, -86.33, -117.38, -66.6, 180.0, 30.22 });
   cfg.twistStrategyWaypointTwoJoint = 
     WaypointJoint({ -10.0, -82.22, -90.66, -97.43, 270.0, 30.22 });
   cfg.twistStrategyWaypointThreeJoint = 
-    WaypointJoint({ -50.0, -91.55, -122.70, -72.19, 180.0, 14.09 });
+    WaypointJoint({ -50.0, -82.34, -100.82, -102.60, 180.0, 14.62 });
+  cfg.twistStrategyWaypointFourthJoint = cfg.placeApproachBasicStrategyJoint;
 
   return cfg;
 }
