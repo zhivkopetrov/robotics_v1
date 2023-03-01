@@ -128,6 +128,8 @@ void UrBridgeExternalInterface::handleUrScript(
           urScript->data.c_str(), scriptName.c_str());
   }
   mTcpClient.send(urScript->data);
+
+  preemptUrScriptService(); //if any
 }
 
 void UrBridgeExternalInterface::handleUrScriptService(
@@ -180,19 +182,7 @@ void UrBridgeExternalInterface::handleUrScriptServicePreempt(
   std::shared_ptr<Trigger::Response> response) {
   LOG_T("Received UrScript Service Preempt request");
   response->success = true;
-  if (!mActiveUrscriptServiceCall) {
-    return;
-  }
-    
-  AtomicBoolAutoLiveScope preemptRequest(mActiveUrscriptServicePreemptRequest);
-
-  //wait for service to be aborted
-  while (true) {
-    std::this_thread::sleep_for(10ms);
-    if (!mActiveUrscriptServiceCall) {
-      break;
-    }
-  }
+  preemptUrScriptService();
 }
 
 void UrBridgeExternalInterface::handleGetEefAngleAxisService(
@@ -255,4 +245,20 @@ UrBridgeExternalInterface::getPinPayload() {
   }
 
   return { payloadStr, waitState };
+}
+
+void UrBridgeExternalInterface::preemptUrScriptService() {
+  if (!mActiveUrscriptServiceCall) {
+    return;
+  }
+    
+  AtomicBoolAutoLiveScope preemptRequest(mActiveUrscriptServicePreemptRequest);
+
+  //wait for service to be aborted
+  while (true) {
+    std::this_thread::sleep_for(10ms);
+    if (!mActiveUrscriptServiceCall) {
+      break;
+    }
+  }
 }

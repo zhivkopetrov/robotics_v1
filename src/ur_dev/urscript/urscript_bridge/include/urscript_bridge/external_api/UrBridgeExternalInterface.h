@@ -63,8 +63,9 @@ private:
 
   //returns wait aborted or not
   bool waitForPinState(PinState state);
-
   std::pair<std::string, PinState> getPinPayload();
+  
+  void preemptUrScriptService();
 
   TcpClient mTcpClient;
   uint32_t mUrScriptServiceReadyPin { };
