@@ -136,7 +136,10 @@ void UrControlBloom::handleEventBloomRecoveryState(const InputEvent& e) {
     return; //only interested in keyboard release events
   }
 
-  if (Keyboard::KEY_BACKSPACE == e.key) {
+  if ((Keyboard::KEY_ENTER == e.key) || (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
+    executeGracefulStopAndTransitionToIdle();
+  }
+  else if (Keyboard::KEY_BACKSPACE == e.key) {
     executeAbortMotion();
   }
 }

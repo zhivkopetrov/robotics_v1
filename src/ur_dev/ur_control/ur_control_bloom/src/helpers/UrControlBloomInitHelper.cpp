@@ -374,6 +374,9 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
 
   transition.stateName = BloomState::BLOOM_RECOVERY;
   transition.transitions.insert(BloomState::BLOOM);
+
+  //a potential recovery scenario with BloonEndStrategy::TRANSPORT_AND_WAIT
+  transition.transitions.insert(BloomState::IDLE);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
 

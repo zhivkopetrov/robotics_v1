@@ -32,8 +32,7 @@ void BloomMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
     commands.push_back(generatePlaceCommand());
     commands.push_back(generateRetractAndReturnHomeCommand());
     batchDoneCb = cb;
-  } else {
-    //do nothing on BloomEndStrategy::WAIT_AFTER_TRANSPORT
+  } else { //BloomEndStrategy::WAIT_AFTER_TRANSPORT
     batchDoneCb = [](){};
   }
 
@@ -41,12 +40,19 @@ void BloomMotionSequence::start(const UrscriptsBatchDoneCb& cb) {
 }
 
 void BloomMotionSequence::gracefulStop(const UrscriptsBatchDoneCb& cb) {
-  const std::vector<UrscriptCommand> commands = 
-    (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy ? 
-      generateGracefullyStopPlaceAndReturnHomeStrategy() :
-      generateGracefullyStopWaitAfterTransportStrategy());
+  std::vector<UrscriptCommand> commands;
+  UrscriptsBatchDoneCb batchDoneCb = cb;
+  if (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy) {
+    commands = generateGracefullyStopPlaceAndReturnHomeStrategy();
+  } else { //BloomEndStrategy::WAIT_AFTER_TRANSPORT
+    commands = generateGracefullyStopWaitAfterTransportStrategy();
+    if (_state.holdingObject && !_state.reachedTransportTargetPose) {
+      //transport and wait. Ignore the UrscriptsBatchDoneCb callback
+      batchDoneCb = [](){};
+    }
+  }
 
-  dispatchUscriptsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, batchDoneCb);
 }
 
 void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
@@ -54,10 +60,17 @@ void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
   std::vector<UrscriptCommand> commands { generateReturnHomeCommand() };
 
   //reuse the gracefully stopping logic
-  std::vector<UrscriptCommand> gracefullyStopCommands = 
-    (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy ? 
-      generateGracefullyStopPlaceAndReturnHomeStrategy() :
-      generateGracefullyStopWaitAfterTransportStrategy());
+  std::vector<UrscriptCommand> gracefullyStopCommands;
+  UrscriptsBatchDoneCb batchDoneCb = cb;
+  if (BloomEndStrategy::PLACE_AND_RETURN_HOME == _cfg.endStrategy) {
+    gracefullyStopCommands = generateGracefullyStopPlaceAndReturnHomeStrategy();
+  } else { //BloomEndStrategy::WAIT_AFTER_TRANSPORT
+    gracefullyStopCommands = generateGracefullyStopWaitAfterTransportStrategy();
+    if (_state.holdingObject && !_state.reachedTransportTargetPose) {
+      //transport and wait. Ignore the UrscriptsBatchDoneCb callback
+      batchDoneCb = [](){};
+    }
+  }
 
   commands.insert(
     commands.end(),
@@ -65,7 +78,7 @@ void BloomMotionSequence::recover(const UrscriptsBatchDoneCb& cb) {
     std::make_move_iterator(gracefullyStopCommands.end())
   );
 
-  dispatchUscriptsAsyncCb(commands, cb);
+  dispatchUscriptsAsyncCb(commands, batchDoneCb);
 }
 
 ErrorCode BloomMotionSequence::setTransportStrategy(int32_t strategyId) {
@@ -319,11 +332,14 @@ std::vector<UrscriptCommand>
 BloomMotionSequence::generateGracefullyStopWaitAfterTransportStrategy() {
   std::vector<UrscriptCommand> commands;
   if (_state.holdingObject) {
-    if (!_state.reachedTransportTargetPose) {
+    //resume after wait
+    if (_state.reachedTransportTargetPose) {
+      commands.push_back(generateHandoverCommand());
+      commands.push_back(generateReturnHomeCommand());
+    } else {
+      //transport and wait
       commands.push_back(generateTransportCommand());
     }
-    commands.push_back(generateHandoverCommand());
-    commands.push_back(generateReturnHomeCommand());
   } else {
     commands.push_back(generateReturnHomeCommand());
     commands.push_back(
