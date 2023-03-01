@@ -30,13 +30,30 @@ public:
 private:
   struct BloomState {
     bool holdingObject = false;
+    bool reachedTransportTargetPose = false;
   };
 
+  //==========START stateful commands===========
   UrscriptCommand generateGraspCommand();
-  UrscriptCommand generateTransportAndPlaceCommand();
-  UrscriptCommand generateRetractAndReturnHomeCommand();
-  UrscriptCommand generateReturnHomeCommand();
-  UrscriptCommand generateReturnHomeAndOpenGripperCommand();
+
+  //used for BloomEndStrategy::PLACE_AND_RETURN_HOME strategy
+  UrscriptCommand generatePlaceCommand();
+
+  //used for BloomEndStrategy::WAIT_AFTER_TRANSPORT strategy
+  UrscriptCommand generateHandoverCommand();
+
+  UrscriptCommand generateTransportCommand();
+
+  std::vector<UrscriptCommand> 
+    generateGracefullyStopPlaceAndReturnHomeStrategy();
+  std::vector<UrscriptCommand> 
+    generateGracefullyStopWaitAfterTransportStrategy();
+  //===========END stateful commands============
+
+  //used for BloomEndStrategy::PLACE_AND_RETURN_HOME strategy
+  UrscriptCommand generateRetractAndReturnHomeCommand() const;
+  UrscriptCommand generateReturnHomeCommand() const;
+  UrscriptCommand generateGripperActuateCommand(GripperActuateType type) const;
 
   TransportMoveCommands generateTransportMoveCommands(
     Motion::Bloom::TransportStrategy strategy) const;
