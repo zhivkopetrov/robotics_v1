@@ -19,7 +19,7 @@
     #supported jenga end strategies:
       #PLACE_AND_RETURN_HOME(0)
       #WAIT_AFTER_TRANSPORT(1)
-    bloom_end_strategy: 0
+    bloom_end_strategy: 1
     
     #supported executor types:
       #SINGLE_THREADED(0)
