@@ -23,7 +23,7 @@ constexpr auto SCRIPTS_FOLDER_NAME = "scripts";
 constexpr auto GRIPPER_DEFINITIONS_FOLDER_NAME = "gripper_definitions";
 constexpr auto CONFIG_FOLDER_NAME = "config";
 constexpr auto STATE_FILE_NAME = "system_state.ini";
-constexpr auto TOTAL_OBJECTS_PER_TOWER = 20;
+constexpr auto TOTAL_OBJECTS_PER_TOWER = 18;
 
 ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
     const std::string &projectInstallPrefix) {
@@ -141,9 +141,9 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   cfg.graspApproachCartesian = WaypointCartesian(
     Point3d(0.545, -0.592, 0.475), cfg.zeroOrientation);
   cfg.baseCenterACartesian = WaypointCartesian(
-    Point3d(0.596, -0.426, -0.015), cfg.zeroOrientation);
+    Point3d(0.596, -0.426, -0.012), cfg.zeroOrientation);
   cfg.baseCenterBCartesian = WaypointCartesian(
-    Point3d(0.495, -0.758, -0.015), cfg.zeroOrientation);
+    Point3d(0.495, -0.758, -0.012), cfg.zeroOrientation);
 
   return cfg;
 }
