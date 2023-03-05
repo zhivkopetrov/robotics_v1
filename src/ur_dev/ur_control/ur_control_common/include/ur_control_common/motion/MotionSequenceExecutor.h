@@ -4,6 +4,8 @@
 //System headers
 #include <cstdint>
 #include <vector>
+#include <atomic>
+#include <thread>
 
 //Other libraries headers
 #include "ur_control_common/defines/UrControlCommonFunctionalDefines.h"

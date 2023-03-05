@@ -10,8 +10,8 @@
 //Own components headers
 
 namespace {
-constexpr double DEGREES_TO_RADIANS_MULTIPLIER = std::numbers::pi / 180.0;
-constexpr double RADIANS_TO_DEGREES_MULTIPLIER = 180.0 / std::numbers::pi;
+constexpr double DEGREES_TO_RADIANS_MULTIPLIER = M_PI / 180.0;
+constexpr double RADIANS_TO_DEGREES_MULTIPLIER = 180.0 / M_PI;
 }
 
 double toRadians(double degrees) {
