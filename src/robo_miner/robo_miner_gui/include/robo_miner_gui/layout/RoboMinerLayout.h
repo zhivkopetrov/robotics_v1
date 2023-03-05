@@ -24,7 +24,7 @@ public:
 
   ErrorCode init(const RoboMinerLayoutConfig& cfg,
                  const RoboMinerLayoutOutInterface &outInterface,
-               RoboMinerLayoutInterface& interface);
+                 RoboMinerLayoutInterface& interface);
   void deinit();
   void draw() const;
   void handleEvent(const InputEvent &e);

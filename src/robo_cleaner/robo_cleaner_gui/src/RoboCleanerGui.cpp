@@ -36,7 +36,8 @@ void RoboCleanerGui::draw() const {
   _layout.draw();
 }
 
-void RoboCleanerGui::handleEvent([[maybe_unused]]const InputEvent &e) {
+void RoboCleanerGui::handleEvent(const InputEvent &e) {
+  _layout.handleEvent(e);
 }
 
 void RoboCleanerGui::process() {

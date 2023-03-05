@@ -5,7 +5,7 @@
 
 //Other libraries headers
 #include "robo_common/layout/field/FieldUtils.h"
-#include "sdl_utils/input/InputEvent.h"
+#include "utils/input/InputEvent.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 

@@ -10,6 +10,7 @@ project(
 
 find_package(cmake_helpers REQUIRED)
 find_package(robo_common REQUIRED)
+find_package(ament_cmake REQUIRED)
 find_package(robo_miner_interfaces REQUIRED)
 
 set(_INC_FOLDER_NAME include)
@@ -38,7 +39,18 @@ target_link_libraries(
         robo_common::robo_common
 )
 
+ament_export_targets(
+    ${PROJECT_NAME}Targets
+        HAS_LIBRARY_TARGET
+)
+
 ament_target_dependencies(
+    ${PROJECT_NAME}
+    PUBLIC
+        robo_miner_interfaces
+)
+
+ament_export_dependencies(
     ${PROJECT_NAME}
     PUBLIC
         robo_miner_interfaces

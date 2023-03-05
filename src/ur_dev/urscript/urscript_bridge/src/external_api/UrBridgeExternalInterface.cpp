@@ -8,7 +8,7 @@
 
 //Other libraries headers
 #include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include "urscript_common/message_helpers/UrScriptMessageHelpers.h"
 #include "urscript_common/defines/UrScriptTopics.h"
@@ -19,15 +19,28 @@
 #include "urscript_bridge/utils/Tf2Utils.h"
 
 namespace {
+using namespace std::literals;
+
 constexpr auto NODE_NAME = "urscript_bridge";
+
+class AtomicBoolAutoLiveScope {
+public:
+  AtomicBoolAutoLiveScope(std::atomic<bool>& obj) : mObj(obj) {
+    mObj = true;
+  }
+  ~AtomicBoolAutoLiveScope() noexcept {
+    mObj = false;
+  }
+
+private:
+  std::atomic<bool>& mObj;
+};
 
 template<typename T>
 void waitForPublishers(const T& subscription) {
   while (0 == subscription->get_publisher_count()) {
     LOG("Topic [%s] publishers not available. Waiting 1s ...",
         subscription->get_topic_name());
-
-    using namespace std::literals;
     std::this_thread::sleep_for(1s);
   }
 }
@@ -41,7 +54,8 @@ UrBridgeExternalInterface::UrBridgeExternalInterface()
 
 ErrorCode UrBridgeExternalInterface::init(
     const UrBridgeExternalInterfaceConfig &cfg) {
-  initTogglePinMessagesPayload(cfg.urScriptServiceReadyPin);
+  mUrScriptServiceReadyPin = cfg.urScriptServiceReadyPin;
+  mVerboseLogging = cfg.verboseLogging;
 
   if (ErrorCode::SUCCESS != mTcpClient.init(cfg.robotIp,
           cfg.robotInterfacePort)) {
@@ -57,21 +71,6 @@ ErrorCode UrBridgeExternalInterface::init(
   mTcpClient.start();
 
   return ErrorCode::SUCCESS;
-}
-
-void UrBridgeExternalInterface::initTogglePinMessagesPayload(uint32_t pin) {
-  mUrScriptServiceReadyPin = pin;
-
-  std::ostringstream ss;
-  ss << std::setprecision(3);
-  ss << "def prepare():\n" << "\tposition_deviation_warning(True, 0.6)\n"
-     << "\tset_standard_digital_out(" << mUrScriptServiceReadyPin << ", "
-     << "True" << ")\n" << "end\n";
-  mTogglePinMsgPayload = ss.str();
-
-  mUntogglePinMsgPayload = "\tset_standard_digital_out(";
-  mUntogglePinMsgPayload.append(std::to_string(mUrScriptServiceReadyPin)).
-      append(", False)\n");
 }
 
 ErrorCode UrBridgeExternalInterface::initCommunication() {
@@ -92,6 +91,11 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
 
   mUrScriptService = create_service<UrScriptSrv>(URSCRIPT_SERVICE,
       std::bind(&UrBridgeExternalInterface::handleUrScriptService, this,
+          std::placeholders::_1, std::placeholders::_2),
+      rmw_qos_profile_services_default, mCallbackGroup);
+
+  mUrScriptServicePreempt = create_service<Trigger>(URSCRIPT_SERVICE_PREEMPT,
+      std::bind(&UrBridgeExternalInterface::handleUrScriptServicePreempt, this,
           std::placeholders::_1, std::placeholders::_2),
       rmw_qos_profile_services_default, mCallbackGroup);
 
@@ -117,12 +121,29 @@ void UrBridgeExternalInterface::handleIOState(
 
 void UrBridgeExternalInterface::handleUrScript(
     const String::SharedPtr urScript) {
+  if (mVerboseLogging) {
+    const std::string scriptName = extractScriptName(urScript->data);
+    LOG_T("Received UrScript Topic: [%s] with data:\n%s\nUrScript Topic: [%s] "
+          "- Sending command to robot\n", scriptName.c_str(), 
+          urScript->data.c_str(), scriptName.c_str());
+  }
   mTcpClient.send(urScript->data);
+
+  preemptUrScriptService(); //if any
 }
 
 void UrBridgeExternalInterface::handleUrScriptService(
     const std::shared_ptr<UrScriptSrv::Request> request,
     std::shared_ptr<UrScriptSrv::Response> response) {
+  response->success = true;
+  AtomicBoolAutoLiveScope urscriptServiceCall(mActiveUrscriptServiceCall);
+  [[maybe_unused]]std::string scriptName;
+  if (mVerboseLogging) {
+    scriptName = extractScriptName(request->data);
+    LOG_T("Received UrScript Service: [%s] with data:\n%s", scriptName.c_str(),
+          request->data.c_str());
+  }
+
   size_t endDelimiterFindIdx { };
   const bool success = validateUrscriptServiceRequest(request,
       response->error_reason, endDelimiterFindIdx);
@@ -132,15 +153,36 @@ void UrBridgeExternalInterface::handleUrScriptService(
     return;
   }
 
-  mTcpClient.send(mTogglePinMsgPayload);
-  waitForPinState(PinState::TOGGLED);
+  const auto [pinPayloadStr, pinWaitCondition] = getPinPayload();
+  UrScriptPayload payload = request->data;
+  payload.insert(endDelimiterFindIdx, pinPayloadStr);
 
-  std::string data = request->data;
-  data.insert(endDelimiterFindIdx, mUntogglePinMsgPayload);
+  if (mVerboseLogging) {
+    LOG_T("UrScript Service: [%s] - Sending command to robot",
+     scriptName.c_str());
+  }
+  mTcpClient.send(payload);
 
-  mTcpClient.send(data);
-  waitForPinState(PinState::UNTOGGLED);
+  const bool waitAborted = waitForPinState(pinWaitCondition);
+  if (waitAborted) {
+    if (mVerboseLogging) {
+      LOG_T("UrScript Service: [%s] - aborted externally\n",
+        scriptName.c_str());
+    }
+    return;
+  }
+  if (mVerboseLogging) {
+    LOG_T("UrScript Service: [%s] - Robot completed command\n", 
+      scriptName.c_str());
+  }
+}
+
+void UrBridgeExternalInterface::handleUrScriptServicePreempt(
+  [[maybe_unused]]const std::shared_ptr<Trigger::Request> request,
+  std::shared_ptr<Trigger::Response> response) {
+  LOG_T("Received UrScript Service Preempt request");
   response->success = true;
+  preemptUrScriptService();
 }
 
 void UrBridgeExternalInterface::handleGetEefAngleAxisService(
@@ -163,19 +205,60 @@ void UrBridgeExternalInterface::handleGetEefAngleAxisService(
   }
 }
 
-void UrBridgeExternalInterface::waitForPinState(PinState state) {
-  using namespace std::literals;
-
-  const bool waitCondidition = PinState::TOGGLED == state ? true : false;
+bool UrBridgeExternalInterface::waitForPinState(PinState state) {
+  const bool waitCondidition = PinState::FLIPPED == state ? true : false;
+  bool waitAborted = false; 
   while (true) {
+    if (mActiveUrscriptServicePreemptRequest) {
+      waitAborted = true;
+      return waitAborted;
+    }
+
     {
       std::lock_guard<Mutex> lock(mIoMutex);
-      if (waitCondidition == mLatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
+      if (waitCondidition == 
+          mLatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
         break;
       }
     }
 
     std::this_thread::sleep_for(10ms);
   }
+
+  return waitAborted;
 }
 
+std::pair<std::string, UrBridgeExternalInterface::PinState> 
+UrBridgeExternalInterface::getPinPayload() {
+  std::string payloadStr = "\tset_standard_digital_out(";
+  PinState waitState;
+
+  std::lock_guard<Mutex> lock(mIoMutex);
+  payloadStr.append(std::to_string(mUrScriptServiceReadyPin)).append(", ");
+
+  if (mLatestIoStates.digital_out_states[mUrScriptServiceReadyPin].state) {
+    payloadStr.append("False)\n");
+    waitState = PinState::UNFLIPPED;
+  } else {
+    payloadStr.append("True)\n");
+    waitState = PinState::FLIPPED;
+  }
+
+  return { payloadStr, waitState };
+}
+
+void UrBridgeExternalInterface::preemptUrScriptService() {
+  if (!mActiveUrscriptServiceCall) {
+    return;
+  }
+    
+  AtomicBoolAutoLiveScope preemptRequest(mActiveUrscriptServicePreemptRequest);
+
+  //wait for service to be aborted
+  while (true) {
+    std::this_thread::sleep_for(10ms);
+    if (!mActiveUrscriptServiceCall) {
+      break;
+    }
+  }
+}

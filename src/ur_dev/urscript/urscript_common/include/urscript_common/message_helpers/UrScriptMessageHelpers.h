@@ -9,6 +9,7 @@
 #include "urscript_interfaces/srv/ur_script.hpp"
 
 //Own components headers
+#include "urscript_common/defines/UrScriptDefines.h"
 
 //Forward declarations
 
@@ -18,5 +19,7 @@
 bool validateUrscriptServiceRequest(
     const std::shared_ptr<urscript_interfaces::srv::UrScript::Request> &request,
     std::string &outErrorCode, size_t &outEndFindIdx);
+
+std::string extractScriptName(const UrScriptPayload& data);
 
 #endif /* URSCRIPT_COMMOM_URSCRIPTMESSAGEHELPERS_H_ */

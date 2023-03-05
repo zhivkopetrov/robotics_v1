@@ -1,0 +1,103 @@
+@startuml
+
+skinparam linetype polyline
+skinparam linetype ortho
+
+package "static C++ libs layer 1" {
+  [cmake_helpers]
+  [utils]
+  [resource_utils]
+}
+
+package "static C++ libs layer 2" {
+  [sdl_utils]
+  [manager_utils]
+  [game_engine]
+}
+
+package "static C++ libs layer 3" {
+  [ros2_game_engine]
+  [robo_common]
+}
+
+package "tools" {
+  [resource_builder]
+}
+
+package "auto-generated" {
+  [cpp_headers]
+  [asset_information]
+}
+
+package "sdl_dynamic_libs" {
+  [SDL2]
+  [SDL2_image]
+  [SDL2_ttf]
+  [SDL2_mixer]
+}
+
+[SDL2_dynamic_libs]
+
+package "ur_driver" {
+  [universal_robots_client_library]
+  [universal_robots_ros2_driver]
+}
+
+package "ur_script" {
+  [urscript_interface]
+  [urscript_common]
+  [urscript_bridge]
+}
+
+package "ur_control" {
+  [ur_control_common]
+  [ur_control_gui]
+  [ur_control_bloom]
+}
+
+' START libs & tools
+cmake_helpers -> utils
+utils -> resource_utils
+resource_utils -u--> sdl_utils
+sdl_utils -d-> manager_utils
+manager_utils -> game_engine
+game_engine -> ros2_game_engine
+
+resource_utils --> resource_builder
+resource_builder --> asset_information
+resource_builder --> cpp_headers
+asset_information --> game_engine
+cpp_headers --> game_engine
+
+SDL2 --> SDL2_dynamic_libs
+SDL2_image --> SDL2_dynamic_libs
+SDL2_ttf --> SDL2_dynamic_libs
+SDL2_mixer --> SDL2_dynamic_libs
+
+SDL2_dynamic_libs --> sdl_utils : private\ndependency
+' END libs & tools
+
+manager_utils --> robo_common
+
+' START UR Driver
+universal_robots_client_library --> universal_robots_ros2_driver
+universal_robots_ros2_driver -d--> urscript_bridge
+universal_robots_ros2_driver -l--> ur_control_common
+' END UR Driver
+
+' START URScript
+urscript_interface --> urscript_common
+urscript_common --> urscript_bridge
+urscript_common --> ur_control_common
+
+ros2_game_engine -d--> urscript_bridge
+' END UR URScript
+
+' START UR Control
+ros2_game_engine -d--> ur_control_common
+
+ur_control_common --> ur_control_gui
+ur_control_common --> ur_control_bloom
+' END UR Control
+
+@enduml

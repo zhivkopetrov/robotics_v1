@@ -38,8 +38,3 @@ void RoboCollectorController::draw() const {
 void RoboCollectorController::handleEvent(const InputEvent &e) {
   _layout.handleEvent(e);
 }
-
-void RoboCollectorController::process() {
-
-}
-

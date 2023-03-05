@@ -1,6 +1,9 @@
 FROM ubuntu:20.04 as base
 
 ARG ROS2_DISTRO=foxy
+ARG CMAKE_BUILD_TYPE=Debug
+ARG VERBOSE_BUILD=False
+ARG ADDITIONAL_COLCON_OPTIONS=""
 ARG REPO_NAME=robotics_v1
 ARG INSTALL_SCRIPTS_DIR=/scripts/assisted_install
 ARG BUILD_SCRIPTS_DIR=/scripts/assisted_build
@@ -50,7 +53,8 @@ RUN rm -rf \
     /var/tmp/*
 
 # build and install artifacts
-RUN .${BUILD_SCRIPTS_DIR}/full_build.sh
+RUN .${BUILD_SCRIPTS_DIR}/full_build.sh \ 
+    ${CMAKE_BUILD_TYPE} ${VERBOSE_BUILD} ${ADDITIONAL_COLCON_OPTIONS}
 
 # Expose port 5920 to view display using VNC
 EXPOSE ${VNC_PORT}

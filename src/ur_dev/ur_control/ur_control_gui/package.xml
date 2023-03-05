@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ur_control_gui</name>
+  <version>2.0.0</version>
+  <description>ur_control_gui app</description>
+  <maintainer email="zhivkopetrov90@gmail.com">Zhivko Petrov</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <build_depend>cmake_helpers</build_depend>
+  <build_depend>ament_index_cpp</build_depend>
+  <build_depend>ur_control_common</build_depend>
+
+  <exec_depend>ament_index_cpp</exec_depend>
+  <exec_depend>ur_control_common</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-#include "sdl_utils/input/InputEvent.h"
+#include "utils/input/InputEvent.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
 #include "utils/Log.h"

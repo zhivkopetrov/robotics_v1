@@ -8,6 +8,7 @@ project(
     VERSION 1.0.0
 )
 
+find_package(ament_cmake REQUIRED)
 find_package(cmake_helpers REQUIRED)
 find_package(utils REQUIRED)
 find_package(urscript_interfaces REQUIRED)
@@ -20,9 +21,22 @@ add_library(
     ${PROJECT_NAME}
     STATIC
         ${_INC_DIR}/defines/UrScriptTopics.h
+        ${_INC_DIR}/defines/UrScriptDefines.h
         ${_INC_DIR}/message_helpers/UrScriptMessageHelpers.h
+        ${_INC_DIR}/gripper/GripperStructs.h
+        ${_INC_DIR}/motion/MotionStructs.h
+        ${_INC_DIR}/motion/MotionUtils.h
+        ${_INC_DIR}/urscript/UrScriptParser.h
+        ${_INC_DIR}/urscript/UrScriptCommandContainer.h
+        ${_INC_DIR}/urscript/UrScriptBuilder.h
+        ${_INC_DIR}/urscript/config/UrScriptBuilderConfig.h
      
         ${_SRC_DIR}/message_helpers/UrScriptMessageHelpers.cpp
+        ${_SRC_DIR}/gripper/GripperStructs.cpp
+        ${_SRC_DIR}/motion/MotionStructs.cpp
+        ${_SRC_DIR}/motion/MotionUtils.cpp
+        ${_SRC_DIR}/urscript/UrScriptParser.cpp
+        ${_SRC_DIR}/urscript/UrScriptBuilder.cpp
 )
 
 target_include_directories(
@@ -38,7 +52,18 @@ target_link_libraries(
         utils::utils
 )
 
+ament_export_targets(
+    ${PROJECT_NAME}Targets 
+        HAS_LIBRARY_TARGET
+)
+
 ament_target_dependencies(
+    ${PROJECT_NAME}
+    PUBLIC
+        urscript_interfaces
+)
+
+ament_export_dependencies(
     ${PROJECT_NAME}
     PUBLIC
         urscript_interfaces

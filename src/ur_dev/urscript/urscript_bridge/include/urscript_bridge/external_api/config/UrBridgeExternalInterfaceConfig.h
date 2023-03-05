@@ -15,6 +15,7 @@ struct UrBridgeExternalInterfaceConfig {
   std::string robotIp;
   uint16_t robotInterfacePort { };
   uint32_t urScriptServiceReadyPin { };
+  bool verboseLogging = false;
 };
 
 #endif /* URSCRIPT_BRINDGE_URBRIDGEEXTERNALINTERFACECONFIG_H_ */

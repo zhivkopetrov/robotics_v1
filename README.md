@@ -1,6 +1,6 @@
 # robotics_v1
 
-## A C++20 Robot Operating System 2 (ROS2) Foxy Fitzroy workspace
+## An educational C++20 Robot Operating System 2 (ROS2) Foxy Fitzroy workspace
 *You're reading the documentation for an older, but still supported, version of ROS 2.  
 For information on the latest version, please look at the [master](https://github.com/zhivkopetrov/robotics_v1/tree/master) branch.*
 
@@ -90,6 +90,8 @@ echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
 echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
 ```
 ### Docker support
+  - Requires Docker Engine (18.09.1 and above)
+    - Tested up to Docker Engine 20.10.23
 ```
 # All parameters are optional
 
@@ -125,9 +127,11 @@ Right click -> Applications -> Shells -> Bash
 ## Colcon configuration. Building the project
 Use plain Colcon commands to configure and build the project or use some of the existing preset build scripts.
 ### Basic usage
+Automatic asset generation + build + install steps
 ```
 ./scripts/assisted_build/full_build.sh
 ```
+Build + install steps
 ```
 ./scripts/assisted_build/partial_build.sh
 ```
@@ -135,12 +139,10 @@ Use plain Colcon commands to configure and build the project or use some of the 
 ```
 # all parameters listed in the scripts are optional
 
-# full build - automatic asset generation + build + install steps
 # A full build is required only once in the beginning.
 # For more information refer to the 'Automatic asset information generation' section
 ./scripts/assisted_build/full_build.sh <build_type> <verbose_build> <additional_colcon_options>
 
-# partial build - build + install steps
 # A partial build is the prefered, fast, with minimal compilation (build + install) procedure
 ./scripts/assisted_build/partial_build.sh <build_type> <verbose_build> <additional_colcon_options>
 
@@ -192,13 +194,11 @@ Run nodes via normal colcon commands (ros2 run/launch).
 
 ### Robo games
 ```
-source install/setup.bash
 ros2 launch robo_collector_gui launch.py
 ros2 launch robo_collector_controller launch.py
 ros2 launch robo_miner_gui launch.py
 ros2 launch robo_cleaner_gui launch.py
-
-# Note that 'ros2 launch' will load config files, while 'ros2 run' will use the default ones 
+# Note that 'ros2 launch' will load config files, while 'ros2 run' will use the default ones
 ```
 
 ### Universal Robots Application suite setup
@@ -240,12 +240,22 @@ Helper utility node, exposing beginner-friendly API from the robot.
 ```
 ros2 launch urscript_bridge launch.py
 ```
-  
-Helper GUI node, which can control real hardware or a simulated robot.  
-The node is utilising the robot API exposed from the 'urscript_bridge' node  
+
+Helper GUI nodes, which can control real hardware or a simulated robot.  
+The nodes are utilising the robot API exposed from the 'urscript_bridge' node.  
 ```
 ros2 launch ur_control_gui launch.py
+ros2 launch ur_control_bloom launch.py
 ```
+
+`ur_control_gui` is a high-level control application suited for executing raw URScripts.  
+`ur_control_bloom` provides more sophisticated control concepts such as:
+  - Execution of blocking or async motion commands
+  - Graceful/immediate abort of motion trajectories
+  - Constructing gripper/motion/robot URScripts with source code primitives
+  - Configurable high-level state machine and low-level motion sequences
+  - Configurable motion strategies (behavior) based on config 
+  - Gripper full hardware support and basic simulation support
 
 ## Hardware requirements
 This project utilizes hardware-accelerated graphics.
@@ -326,5 +336,9 @@ This step decribes the manual installation of third party libs. For automated/as
     - Download SDL2 packages from the official [SDL2 repository](https://github.com/libsdl-org/SDL/releases/latest)
     - Extract under "C:/SDL2" or alongside the project binary 
 
-## Dependency hierarchy diagram
-![](doc/hierarchy_diagram.svg)
+## Dependency hierarchy diagrams
+### Robo Games
+![](doc/hierarchy_diagrams/robo_games_hierarchy_diagram.svg)
+
+### UR Dev
+![](doc/hierarchy_diagrams/ur_dev_hierarchy_diagram.svg)

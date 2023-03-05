@@ -2,14 +2,13 @@
 #include "robo_common/helpers/LevelFileLoader.h"
 
 //System headers
-#include <cerrno>
-#include <cstring>
 #include <fstream>
 
 //Other libraries headers
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/file_system/FileSystemUtils.h"
+#include "utils/debug/StrError.h"
 #include "utils/Log.h"
 
 //Own components headers
@@ -34,7 +33,7 @@ LevelData LevelFileLoader::readLevelData(
   std::ifstream ifstream(filePath);
   if (!ifstream) {
     LOGERR("Error, opening file: [%s]. Reason: %s", filePath.c_str(),
-        strerror(errno));
+        strError().c_str());
     return {};
   }
 
@@ -85,7 +84,7 @@ std::vector<FieldPos> LevelFileLoader::readMinerLongestSolution(
   std::ifstream ifstream(filePath);
   if (!ifstream) {
     LOGERR("Error, opening file: [%s]. Reason: %s", filePath.c_str(),
-        strerror(errno));
+        strError().c_str());
     return {};
   }
 

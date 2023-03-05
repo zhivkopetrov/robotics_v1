@@ -8,6 +8,7 @@ project(
     VERSION 1.0.0
 )
 
+find_package(ament_cmake REQUIRED)
 find_package(cmake_helpers REQUIRED)
 find_package(manager_utils REQUIRED)
 
@@ -105,6 +106,11 @@ target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC
         manager_utils::manager_utils
+)
+
+ament_export_targets(
+    ${PROJECT_NAME}Targets
+        HAS_LIBRARY_TARGET
 )
 
 if(NOT DISABLE_ROS_TOOLING)

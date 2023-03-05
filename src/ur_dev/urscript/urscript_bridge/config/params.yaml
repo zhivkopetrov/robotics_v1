@@ -1,6 +1,8 @@
 /UrBridgeRos2ParamProvider:
   ros__parameters:
     use_sim_time: false
+
+    verbose_logging: True
     
     #supported executor types:
       #SINGLE_THREADED(0)
@@ -12,9 +14,11 @@
     #used only for MULTI_THREADED executor
     ros2_executor_threads_num: 4
     
-    robot_ip: "0.0.0.0"
+    robot_ip: "192.168.56.101"
     robot_port: 30003
     
-    #supported values: [0-17]
+    #supported values: [1-7]
     #UR10e has 18 input and 18 output GPIO pins
+    #But only pins from [0-7] are configurable through URScript
+    #NOTE: pin 0 is reserved for aborting (overriding URScripts)
     urscript_service_ready_pin: 4

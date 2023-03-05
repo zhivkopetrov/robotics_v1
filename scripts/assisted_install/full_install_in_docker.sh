@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script parameters
-ROS2_DISTRO=humble
+ROS2_DISTRO=foxy
 ENABLE_VNC_SERVER=False
 ENABLE_DOCKER_IN_DOCKER=False
 

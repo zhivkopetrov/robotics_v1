@@ -4,6 +4,7 @@ include(CMakeFindDependencyMacro)
 #find_package is only for internal use
 find_dependency(cmake_helpers REQUIRED)
 find_dependency(utils REQUIRED)
+find_dependency(urscript_interfaces REQUIRED)
 
 if(NOT TARGET urscript_common::urscript_common)
   include(${CMAKE_CURRENT_LIST_DIR}/urscript_commonTargets.cmake)
