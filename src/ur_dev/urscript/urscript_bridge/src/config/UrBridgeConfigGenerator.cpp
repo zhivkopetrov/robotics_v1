@@ -39,7 +39,7 @@ std::vector<DependencyDescription> UrBridgeConfigGenerator::generateDependencies
   const LoadDependencyCb ros2Loader = [argc, args]() {
     rclcpp::InitOptions initOptions;
     //SIGINT signal will cancel the executor and will unblock the main thread
-    initOptions.shutdown_on_signal = true;
+    initOptions.shutdown_on_sigint = true;
 
     rclcpp::init(argc, args, initOptions);
     return ErrorCode::SUCCESS;
