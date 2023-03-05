@@ -11,7 +11,7 @@ The workspace contains several interesting, competitive, visual games with their
 - [Robo Collector](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_collector) - focused on learning ROS2 topics
 - [Robo Miner](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_miner) - focused on learning ROS2 services
 - [Robo Cleaner](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_cleaner) - focused on learning ROS2 actions
-- [UR Dev](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_dev) - focused on learning UR robotics movements through URScripts
+- [UR Dev](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_dev) - focused on learning UR robotic motions through URScript
 - [UR Driver](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_driver) - forked helper repositories for Universal Robots Client Library and Universal Robots ROS2 driver + description
 
 *You're reading the documentation for the latest version of ROS2.  
@@ -222,11 +222,20 @@ ros2 launch urscript_bridge launch.py
 ```
 
 Helper GUI nodes, which can control real hardware or a simulated robot.  
-The node is utilising the robot API exposed from the 'urscript_bridge' node  
+The nodes are utilising the robot API exposed from the 'urscript_bridge' node.  
 ```
 ros2 launch ur_control_gui launch.py
 ros2 launch ur_control_bloom launch.py
 ```
+
+`ur_control_gui` is a high-level control application suited for executing raw URScripts.  
+`ur_control_bloom` provides more sophisticated control concepts such as:
+  - Execution of blocking or async motion commands
+  - Graceful/immediate abort of motion trajectories
+  - Constructing gripper/motion/robot URScripts with source code primitives
+  - Configurable high-level state machine and low-level motion sequences
+  - Configurable motion strategies (behavior) based on config 
+  - Gripper full hardware support and basic simulation support
 
 ## Hardware requirements
 This project utilizes hardware-accelerated graphics.
