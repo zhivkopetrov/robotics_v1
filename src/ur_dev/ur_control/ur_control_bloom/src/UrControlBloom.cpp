@@ -99,6 +99,37 @@ void UrControlBloom::handleEventIdleState(const InputEvent& e) {
   else if (Keyboard::KEY_J == e.key) {
     _stateMachine.changeState(BloomState::JENGA_RECOVERY);
   }
+  else if (Keyboard::KEY_P == e.key) {
+    _stateMachine.changeState(BloomState::PARK);
+  }
+}
+
+void UrControlBloom::enterParkState() {
+  serializeState(BloomState::PARK);
+  _layout.enterParkState();
+
+  _motionExecutor.loadSequence(Motion::PARK_ID);
+  const auto doneCb = [this](){
+    _stateMachine.changeState(BloomState::IDLE);
+  };
+  _motionExecutor.performAction(MotionAction::START, doneCb);
+}
+
+void UrControlBloom::exitParkState() {
+  _layout.exitParkState();
+}
+
+void UrControlBloom::handleEventParkState(const InputEvent& e) {
+  if (TouchEvent::KEYBOARD_RELEASE != e.type) {
+    return; //only interested in keyboard release events
+  }
+
+  if ((Keyboard::KEY_ENTER == e.key) || (Keyboard::KEY_NUMPAD_ENTER == e.key)) {
+    executeGracefulStopAndTransitionToIdle();
+  }
+  else if (Keyboard::KEY_BACKSPACE == e.key) {
+    executeAbortMotion();
+  }
 }
 
 void UrControlBloom::enterBloomState() {
@@ -236,7 +267,12 @@ std::string UrControlBloom::getRecoveryTransitionStateName() const {
     return BloomState::JENGA_RECOVERY;
   }
 
-  return BloomState::IDLE;
+  //nothing to do on init
+  if (BloomState::INIT == stateStr) {
+    return BloomState::IDLE;
+  }
+
+  return stateStr;
 }
 
 void UrControlBloom::serializeState(const std::string& stateName) {

@@ -32,9 +32,11 @@ add_executable(
         ${_INC_DIR}/layout/UrControlBloomLayoutInterfaces.h
         ${_INC_DIR}/motion/BloomMotionSequence.h
         ${_INC_DIR}/motion/JengaMotionSequence.h
+        ${_INC_DIR}/motion/ParkMotionSequence.h
         ${_INC_DIR}/motion/config/UrControlBloomMotionSequenceConfig.h
         ${_INC_DIR}/motion/config/BloomMotionSequenceConfig.h
         ${_INC_DIR}/motion/config/JengaMotionSequenceConfig.h
+        ${_INC_DIR}/motion/config/ParkMotionSequenceConfig.h
      
         ${_SRC_DIR}/main.cpp
         ${_SRC_DIR}/UrControlBloom.cpp
@@ -46,6 +48,7 @@ add_executable(
         ${_SRC_DIR}/layout/UrControlBloomLayout.cpp
         ${_SRC_DIR}/motion/BloomMotionSequence.cpp
         ${_SRC_DIR}/motion/JengaMotionSequence.cpp
+        ${_SRC_DIR}/motion/ParkMotionSequence.cpp
 )
 
 target_include_directories(

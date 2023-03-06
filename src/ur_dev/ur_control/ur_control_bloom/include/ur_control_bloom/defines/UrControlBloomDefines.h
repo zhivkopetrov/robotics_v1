@@ -14,10 +14,11 @@ namespace BloomState {
 constexpr auto SECTION_NAME = "BloomState";
 constexpr auto STATE_ENTRY_NAME = "State";
 
-constexpr auto STATES_COUNT = 6;
+constexpr auto STATES_COUNT = 7;
   
 constexpr auto INIT = "Init";
 constexpr auto IDLE = "Idle";
+constexpr auto PARK = "Park";
 constexpr auto BLOOM = "Bloom";
 constexpr auto BLOOM_RECOVERY = "Bloom Recovery";
 constexpr auto JENGA = "Jenga";
@@ -29,11 +30,13 @@ namespace Motion {
 
 enum MotionId {
   BLOOM_MOTION_ID,
-  JENGA_MOTION_ID
+  JENGA_MOTION_ID,
+  PARK_ID
 };
 
 constexpr auto BLOOM_MOTION_SEQUENCE_NAME = "BloomMotionSequence";
 constexpr auto JENGA_MOTION_SEQUENCE_NAME = "JengaMotionSequence";
+constexpr auto PARK_MOTION_SEQUENCE_NAME = "ParkMotionSequence";
 
 namespace Bloom {
 
@@ -71,7 +74,13 @@ constexpr auto TRANSPORT_AND_PLACE_NAME = "JengaTransportAndPlace";
 constexpr auto RETURN_HOME_NAME = "JengaReturnHome";
 constexpr auto RETURN_HOME_AND_OPEN_GRIPPER_NAME = "JengaReturnHomeAndOpenGripper";
 
-} //namespace Bloom
+} //namespace Jenga
+
+namespace Park {
+
+constexpr auto PARK_NAME = "Park";
+
+} //namespace Park
 
 } //namespace Motions
 

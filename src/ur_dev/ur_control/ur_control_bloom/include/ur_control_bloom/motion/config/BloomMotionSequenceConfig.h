@@ -2,7 +2,6 @@
 #define UR_CONTROL_BLOOM_BLOOMMOTIONSEQUENCECONFIG_H_
 
 //System headers
-#include <cstdint>
 
 //Other libraries headers
 #include "urscript_common/motion/MotionStructs.h"
@@ -13,7 +12,6 @@
 //Forward declarations
 
 struct BloomMotionSequenceConfig {
-  //TODO populate from ros params
   BloomEndStrategy endStrategy = BloomEndStrategy::PLACE_AND_RETURN_HOME;
 
   double pickAndPlaceAcc = 0.0; //[m/s2]

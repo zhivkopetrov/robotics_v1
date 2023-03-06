@@ -16,6 +16,7 @@
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"
 #include "ur_control_bloom/motion/BloomMotionSequence.h"
 #include "ur_control_bloom/motion/JengaMotionSequence.h"
+#include "ur_control_bloom/motion/ParkMotionSequence.h"
 
 using namespace std::placeholders;
 
@@ -176,10 +177,8 @@ void UrControlBloomInitHelper::populateCustomActionButtonHandlerCbs(
   CustomActionButtonCbs& commandCbs = outCbs.commandButtonCbs;
   commandCbs.resize(CUSTOM_ACTION_BUTTONS_COUNT);
 
-  commandCbs[PARK_IDX] = [](){
-    //implement additional ReturnHomeMotionSequence
-    //load the sequence and execute it
-    LOGR("Park implement missing. TODO: implement");
+  commandCbs[PARK_IDX] = [&bloom](){
+    bloom._stateMachine.changeState(BloomState::PARK);
   };
 
   commandCbs[JENGA_IDX] = [&bloom](){
@@ -312,6 +311,15 @@ ErrorCode UrControlBloomInitHelper::initMotionExecutor(
     return ErrorCode::FAILURE;
   }
 
+  auto parkMotionSequence = std::make_unique<ParkMotionSequence>(
+    cfg.parkMotionSequenceCfg, Motion::PARK_MOTION_SEQUENCE_NAME, 
+    Motion::PARK_ID, bloom._urScriptBuilder, bloom._stateFileHandler);
+  if (ErrorCode::SUCCESS != 
+      bloom._motionExecutor.addSequence(std::move(parkMotionSequence))) {
+    LOGERR("Error in motionExecutor.addSequence() for ParkMotionSequence");
+    return ErrorCode::FAILURE;
+  }
+
   return ErrorCode::SUCCESS;
 }
 
@@ -333,6 +341,13 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   state.onExit = std::bind(&UrControlBloom::exitIdleState, &bloom);
   state.handleEvent = 
     std::bind(&UrControlBloom::handleEventIdleState, &bloom, _1);
+  stateDescriptions.push_back(state);
+
+  state.name = BloomState::PARK;
+  state.onEnter = std::bind(&UrControlBloom::enterParkState, &bloom);
+  state.onExit = std::bind(&UrControlBloom::exitParkState, &bloom);
+  state.handleEvent = 
+    std::bind(&UrControlBloom::handleEventParkState, &bloom, _1);
   stateDescriptions.push_back(state);
 
   state.name = BloomState::BLOOM;
@@ -368,6 +383,19 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
   transition.stateName = BloomState::INIT;
   transition.transitions.insert(BloomState::BLOOM_RECOVERY);
   transition.transitions.insert(BloomState::JENGA_RECOVERY);
+  transition.transitions.insert(BloomState::PARK);
+  transition.transitions.insert(BloomState::IDLE);
+  stateTransitions.push_back(transition);
+  transition.transitions.clear();
+
+  transition.stateName = BloomState::IDLE;
+  transition.transitions.insert(BloomState::BLOOM_RECOVERY);
+  transition.transitions.insert(BloomState::JENGA_RECOVERY);
+  transition.transitions.insert(BloomState::PARK);
+  stateTransitions.push_back(transition);
+  transition.transitions.clear();
+
+  transition.stateName = BloomState::PARK;
   transition.transitions.insert(BloomState::IDLE);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
@@ -382,12 +410,6 @@ ErrorCode UrControlBloomInitHelper::initStateMachine(UrControlBloom &bloom) {
 
   transition.stateName = BloomState::JENGA_RECOVERY;
   transition.transitions.insert(BloomState::JENGA);
-  stateTransitions.push_back(transition);
-  transition.transitions.clear();
-
-  transition.stateName = BloomState::IDLE;
-  transition.transitions.insert(BloomState::BLOOM_RECOVERY);
-  transition.transitions.insert(BloomState::JENGA_RECOVERY);
   stateTransitions.push_back(transition);
   transition.transitions.clear();
 

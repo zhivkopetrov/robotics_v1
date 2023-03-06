@@ -41,6 +41,9 @@ private:
   void enterIdleState();
   void exitIdleState();
   void handleEventIdleState(const InputEvent& e);
+  void enterParkState();
+  void exitParkState();
+  void handleEventParkState(const InputEvent& e);
   void enterBloomState();
   void exitBloomState();
   void handleEventBloomState(const InputEvent& e);

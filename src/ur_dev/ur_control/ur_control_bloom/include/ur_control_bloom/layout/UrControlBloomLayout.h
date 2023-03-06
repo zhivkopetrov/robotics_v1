@@ -31,6 +31,8 @@ public:
   void exitInitState();
   void enterIdleState();
   void exitIdleState();
+  void enterParkState();
+  void exitParkState();
   void enterBloomState();
   void exitBloomState();
   void enterBloomRecoveryState();
@@ -42,6 +44,7 @@ public:
 
 private:
   ErrorCode initStandaloneEntities(const UrControlBloomLayoutConfig &cfg);
+  void activateMotionStateButtonsPreset();
 
   Image _rose;
   Image _jenga;

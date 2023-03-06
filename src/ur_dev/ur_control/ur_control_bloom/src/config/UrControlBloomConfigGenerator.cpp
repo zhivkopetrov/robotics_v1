@@ -25,6 +25,14 @@ constexpr auto CONFIG_FOLDER_NAME = "config";
 constexpr auto STATE_FILE_NAME = "system_state.ini";
 constexpr auto TOTAL_OBJECTS_PER_TOWER = 18;
 
+//common waypoints
+const AngleAxis HOME_ORIENTATION(0, 3.148, 0);
+const WaypointJoint WAYPOINT_HOME_JOINT = 
+  WaypointJoint({ -90, -90, -90, -90, 90, 0 });
+const WaypointCartesian WAYPOINT_HOME_CARTESIAN = 
+  WaypointCartesian(Point3d(-0.176, -0.691, 0.502), HOME_ORIENTATION);
+
+
 ButtonHandlerHighLevelConfig generateButtonHandlerHighLevelConfig(
     const std::string &projectInstallPrefix) {
   CustomActionButtonHandlerConfig concreteCfg;
@@ -72,12 +80,10 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
   cfg.pickAndPlaceAcc = 1.0; // [m/s2]
   cfg.pickAndPlaceVel = 1.0; // [m/s]
 
-  const AngleAxis zeroOrientation(0, 3.148, 0);
-  const AngleAxis ninetyHorizontalOrientation(2.224, -2.224, 0.000);
+  const AngleAxis ninetyHorizontalOrientation(2.224, -2.224, 0);
   const AngleAxis verticalOrientation(0, -2.224, 2.224);
   //TODO parse from files
-  cfg.homeCartesian = 
-    WaypointCartesian(Point3d(-0.176, -0.691, 0.502), zeroOrientation);
+  cfg.homeCartesian = WAYPOINT_HOME_CARTESIAN;
   cfg.graspApproachCartesian = 
     WaypointCartesian(Point3d(0.6, 0.145, 0.25), ninetyHorizontalOrientation);
   cfg.graspCartesian = 
@@ -87,7 +93,7 @@ BloomMotionSequenceConfig generateBloomMotionSequenceConfig(
   cfg.placeCartesian = WaypointCartesian(
     Point3d(-0.196, -0.812, 0.236), verticalOrientation);
 
-  cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
+  cfg.homeJoint = WAYPOINT_HOME_JOINT;
   cfg.graspApproachJoint = 
     WaypointJoint({ 30.1, -86.3, -119.74, -64.23, 90.1, 30.12 });
   cfg.graspJoint = 
@@ -130,20 +136,32 @@ JengaMotionSequenceConfig generateJengaMotionSequenceConfig(
   cfg.pickAndPlaceVel = 1.0; // [m/s]
 
   //TODO parse from files
-  cfg.homeJoint = WaypointJoint({ -90, -90, -90, -90, 90, 0 });
+  cfg.homeJoint = WAYPOINT_HOME_JOINT;
   cfg.graspApproachJoint = 
     WaypointJoint({ -34.79, -99.07, -82.88, -88.33, 90.22, 55.23 });
 
-  cfg.zeroOrientation = AngleAxis(0, 3.148, 0);
+  cfg.zeroOrientation = HOME_ORIENTATION;
   cfg.ninetyOrientation = AngleAxis(2.221, 2.221, 0);
-  cfg.homeCartesian = WaypointCartesian(
-    Point3d(-0.176, -0.691, 0.502), cfg.zeroOrientation);
+  cfg.homeCartesian = WAYPOINT_HOME_CARTESIAN;
   cfg.graspApproachCartesian = WaypointCartesian(
-    Point3d(0.545, -0.592, 0.475), cfg.zeroOrientation);
+    Point3d(0.545, -0.592, 0.475), HOME_ORIENTATION);
   cfg.baseCenterACartesian = WaypointCartesian(
-    Point3d(0.596, -0.426, -0.012), cfg.zeroOrientation);
+    Point3d(0.596, -0.426, -0.012), HOME_ORIENTATION);
   cfg.baseCenterBCartesian = WaypointCartesian(
-    Point3d(0.495, -0.758, -0.012), cfg.zeroOrientation);
+    Point3d(0.495, -0.758, -0.012), HOME_ORIENTATION);
+
+  return cfg;
+}
+
+ParkMotionSequenceConfig generateParkMotionSequenceConfig() {
+  ParkMotionSequenceConfig cfg;
+
+  cfg.motionAcc = 1.0; // [m/s2]
+  cfg.motionVel = 1.0; // [m/s]
+
+  //TODO parse from files
+  cfg.homeCartesian = WAYPOINT_HOME_CARTESIAN;
+  cfg.homeJoint = WAYPOINT_HOME_JOINT;
 
   return cfg;
 }
@@ -172,6 +190,7 @@ UrControlBloomMotionSequenceConfig generateUrControlBloomMotionSequenceConfig(
 
   cfg.bloomMotionSequenceCfg = generateBloomMotionSequenceConfig(rosParams);
   cfg.jengaMotionSequenceCfg = generateJengaMotionSequenceConfig(rosParams);
+  cfg.parkMotionSequenceCfg = generateParkMotionSequenceConfig();
 
   return cfg;
 }

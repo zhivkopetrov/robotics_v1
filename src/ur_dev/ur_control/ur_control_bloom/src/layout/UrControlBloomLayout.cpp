@@ -94,22 +94,19 @@ void UrControlBloomLayout::exitIdleState() {
 
 }
 
+void UrControlBloomLayout::enterParkState() {
+  _stateText.setTextAndColor(BloomState::PARK, Colors::GREEN);
+  activateMotionStateButtonsPreset();
+}
+
+void UrControlBloomLayout::exitParkState() {
+
+}
+
 void UrControlBloomLayout::enterBloomState() {
   _rose.show();
   _stateText.setTextAndColor(BloomState::BLOOM, Colors::GREEN);
-
-  const std::vector<int32_t> lockBtnIndexes = { 
-    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX
-  };
-  const std::vector<int32_t> unlockBtnIndexes = { 
-    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
-  };
-  if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
-    lockBtnIndexes, unlockBtnIndexes)) {
-    LOGERR("Error, setCommandButtonsLockStatus() failed");
-  }
-  buttonHandler->setGripperButtonsLockStatus(GripperButtonsInputStatus::LOCKED);
+  activateMotionStateButtonsPreset();
 }
 
 void UrControlBloomLayout::exitBloomState() {
@@ -118,19 +115,7 @@ void UrControlBloomLayout::exitBloomState() {
 
 void UrControlBloomLayout::enterBloomRecoveryState() {
   _stateText.setTextAndColor(BloomState::BLOOM_RECOVERY, Colors::ORANGE);
-
-  const std::vector<int32_t> lockBtnIndexes = { 
-    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX
-  };
-  const std::vector<int32_t> unlockBtnIndexes = { 
-    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
-  };
-  if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
-    lockBtnIndexes, unlockBtnIndexes)) {
-    LOGERR("Error, setCommandButtonsLockStatus() failed");
-  }
-  buttonHandler->setGripperButtonsLockStatus(GripperButtonsInputStatus::LOCKED);
+  activateMotionStateButtonsPreset();
 }
 
 void UrControlBloomLayout::exitBloomRecoveryState() {
@@ -140,19 +125,7 @@ void UrControlBloomLayout::exitBloomRecoveryState() {
 void UrControlBloomLayout::enterJengaState() {
   _jenga.show();
   _stateText.setTextAndColor(BloomState::JENGA, Colors::GREEN);
-
-  const std::vector<int32_t> lockBtnIndexes = { 
-    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX
-  };
-  const std::vector<int32_t> unlockBtnIndexes = { 
-    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
-  };
-  if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
-    lockBtnIndexes, unlockBtnIndexes)) {
-    LOGERR("Error, setCommandButtonsLockStatus() failed");
-  }
-  buttonHandler->setGripperButtonsLockStatus(GripperButtonsInputStatus::LOCKED);
+  activateMotionStateButtonsPreset();
 }
 
 void UrControlBloomLayout::exitJengaState() {
@@ -161,19 +134,7 @@ void UrControlBloomLayout::exitJengaState() {
 
 void UrControlBloomLayout::enterJengaRecoveryState() {
   _stateText.setTextAndColor(BloomState::JENGA_RECOVERY, Colors::ORANGE);
-
-  const std::vector<int32_t> lockBtnIndexes = { 
-    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
-    BLOOM_3RD_IDX
-  };
-  const std::vector<int32_t> unlockBtnIndexes = { 
-    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
-  };
-  if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
-    lockBtnIndexes, unlockBtnIndexes)) {
-    LOGERR("Error, setCommandButtonsLockStatus() failed");
-  }
-  buttonHandler->setGripperButtonsLockStatus(GripperButtonsInputStatus::LOCKED);
+  activateMotionStateButtonsPreset();
 }
 
 void UrControlBloomLayout::exitJengaRecoveryState() {
@@ -202,4 +163,19 @@ ErrorCode UrControlBloomLayout::initStandaloneEntities(
     cfg.stateVisualsFontRsrcId, " ", Colors::BLACK, stateTextPos);
 
   return ErrorCode::SUCCESS;                                    
+}
+
+void UrControlBloomLayout::activateMotionStateButtonsPreset() {
+  const std::vector<int32_t> lockBtnIndexes = { 
+    PARK_IDX, JENGA_IDX, BLOOM_RANDOMIZED_IDX, BLOOM_1ST_IDX, BLOOM_2ND_IDX, 
+    BLOOM_3RD_IDX
+  };
+  const std::vector<int32_t> unlockBtnIndexes = { 
+    GRACEFUL_STOP_IDX, ABORT_MOTION_IDX
+  };
+  if (ErrorCode::SUCCESS != buttonHandler->setCommandButtonsLockStatus(
+    lockBtnIndexes, unlockBtnIndexes)) {
+    LOGERR("Error, setCommandButtonsLockStatus() failed");
+  }
+  buttonHandler->setGripperButtonsLockStatus(GripperButtonsInputStatus::LOCKED);
 }
