@@ -8,6 +8,7 @@ find_dependency(urscript_common REQUIRED)
 find_dependency(std_msgs REQUIRED)
 find_dependency(std_srvs REQUIRED)
 find_dependency(ur_dashboard_msgs REQUIRED)
+find_dependency(visualization_msgs REQUIRED)
 
 if(NOT TARGET ur_control_common::ur_control_common)
   include(${CMAKE_CURRENT_LIST_DIR}/ur_control_commonTargets.cmake)

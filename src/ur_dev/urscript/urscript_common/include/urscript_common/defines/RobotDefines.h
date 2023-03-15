@@ -1,5 +1,5 @@
-#ifndef URSCRIPT_BRIDGE_ROBOTDEFINES_H_
-#define URSCRIPT_BRIDGE_ROBOTDEFINES_H_
+#ifndef URSCRIPT_COMMON_ROBOTDEFINES_H_
+#define URSCRIPT_COMMON_ROBOTDEFINES_H_
 
 //System headers
 
@@ -25,4 +25,4 @@ constexpr auto TOOL0_NAME = "tool0";
 
 } //namespace ur_links
 
-#endif /* URSCRIPT_BRIDGE_ROBOTDEFINES_H_ */
+#endif /* URSCRIPT_COMMON_ROBOTDEFINES_H_ */

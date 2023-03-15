@@ -16,12 +16,14 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>std_srvs</build_depend>
   <build_depend>ur_dashboard_msgs</build_depend>
+  <build_depend>visualization_msgs</build_depend>
 
   <exec_depend>ros2_game_engine</exec_depend>
   <exec_depend>urscript_common</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>std_srvs</exec_depend>
   <exec_depend>ur_dashboard_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
 
   <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">ament_cmake</exec_depend>

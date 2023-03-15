@@ -5,6 +5,7 @@
 
 //Other libraries headers
 #include "urscript_common/defines/UrScriptTopics.h"
+#include "urscript_common/defines/RobotDefines.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/Log.h"
 
@@ -29,6 +30,10 @@ void waitForService(T &client) {
 UrControlCommonExternalBridge::UrControlCommonExternalBridge(
   const std::string& nodeName) : Node(nodeName) {
 
+}
+
+UrControlCommonExternalBridge::~UrControlCommonExternalBridge() noexcept {
+  publishDeleteAllMarkers();
 }
 
 ErrorCode UrControlCommonExternalBridge::init(
@@ -82,6 +87,47 @@ void UrControlCommonExternalBridge::invokeURScriptPreemptService() const {
   }
 }
 
+void UrControlCommonExternalBridge::publishMarker() {
+  geometry_msgs::msg::Pose pose;
+  pose.position.x = 0;
+  pose.position.y = 0;
+  pose.position.z = 0;
+  pose.orientation.x = 0;
+  pose.orientation.y = 0;
+  pose.orientation.z = 0;
+  pose.orientation.w = 0;
+
+  std_msgs::msg::ColorRGBA colour;
+  colour.a = 0.5;
+  colour.r = 1;
+  colour.g = 0;
+  colour.b = 0;
+
+  visualization_msgs::msg::Marker marker;
+  marker.header.frame_id = ur_links::TOOL0_NAME;
+  marker.header.stamp = get_clock()->now();
+
+  marker.id           = Marker::ADD;
+  marker.type         = Marker::CUBE;
+  marker.scale.x      = 0.25;
+  marker.scale.y      = 0.25;
+  marker.scale.z      = 0.25;
+  marker.color        = colour;
+  marker.pose         = pose;
+  marker.frame_locked = true;
+
+  _markerPublisher->publish(marker);
+}
+
+void UrControlCommonExternalBridge::publishDeleteAllMarkers() {
+  visualization_msgs::msg::Marker marker;
+  marker.header.stamp = get_clock()->now();
+  marker.id     = Marker::DELETEALL;
+  marker.action = Marker::DELETEALL;
+
+  _markerPublisher->publish(marker);
+}
+
 ErrorCode UrControlCommonExternalBridge::initOutInterface(
     const UrControlCommonExternalBridgeOutInterface &outInterface) {
   _outInterface = outInterface;
@@ -117,6 +163,9 @@ ErrorCode UrControlCommonExternalBridge::initCommunication() {
 
   _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos,
       publisherOptions);
+
+  _markerPublisher = create_publisher<Marker>("bazinga", qos,
+      publisherOptions); 
 
   _urscriptService = create_client<UrScript>(URSCRIPT_SERVICE,
       rmw_qos_profile_services_default, _publishersCallbackGroup);

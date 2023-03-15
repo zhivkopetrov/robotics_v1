@@ -41,7 +41,6 @@ add_executable(
 		${_INC_DIR}/external_api/config/UrBridgeExternalInterfaceConfig.h
 		${_INC_DIR}/utils/TcpClient.h
 		${_INC_DIR}/utils/Tf2Utils.h
-		${_INC_DIR}/defines/RobotDefines.h
      
 		${_SRC_DIR}/config/UrBridgeConfigGenerator.cpp
 		${_SRC_DIR}/core/UrBridgeApplication.cpp

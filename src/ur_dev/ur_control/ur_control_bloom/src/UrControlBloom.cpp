@@ -82,6 +82,8 @@ void UrControlBloom::exitInitState() {
 void UrControlBloom::enterIdleState() {
   serializeState(BloomState::IDLE);
   _layout.enterIdleState();
+
+  _externalBridge->publishMarker();
 }
 
 void UrControlBloom::exitIdleState() {

@@ -12,10 +12,10 @@
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include "urscript_common/message_helpers/UrScriptMessageHelpers.h"
 #include "urscript_common/defines/UrScriptTopics.h"
+#include "urscript_common/defines/RobotDefines.h"
 #include "utils/Log.h"
 
 //Own components headers
-#include "urscript_bridge/defines/RobotDefines.h"
 #include "urscript_bridge/utils/Tf2Utils.h"
 
 namespace {

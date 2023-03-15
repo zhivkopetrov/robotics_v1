@@ -22,6 +22,7 @@ add_library(
     STATIC
         ${_INC_DIR}/defines/UrScriptTopics.h
         ${_INC_DIR}/defines/UrScriptDefines.h
+        ${_INC_DIR}/defines/RobotDefines.h
         ${_INC_DIR}/message_helpers/UrScriptMessageHelpers.h
         ${_INC_DIR}/gripper/GripperStructs.h
         ${_INC_DIR}/motion/MotionStructs.h

@@ -9,6 +9,7 @@
 #include <std_srvs/srv/trigger.hpp>
 #include <ur_dashboard_msgs/msg/robot_mode.hpp>
 #include <ur_dashboard_msgs/msg/safety_mode.hpp>
+#include <visualization_msgs/msg/marker.hpp>
 #include <urscript_interfaces/srv/ur_script.hpp>
 #include "game_engine/defines/ActionEventDefines.h"
 #include "utils/ErrorCode.h"
@@ -28,6 +29,7 @@ struct UrControlCommonExternalBridgeOutInterface {
 class UrControlCommonExternalBridge: public rclcpp::Node {
 public:
   UrControlCommonExternalBridge(const std::string& nodeName);
+  ~UrControlCommonExternalBridge() noexcept;
 
   ErrorCode init(const UrContolCommonExternalBridgeConfig& cfg,
                  const UrControlCommonExternalBridgeOutInterface &interface);
@@ -38,12 +40,17 @@ public:
 
   void invokeURScriptPreemptService() const;
 
+  void publishMarker();
+
 private:
   using String = std_msgs::msg::String;
   using Trigger = std_srvs::srv::Trigger;
   using UrScript = urscript_interfaces::srv::UrScript;
   using RobotModeType = ur_dashboard_msgs::msg::RobotMode;
   using SafetyModeType = ur_dashboard_msgs::msg::SafetyMode;
+  using Marker = visualization_msgs::msg::Marker;
+
+  void publishDeleteAllMarkers();
 
   ErrorCode initOutInterface(
       const UrControlCommonExternalBridgeOutInterface &outInterface);
@@ -53,6 +60,8 @@ private:
   void onSafetyModeMsg(const SafetyModeType::SharedPtr msg);
 
   UrControlCommonExternalBridgeOutInterface _outInterface;
+
+  rclcpp::Publisher<Marker>::SharedPtr _markerPublisher;
   rclcpp::Publisher<String>::SharedPtr _urscriptPublisher;
   rclcpp::Client<UrScript>::SharedPtr _urscriptService;
   rclcpp::Client<Trigger>::SharedPtr _urscriptPreemptService;

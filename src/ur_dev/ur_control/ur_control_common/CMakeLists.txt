@@ -15,6 +15,7 @@ find_package(urscript_common REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(ur_dashboard_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 set(_INC_FOLDER_NAME include)
 set(_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${_INC_FOLDER_NAME}/${PROJECT_NAME})       
@@ -94,6 +95,7 @@ ament_target_dependencies(
         std_msgs
         std_srvs
         ur_dashboard_msgs
+        visualization_msgs
 )
 
 ament_export_dependencies(
@@ -102,6 +104,7 @@ ament_export_dependencies(
         std_msgs
         std_srvs
         ur_dashboard_msgs
+        visualization_msgs
 )
 
 if(NOT DISABLE_ROS_TOOLING)
