@@ -31,3 +31,6 @@
 [submodule "src/ur_driver/Universal_Robots_ROS2_Description"]
 	path = src/ur_driver/Universal_Robots_ROS2_Description
 	url = https://github.com/zhivkopetrov/Universal_Robots_ROS2_Description.git
+[submodule "src/ur_dev/ur_dev_helpers"]
+	path = src/ur_dev/ur_dev_helpers
+	url = https://github.com/zhivkopetrov/ur_dev_helpers.git
