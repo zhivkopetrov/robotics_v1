@@ -31,3 +31,9 @@
 [submodule "src/ur_driver/Universal_Robots_ROS2_Description"]
 	path = src/ur_driver/Universal_Robots_ROS2_Description
 	url = https://github.com/zhivkopetrov/Universal_Robots_ROS2_Description.git
+[submodule "src/gripper/serial-ros2"]
+	path = src/gripper/serial-ros2
+	url = https://github.com/RoverRobotics-forks/serial-ros2.git
+[submodule "src/gripper/ros2_robotiq_gripper"]
+	path = src/gripper/ros2_robotiq_gripper
+	url = https://github.com/PickNikRobotics/ros2_robotiq_gripper.git
