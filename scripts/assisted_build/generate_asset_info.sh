@@ -57,8 +57,8 @@ GUI_PROJECTS=(\
     "$SRC_DIR/robo_collector/robo_collector_controller" \
     "$SRC_DIR/robo_miner/robo_miner_gui" \
     "$SRC_DIR/robo_cleaner/robo_cleaner_gui" \
-    "$SRC_DIR/ur_dev/ur_control/ur_control_gui" \
-    "$SRC_DIR/ur_dev/ur_control/ur_control_bloom"
+    "$SRC_DIR/ur_dev/ur_apps/ur_control_gui" \
+    "$SRC_DIR/ur_dev/ur_apps/ur_control_bloom"
 )
 
 for project in ${GUI_PROJECTS[@]}; do
