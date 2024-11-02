@@ -12,7 +12,7 @@
 #include "robo_common/helpers/LevelFileLoader.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_miner_gui/config/RoboMinerGuiConfig.h"

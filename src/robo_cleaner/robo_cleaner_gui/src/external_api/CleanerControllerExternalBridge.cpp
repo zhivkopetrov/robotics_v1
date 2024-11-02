@@ -9,7 +9,7 @@
 #include "robo_common/defines/RoboCommonDefines.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"

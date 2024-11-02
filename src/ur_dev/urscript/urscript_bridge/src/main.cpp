@@ -2,7 +2,7 @@
 #include <cstdint>
 
 //Other libraries headers
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "urscript_bridge/core/UrBridgeApplication.h"

@@ -5,7 +5,7 @@
 #include "ros2_game_engine/communicator/Ros2Communicator.h"
 #include "game_engine/Application.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_cleaner_gui/helpers/RoboCleanerBuilder.h"

@@ -6,7 +6,7 @@
 //Other libraries headers
 #include "robo_collector_interfaces/msg/robot_move_type.hpp"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

@@ -8,7 +8,7 @@
 #include "ur_control_common/layout/helpers/UrControlCommonLayoutInterfaces.h"
 #include "ur_control_common/layout/entities/button_handler/ButtonHandlerInterfaces.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "ur_control_bloom/UrControlBloom.h"

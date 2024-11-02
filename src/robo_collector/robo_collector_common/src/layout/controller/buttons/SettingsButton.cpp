@@ -7,7 +7,7 @@
 #include "utils/input/InputEvent.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

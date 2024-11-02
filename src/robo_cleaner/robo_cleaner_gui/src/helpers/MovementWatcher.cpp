@@ -9,7 +9,7 @@
 #include "sdl_utils/drawing/defines/DrawConstants.h"
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/data_type/FloatingPointUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_cleaner_gui/helpers/RoboCleanerSolutionValidator.h"

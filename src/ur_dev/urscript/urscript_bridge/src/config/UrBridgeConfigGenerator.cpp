@@ -5,7 +5,7 @@
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "urscript_bridge/external_api/UrBridgeRos2ParamProvider.h"

@@ -6,7 +6,7 @@
 //Other libraries headers
 #include "urscript_common/motion/MotionUtils.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "ur_control_bloom/defines/UrControlBloomDefines.h"

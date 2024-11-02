@@ -8,7 +8,7 @@
 //Other libraries headers
 #include "sdl_utils/drawing/defines/RendererDefines.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

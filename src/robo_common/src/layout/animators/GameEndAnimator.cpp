@@ -6,7 +6,7 @@
 //Other libraries headers
 #include "utils/drawing/WidgetAligner.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

@@ -9,7 +9,7 @@
 
 //Own components headers
 #include "utils/file/IniFileUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Forward declarations
 

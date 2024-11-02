@@ -8,7 +8,7 @@
 #include "manager_utils/drawing/Image.h"
 #include "manager_utils/drawing/Text.h"
 #include "utils/drawing/WidgetAligner.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_common/layout/animators/config/HelpPageAnimatorConfig.h"

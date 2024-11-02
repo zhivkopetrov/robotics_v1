@@ -6,7 +6,7 @@
 //Other libraries headers
 #include "utils/data_type/EnumClassUtils.h"
 #include "utils/drawing/Rectangle.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

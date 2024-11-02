@@ -5,7 +5,7 @@
 
 //Other libraries headers
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_miner_gui/layout/helpers/RoboMinerLayoutInterfaces.h"

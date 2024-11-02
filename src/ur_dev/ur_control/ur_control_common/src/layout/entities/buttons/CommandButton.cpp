@@ -6,7 +6,7 @@
 //Other libraries headers
 #include "utils/input/InputEvent.h"
 #include "utils/drawing/WidgetAligner.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

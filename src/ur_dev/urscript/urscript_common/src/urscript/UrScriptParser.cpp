@@ -11,7 +11,7 @@
 #include "utils/file_system/FileSystemUtils.h"
 
 //Own components headers
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 ErrorCode UrScriptParser::parseScripts(
   const std::string &folderLocation, std::vector<std::string> &outScripts) {

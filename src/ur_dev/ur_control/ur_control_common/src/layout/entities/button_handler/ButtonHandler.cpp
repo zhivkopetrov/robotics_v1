@@ -7,7 +7,7 @@
 //Other libraries headers
 #include "urscript_common/urscript/UrScriptParser.h"
 #include "utils/input/InputEvent.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

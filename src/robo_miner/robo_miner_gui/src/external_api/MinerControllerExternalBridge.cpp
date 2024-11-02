@@ -7,7 +7,7 @@
 #include "robo_miner_common/defines/RoboMinerTopics.h"
 #include "robo_miner_common/message_helpers/RoboMinerMessageHelpers.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_miner_gui/helpers/MovementWatcher.h"

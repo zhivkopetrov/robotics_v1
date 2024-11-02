@@ -9,7 +9,7 @@
 #include "ros2_game_engine/communicator/config/Ros2CommunicatorConfig.h"
 #include "resource_utils/common/ResourceFileHeader.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "ur_control_bloom/config/UrControlBloomConfig.h"

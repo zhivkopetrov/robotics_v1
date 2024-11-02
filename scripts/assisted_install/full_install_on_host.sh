@@ -13,7 +13,7 @@ export TZ=Etc/UTC
 ./scripts/assisted_install/ubuntu_apt_third_party_install.sh
 
 # complere ROS2 setup per documentation
-# https://docs.ros.org/en/humble/Installation.html
+# https://docs.ros.org/en/jazzy/Installation.html
 ./scripts/assisted_install/ros2_install.sh $ROS2_DISTRO
 
 # own dependencies (personal open-source libraries and tools)

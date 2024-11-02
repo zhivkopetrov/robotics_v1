@@ -7,7 +7,7 @@
 #include "game_engine/communicator/NullCommunicator.h"
 #include "utils/debug/SignalHandler.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

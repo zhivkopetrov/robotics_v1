@@ -5,7 +5,7 @@
 
 //Other libraries headers
 #include "robo_cleaner_common/defines/RoboCleanerDefines.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_cleaner_gui/helpers/config/EnergyHandlerConfig.h"

@@ -12,7 +12,7 @@
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include "urscript_common/message_helpers/UrScriptMessageHelpers.h"
 #include "urscript_common/defines/UrScriptTopics.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "urscript_bridge/defines/RobotDefines.h"

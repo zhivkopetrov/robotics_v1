@@ -7,7 +7,7 @@
 #include "robo_collector_common/defines/RoboCollectorTopics.h"
 #include "robo_collector_common/message_helpers/RoboCollectorMessageHelpers.h"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 

@@ -8,7 +8,7 @@
 #include "robo_common/layout/field/FieldUtils.h"
 #include "utils/drawing/WidgetAligner.h"
 #include "utils/ErrorCode.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_cleaner_gui/layout/entities/config/EntityHandlerConfig.h"

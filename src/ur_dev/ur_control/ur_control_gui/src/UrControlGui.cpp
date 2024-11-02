@@ -4,7 +4,7 @@
 //System headers
 
 //Other libraries headers
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "ur_control_gui/helpers/UrControlGuiInitHelper.h"

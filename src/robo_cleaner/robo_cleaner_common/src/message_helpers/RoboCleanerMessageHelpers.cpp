@@ -7,7 +7,7 @@
 #include "robo_cleaner_interfaces/msg/robot_move_type.hpp"
 #include "robo_cleaner_interfaces/msg/initial_robot_state.hpp"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 
@@ -53,7 +53,7 @@ int32_t getRobotDirectionField(Direction dir) {
   case Direction::LEFT:
     return InitialRobotState::DIRECTION_LEFT;
   default:
-    LOGERR("Error, received unsupported Direction: %d", dir);
+    LOGERR("Error, received unsupported Direction: %d", getEnumValue(dir));
     return InitialRobotState::DIRECTION_UP;
   }
 }

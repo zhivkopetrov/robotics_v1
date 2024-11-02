@@ -6,7 +6,7 @@
 
 //Other libraries headers
 #include "manager_utils/drawing/Fbo.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 #include "robo_common/layout/field/FieldUtils.h"

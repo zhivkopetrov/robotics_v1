@@ -9,7 +9,7 @@
 #include "robo_miner_interfaces/msg/robot_position_response.hpp"
 #include "robo_miner_interfaces/srv/robot_move.hpp"
 #include "utils/data_type/EnumClassUtils.h"
-#include "utils/Log.h"
+#include "utils/log/Log.h"
 
 //Own components headers
 
@@ -56,7 +56,7 @@ int32_t getRobotDirectionField(Direction dir) {
   case Direction::LEFT:
     return RobotPositionResponse::DIRECTION_LEFT;
   default:
-    LOGERR("Error, received unsupported Direction: %d", dir);
+    LOGERR("Error, received unsupported Direction: %d", getEnumValue(dir));
     return RobotPositionResponse::DIRECTION_UP;
   }
 }
