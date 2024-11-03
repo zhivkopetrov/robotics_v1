@@ -22,12 +22,3 @@
 [submodule "src/lib/cmake_helpers"]
 	path = src/lib/cmake_helpers
 	url = https://github.com/zhivkopetrov/cmake_helpers.git
-[submodule "src/ur_driver/Universal_Robots_ROS2_Driver"]
-	path = src/ur_driver/Universal_Robots_ROS2_Driver
-	url = https://github.com/zhivkopetrov/Universal_Robots_ROS2_Driver.git
-[submodule "src/ur_driver/Universal_Robots_Client_Library"]
-	path = src/ur_driver/Universal_Robots_Client_Library
-	url = https://github.com/zhivkopetrov/Universal_Robots_Client_Library.git
-[submodule "src/ur_driver/Universal_Robots_ROS2_Description"]
-	path = src/ur_driver/Universal_Robots_ROS2_Description
-	url = https://github.com/zhivkopetrov/Universal_Robots_ROS2_Description.git
