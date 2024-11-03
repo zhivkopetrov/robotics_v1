@@ -1,0 +1,41 @@
+name: Humble Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      cmake_build_type:
+        description: 'CMake build type'
+        required: true
+        default: 'Debug'
+        type: choice
+        options:
+        - Debug
+        - Release
+        - RelWithDebInfo
+        - MinSizeRel
+      verbose_build:
+        description: 'Verbose build/install logs'
+        required: false
+        type: boolean
+      additional_colcon_options:
+        description: 'Additional colcon options'
+        default: ''
+        required: false
+        type: string
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: humble
+    - name: Build the Docker image
+      run: ./scripts/assisted_install/full_install_in_docker.sh ubuntu:24.04 jazzy
+      env:
+        CMAKE_BUILD_TYPE: ${{ inputs.cmake_build_type }}
+        VERBOSE_BUILD: ${{ inputs.verbose_build }}
+        ADDITIONAL_COLCON_OPTIONS: ${{ inputs.additional_colcon_options }}
