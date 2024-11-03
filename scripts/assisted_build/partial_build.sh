@@ -4,7 +4,7 @@ SCRIPT_NAME=`basename "$0"`
 BUILD_TYPE=Debug
 VERBOSE_BUILD=False
 ADDITIONAL_COLCON_OPTIONS=""
-ROS2_DISTRO=humble
+ROS2_DISTRO=jazzy
 
 echo "Processing $SCRIPT_NAME"
 

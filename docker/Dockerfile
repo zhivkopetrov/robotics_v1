@@ -1,4 +1,4 @@
-ARG OS_VERSION=ubuntu:22.04
+ARG OS_VERSION=ubuntu:24.04
 
 FROM ${OS_VERSION} as base
 

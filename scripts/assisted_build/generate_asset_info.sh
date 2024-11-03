@@ -7,7 +7,7 @@ INSTALL_DIR=install
 VERBOSE_BUILD=False
 ADDITIONAL_COLCON_OPTIONS=""
 TOOL_NAME=resource_builder
-ROS2_DISTRO=humble
+ROS2_DISTRO=jazzy
 
 echo "Processing $SCRIPT_NAME"
 

@@ -1,8 +1,7 @@
 # robotics_v1
 
 ## An educational C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
-*You're reading the documentation for an older, but still supported, version of ROS 2 - Humble Hawksbill, available under the [humble](https://github.com/zhivkopetrov/robotics_v1/tree/humble) branch.  
-An older, but End-of-Life ROS2 version - Foxy Fitzroy is still supported by this repo, available under the [foxy](https://github.com/zhivkopetrov/robotics_v1/tree/foxy) branch.  
+*You're reading the documentation for 
 For information on the latest version, please look at the [master](https://github.com/zhivkopetrov/robotics_v1/tree/master) branch.*
 
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
@@ -16,6 +15,10 @@ The workspace contains several interesting, competitive, visual games with their
 - [Robo Miner](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_miner) - focused on learning ROS2 services
 - [Robo Cleaner](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_cleaner) - focused on learning ROS2 actions
 - [UR Dev](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_dev) - focused on learning UR robotic motions through URScript
+
+*You're reading the documentation for the latest version of ROS2 - Jazzy Jalisco.  
+An older, but still supported, version of ROS 2 - Humble Hawksbill, available under the [humble](https://github.com/zhivkopetrov/robotics_v1/tree/humble) branch.  
+An older, but End-of-Life ROS2 version - Foxy Fitzroy is still supported by this repo, available under the [foxy](https://github.com/zhivkopetrov/robotics_v1/tree/foxy) branch.*
 
 ## Build Status
 <table width="100%">
@@ -94,7 +97,7 @@ This way each time you open a NEW terminal session, they will be populated for y
 ```
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
+echo "source source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash" >> ~/.bashrc
 ```
 ### Docker support
   - Requires Docker Engine (18.09.1 and above)
@@ -102,10 +105,10 @@ echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.b
 ```
 # All parameters are optional
 
-# Clone dependencies on fresh Ubuntu 22.04 image, build and install artifacts
+# Clone dependencies on fresh Ubuntu 24.04 image, build and install artifacts
 ./scripts/assisted_install/full_install_in_docker.sh <os_version> <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
 
-# By default os_version=ubuntu:22.04 ros2_distro=humble, enable_vnc_server=False, enable_docker_in_docker=False
+# By default os_version=ubuntu:24.04 ros2_distro=humble, enable_vnc_server=False, enable_docker_in_docker=False
 
 # Start the image
 ./scripts/run/run_docker_file.sh <ros2_distro> <enable_privileged_mode>

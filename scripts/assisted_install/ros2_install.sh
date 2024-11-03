@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROS2_DISTRO=humble
+ROS2_DISTRO=jazzy
 
 if [ -z "$1" ]; then
     echo "No argument supplied for ROS2_DISTRO. Assuming '$ROS2_DISTRO'"

@@ -1,7 +1,7 @@
 #!/bin/bash
 SCRIPT_NAME=`basename "$0"`
 REPO_NAME=robotics_v1
-ROS2_DISTRO=humble
+ROS2_DISTRO=jazzy
 PRIVILEGED_MODE=False
 PRIVILEGED_STR=""
 

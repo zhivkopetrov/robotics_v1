@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Script parameters
-OS_VERSION=ubuntu:22.04
-ROS2_DISTRO=humble
+OS_VERSION=ubuntu:24.04
+ROS2_DISTRO=jazzy
 ENABLE_VNC_SERVER=False
 ENABLE_DOCKER_IN_DOCKER=False
 

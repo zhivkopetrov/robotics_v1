@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROS2_DISTRO=humble
+ROS2_DISTRO=jazzy
 
 # Noninteractive option for time-zone settings
 export DEBIAN_FRONTEND=noninteractive
