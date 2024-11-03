@@ -1,9 +1,6 @@
 # robotics_v1
 
-## An educational C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
-*You're reading the documentation for 
-For information on the latest version, please look at the [master](https://github.com/zhivkopetrov/robotics_v1/tree/master) branch.*
-
+## An educational C++20 Robot Operating System 2 (ROS2) Jazzy Jalisco workspace
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022) / [Official Video](https://www.youtube.com/watch?v=wgNpRyYdaUs)
 
