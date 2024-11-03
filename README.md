@@ -1,6 +1,10 @@
 # robotics_v1
 
 ## An educational C++20 Robot Operating System 2 (ROS2) Humble Hawksbill workspace
+*You're reading the documentation for an older, but still supported, version of ROS 2 - Humble Hawksbill, available under the [foxy](https://github.com/zhivkopetrov/robotics_v1/tree/humble) branch.
+An older, but End-of-Life ROS2 version - Foxy Fitzroy is still supported by this repo, available under the [foxy](https://github.com/zhivkopetrov/robotics_v1/tree/foxy) branch.*
+For information on the latest version, please look at the [master](https://github.com/zhivkopetrov/robotics_v1/tree/master) branch.
+
 This is the official repository for the Robotics Accelerator course, created by me and powered by Ocado Technology.
   - More on the training - [Robotics Accelerator page](https://pages.beamery.eu/ocadogroup/page/ot-sofia-roboticscourse2022) / [Official Video](https://www.youtube.com/watch?v=wgNpRyYdaUs)
 
@@ -12,25 +16,26 @@ The workspace contains several interesting, competitive, visual games with their
 - [Robo Miner](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_miner) - focused on learning ROS2 services
 - [Robo Cleaner](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/robo_cleaner) - focused on learning ROS2 actions
 - [UR Dev](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_dev) - focused on learning UR robotic motions through URScript
-- [UR Driver](https://github.com/zhivkopetrov/robotics_v1/tree/master/src/ur_driver) - forked helper repositories for Universal Robots Client Library and Universal Robots ROS2 driver + description
-
-*You're reading the documentation for the latest version of ROS2.  
-An older, but still supported ROS2 version - Foxy Fitzroy is available under the [foxy](https://github.com/zhivkopetrov/robotics_v1/tree/foxy) branch.*
 
 ## Build Status
 <table width="100%">
   <tr>
     <th>ROS2 Distro</th>
+    <th>Jazzy Jalisco</th>
     <th>Humble Hawksbill</th>
     <th>Foxy Fitzroy</th>
   </tr>
   <tr>
     <th>Branch</th>
     <td><div align="center"><a href="https://github.com/zhivkopetrov/robotics_v1/tree/master">master</a></div></td>
+    <td><div align="center"><a href="https://github.com/zhivkopetrov/robotics_v1/tree/humble">master</a></div></td>
     <td><div align="center"><a href="https://github.com/zhivkopetrov/robotics_v1/tree/foxy">foxy</a></div></td>
   </tr>
   <tr>
     <th>Build Status</th>
+      <th><a href="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/jazzy_docker_image.yml">
+         <img src="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/jazzy_docker_image.yml/badge.svg"
+              alt="Jazzy Build"/></a></th>
       <th><a href="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/humble_docker_image.yml">
          <img src="https://github.com/zhivkopetrov/robotics_v1/actions/workflows/humble_docker_image.yml/badge.svg"
               alt="Humble Build"/></a></th>
@@ -40,11 +45,13 @@ An older, but still supported ROS2 version - Foxy Fitzroy is available under the
   </tr>
   <tr>
     <th>OS version</th>
+    <th>Ubuntu 24.04 LTS</th>
     <th>Ubuntu 22.04 LTS</th>
     <th>Ubuntu 20.04 LTS</th>
   </tr>
   <tr>
     <th>Documentation</th>
+    <td><div align="center"><a href="https://docs.ros.org/en/jazzy/index.html">ROS2 Humble Hawksbill</a></div></td>
     <td><div align="center"><a href="https://docs.ros.org/en/humble/index.html">ROS2 Humble Hawksbill</a></div></td>
     <td><div align="center"><a href="https://docs.ros.org/en/foxy/index.html">ROS2 Foxy Fitzroy</a></div></td>
   </tr>
