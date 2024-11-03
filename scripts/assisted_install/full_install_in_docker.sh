@@ -48,6 +48,7 @@ fi
 
 DOCKER_BUILDKIT=1 docker build \
     --file docker/Dockerfile \
+    --build-arg OS_VERSION=$OS_VERSION \
     --build-arg ROS2_DISTRO=$ROS2_DISTRO \
     --build-arg ENABLE_VNC_SERVER=$ENABLE_VNC_SERVER \
     --build-arg ENABLE_DOCKER_IN_DOCKER=$ENABLE_DOCKER_IN_DOCKER \

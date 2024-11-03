@@ -47,4 +47,8 @@ colcon build \
     $ADDITIONAL_COLCON_OPTIONS \
     --cmake-args \
         -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-        -DCMAKE_CXX_COMPILER=/usr/bin/clang++ 2>&1
+        -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+        -DCMAKE_LINKER=lld \
+        -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS="-fuse-ld=lld" 2>&1

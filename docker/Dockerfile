@@ -1,4 +1,6 @@
-FROM ubuntu:20.04 as base
+ARG OS_VERSION=ubuntu:20.04
+
+FROM ${OS_VERSION} as base
 
 ARG ROS2_DISTRO=foxy
 ARG CMAKE_BUILD_TYPE=Debug
