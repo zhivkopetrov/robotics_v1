@@ -201,7 +201,7 @@ ros2 launch robo_cleaner_gui launch.py
 If real hardware robot is used, the application suite will pick it up automatically.  
 If instead a Universal Robots Simulator (URSim) is used, start it with:  
 ```
-ros2 run ur_robot_driver start_ursim.sh -m <ur_type>
+./scripts/run/run_ursim.sh <ur_type>
 ```
 Supported ur_types: ur3/ur3e/ur5/ur5e/ur10/ur10e.  
 ur16/ur16e are supported as parameters, but their URDFs are not present.  
