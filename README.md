@@ -104,9 +104,9 @@ echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.b
 # All parameters are optional
 
 # Clone dependencies on fresh Ubuntu 20.04 image, build and install artifacts
-./scripts/assisted_install/full_install_in_docker.sh <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
+./scripts/assisted_install/full_install_in_docker.sh <os_version> <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
 
-# By default ros2_distro=foxy, enable_vnc_server=False, enable_docker_in_docker=False
+# By default os_version=ubuntu:20.04 ros2_distro=foxy, enable_vnc_server=False, enable_docker_in_docker=False
 # enable_docker_in_docker=True is needed if Universal Robots Simulator (URSim) will be used
 
 # Start the image
