@@ -17,5 +17,5 @@ source /opt/ros/$ROS2_DISTRO/setup.bash
 # install dependencies from source
 rosdep init && \
     rosdep fix-permissions && \
-    rosdep update && \
+    rosdep update --include-eol-distros && \
     rosdep install --from-paths src -y --ignore-src
