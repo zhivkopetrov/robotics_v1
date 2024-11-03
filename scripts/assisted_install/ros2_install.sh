@@ -51,4 +51,6 @@ apt update && apt install -y \
   ros-$ROS2_DISTRO-ros2cli-common-extensions \
   ros-$ROS2_DISTRO-ros2bag \
   ros-$ROS2_DISTRO-joint-trajectory-controller \
-  ros-$ROS2_DISTRO-ur-msgs
+  ros-$ROS2_DISTRO-ur-msgs \
+  ros-$ROS2_DISTRO-ur-dashboard-msgs \
+  ros-$ROS2_DISTRO-ur

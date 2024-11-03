@@ -4,6 +4,7 @@
 apt update && apt-get install -y \
     build-essential \
     clang \
+    lld \
     gcc \
     g++
 
@@ -13,6 +14,7 @@ apt update && apt-get install -y \
     git \
     docker \
     docker-compose \
+    docker-buildx \
     x11vnc \
     xvfb \
     fluxbox
