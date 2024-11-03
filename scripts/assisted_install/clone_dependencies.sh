@@ -9,9 +9,6 @@ else
     echo "Using ROS2_DISTRO=$ROS2_DISTRO"
 fi
 
-# Temporary for test. TODO: remove
-git checkout ur_binary_packages
-
 # clone personal open-source repositories
 git submodule init && git submodule update
 

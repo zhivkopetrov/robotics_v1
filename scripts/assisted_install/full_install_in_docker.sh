@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Script parameters
+OS_VERSION=ubuntu:22.04
 ROS2_DISTRO=humble
 ENABLE_VNC_SERVER=False
 ENABLE_DOCKER_IN_DOCKER=False
@@ -10,16 +11,23 @@ CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Debug}"
 VERBOSE_BUILD="${VERBOSE_BUILD:-False}"
 
 if [ -z "$1" ]; then
-    echo "No argument supplied for ROS2_DISTRO. Assuming '$ROS2_DISTRO'"
+    echo "No argument supplied for OS_VERSION. Assuming '$OS_VERSION'"
 else
-    ROS2_DISTRO=$1
-    echo "Using ROS2_DISTRO=$ROS2_DISTRO"
+    OS_VERSION=$1
+    echo "Using OS_VERSION=$OS_VERSION"
 fi
 
 if [ -z "$2" ]; then
+    echo "No argument supplied for ROS2_DISTRO. Assuming '$ROS2_DISTRO'"
+else
+    ROS2_DISTRO=$2
+    echo "Using ROS2_DISTRO=$ROS2_DISTRO"
+fi
+
+if [ -z "$3" ]; then
     echo "No argument supplied for ENABLE_VNC_SERVER. Assuming '$ENABLE_VNC_SERVER'"
 else
-    ENABLE_VNC_SERVER=$2
+    ENABLE_VNC_SERVER=$3
     if [[ "$ENABLE_VNC_SERVER" == "true" || 
           "$ENABLE_VNC_SERVER" == "True" || 
           "$ENABLE_VNC_SERVER" == "1" ]] ; then
@@ -31,10 +39,10 @@ else
     echo "Using ENABLE_VNC_SERVER=$ENABLE_VNC_SERVER"
 fi
 
-if [ -z "$3" ]; then
+if [ -z "$4" ]; then
     echo "No argument supplied for ENABLE_DOCKER_IN_DOCKER. Assuming '$ENABLE_DOCKER_IN_DOCKER'"
 else
-    ENABLE_DOCKER_IN_DOCKER=$3
+    ENABLE_DOCKER_IN_DOCKER=$4
     if [[ "$ENABLE_DOCKER_IN_DOCKER" == "true" || 
           "$ENABLE_DOCKER_IN_DOCKER" == "True" || 
           "$ENABLE_DOCKER_IN_DOCKER" == "1" ]] ; then

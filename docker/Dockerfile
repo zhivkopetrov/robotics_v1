@@ -1,4 +1,6 @@
-FROM ubuntu:22.04 as base
+ARG OS_VERSION=ubuntu:22.04
+
+FROM ${OS_VERSION} as base
 
 ARG ROS2_DISTRO=humble
 ARG CMAKE_BUILD_TYPE=Debug

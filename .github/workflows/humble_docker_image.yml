@@ -31,8 +31,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: humble
     - name: Build the Docker image
-      run: ./scripts/assisted_install/full_install_in_docker.sh humble
+      run: ./scripts/assisted_install/full_install_in_docker.sh ubuntu:22.04 humble
       env:
         CMAKE_BUILD_TYPE: ${{ inputs.cmake_build_type }}
         VERBOSE_BUILD: ${{ inputs.verbose_build }}
