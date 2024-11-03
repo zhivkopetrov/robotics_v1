@@ -80,23 +80,23 @@ ErrorCode DashboardProvider::initOutInterface(
 }
 
 ErrorCode DashboardProvider::initCommunication() {
+  constexpr size_t queueSize = 10;
+  const rclcpp::QoS qos(queueSize);
+
   _powerOnService = create_client<Trigger>(DASHBOARD_CLIENT_POWER_ON_SERVICE,
-      rmw_qos_profile_services_default, _callbackGroup);
+      qos, _callbackGroup);
 
   _powerOffService = create_client<Trigger>(DASHBOARD_CLIENT_POWER_OFF_SERVICE,
-      rmw_qos_profile_services_default, _callbackGroup);
+      qos, _callbackGroup);
 
   _brakeReleaseService = create_client<Trigger>(
-      DASHBOARD_CLIENT_BRAKE_RELEASE_SERVICE, rmw_qos_profile_services_default,
-      _callbackGroup);
+      DASHBOARD_CLIENT_BRAKE_RELEASE_SERVICE, qos, _callbackGroup);
 
   _getRobotModeService = create_client<GetRobotMode>(
-      DASHBOARD_CLIENT_GET_ROBOT_MODE_SERVICE, rmw_qos_profile_services_default,
-      _callbackGroup);
+      DASHBOARD_CLIENT_GET_ROBOT_MODE_SERVICE, qos, _callbackGroup);
 
   _getSafetyModeService = create_client<GetSafetyMode>(
-      DASHBOARD_CLIENT_GET_SAFETY_MODE_SERVICE,
-      rmw_qos_profile_services_default, _callbackGroup);
+      DASHBOARD_CLIENT_GET_SAFETY_MODE_SERVICE, qos, _callbackGroup);
 
   waitForService(_powerOnService);
   waitForService(_powerOffService);

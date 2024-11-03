@@ -118,11 +118,11 @@ ErrorCode UrControlCommonExternalBridge::initCommunication() {
   _urscriptPublisher = create_publisher<String>(URSCRIPT_TOPIC, qos,
       publisherOptions);
 
-  _urscriptService = create_client<UrScript>(URSCRIPT_SERVICE,
-      rmw_qos_profile_services_default, _publishersCallbackGroup);
+  _urscriptService = create_client<UrScript>(URSCRIPT_SERVICE, qos,
+      _publishersCallbackGroup);
 
   _urscriptPreemptService = create_client<Trigger>(URSCRIPT_SERVICE_PREEMPT,
-      rmw_qos_profile_services_default, _publishersCallbackGroup);
+      qos, _publishersCallbackGroup);
 
   _robotModeSubscriber = create_subscription<RobotModeType>(ROBOT_MODE_TOPIC,
       qos, std::bind(&UrControlCommonExternalBridge::onRobotModeMsg, this, _1),

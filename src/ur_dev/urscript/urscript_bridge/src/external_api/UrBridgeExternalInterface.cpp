@@ -92,19 +92,16 @@ ErrorCode UrBridgeExternalInterface::initCommunication() {
 
   mUrScriptService = create_service<UrScriptSrv>(URSCRIPT_SERVICE,
       std::bind(&UrBridgeExternalInterface::handleUrScriptService, this,
-          std::placeholders::_1, std::placeholders::_2),
-      rmw_qos_profile_services_default, mCallbackGroup);
+          std::placeholders::_1, std::placeholders::_2), qos, mCallbackGroup);
 
   mUrScriptServicePreempt = create_service<Trigger>(URSCRIPT_SERVICE_PREEMPT,
       std::bind(&UrBridgeExternalInterface::handleUrScriptServicePreempt, this,
-          std::placeholders::_1, std::placeholders::_2),
-      rmw_qos_profile_services_default, mCallbackGroup);
+          std::placeholders::_1, std::placeholders::_2), qos, mCallbackGroup);
 
   mGetEefAngleAxisService = create_service<GetEefAngleAxis>(
       GET_EEF_ANGLE_AXIS_SERVICE,
       std::bind(&UrBridgeExternalInterface::handleGetEefAngleAxisService, this,
-          std::placeholders::_1, std::placeholders::_2),
-      rmw_qos_profile_services_default, mCallbackGroup);
+          std::placeholders::_1, std::placeholders::_2), qos, mCallbackGroup);
 
   mTfBuffer = std::make_unique<tf2_ros::Buffer>(get_clock());
   mTfListener = std::make_unique<tf2_ros::TransformListener>(*mTfBuffer);

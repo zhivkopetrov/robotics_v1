@@ -173,20 +173,17 @@ ErrorCode CleanerControllerExternalBridge::initCommunication() {
   _batteryStatusService = create_service<QueryBatteryStatus>(
       QUERY_BATTERY_STATUS_SERVICE,
       std::bind(&CleanerControllerExternalBridge::handleBatteryStatusService,
-          this, _1, _2), rmw_qos_profile_services_default,
-      _subscriberCallbackGroup);
+          this, _1, _2), qos, _subscriberCallbackGroup);
 
   _initialRobotStateService = create_service<QueryInitialRobotState>(
       QUERY_INITIAL_ROBOT_STATE_SERVICE,
       std::bind(
           &CleanerControllerExternalBridge::handleInitialRobotStateService,
-          this, _1, _2), rmw_qos_profile_services_default,
-      _subscriberCallbackGroup);
+          this, _1, _2), qos, _subscriberCallbackGroup);
 
   _chargeBatteryService = create_service<ChargeBattery>(CHARGE_BATTERY_SERVICE,
       std::bind(&CleanerControllerExternalBridge::handleChargeBatteryService,
-          this, _1, _2), rmw_qos_profile_services_default,
-      _subscriberCallbackGroup);
+          this, _1, _2), qos, _subscriberCallbackGroup);
 
   _moveActionServer = rclcpp_action::create_server<RobotMove>(this,
       ROBOT_MOVE_ACTION,

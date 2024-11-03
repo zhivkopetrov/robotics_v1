@@ -146,31 +146,28 @@ ErrorCode MinerControllerExternalBridge::initCommunication() {
   _initialRobotPosService = create_service<QueryInitialRobotPosition>(
       QUERY_INITIAL_ROBOT_POSITION_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleInitialRobotPosService,
-          this, _1, _2), rmw_qos_profile_services_default);
+          this, _1, _2), qos);
 
   _robotMoveService = create_service<RobotMove>(ROBOT_MOVE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleRobotMoveService, this,
-          _1, _2), rmw_qos_profile_services_default, _subscriberCallbackGroup);
+          _1, _2), qos, _subscriberCallbackGroup);
 
   _fieldMapValidateService = create_service<FieldMapValidate>(
       FIELD_MAP_VALIDATE_SERVICE,
       std::bind(&MinerControllerExternalBridge::handleFieldMapValidateService,
-          this, _1, _2), rmw_qos_profile_services_default,
-          _subscriberCallbackGroup);
+          this, _1, _2), qos, _subscriberCallbackGroup);
 
   _longestSequenceValidateService = create_service<LongestSequenceValidate>(
       LONGEST_SEQUENCE_VALIDATE_SERVICE,
       std::bind(
           &MinerControllerExternalBridge::handleLongestSequenceValidateService,
-          this, _1, _2), rmw_qos_profile_services_default,
-          _subscriberCallbackGroup);
+          this, _1, _2), qos, _subscriberCallbackGroup);
 
   _activateMiningValidateService = create_service<ActivateMiningValidate>(
       ACTIVATE_MINING_VALIDATE_SERVICE,
       std::bind(
           &MinerControllerExternalBridge::handleActivateMiningValidateService,
-          this, _1, _2), rmw_qos_profile_services_default,
-          _subscriberCallbackGroup);
+          this, _1, _2), qos, _subscriberCallbackGroup);
 
   _userAuthenticateSubscriber = create_subscription<UserAuthenticate>(
       USER_AUTHENTICATE_TOPIC, qos,
