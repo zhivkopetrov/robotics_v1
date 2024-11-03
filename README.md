@@ -96,9 +96,9 @@ echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.b
 # All parameters are optional
 
 # Clone dependencies on fresh Ubuntu 22.04 image, build and install artifacts
-./scripts/assisted_install/full_install_in_docker.sh <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
+./scripts/assisted_install/full_install_in_docker.sh <os_version> <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
 
-# By default ros2_distro=humble, enable_vnc_server=False, enable_docker_in_docker=False
+# By default os_version=ubuntu:22.04 ros2_distro=humble, enable_vnc_server=False, enable_docker_in_docker=False
 
 # Start the image
 ./scripts/run/run_docker_file.sh <ros2_distro> <enable_privileged_mode>
@@ -209,11 +209,11 @@ Note that URSim does not support ARM based CPUs.
 
 Starting the Universal Robots ROS2 driver:
 ```
-ros2 launch ur_robot_driver ur_control.launch.py ur_type:=<value> robot_ip:=xxx.xxx.xxx.xxx launch_rviz:=<true/false>
+./scripts/run/run_ur_driver.sh <ur_type> <robot_ip> <launch_rviz>
 ```
 Example usage with ur10e robot configured to connect with URSim
 ```
-ros2 launch ur_robot_driver ur_control.launch.py ur_type:=ur10e robot_ip:=192.168.56.101 launch_rviz:=true
+./scripts/run/run_ur_driver.sh ur10e 192.168.56.101 true
 ```
 
 Helper utility node, exposing beginner-friendly API from the robot.  
