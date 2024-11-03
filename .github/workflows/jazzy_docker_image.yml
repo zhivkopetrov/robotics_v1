@@ -1,4 +1,4 @@
-name: Humble Build
+name: Jazzy Build
 
 on:
   workflow_dispatch:
