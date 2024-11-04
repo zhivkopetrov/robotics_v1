@@ -2,7 +2,7 @@ ARG OS_VERSION=ubuntu:24.04
 
 FROM ${OS_VERSION} as base
 
-ARG ROS2_DISTRO=humble
+ARG ROS2_DISTRO=jazzy
 ARG CMAKE_BUILD_TYPE=Debug
 ARG VERBOSE_BUILD=False
 ARG ADDITIONAL_COLCON_OPTIONS=""
@@ -41,7 +41,7 @@ RUN .${INSTALL_SCRIPTS_DIR}/ubuntu_apt_base_install.sh
 RUN .${INSTALL_SCRIPTS_DIR}/ubuntu_apt_third_party_install.sh
 
 # Complete ROS2 setup per documentation
-# https://docs.ros.org/en/humble/Installation.html
+# https://docs.ros.org/en/jazzy/Installation.html
 RUN .${INSTALL_SCRIPTS_DIR}/ros2_install.sh ${ROS2_DISTRO}
 
 # Own dependencies (personal open-source libraries and tools)

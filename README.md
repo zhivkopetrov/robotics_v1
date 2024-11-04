@@ -93,7 +93,7 @@ Once the installation phase finishes, for convinience, you can add manual steps 
 This way each time you open a NEW terminal session, they will be populated for you.
 ```
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
-echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 echo "source source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash" >> ~/.bashrc
 ```
 ### Docker support
@@ -105,12 +105,12 @@ echo "source source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash" >>
 # Clone dependencies on fresh Ubuntu 24.04 image, build and install artifacts
 ./scripts/assisted_install/full_install_in_docker.sh <os_version> <ros2_distro> <enable_vnc_server> <enable_docker_in_docker>
 
-# By default os_version=ubuntu:24.04 ros2_distro=humble, enable_vnc_server=False, enable_docker_in_docker=False
+# By default os_version=ubuntu:24.04 ros2_distro=jazzy, enable_vnc_server=False, enable_docker_in_docker=False
 
 # Start the image
 ./scripts/run/run_docker_file.sh <ros2_distro> <enable_privileged_mode>
 
-# By default ros2_distro=humble, enable_privileged_mode=False
+# By default ros2_distro=jazzy, enable_privileged_mode=False
 # Privileged mode is required if you want to enable docker in docker support.
 # For example starting the Universal Robots Simulator docker image inside robotics_v1 docker image (Docker in Docker)
 
@@ -163,7 +163,7 @@ Build + install steps
 
 # For plain colcon commands run 'colcon build --help'
 # Or refer to the official colcon documentation:
-# https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html
+# https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html
 ```
 
 ## Automatic asset information generation
@@ -301,8 +301,8 @@ Those commands will clone the following repositories:
 
 ## Third party libs, which are not shipped with this repository
 This step decribes the manual installation of third party libs. For automated/assisted install refer to the 'Project automated installation' section.
-- ROS2 Humble Hawksbill
-  - For installation, please refer to the official [ROS2 Humble Hawksbill installation documentation](https://docs.ros.org/en/humble/Installation.html)
+- ROS2 Jazzy Jalisco
+  - For installation, please refer to the official [ROS2 Jazzy Jalisco installation documentation](https://docs.ros.org/en/jazzy/Installation.html)
 
 - Boost
   - Linux
