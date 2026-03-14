@@ -15,8 +15,7 @@ apt update && apt-get install -y \
     build-essential \
     clang \
     lld \
-    gcc \
-    g++ \
+    ccache \
     cmake
 
 # install VNC related utilities
