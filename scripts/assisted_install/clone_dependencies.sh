@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 ROS2_DISTRO=humble
 

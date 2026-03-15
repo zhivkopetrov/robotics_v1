@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 SCRIPT_NAME=`basename "$0"`
 BUILD_TYPE=Debug
